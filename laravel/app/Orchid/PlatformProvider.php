@@ -44,7 +44,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.example')
                 ->badge(fn () => 6),
 
-            Menu::make('Form Elements')
+            Menu::make('Form Elements 2')
                 ->icon('bs.card-list')
                 ->route('platform.example.fields')
                 ->active('*/examples/form/*'),
