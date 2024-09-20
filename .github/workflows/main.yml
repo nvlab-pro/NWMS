@@ -18,3 +18,5 @@ jobs:
         
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
+          syncroot: "domains/cloudmenu.online/public_html"
+          server-dir: "domains/cloudmenu.online/public_html"
