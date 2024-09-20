@@ -7,7 +7,7 @@ jobs:
 
     steps:
       - name: Deploy to Hosting
-        uses: nvlab-pro/cloudmenu@v2
+        uses: nvlab-pro/cloudmenu
         with:
           url: ${{ secrets.FTP_SERVER }}
           user: ${{ secrets.FTP_USERNAME }}
