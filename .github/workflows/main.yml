@@ -1,8 +1,5 @@
 name: Deploy to Hosting
-on:
-  push:
-    branches:
-      - master
+on: push
 
 jobs:
   deploy:
@@ -13,9 +10,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Deploy to Hosting
-        uses: actions/deploy@1.0
+        uses: actions/deploy@v2
         with:
+          url: ${{ secrets.FTP_SERVER }}
+          user: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          syncroot: "domains/cloudmenu.online/public_html"
+        
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: domains/cloudmenu.online/public_html
+          server-dir: "domains/cloudmenu.online/public_html"
