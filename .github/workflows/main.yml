@@ -6,11 +6,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
       - name: Deploy to Hosting
-        uses: actions/deploy@v2
+        uses: nvlab-pro/cloudmenu@v2
         with:
           url: ${{ secrets.FTP_SERVER }}
           user: ${{ secrets.FTP_USERNAME }}
