@@ -34,12 +34,12 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         return [
-            Menu::make('Get Started')
+            Menu::make('Main')
                 ->icon('bs.book')
                 ->title('Navigation')
                 ->route(config('platform.index')),
 
-            Menu::make('Sample Screen')
+            Menu::make('Sample Screen 2')
                 ->icon('bs.collection')
                 ->route('platform.example')
                 ->badge(fn () => 6),
