@@ -11,7 +11,7 @@ jobs:
         with:
           url: nvlab.pro
           user: admin
-          password: ${{ inputs.FTP_PASSWORD }}
+          password: #65nuflfs656
         
           server: nvlab.pro
           username: admin
