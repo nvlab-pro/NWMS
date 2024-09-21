@@ -9,11 +9,11 @@ jobs:
       - name: Deploy to Hosting
         uses: nvlab-pro/cloudmenu@master
         with:
-          url: ${{ secrets.FTP_SERVER }}
+          url: nvlab.pro
           user: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
         
-          server: ${{ secrets.FTP_SERVER }}
+          server: nvlab.pro
           username: ${{ secrets.FTP_USERNAME }}
           syncroot: "domains/cloudmenu.online/public_html"
           server-dir: "domains/cloudmenu.online/public_html"
