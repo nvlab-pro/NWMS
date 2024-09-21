@@ -1,1 +1,19 @@
+name: Deploy to Hosting
+on: push
 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Hosting
+        uses: nvlab-pro/cloudmenu@master
+        with:
+          url: ${{ secrets.FTP_SERVER }}
+          user: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+        
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          syncroot: "domains/cloudmenu.online/public_html"
+          server-dir: "domains/cloudmenu.online/public_html"
