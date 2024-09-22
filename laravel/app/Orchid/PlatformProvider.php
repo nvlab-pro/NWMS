@@ -53,7 +53,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.window-sidebar')
                 ->route('platform.example.layouts'),
 
-            Menu::make('Grid System')
+            Menu::make('Grid System 4')
                 ->icon('bs.columns-gap')
                 ->route('platform.example.grid'),
 
