@@ -49,7 +49,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.example.fields')
                 ->active('*/examples/form/*'),
 
-            Menu::make('Overview Layouts 3')
+            Menu::make('Overview Layouts 03')
                 ->icon('bs.window-sidebar')
                 ->route('platform.example.layouts'),
 
