@@ -61,7 +61,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.bar-chart')
                 ->route('platform.example.charts'),
 
-            Menu::make('Cards')
+            Menu::make('Cards 5')
                 ->icon('bs.card-text')
                 ->route('platform.example.cards')
                 ->divider(),
