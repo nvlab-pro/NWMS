@@ -13,9 +13,10 @@ jobs:
     - name: Copy files to server
       uses: nvlab-pro/cloudmenu@master
       with:
-        host: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
         rm: true
         source: "./*"
         target: "domains/cloudmenu.online/public_html"
+      secrets:
+        host: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
