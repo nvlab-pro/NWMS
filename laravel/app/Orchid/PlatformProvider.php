@@ -39,7 +39,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->title('Navigation')
                 ->route(config('platform.index')),
 
-            Menu::make('Sample Screen 2')
+            Menu::make('Sample Screen 1')
                 ->icon('bs.collection')
                 ->route('platform.example')
                 ->badge(fn () => 6),
@@ -49,7 +49,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.example.fields')
                 ->active('*/examples/form/*'),
 
-            Menu::make('Overview Layouts 2')
+            Menu::make('Overview Layouts 3')
                 ->icon('bs.window-sidebar')
                 ->route('platform.example.layouts'),
 
