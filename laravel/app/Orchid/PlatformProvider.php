@@ -39,40 +39,40 @@ class PlatformProvider extends OrchidServiceProvider
                 ->title('Navigation')
                 ->route(config('platform.index')),
 
-            Menu::make('Sample Screen 2')
+            Menu::make('Sample Screen 01')
                 ->icon('bs.collection')
                 ->route('platform.example')
                 ->badge(fn () => 6),
 
-            Menu::make('Form Elements')
+            Menu::make('Form Elements 02')
                 ->icon('bs.card-list')
                 ->route('platform.example.fields')
                 ->active('*/examples/form/*'),
 
-            Menu::make('Overview Layouts')
+            Menu::make('Overview Layouts 3')
                 ->icon('bs.window-sidebar')
                 ->route('platform.example.layouts'),
 
-            Menu::make('Grid System')
+            Menu::make('Grid System 4')
                 ->icon('bs.columns-gap')
                 ->route('platform.example.grid'),
 
-            Menu::make('Charts')
+            Menu::make('Charts 4')
                 ->icon('bs.bar-chart')
                 ->route('platform.example.charts'),
 
-            Menu::make('Cards')
+            Menu::make('Cards 5')
                 ->icon('bs.card-text')
                 ->route('platform.example.cards')
                 ->divider(),
 
-            Menu::make(__('Users'))
+            Menu::make(__('Users 6'))
                 ->icon('bs.people')
                 ->route('platform.systems.users')
                 ->permission('platform.systems.users')
                 ->title(__('Access Controls')),
 
-            Menu::make(__('Roles'))
+            Menu::make(__('Role 7'))
                 ->icon('bs.shield')
                 ->route('platform.systems.roles')
                 ->permission('platform.systems.roles')
