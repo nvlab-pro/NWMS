@@ -290,7 +290,7 @@ return [
     |
     */
 
-    'workspace' => 'platform::workspace.compact',
+    'workspace' => 'platform::workspace.full',
 
     /*
     |--------------------------------------------------------------------------
