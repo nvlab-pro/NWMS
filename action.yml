@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Copy files to server
-      uses: appleboy/scp-action@master
+      uses: nvlab-pro/cloudmenu@master
       with:
         rm: true
         source: "./*"
