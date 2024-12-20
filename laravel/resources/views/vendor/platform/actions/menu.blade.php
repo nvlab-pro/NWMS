@@ -5,15 +5,15 @@
 @endisset
 
 @if (!empty($name))
-    <li class="nav-item {{ active($active) }}">
+    <li class="nav-item {{ active($active) }}" style="background-color: #2A2A2A">
         <a data-turbo="{{ var_export($turbo) }}"
-            {{ $attributes }}
+                {{ $attributes }}
         >
             @isset($icon)
-                <x-orchid-icon :path="$icon" class="{{ empty($name) ?: 'me-2 overflow-visible'}}"/>
+                <x-orchid-icon :path="$icon" class="overflow-visible"/>
             @endisset
 
-            <span class="me-2">{{ $name ?? '' }}</span>
+            <span class="mx-2">{{ $name ?? '' }}</span>
 
             @isset($badge)
                 <b class="badge rounded-pill bg-{{$badge['class']}} col-auto ms-auto">{{$badge['data']()}}</b>
@@ -23,8 +23,7 @@
 @endif
 
 @if(!empty($list))
-    <div class="nav collapse sub-menu ps-3 {{active($active, 'show')}}"
-         id="menu-{{$slug}}"
+    <div class="nav collapse sub-menu ps-3 {{active($active, 'show')}}" style="background-color: #555555" id="menu-{{$slug}}"
          @isset($parent)
              data-bs-parent="#menu-{{$parent}}">
         @else

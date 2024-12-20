@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid;
 
+use App\Http\Middleware\RoleMiddleware;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\ItemPermission;
 use Orchid\Platform\OrchidServiceProvider;
@@ -34,61 +35,73 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         return [
-            Menu::make('Main')
-                ->icon('bs.book')
-                ->title('Navigation')
+            Menu::make(__('Main'))
+                ->icon('bs.bank2')
                 ->route(config('platform.index')),
 
-            Menu::make('Sample Screen 2')
-                ->icon('bs.collection')
-                ->route('platform.example')
-                ->badge(fn () => 6),
+            Menu::make(__('Приемка товара'))
+                ->icon('bs.building-add')
+                ->route('platform.acceptances.index'),
 
-            Menu::make('Form Elements')
-                ->icon('bs.card-list')
-                ->route('platform.example.fields')
-                ->active('*/examples/form/*'),
+            Menu::make(__('Список товаров'))
+                ->icon('bs.stack')
+                ->route('platform.offers.index'),
 
-            Menu::make('Overview Layouts')
-                ->icon('bs.window-sidebar')
-                ->route('platform.example.layouts'),
+            Menu::make(__('Бибилотеки'))
+                ->icon('bs.list-check')
+                ->list([
+                    Menu::make(__('Страны'))
+                        ->icon('bs.list')
+                        ->route('platform.settings.countries.index'),
 
-            Menu::make('Grid System')
-                ->icon('bs.columns-gap')
-                ->route('platform.example.grid'),
+                    Menu::make(__('Города'))
+                        ->icon('bs.list')
+                        ->route('platform.settings.cities.index'),
 
-            Menu::make('Charts')
-                ->icon('bs.bar-chart')
-                ->route('platform.example.charts'),
+                    Menu::make(__('Валюты'))
+                        ->icon('bs.list')
+                        ->route('platform.settings.currencies.index'),
 
-            Menu::make('Cards')
-                ->icon('bs.card-text')
-                ->route('platform.example.cards')
-                ->divider(),
+                    Menu::make(__('Языки'))
+                        ->icon('bs.list')
+                        ->route('platform.settings.languages.index'),
+                ]),
 
-            Menu::make(__('Users'))
+            // ************************
+            // *    Настройка      *
+            // ************************
+
+            Menu::make(__('Настройки'))
+                ->icon('bs.gear-fill')
+                ->list([
+                    Menu::make(__('Магазины'))
+                        ->icon('bs.shop')
+                        ->route('platform.shops.index'),
+
+                    Menu::make(__('Склады'))
+                        ->icon('bs.buildings')
+                        ->route('platform.warehouses.index'),
+                ]),
+
+            // ************************
+            // *     Польщователи      *
+            // ************************
+
+            Menu::make(__('Пользователи'))
                 ->icon('bs.people')
-                ->route('platform.systems.users')
-                ->permission('platform.systems.users')
-                ->title(__('Access Controls')),
+                ->list([
+                    Menu::make('Пользователи')
+                        ->icon('bs.people')
+                        ->route('platform.systems.users')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
 
-            Menu::make(__('Roles'))
-                ->icon('bs.shield')
-                ->route('platform.systems.roles')
-                ->permission('platform.systems.roles')
-                ->divider(),
+                    Menu::make('Роли')
+                        ->icon('bs.book')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                        ->route('platform.systems.roles'),
+                ]),
 
-            Menu::make('Documentation')
-                ->title('Docs')
-                ->icon('bs.box-arrow-up-right')
-                ->url('https://orchid.software/en/docs')
-                ->target('_blank'),
 
-            Menu::make('Changelog')
-                ->icon('bs.box-arrow-up-right')
-                ->url('https://github.com/orchidsoftware/platform/blob/master/CHANGELOG.md')
-                ->target('_blank')
-                ->badge(fn () => Dashboard::version(), Color::DARK),
         ];
     }
 

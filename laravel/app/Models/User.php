@@ -2,13 +2,23 @@
 
 namespace App\Models;
 
+use App\Orchid\Presenters\UserPresenter;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
+use Orchid\Access\UserAccess;
+use Orchid\Attachment\Attachable;
+use Orchid\Filters\Filterable;
 use Orchid\Filters\Types\Like;
 use Orchid\Filters\Types\Where;
 use Orchid\Filters\Types\WhereDateStartEnd;
+use Orchid\Metrics\Chartable;
 use Orchid\Platform\Models\User as Authenticatable;
+use Orchid\Screen\AsSource;
 
 class User extends Authenticatable
 {
+    use AsSource, Chartable, Filterable, Attachable, HasFactory, Notifiable, UserAccess, Chartable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -17,6 +27,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'storage_id',
+        'domain_id',
         'password',
     ];
 
@@ -37,8 +49,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'permissions'          => 'array',
-        'email_verified_at'    => 'datetime',
+        'permissions' => 'array',
+        'email_verified_at' => 'datetime',
     ];
 
     /**
@@ -47,11 +59,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $allowedFilters = [
-           'id'         => Where::class,
-           'name'       => Like::class,
-           'email'      => Like::class,
-           'updated_at' => WhereDateStartEnd::class,
-           'created_at' => WhereDateStartEnd::class,
+        'id' => Where::class,
+        'name' => Like::class,
+        'email' => Like::class,
+        'updated_at' => WhereDateStartEnd::class,
+        'created_at' => WhereDateStartEnd::class,
     ];
 
     /**
@@ -63,7 +75,55 @@ class User extends Authenticatable
         'id',
         'name',
         'email',
+        'domain_id',
+        'storage_id',
         'updated_at',
         'created_at',
     ];
+
+    /**
+     * Throw an exception if email already exists, create admin user.
+     *
+     * @throws \Throwable
+     */
+    public static function createAdmin(string $name, string $email, string $password): void
+    {
+        throw_if(static::where('email', $email)->exists(), 'User exists');
+
+        static::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'permissions' => Dashboard::getAllowAllPermission(),
+        ]);
+    }
+
+    /**
+     * @return UserPresenter
+     */
+    public function presenter()
+    {
+        return new UserPresenter($this);
+    }
+
+    public function showLocations()
+    {
+        return $this->hasOne(MistralLocations::class, 'loc_Id', 'storage_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsToMany(Role::class, 'role_users', 'user_id', 'role_id');
+    }
+
+    public function hasRole($role)
+    {
+        $tmpRole = false;
+
+        foreach ($this->role as $currentRole)
+            if ($role === $currentRole->slug) $tmpRole = true;
+
+        return $tmpRole;
+    }
+
 }

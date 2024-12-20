@@ -14,6 +14,19 @@ use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
+use App\Orchid\Screens\Settings\LibCityCreateScreen;
+use App\Orchid\Screens\Settings\LibCityScreen;
+use App\Orchid\Screens\Settings\LibCountryCreateScreen;
+use App\Orchid\Screens\Settings\LibCountryScreen;
+use App\Orchid\Screens\Settings\LibCurrencyCreateScreen;
+use App\Orchid\Screens\Settings\LibCurrencyScreen;
+use App\Orchid\Screens\Settings\LibLanguageCreateScreen;
+use App\Orchid\Screens\Settings\LibLanguageScreen;
+use App\Orchid\Screens\Settings\LibLengthCreateScreen;
+use App\Orchid\Screens\Settings\LibLengthScreen;
+use App\Orchid\Screens\Settings\LibWeightCreateScreen;
+use App\Orchid\Screens\Settings\LibWeightScreen;
+use App\Orchid\Screens\Settings\SettingScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
@@ -34,6 +47,242 @@ use Tabuna\Breadcrumbs\Trail;
 // Main
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');
+
+// ******************************************************
+// *** Список товаров
+// *** Platform > offers
+// ******************************************************
+
+Route::screen('offers', \App\Orchid\Screens\Offers\OffersScreen::class)
+    ->name('platform.offers.index')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Список товаров'), route('platform.offers.index')));
+
+Route::screen('offers/create', \App\Orchid\Screens\Offers\OffersCreateScreen::class)
+    ->name('platform.offers.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.offers.index')
+        ->push(__('Создание нового товара'), route('platform.offers.create')));
+
+Route::screen('offers/{offerId}/edit', \App\Orchid\Screens\Offers\OffersCreateScreen::class)
+    ->name('platform.offers.edit')
+    ->breadcrumbs(fn (Trail $trail, $offerId) => $trail
+        ->parent('platform.offers.index')
+        ->push(__('Создание нового товара'), route('platform.offers.edit', $offerId)));
+
+// ******************************************************
+// *** Список магазинов
+// *** Platform > shops
+// ******************************************************
+
+Route::screen('shops', \App\Orchid\Screens\Shops\ShopsScreen::class)
+    ->name('platform.shops.index')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Магазины'), route('platform.shops.index')));
+
+Route::screen('shops/create', \App\Orchid\Screens\Shops\ShopsCreateScreen::class)
+    ->name('platform.shops.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Магазины'), route('platform.shops.create')));
+
+Route::screen('shops/{shopId}/edit', \App\Orchid\Screens\Shops\ShopsCreateScreen::class)
+    ->name('platform.shops.edit')
+    ->breadcrumbs(fn (Trail $trail, $shopId) => $trail
+        ->parent('platform.shops.index')
+        ->push(__('Магазины'), route('platform.shops.edit', $shopId)));
+
+// ******************************************************
+// *** Список складов
+// *** Platform > warehouses
+// ******************************************************
+
+Route::screen('warehouses', \App\Orchid\Screens\Warehouses\WarehouseScreen::class)
+    ->name('platform.warehouses.index')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Список складов'), route('platform.warehouses.index')));
+
+Route::screen('warehouses/create', \App\Orchid\Screens\Warehouses\WarehouseCreateScreen::class)
+    ->name('platform.warehouses.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.warehouses.index')
+        ->push(__('Список складов'), route('platform.warehouses.create')));
+
+Route::screen('warehouses/{whId}/edit', \App\Orchid\Screens\Warehouses\WarehouseCreateScreen::class)
+    ->name('platform.warehouses.edit')
+    ->breadcrumbs(fn (Trail $trail, $whId) => $trail
+        ->parent('platform.warehouses.index')
+        ->push(__('Список складов'), route('platform.warehouses.edit', $whId)));
+
+// ******************************************************
+// *** Список складов
+// *** Platform > acceptances
+// ******************************************************
+
+Route::screen('acceptances', \App\Orchid\Screens\Acceptances\AcceptancesScreen::class)
+    ->name('platform.acceptances.index')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Список накладных'), route('platform.acceptances.index')));
+
+Route::screen('acceptances/create', \App\Orchid\Screens\Acceptances\AcceptanceCreateScreen::class)
+    ->name('platform.acceptances.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.acceptances.index')
+        ->push(__('Список накладных'), route('platform.acceptances.create')));
+
+Route::screen('acceptances/{acceptId}/edit', \App\Orchid\Screens\Acceptances\AcceptanceCreateScreen::class)
+    ->name('platform.acceptances.edit')
+    ->breadcrumbs(fn (Trail $trail, $acceptId) => $trail
+        ->parent('platform.acceptances.index')
+        ->push(__('Список накладных'), route('platform.acceptances.edit', $acceptId)));
+
+Route::screen('acceptances/{acceptId}/offers', \App\Orchid\Screens\Acceptances\AcceptancesOffersScreen::class)
+    ->name('platform.acceptances.offers')
+    ->breadcrumbs(fn (Trail $trail, $acceptId) => $trail
+        ->parent('platform.acceptances.index')
+        ->push(__('Список накладных'), route('platform.acceptances.offers', $acceptId)));
+
+Route::post('acceptances/{acceptId}/offers/save', [\App\Orchid\Screens\Acceptances\AcceptancesOffersScreen::class, 'saveChanges'])
+    ->name('platform.acceptances.offers.save');
+
+// ******************************************************
+// *** Настройки системы
+// *** Platform > Settings
+// ******************************************************
+
+Route::screen('settings', SettingScreen::class)
+    ->name('platform.settings.index')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Настройки'), route('platform.settings.index')));
+
+Route::prefix('settings')
+    ->name('platform.settings')
+    ->group(function () {
+
+        // Страны
+        Route::screen('countries', LibCountryScreen::class)
+            ->name('.countries.index')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.index')
+                ->push(__('Страны'), route('platform.settings.countries.index')));
+
+        Route::screen('countries/create', LibCountryCreateScreen::class)
+            ->name('.countries.create')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.countries.index')
+                ->push(__('Создание новой страны'), route('platform.settings.countries.create')));
+
+        Route::screen('countries/{countryId}/edit', LibCountryCreateScreen::class)
+            ->name('.countries.edit')
+            ->breadcrumbs(fn (Trail $trail, $countryId) => $trail
+                ->parent('platform.settings.countries.index')
+                ->push(__('Редактирование страны'), route('platform.settings.countries.edit', $countryId)));
+
+        // Города
+        Route::screen('cities', LibCityScreen::class)
+            ->name('.cities.index')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.index')
+                ->push(__('Города'), route('platform.settings.cities.index')));
+
+        Route::screen('cities/create', LibCityCreateScreen::class)
+            ->name('.cities.create')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.cities.index')
+                ->push(__('Создание нового города'), route('platform.settings.cities.create')));
+
+        Route::screen('cities/{cityId}/edit', LibCityCreateScreen::class)
+            ->name('.cities.edit')
+            ->breadcrumbs(fn (Trail $trail, $cityId) => $trail
+                ->parent('platform.settings.cities.index')
+                ->push(__('Редактирование города'), route('platform.settings.cities.edit', $cityId)));
+
+        // Валюты
+        Route::screen('currencies', LibCurrencyScreen::class)
+            ->name('.currencies.index')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.index')
+                ->push(__('Валюта'), route('platform.settings.currencies.index')));
+
+        Route::screen('currencies/create', LibCurrencyCreateScreen::class)
+            ->name('.currencies.create')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.currencies.index')
+                ->push(__('Создание новой валюты'), route('platform.settings.currencies.create')));
+
+        Route::screen('currencies/{curId}/edit', LibCurrencyCreateScreen::class)
+            ->name('.currencies.edit')
+            ->breadcrumbs(fn (Trail $trail, $langId) => $trail
+                ->parent('platform.settings.currencies.index')
+                ->push(__('Редактирование валюты'), route('platform.settings.currencies.edit', $langId)));
+
+        // Языки
+        Route::screen('languages', LibLanguageScreen::class)
+            ->name('.languages.index')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.index')
+                ->push(__('Языки'), route('platform.settings.languages.index')));
+
+        Route::screen('languages/create', LibLanguageCreateScreen::class)
+            ->name('.languages.create')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.languages.index')
+                ->push(__('Создание новой единицы веса'), route('platform.settings.languages.create')));
+
+        Route::screen('languages/{langId}/edit', LibLanguageCreateScreen::class)
+            ->name('.languages.edit')
+            ->breadcrumbs(fn (Trail $trail, $langId) => $trail
+                ->parent('platform.settings.languages.index')
+                ->push(__('Редактирование единицы веса'), route('platform.settings.languages.edit', $langId)));
+
+        // Единицы размера
+        Route::screen('weight', LibWeightScreen::class)
+            ->name('.weight.index')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.index')
+                ->push(__('Веса'), route('platform.settings.weight.index')));
+
+        Route::screen('weight/create', LibWeightCreateScreen::class)
+            ->name('.weight.create')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.weight.index')
+                ->push(__('Создание новой единицы веса'), route('platform.settings.weight.create')));
+
+        Route::screen('weight/{whId}/edit', LibWeightCreateScreen::class)
+            ->name('.weight.edit')
+            ->breadcrumbs(fn (Trail $trail, $whId) => $trail
+                ->parent('platform.settings.weight.index')
+                ->push(__('Редактирование единицы веса'), route('platform.settings.weight.edit', $whId)));
+
+        // Единицы размера
+        Route::screen('length', LibLengthScreen::class)
+            ->name('.length.index')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.index')
+                ->push(__('Размеры'), route('platform.settings.length.index')));
+
+        Route::screen('length/create', LibLengthCreateScreen::class)
+            ->name('.length.create')
+            ->breadcrumbs(fn (Trail $trail) => $trail
+                ->parent('platform.settings.length.index')
+                ->push(__('Создание новой единицы измерения'), route('platform.settings.length.create')));
+
+        Route::screen('length/{libId}/edit', LibLengthCreateScreen::class)
+            ->name('.length.edit')
+            ->breadcrumbs(fn (Trail $trail, $lenId) => $trail
+                ->parent('platform.settings.length.index')
+                ->push(__('Редактирование единицы измерения'), route('platform.settings.length.edit', $lenId)));
+
+    });
+
+
+
+
 
 // Platform > Profile
 Route::screen('profile', UserProfileScreen::class)
