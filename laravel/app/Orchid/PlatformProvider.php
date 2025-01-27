@@ -39,6 +39,12 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.bank2')
                 ->route(config('platform.index')),
 
+            // Терминал
+            Menu::make(__('Терминал'))
+                ->icon('bs.tablet')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
+                ->route('platform.terminal.main'),
+
             Menu::make(__('Приемка товара'))
                 ->icon('bs.building-add')
                 ->route('platform.acceptances.index'),
@@ -46,6 +52,10 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make(__('Список товаров'))
                 ->icon('bs.stack')
                 ->route('platform.offers.index'),
+
+            Menu::make(__('Заказы'))
+                ->icon('bs.stack')
+                ->route('platform.orders.index'),
 
             Menu::make(__('Бибилотеки'))
                 ->icon('bs.list-check')
@@ -81,6 +91,20 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make(__('Склады'))
                         ->icon('bs.buildings')
                         ->route('platform.warehouses.index'),
+                ]),
+
+            // ************************
+            // *    Службы доставки      *
+            // ************************
+
+            Menu::make(__('Доставка заказов'))
+                ->icon('bs.truck-front-fill')
+                ->list([
+
+                    Menu::make(__('Службы доставки'))
+                        ->icon('bs.truck')
+                        ->route('platform.delivery-services.list'),
+
                 ]),
 
             // ************************

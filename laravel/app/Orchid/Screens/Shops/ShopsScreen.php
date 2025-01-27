@@ -20,8 +20,8 @@ class ShopsScreen extends Screen
 
         $currentUser = Auth::user();
 
-        $dbShopsList = new rwShop();
-        $dbShopsList = $dbShopsList->with('getOwner');
+        $dbShopsList = rwShop::where('sh_domain_id', $currentUser->domain_id)
+            ->with('getOwner');
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 

@@ -15,6 +15,13 @@ class rwShop extends Model
 
     use AsSource, Filterable, Attachable, HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'sh_id',
+        'sh_domain_id',
+        'sh_user_id',
+        'sh_name',
+    ];
+
     public static function perPage(): int
     {
         return 50;

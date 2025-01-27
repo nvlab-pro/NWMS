@@ -4,8 +4,11 @@
          role="dialog"
          aria-labelledby="screen-modal-{{$key}}"
          data-controller="modal"
-         data-modal-slug-value="{{$templateSlug}}"
-         data-modal-url-value="{{$deferredRoute}}"
+         data-modal-slug-value="{{ $templateSlug }}"
+         data-modal-url-value="{{ $deferredRoute }}"
+         @if(!empty($deferrerParams))
+            data-modal-parameters-value='@json($deferrerParams)'
+         @endif
          data-modal-open-value="{{ var_export($open) }}"
         {{$staticBackdrop ? "data-bs-backdrop=static" : ''}}
     >
@@ -53,8 +56,8 @@
                         <span class="placeholder col-4 rounded-1"></span>
                     </p>
                 </div>
-                <div class="modal-header">
-                    <h4 class="modal-title text-black fw-light" data-modal-target="title">{{$title}}</h4>
+                <div class="modal-header align-items-baseline gap-3">
+                    <h4 class="modal-title text-body-emphasis fw-light text-balance text-break" data-modal-target="title">{{$title}}</h4>
                     <button type="button" class="btn-close" title="Close" data-bs-dismiss="modal"
                             aria-label="Close">
                     </button>
@@ -62,7 +65,7 @@
                 <div class="modal-body layout-wrapper">
                     <x-orchid-stream target="{{$templateSlug}}">
                         <div id="{{ $templateSlug }}">
-                            @if(!empty($deferredRoute) == \Orchid\Support\Facades\Dashboard::isPartialRequest())
+                            @if(!empty($deferrerParams) == \Orchid\Support\Facades\Dashboard::isPartialRequest())
                                 @foreach($manyForms as $formKey => $modal)
                                     @foreach($modal as $item)
                                         {!! $item ?? '' !!}

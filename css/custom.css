@@ -1,0 +1,180 @@
+.command-bar-wrapper {
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    bottom: 0;
+    left: 0;
+    position: sticky;
+    right: 0;
+    z-index: 5;
+    top: 0;
+}
+
+.workspace-limit {
+    max-width: 100%;
+    overscroll-behavior-y: none;
+    /* max-width: 100%; */
+}
+
+.scrollable-window {
+    width: 90%; /* Занимает всю ширину родителя */
+    max-width: 90vw; /* Максимальная ширина не больше ширины экрана */
+    border-radius: 8px; /* Скругленные углы */
+    overflow-y: hidden; /* Вертикальная прокрутка */
+    overflow-x: auto; /* Горизонтальная прокрутка */
+    padding: 5px; /* Внутренний отступ */
+    box-sizing: border-box; /* Включает padding в ширину */
+}
+
+@media (min-width: 1200px) {
+    .col-xl-9 {
+        width: 77%;
+    }
+    .scrollable-window {
+        width: 90%; /* Занимает всю ширину родителя */
+        max-width: 90vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+@media (min-width: 1250px) {
+    .col-xl-9 {
+        width: 78%;
+    }
+    .scrollable-window {
+        width: 85%; /* Занимает всю ширину родителя */
+        max-width: 85vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+@media (min-width: 1300px) {
+    .col-xl-9 {
+        width: 79%;
+    }
+    .scrollable-window {
+        width: 85%; /* Занимает всю ширину родителя */
+        max-width: 85vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+@media (min-width: 1340px) {
+    .col-xl-9 {
+        width: 80%;
+    }
+    .scrollable-window {
+        width: 85%; /* Занимает всю ширину родителя */
+        max-width: 85vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1370px;
+    }
+    .scrollable-window {
+        width: 85%; /* Занимает всю ширину родителя */
+        max-width: 85vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+@media (min-width: 1600px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1570px
+    }
+    .scrollable-window {
+        width: 90%; /* Занимает всю ширину родителя */
+        max-width: 90vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+@media (min-width: 1900px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1870px
+    }
+    .scrollable-window {
+        width: 90%; /* Занимает всю ширину родителя */
+    }
+}
+
+@media (min-width: 2000px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1970px
+    }
+    .scrollable-window {
+        width: 100%; /* Занимает всю ширину родителя */
+        max-width: 100vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+@media (min-width: 2560px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 2530px
+    }
+    .scrollable-window {
+        width: 100%; /* Занимает всю ширину родителя */
+        max-width: 100vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+@media screen and (min-width: 3840px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        width: 3810px;
+    }
+    .scrollable-window {
+        width: 100%; /* Занимает всю ширину родителя */
+        max-width: 100vw; /* Максимальная ширина не больше ширины экрана */
+    }
+}
+
+
+.cropper-preview, .picture-preview {
+    max-height: 150px;
+    max-width: 150px;
+}
+
+.bootstrap-tagsinput, .chosen-choices, .chosen-single, .form-control, .form-range, .select2-container--bootstrap .select2-search--dropdown .select2-search__field {
+    max-width: 900px;
+}
+
+.select2.select2-container.select2-container--bootstrap.select2-container--below {
+    max-width: 755px;
+    min-width: 10em;
+}
+
+.form-control, body {
+    font-size: 0.875rem;
+}
+
+.ts-wrapper.single.dropdown-active .ts-control:after {
+    border-color: transparent transparent #343a40;
+    border-width: 0 5px 5px;
+    margin-top: -4px;
+}
+
+.ts-wrapper.single .ts-control:after {
+    border-color: #343a40 transparent transparent;
+    border-style: solid;
+    border-width: 5px 5px 0;
+    content: " ";
+    display: block;
+    height: 0;
+    margin-top: -3px;
+    position: absolute;
+    right: calc(.75rem + 5px);
+    top: 50%;
+    width: 0;
+}
+
+tr.highlight {
+    color: #dc3545 !important;
+    background: var(--bs-gray-400);
+    font-weight: 600;
+}
+
+table.matrix {
+    overflow: auto;
+}
+
+.matrix .bootstrap-tagsinput, .matrix .chosen-choices, .matrix .chosen-single, .matrix .form-control, .matrix .select2-selection--single {
+    border: none !important;
+    font-weight: 400;
+    height: auto !important;
+}

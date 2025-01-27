@@ -6,12 +6,17 @@ namespace Orchid\Platform\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Traits\Conditionable;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\Events\InstallEvent;
 use Orchid\Platform\Providers\ConsoleServiceProvider;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'orchid:install')]
 class InstallCommand extends Command
 {
+    use Conditionable;
+
     /**
      * The console command signature.
      *
@@ -50,6 +55,9 @@ class InstallCommand extends Command
             ->executeCommand('storage:link')
             ->changeUserModel()
             ->setValueEnv('SCOUT_DRIVER')
+            ->when(class_exists(\App\Models\User::class), function () {
+                $this->replaceInFiles(app_path(), 'use Orchid\\Platform\\Models\\User;', 'use App\\Models\\User;');
+            })
             ->showMeLove();
 
         $this->info('Completed!');
@@ -144,6 +152,48 @@ class InstallCommand extends Command
         };
 
         $this->line('Thank you! It means a lot to us! 🙏');
+
+        return $this;
+    }
+
+    /**
+     * @param string $directory
+     * @param string $search
+     * @param string $replace
+     *
+     * @return void
+     */
+    private function replaceInFiles(string $directory, string $search, string $replace): self
+    {
+        if (! is_dir($directory)) {
+            return $this;
+        }
+
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory)
+        );
+
+        // Iterate through all files in the directory
+        foreach ($files as $file) {
+            // Skip if not a .php file
+            if ($file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $filePath = $file->getRealPath();
+            $fileContents = file_get_contents($filePath);
+
+            // Skip if the file does not contain the old namespace
+            if (! str_contains($fileContents, $search)) {
+                continue;
+            }
+
+            // Replace the old namespace with the new one
+            $updatedContents = str_replace($search, $replace, $fileContents);
+
+            // Save the changes
+            file_put_contents($filePath, $updatedContents);
+        }
 
         return $this;
     }

@@ -15,23 +15,7 @@ class ReplicateFileEvent
     use SerializesModels;
 
     /**
-     * @var Attachment
-     */
-    public $attachment;
-
-    /**
-     * The timestamp when the event occurred.
-     *
-     * @var int
-     */
-    public $time;
-
-    /**
      * ReplicateFileEvent constructor.
      */
-    public function __construct(Attachment $attachment, int $time)
-    {
-        $this->attachment = $attachment;
-        $this->time = $time;
-    }
+    public function __construct(public Attachment $attachment, public int $time) {}
 }

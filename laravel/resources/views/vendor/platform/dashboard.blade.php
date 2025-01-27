@@ -1,7 +1,7 @@
 @extends(config('platform.workspace', 'platform::workspace.compact'))
 
 @section('aside')
-    <div class="aside col-xs-12 col-xxl-2 bg-dark d-flex flex-column me-auto" data-controller="menu">
+    <div class="aside col-xs-12 col-xxl-2 bg-dark d-flex flex-column" data-controller="menu">
         <header class="d-xl-block p-3 mt-xl-4 w-100 d-flex align-items-center">
             <a href="#" class="header-toggler d-xl-none me-auto order-first d-flex align-items-center lh-1"
                data-action="click->menu#toggle">
@@ -20,7 +20,7 @@
             @include('platform::partials.search')
 
             <ul class="nav flex-column mb-md-1 mb-auto ps-0">
-                {!! Dashboard::renderMenu(\Orchid\Platform\Dashboard::MENU_MAIN) !!}
+                {!! Dashboard::renderMenu() !!}
             </ul>
 
             <div class="h-100 w-100 position-relative to-top cursor d-none d-md-flex mt-md-5"
@@ -40,22 +40,13 @@
                 <div class="bg-dark position-relative overflow-hidden" style="padding-bottom: 10px;">
                     @includeWhen(Auth::check(), 'platform::partials.profile')
                 </div>
-
-
-                {{--
-                <div class="mt-3">
-                    @includeFirst([config('platform.template.footer'), 'platform::footer'])
-                </div>
-
-                --}}
-
             </footer>
         </nav>
     </div>
 @endsection
 
 @section('workspace')
-    @if(Breadcrumbs::has())
+@if(Breadcrumbs::has())
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb px-4 mb-2">
                 <x-tabuna-breadcrumbs
@@ -69,11 +60,11 @@
     <div class="order-last order-md-0 command-bar-wrapper">
         <div class="@hasSection('navbar') @else d-none d-md-block @endif layout d-md-flex align-items-center">
             <header class="d-none d-md-block col-xs-12 col-md p-0 me-3">
-                <h1 class="m-0 fw-light h3 text-black">@yield('title')</h1>
+                <h1 class="m-0 fw-light h3 text-body-emphasis">@yield('title')</h1>
                 <small class="text-muted" title="@yield('description')">@yield('description')</small>
             </header>
             <nav class="col-xs-12 col-md-auto ms-md-auto p-0">
-                <ul class="nav command-bar justify-content-sm-end justify-content-start d-flex align-items-center">
+                <ul class="nav command-bar justify-content-sm-end justify-content-start d-flex align-items-center gap-2 flex-wrap-reverse flex-sm-nowrap">
                     @yield('navbar')
                 </ul>
             </nav>

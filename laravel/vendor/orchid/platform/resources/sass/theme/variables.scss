@@ -28,7 +28,7 @@ $body-bg: #edeef0; //lighten($light, 1%);
 $text-color: #394247;
 $text-muted: lighten($text-color, 20%);
 
-$font-size-root:              .925rem;
+$font-size-root:              .95rem;
 $font-size-base:              1rem;
 $font-size-sm:                $font-size-base * .875;
 $font-size-lg:                $font-size-base * 1.25;
@@ -84,8 +84,8 @@ $table-group-separator-color: lighten($border-color, 2%);
 $table-striped-color: lighten($dark, 4.5%);
 $table-hover-bg: rgba($dark, .045) !default;
 
-$app-aside-min-width: 20em;
-$app-aside-width: 280px;
+$app-aside-width: 20em;
+$app-aside-max-width: 280px;
 $aside-wrap-main-width: 0px;
 $app-aside-nav-height: 40px; //2,857rem;
 $app-aside-folded-width: 60px;
@@ -125,6 +125,7 @@ $screen-lg-min: 1024px;
 
 //Bootstrap
 $enable-caret: false;
+$enable-cssgrid: true;
 
 //Border
 $border-radius: .5rem;

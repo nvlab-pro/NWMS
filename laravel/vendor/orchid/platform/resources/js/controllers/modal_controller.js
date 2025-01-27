@@ -12,6 +12,9 @@ export default class extends ApplicationController {
             type: String,
             default: ''
         },
+        parameters: {
+            type: Object,
+        },
         open: {
             type: Boolean,
             default: false
@@ -112,8 +115,8 @@ export default class extends ApplicationController {
         }
 
         // Load deferred data if URL is specified and no validation errors are present
-        if (this.urlValue && !options.validateError) {
-            this.asyncLoadData(JSON.parse(options.params));
+        if (Object.keys(this.parametersValue).length !== 0 && !options.validateError) {
+            this.asyncLoadData(options.params);
         }
 
         // Store the last open modal options
@@ -127,12 +130,12 @@ export default class extends ApplicationController {
      * Open the last modal if validation errors are present.
      */
     openLastModal() {
-        const lastOpenModal = this.getLastOpenModal();
-
         // If no validation errors are present, do nothing
         if (this.element.querySelectorAll('.invalid-feedback').length === 0) {
             return;
         }
+
+        const lastOpenModal = this.lastOpenModal();
 
         // Reopen the last modal if it matches the current slug
         if (lastOpenModal && lastOpenModal.slug === this.slugValue) {
@@ -153,7 +156,8 @@ export default class extends ApplicationController {
 
         // Load data via stream and update modal state
         this.loadStream(`${this.urlValue}?${query}`, {
-            '_state': document.getElementById('screen-state')?.value || null
+            '_state': document.getElementById('screen-state')?.value || null,
+            ...this.parametersValue
         })
             .then(() => this.element.classList.remove('modal-loading'));
     }
@@ -163,21 +167,21 @@ export default class extends ApplicationController {
      * @param options - Modal options to store.
      */
     storeLastOpenModal(options) {
-        sessionStorage.setItem(this.SESSION_KEY_FOR_LAST_OPEN_MODAL, JSON.stringify(options));
+        window.sessionStorage.setItem(this.constructor.SESSION_KEY_FOR_LAST_OPEN_MODAL, JSON.stringify(options));
     }
 
     /**
      * Retrieve the last opened modal options from session storage.
      * @returns {Object|false} - The last opened modal options or false if not found.
      */
-    getLastOpenModal() {
-        return JSON.parse(sessionStorage.getItem(this.SESSION_KEY_FOR_LAST_OPEN_MODAL)) ?? false;
+    lastOpenModal() {
+        return JSON.parse(sessionStorage.getItem(this.constructor.SESSION_KEY_FOR_LAST_OPEN_MODAL)) ?? false;
     }
 
     /**
      * Clear the last opened modal options from session storage.
      */
     clearLastOpenModal() {
-        sessionStorage.removeItem(this.SESSION_KEY_FOR_LAST_OPEN_MODAL);
+        sessionStorage.removeItem(this.constructor.SESSION_KEY_FOR_LAST_OPEN_MODAL);
     }
 }

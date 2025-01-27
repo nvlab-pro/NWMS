@@ -2,11 +2,11 @@
 
 @section('title', (string) __($name))
 @section('description', (string) __($description))
-@section('controller', $controller)
+@section('controller', 'base')
 
 @section('navbar')
     @foreach($commandBar as $command)
-        <li>
+        <li class="{{ !$loop->first ? 'ms-2' : ''}}">
             {!! $command !!}
         </li>
     @endforeach

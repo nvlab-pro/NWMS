@@ -53,7 +53,8 @@
 
 <div class="container-fluid" data-controller="@yield('controller')" @yield('controller-data')>
 
-    <div class="row justify-content-center d-md-flex h-100">
+    <div class="row justify-content-center d-md-flex h-100" >
+
         @yield('aside')
 
         <div class="col-xxl col-xl-9 col-12">
@@ -61,12 +62,10 @@
         </div>
     </div>
 
-
     @include('platform::partials.toast')
 </div>
 
 @stack('scripts')
-
 
 </body>
 </html>

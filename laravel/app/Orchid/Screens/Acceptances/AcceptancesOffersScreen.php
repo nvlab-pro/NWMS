@@ -2,15 +2,13 @@
 
 namespace App\Orchid\Screens\Acceptances;
 
-use App\Models\MistralLocations;
 use App\Models\rwAcceptance;
 use App\Models\rwAcceptanceOffer;
+use App\Models\rwBarcode;
 use App\Models\rwOffer;
-use App\Models\rwWarehouse;
 use App\Orchid\Layouts\Acceptances\AcceptancesOffersTable;
-use App\Orchid\Layouts\Acceptances\AcceptancesTable;
+use App\Orchid\Services\DocumentService;
 use Illuminate\Support\Facades\Auth;
-use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Screen;
@@ -20,11 +18,12 @@ use Illuminate\Http\Request;
 use Orchid\Support\Facades\Toast;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Support\Facades\Alert;
+use App\WhCore\WhCore;
 
 class AcceptancesOffersScreen extends Screen
 {
 
-    public $acceptId;
+    protected $acceptId, $shopId, $whId, $whName, $docStatus;
 
     public function query($acceptId): iterable
     {
@@ -32,22 +31,20 @@ class AcceptancesOffersScreen extends Screen
 
         $currentUser = Auth::user();
 
-        $dbAcceptOffersList = rwAcceptanceOffer::where('ao_acceptance_id', $this->acceptId)->orderBy('ao_id', 'DESC');
+        $dbCurrentAcceptance = rwAcceptance::where('acc_id', $this->acceptId)->with('getWarehouse')->first();
+        $this->shopId = $dbCurrentAcceptance->acc_shop_id;
+        $this->whId = $dbCurrentAcceptance->acc_wh_id;
+        $this->whName = $dbCurrentAcceptance->getWarehouse->wh_name;
+        $this->docStatus = $dbCurrentAcceptance->acc_status;
 
-        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
-
-
-        } else {
-
-//            $dbWhList = $dbAcceptList->where('wh_user_id', $currentUser->id);
-
-        }
-
-        $dbAcceptOffersList = $dbAcceptOffersList->with('getOffers');
+        $currentDocument = new DocumentService($this->whId);
+        $collection = $currentDocument->getAcceptanceList($this->acceptId);
 
         return [
-            'acceptId' => $this->acceptId,
-            'dbAcceptOffersList' => $dbAcceptOffersList->paginate(50),
+            'acceptId'              => $this->acceptId,
+            'whId'                  => $this->whId,
+            'shopId'                => $this->shopId,
+            'dbAcceptOffersList'    => $collection,
         ];
     }
 
@@ -58,7 +55,7 @@ class AcceptancesOffersScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Приемка № ' . $this->acceptId;
+        return __('Приемка № ') . $this->acceptId . ' (' . $this->whName . ')';
     }
 
     /**
@@ -68,12 +65,73 @@ class AcceptancesOffersScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [
-            ModalToggle::make(__(' Добавить товар в накладную'))
-                ->icon('bs.plus-circle')
-                ->modal('addOfferModal') // Имя модального окна
-                ->method('addOffer'), // Класс для стилизации (по желанию)
-        ];
+        $arLinksList = [];
+        $arLinksList2 = [];
+        $arLinksList3 = [];
+
+        $currentUser = Auth::user();
+
+        // Статус 1 (NEW)
+        if ($this->docStatus == 1) {
+
+            if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
+
+                $arLinksList2 = [
+
+                    Button::make(__('Начать приемку'))
+                        ->class('btn btn-info')
+                        ->method('startAccepting') // Метод, вызываемый на сервере
+                        ->parameters([
+                            'acceptId' => $this->acceptId,
+                            '_token' => csrf_token() // Добавляем CSRF-токен вручную
+                        ])
+                        ->confirm(__('Вы уверены, что хотите начать приемку?')),
+                ];
+
+            } else {
+
+
+            }
+
+            $arLinksList = [
+                ModalToggle::make(__(' Добавить товар'))
+                    ->icon('bs.plus-circle')
+                    ->modal('addOfferModal') // Имя модального окна
+                    ->method('addOffer'), // Класс для стилизации (по желанию)
+
+//                Button::make(__('Закрыть накладную'))
+//                    ->icon('bs.lock')
+//                    ->method('closeDocument') // Метод, вызываемый на сервере
+//                    ->parameters([
+//                        '_token' => csrf_token(), // Добавляем CSRF-токен вручную
+//                    ])
+//                    ->confirm(__('Вы уверены, что хотите закрыть накладную?')),
+            ];
+
+            $arLinksList3 = [
+                Button::make('NEW')
+                    ->class('btn btn-danger')
+                    ->disabled(true),
+
+            ];
+
+        }
+
+        // Статус 2 (Приемка)
+        if ($this->docStatus == 2) {
+
+            $arLinksList3 = [
+                Button::make('Приемка')
+                    ->class('btn')
+                    ->style('background-color: #128497; color: white;')
+                    ->disabled(true),
+
+            ];
+
+        }
+
+        return array_merge($arLinksList, $arLinksList2, $arLinksList3);
+
     }
 
     /**
@@ -86,12 +144,23 @@ class AcceptancesOffersScreen extends Screen
         return [
             Layout::modal('addOfferModal', [
                 Layout::rows([
+                    Input::make('offer.acceptId')
+                        ->value($this->acceptId)
+                        ->type('hidden'),
+
+                    Input::make('offer.whId')
+                        ->value($this->whId)
+                        ->type('hidden'),
+
+                    Input::make('offer.shopId')
+                        ->value($this->shopId)
+                        ->type('hidden'),
 
                     Select::make('offer.of_id')
                         ->title(__('Выберите добавляемый товар:'))
                         ->width('100px')
                         ->options(
-                            rwOffer::where('of_shop_id', $this->acceptId)
+                            rwOffer::where('of_shop_id', $this->shopId)
                                 ->whereNotIn('of_id', function ($query) {
                                     $query->select('ao_offer_id')
                                         ->from('rw_acceptance_offers')
@@ -99,10 +168,10 @@ class AcceptancesOffersScreen extends Screen
                                 })
                                 ->get()
                                 ->mapWithKeys(function ($offer) {
-                                    return [$offer->of_id => $offer->getShop->sh_name . ': ' . $offer->of_name . ' (' . $offer->of_article . ')'];
+                                    return [$offer->of_id => $offer->of_name . ' (' . $offer->of_article . ')'];
                                 })->toArray()
                         )
-                        ->empty('Не выбрано', 0),
+                        ->empty('', 0),
 
                 ]),
             ])
@@ -131,11 +200,27 @@ class AcceptancesOffersScreen extends Screen
             ])->async('asyncGetOfferDimensions'), // Метод для загрузки данных
 
             AcceptancesOffersTable::class,
+
             Layout::rows([
+                Input::make('acceptId')
+                    ->type('hidden')
+                    ->value($this->acceptId),
+
+                Input::make('whId')
+                    ->type('hidden')
+                    ->value($this->whId),
+
+                Input::make('shopId')
+                    ->type('hidden')
+                    ->value($this->shopId),
+
                 // Ваша форма и таблицы
                 Button::make('Сохранить изменения')
                     ->class('btn btn-primary d-block mx-auto')
-                    ->method('saveChanges'), // Указывает метод экрана для вызова
+                    ->method('saveChanges') // Указывает метод экрана для вызова
+                    ->parameters([
+                        '_token' => csrf_token(), // Добавляем CSRF-токен вручную
+                    ]),
             ]),
             Layout::view('acceptances.AcceptanceOffersFormFooter'),
         ];
@@ -143,24 +228,80 @@ class AcceptancesOffersScreen extends Screen
 
     public function saveChanges(Request $request)
     {
-        $data = $request->all(); // Получаем все данные формы
 
-        /*
-                foreach ($data['docOfferExpDate'] as $id => $expirationDate) {
-                    $offer = rwAcceptanceOffer::find($id);
-                    if ($offer) {
-                        $offer->ao_expiration_date = $expirationDate;
-                        $offer->ao_barcode = $data['docOfferBarcode'][$id] ?? null;
-                        $offer->ao_expected = $data['docOfferExept'][$id] ?? null;
-                        $offer->ao_accepted = $data['docOfferAccept'][$id] ?? null;
-                        $offer->ao_price = $data['docOfferPrice'][$id] ?? null;
+        $validatedData = $request->validate([
+            'docOfferExpDate.*' => 'nullable|date', // Каждая дата должна быть обязательной и формата даты
+            'docOfferBarcode.*' => 'nullable|string|max:30', // Штрих-код может быть пустым, но если указан, то это строка
+            'docOfferBatch.*' => 'nullable|string|max:15',
+            'docOfferExept.*' => 'nullable|numeric|min:0', // Ожидаемое количество должно быть числом >= 0
+            'docOfferAccept.*' => 'nullable|numeric|min:0', // Принятое количество должно быть числом >= 0
+            'docOfferPrice.*' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'docOfferId.*' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'docOfferPlaced.*' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'acceptId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'shopId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'whId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+        ]);
 
-                        $offer->save();
+        $currentWarehouse = new WhCore($validatedData['whId']);
+
+        $countExpected = $countAccepted = $countPlaced = 0;
+
+        foreach ($validatedData['docOfferExpDate'] as $id => $expirationDate) {
+
+            $offer = rwAcceptanceOffer::find($id);
+
+            if ($offer && ($validatedData['docOfferPlaced'][$id] == 0 || $validatedData['docOfferPlaced'][$id] === null)) {
+
+                $offer->ao_expected = $validatedData['docOfferExept'][$id] ?? 0;
+                $offer->save();
+
+                $status = 0;
+
+                $currentWarehouse->saveOffers(
+                    $validatedData['acceptId'],
+                    1,                                  // Приемка (таблица rw_lib_type_doc)
+                    $id,                                        // ID офера в документе
+                    $validatedData['docOfferId'][$id],          // оригинальный ID товара
+                    $status,
+                    $validatedData['docOfferAccept'][$id],
+                    $validatedData['docOfferBarcode'][$id],
+                    $validatedData['docOfferPrice'][$id],
+                    $expirationDate,
+                    $validatedData['docOfferBatch'][$id]
+                );
+
+                $countExpected += $offer->ao_expected;
+                $countAccepted += $validatedData['docOfferAccept'][$id];
+
+                if ($validatedData['docOfferBarcode'][$id] != '') {
+
+                    $currentBarcode = rwBarcode::where('br_offer_id', $validatedData['docOfferId'][$id])
+                        ->where('br_barcode', $validatedData['docOfferBarcode'][$id])
+                        ->first();
+
+                    if (!isset($currentBarcode->br_id)) {
+                        rwBarcode::query()->insert([
+                            'br_offer_id' => $validatedData['docOfferId'][$id],
+                            'br_shop_id' => $validatedData['shopId'],
+                            'br_barcode' => $validatedData['docOfferBarcode'][$id],
+                        ]);
                     }
                 }
-        */
 
-        Toast::info('Данные успешно сохранены');
+
+            }
+        }
+
+        $countPlaced = $currentWarehouse->getCountOfPlacedFromDocument($validatedData['acceptId'], 1);
+
+        rwAcceptance::where('acc_id', $validatedData['acceptId'])->update([
+            'acc_count_expected'     => $countExpected,
+            'acc_count_accepted'     => $countAccepted,
+            'acc_count_placed'       => $countPlaced,
+        ]);
+
+        Alert::success('Данные успешно сохранены');
     }
 
     public function deleteOffer(Request $request)
@@ -169,7 +310,11 @@ class AcceptancesOffersScreen extends Screen
 
         rwAcceptanceOffer::where('ao_id', $data['offerId'])->forceDelete();
 
-        Toast::success('Данные успешно удалены');
+        $currentWarehouse = new WhCore($data['whId']);
+
+        $currentWarehouse->deleteItem($data['offerId'], 1);
+
+        Toast::error('Данные успешно удалены!');
     }
 
     public function asyncGetOfferDimensions(int $offerId): array
@@ -206,24 +351,66 @@ class AcceptancesOffersScreen extends Screen
         Toast::info('Размеры успешно обновлены.');
     }
 
+    public function startAccepting($acceptId)
+    {
+
+        $dbAcceptance = rwAcceptance::where('acc_id', $acceptId)->first();
+
+        if ($dbAcceptance->acc_status == 1) {
+
+            rwAcceptance::where('acc_id', $acceptId)->update([
+                'acc_status' => 2,
+            ]);
+
+            Alert::info(__('Приемка началась!'));
+
+        } else {
+
+            Alert::error(__('Текущий статус накладной не позволяет перевод документа в статус приемки!'));
+
+        }
+
+
+    }
+
     public function addOffer(Request $request)
     {
         $validated = $request->validate([
             'offer.of_id' => 'required|integer|min:1',
+            'offer.acceptId' => 'required|integer|min:1',
+            'offer.whId' => 'required|integer|min:1',
         ]);
 
-        $dbOffersList = rwAcceptanceOffer::where('ao_acceptance_id', $this->acceptId)
+        $dbOffersList = rwAcceptanceOffer::where('ao_acceptance_id', $validated['offer']['acceptId'])
             ->where('ao_offer_id', $validated['offer']['of_id'])
             ->first();
 
         if (!isset($dbOffersList->ao_id)) {
 
-            rwAcceptanceOffer::insert([
-                'ao_acceptance_id' => $this->acceptId,
+            $dbAccptence = rwAcceptanceOffer::create([
+                'ao_acceptance_id' => $validated['offer']['acceptId'],
                 'ao_offer_id' => $validated['offer']['of_id'],
             ]);
 
             Alert::success(__('Товар добавлен в накладную'));
+
+            $currentWarehouse = new WhCore($validated['offer']['whId']);
+
+            $barcode = '';
+
+            $currentWarehouse->saveOffers(
+                $validated['offer']['acceptId'],
+                1,                       // Приемка (таблица rw_lib_type_doc)
+                $dbAccptence->ao_id,                                // ID офера в документе
+                $validated['offer']['of_id'],                                // оригинальный ID товара
+                0,
+                0,
+                $barcode,
+                0,
+                NULL,
+                NULL,
+            );
+
 
         } else {
 
@@ -232,4 +419,13 @@ class AcceptancesOffersScreen extends Screen
         }
 
     }
+
+    public function closeDocument()
+    {
+
+        dump('CSRF Token:', request()->header('X-CSRF-TOKEN'));
+        dump('Session Token:', session()->token());
+        dump('OK!');
+    }
+
 }

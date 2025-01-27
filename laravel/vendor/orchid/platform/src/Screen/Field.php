@@ -148,7 +148,7 @@ class Field implements Fieldable, Htmlable
      *
      * @param mixed $value The value to be set for the 'value' attribute.
      */
-    public function value(mixed $value): self
+    public function value(mixed $value): static
     {
         return $this->set('value', $value);
     }
@@ -161,7 +161,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static Returns the current instance for method chaining.
      */
-    public function set(string $key, $value = true): self
+    public function set(string $key, $value = true): static
     {
         $this->attributes[$key] = $value;
 
@@ -175,7 +175,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static Returns the current instance for method chaining.
      */
-    protected function ensureRequiredAttributesArePresent(): self
+    protected function ensureRequiredAttributesArePresent(): static
     {
         collect($this->required)
             ->filter(fn ($attribute) => ! array_key_exists($attribute, $this->attributes))
@@ -223,7 +223,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static
      */
-    private function translateAttributes(): self
+    private function translateAttributes(): static
     {
         $lang = $this->get('lang');
 
@@ -281,7 +281,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static Returns the current instance for method chaining.
      */
-    public function generateId(): self
+    public function generateId(): static
     {
         if (! empty($this->get('id'))) {
             return $this;
@@ -339,7 +339,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static Returns the current instance for method chaining.
      */
-    private function markFieldWithError(): self
+    private function markFieldWithError(): static
     {
         if (! $this->hasError()) {
             return $this;
@@ -369,7 +369,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static Returns the current instance for method chaining.
      */
-    protected function customizeFieldName(): self
+    protected function customizeFieldName(): static
     {
         $name = $this->get('name');
         $prefix = $this->get('prefix');
@@ -398,7 +398,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static Returns the current instance for method chaining.
      */
-    protected function updateFieldValue(): self
+    protected function updateFieldValue(): static
     {
         $value = $this->getOldValue() ?? $this->get('value');
 
@@ -414,7 +414,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static
      */
-    public function vertical(): self
+    public function vertical(): static
     {
         $this->typeForm = 'platform::partials.fields.vertical';
 
@@ -426,7 +426,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static
      */
-    public function clear(): self
+    public function clear(): static
     {
         $this->typeForm = 'platform::partials.fields.clear';
 
@@ -438,7 +438,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static
      */
-    public function horizontal(): self
+    public function horizontal(): static
     {
         $this->typeForm = 'platform::partials.fields.horizontal';
 
@@ -450,7 +450,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return $this
      */
-    public function withoutFormType(): self
+    public function withoutFormType(): static
     {
         $this->typeForm = static fn (array $attributes) => $attributes['slot'];
 
@@ -462,7 +462,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static
      */
-    public function hr(): self
+    public function hr(): static
     {
         $this->set('hr');
 
@@ -476,7 +476,7 @@ class Field implements Fieldable, Htmlable
      *
      * @return static
      */
-    public function addBeforeRender(Closure $closure)
+    public function addBeforeRender(Closure $closure): static
     {
         $this->beforeRender[] = $closure;
 
@@ -489,7 +489,7 @@ class Field implements Fieldable, Htmlable
      * This method iterates over each closure added via addBeforeRender() method
      * and executes them in the context of the current field instance.
      */
-    public function runBeforeRender(): self
+    public function runBeforeRender(): static
     {
         foreach ($this->beforeRender as $before) {
             $before->call($this);
@@ -541,5 +541,22 @@ class Field implements Fieldable, Htmlable
     public function toHtml()
     {
         return $this->render()->toHtml();
+    }
+
+    /**
+     * Add a class to the field including the existing classes.
+     *
+     * @param string|array $classes
+     *
+     * @return static
+     */
+    public function addClass(string|array $classes): static
+    {
+        $currentClasses = array_filter(explode(' ', $this->get('class', '')));
+        $newClasses = is_array($classes) ? $classes : explode(' ', $classes);
+
+        $mergedClasses = array_unique(array_merge($currentClasses, $newClasses));
+
+        return $this->set('class', implode(' ', array_filter($mergedClasses)));
     }
 }

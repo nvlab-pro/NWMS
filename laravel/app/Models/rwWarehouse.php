@@ -8,12 +8,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Orchid\Attachment\Attachable;
 use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
 
-class rwWarehouse extends Model
+class rwWarehouse extends Model implements AuditableContract
 {
+    use AsSource, Filterable, Attachable, HasFactory, SoftDeletes, Auditable;
+
     protected $primaryKey = 'wh_id';
 
-    use AsSource, Filterable, Attachable, HasFactory, SoftDeletes;
+    // Другие разрешённые для массового присвоения атрибуты
+    protected $fillable = [
+        'wh_id',
+        'wh_user_id',
+        'wh_type',
+        'wh_parent_id',
+        'wh_name',
+        'wh_domain_id',
+    ];
 
     public static function perPage(): int
     {

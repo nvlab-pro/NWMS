@@ -11,7 +11,7 @@ class OffersMiddleware
     {
 
         $currentRule = true;
-        if ($offerId == 0) $currentRule = false;
+        if ($offerId == 0) return false;
 
         $arRoles = explode(',', $currentRole);
 

@@ -5,7 +5,6 @@ namespace App\Orchid\Screens\Warehouses;
 use App\Models\rwLibWhType;
 use App\Models\rwWarehouse;
 use App\Models\User;
-use App\Models\rwShop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
@@ -44,7 +43,7 @@ class WarehouseCreateScreen extends Screen
         }
 
         return [
-            'whList' => $dbWhList->first(),
+            'whList' => $dbWhList->where('wh_id', $this->whId)->first(),
         ];
     }
 
@@ -89,13 +88,18 @@ class WarehouseCreateScreen extends Screen
                 ->title(__('Выберите тип склада'));
 
             $arAddFields[] = Select::make('whList.wh_parent_id')
-                ->fromModel(rwWarehouse::where('wh_type', 1)->get(), 'wh_name', 'wh_id')
+                ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
+                ->empty('Не выбрано')
                 ->title(__('Выберите склад ФФ'));
 
         } else {
             $arAddFields[] = Input::make('whList.wh_user_id')
                 ->type('hidden')
                 ->value($currentUser->id);
+
+            $arAddFields[] = Input::make('whList.wh_type')
+                ->type('hidden')
+                ->value(2);
         }
 
         return [
@@ -123,34 +127,47 @@ class WarehouseCreateScreen extends Screen
 
     function saveShop(Request $request)
     {
+        $currentUser = Auth::user();
 
-        $request->validate([
-            'rwShop.sh_id' => 'nullable|integer',
-            'rwShop.sh_name' => 'required|string|max:150',
-            'rwShop.sh_user_id' => 'required|integer',
+        $data = $request->validate([
+            'whList.wh_id' => 'nullable|integer',
+            'whList.wh_name' => 'required|string|max:150',
+            'whList.wh_user_id' => 'required|integer',
+            'whList.wh_type' => 'required|integer',
+            'whList.wh_parent_id' => 'nullable|integer',
         ]);
 
-        if (isset($request->rwShop['sh_id']) && $request->rwShop['sh_id'] > 0) {
+        // Если тип склада равен 2, то родительский ID не требуется
+        if ($data['whList']['wh_type'] == 2) {
+            $data['whList']['wh_parent_id'] = null;
+        }
 
-            rwShop::where('sh_id', $request->rwShop['sh_id'])->update([
-                'sh_name' => $request->rwShop['sh_name'],
-                'sh_user_id' => $request->rwShop['sh_user_id'],
+        if (isset($data['whList']['wh_id']) && $data['whList']['wh_id'] > 0) {
+
+            // Обновление существующего склада
+            rwWarehouse::where('wh_id', $data['whList']['wh_id'])->update([
+                'wh_name' => $data['whList']['wh_name'],
+                'wh_user_id' => $data['whList']['wh_user_id'],
+                'wh_type' => $data['whList']['wh_type'],
+                'wh_parent_id' => $data['whList']['wh_parent_id'],
             ]);
 
-            Alert::success(__('Магазин успешно отредактирован!'));
-
+            Alert::success(__('Склад успешно отредактирован!'));
         } else {
 
-            rwShop::insert([
-                'sh_user_id' => $request->rwShop['sh_user_id'],
-                'sh_name' => $request->rwShop['sh_name'],
+            // Создание нового склада
+            $currentWarehouse = rwWarehouse::create([
+                'wh_name' => $data['whList']['wh_name'],
+                'wh_user_id' => $data['whList']['wh_user_id'],
+                'wh_type' => $data['whList']['wh_type'],
+                'wh_parent_id' => $data['whList']['wh_parent_id'],
+                'wh_domain_id' => $currentUser->domain_id,
             ]);
 
-            Alert::success(__('Магазин успешно создан!'));
-
+            Alert::success(__('Склад успешно создан!'));
         }
 
 
-        return redirect()->route('platform.shops.index');
+        return redirect()->route('platform.warehouses.index');
     }
 }

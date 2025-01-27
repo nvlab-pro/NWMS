@@ -13,6 +13,7 @@ export default class extends ApplicationController {
         },
         group: {
             type: String,
+            default: '',
         },
         storage: {
             type: String,
@@ -20,14 +21,15 @@ export default class extends ApplicationController {
         },
         path: {
             type: String,
+            default: '',
         },
         count: {
             type: Number,
-            default: 3,
+            default: 0,
         },
         size: {
             type: Number,
-            default: 10,
+            default: 0,
         },
         loading: {
             type: Number,
@@ -84,7 +86,7 @@ export default class extends ApplicationController {
         [...event.target.files].forEach((file) => {
             let sizeMB = file.size / 1000 / 1000; //MB (Not MiB)
 
-            if (sizeMB > this.sizeValue) {
+            if (this.sizeValue > 0 && sizeMB > this.sizeValue) {
                 this.toast(this.errorSizeValue.replace(':name', file.name));
                 //alert(this.errorSizeValue.replace(':name', file.name));
                 return;
@@ -122,7 +124,7 @@ export default class extends ApplicationController {
 
                 let limit = this.attachmentValue.length < this.countValue;
 
-                if (!limit) {
+                if (!limit && this.countValue > 0) {
                     return;
                 }
 
@@ -157,9 +159,10 @@ export default class extends ApplicationController {
      *
      */
     togglePlaceholderShow() {
-        this.containerTarget.classList.toggle('d-none', this.attachmentValue.length >= this.countValue);
-        this.filesTarget.disabled = this.attachmentValue.length >= this.countValue;
+        let toggle = this.attachmentValue.length >= this.countValue && this.countValue !== 0;
 
+        this.containerTarget.classList.toggle('d-none', toggle);
+        this.filesTarget.disabled = toggle;
 
         // Disable the nullable field if there is at least one valid value and the count equals 1.
         // If there are no values or if there are multiple values, the field will remain enabled and be sent to the server as `null`.

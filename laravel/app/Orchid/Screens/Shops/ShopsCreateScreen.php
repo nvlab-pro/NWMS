@@ -42,7 +42,7 @@ class ShopsCreateScreen extends Screen
         }
 
         return [
-            'rwShop' => $dbShopsList->first(),
+            'rwShop' => $dbShopsList->where('sh_id', $this->shopId)->first(),
         ];
     }
 
@@ -112,6 +112,7 @@ class ShopsCreateScreen extends Screen
 
     function saveShop(Request $request)
     {
+        $currentUser = Auth::user();
 
         $request->validate([
             'rwShop.sh_id' => 'nullable|integer',
@@ -133,6 +134,7 @@ class ShopsCreateScreen extends Screen
             rwShop::insert([
                 'sh_user_id' => $request->rwShop['sh_user_id'],
                 'sh_name' => $request->rwShop['sh_name'],
+                'sh_domain_id' => $currentUser->domain_id,
             ]);
 
             Alert::success(__('Магазин успешно создан!'));

@@ -69,7 +69,7 @@ class OffersCreateScreen extends Screen
     public function layout(): iterable
     {
         $currentUser = Auth::user();
-        $dbShopsList = new rwShop();
+        $dbShopsList = rwShop::where('sh_domain_id', $currentUser->domain_id);
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 
@@ -91,11 +91,9 @@ class OffersCreateScreen extends Screen
 
                         Group::make([
 
-                            Select::make('rwOffer.of_shop_id')
-                                ->title(__('Магазин'))
-                                ->width('100px')
-                                ->fromModel($dbShopsList->get(), 'sh_name', 'sh_id')
-                                ->disabled(OffersMiddleware::checkRule4SelectShop($this->offerId, 'admin,warehouse_manager')),
+                            Input::make('rwOffer.of_name')
+                                ->width(50)
+                                ->title(__('Название')),
 
                             Select::make('rwOffer.of_status')
                                 ->title(__('Статус'))
@@ -106,9 +104,11 @@ class OffersCreateScreen extends Screen
 
                         Group::make([
 
-                            Input::make('rwOffer.of_name')
-                                ->width(50)
-                                ->title(__('Название')),
+                            Select::make('rwOffer.of_shop_id')
+                                ->title(__('Магазин'))
+                                ->width('100px')
+                                ->fromModel($dbShopsList->get(), 'sh_name', 'sh_id')
+                                ->disabled(OffersMiddleware::checkRule4SelectShop($this->offerId, 'admin,warehouse_manager')),
 
                             Input::make('rwOffer.of_img')
                                 ->width(50)
@@ -191,6 +191,7 @@ class OffersCreateScreen extends Screen
 
     function saveOffer(Request $request)
     {
+        $currentUser = Auth::user();
 
         $request->validate([
             'rwOffer.of_id' => 'nullable|integer',
@@ -201,9 +202,9 @@ class OffersCreateScreen extends Screen
             'rwOffer.of_article' => 'required|string|max:25',
             'rwOffer.of_sku' => 'nullable|string|max:25',
             'rwOffer.of_weight' => 'nullable|integer',
-            'rwOffer.of_dimension_x' => 'nullable|integer',
-            'rwOffer.of_dimension_y' => 'nullable|integer',
-            'rwOffer.of_dimension_z' => 'nullable|integer',
+            'rwOffer.of_dimension_x' => 'nullable|numeric',
+            'rwOffer.of_dimension_y' => 'nullable|numeric',
+            'rwOffer.of_dimension_z' => 'nullable|numeric',
             'rwOffer.of_price' => 'nullable|numeric',
             'rwOffer.of_estimated_price' => 'nullable|numeric',
             'rwOffer.of_comment' => 'nullable|string|max:255',
@@ -243,6 +244,7 @@ class OffersCreateScreen extends Screen
                 'of_dimension_z'        => $request->rwOffer['of_dimension_z'],
                 'of_price'              => $request->rwOffer['of_price'],
                 'of_estimated_price'    => $request->rwOffer['of_estimated_price'],
+                'of_domain_id'          => $currentUser->domain_id,
                 'of_comment'            => $request->rwOffer['of_comment'],
             ]);
 

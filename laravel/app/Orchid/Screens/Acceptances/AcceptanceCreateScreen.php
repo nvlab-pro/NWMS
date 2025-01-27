@@ -6,6 +6,7 @@ use App\Http\Middleware\Offers\OffersMiddleware;
 use App\Models\rwAcceptance;
 use App\Models\rwLibAcceptStatus;
 use App\Models\rwLibAcceptType;
+use App\Models\rwShop;
 use App\Models\rwWarehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,14 +72,15 @@ class AcceptanceCreateScreen extends Screen
     public function layout(): iterable
     {
         $currentUser = Auth::user();
-        $dbWhList = rwWarehouse::query();
+        $dbWhList = rwWarehouse::where('wh_domain_id', $currentUser->domain_id)->where('wh_type', 2);
+        $dbShopList = rwShop::where('sh_domain_id', $currentUser->domain_id);
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
-
 
         } else {
 
             $dbWhList = $dbWhList->where('wh_user_id', $currentUser->id);
+            $dbShopList = $dbShopList->where('sh_user_id', $currentUser->id);
 
         }
 
@@ -98,13 +100,13 @@ class AcceptanceCreateScreen extends Screen
                         ->required()
                         ->disabled(OffersMiddleware::checkRule4SelectShop($this->acceptId, 'admin,warehouse_manager')),
 
-                    Select::make('rwAcceptance.acc_status')
-                        ->title(__('Статус'))
+                    Select::make('rwAcceptance.acc_shop_id')
+                        ->title(__('Магазин'))
                         ->width('100px')
-                        ->fromModel(rwLibAcceptStatus::class, 'las_name', 'las_id')
-                        ->disabled(OffersMiddleware::checkRule4SelectShop($this->acceptId, 'admin,warehouse_manager'))
-                        ->value(1)
-                        ->required(1),
+                        ->fromModel($dbShopList->get(), 'sh_name', 'sh_id')
+                        ->required()
+                        ->disabled(OffersMiddleware::checkRule4SelectShop($this->acceptId, 'admin,warehouse_manager')),
+
                 ]),
 
                 Group::make([
@@ -147,12 +149,13 @@ class AcceptanceCreateScreen extends Screen
 
     function saveAcceptance(Request $request)
     {
+        $currentUser = Auth::user();
 
         $request->validate([
             'rwAcceptance.acc_id' => 'nullable|integer',
-            'rwAcceptance.acc_status' => 'required|integer',
             'rwAcceptance.acc_ext_id' => 'nullable|integer',
             'rwAcceptance.acc_wh_id' => 'required|integer',
+            'rwAcceptance.acc_shop_id' => 'required|integer',
             'rwAcceptance.acc_date' => 'required|string|max:10',
             'rwAcceptance.acc_type' => 'required|integer',
             'rwAcceptance.acc_comment' => 'nullable|string|max:255',
@@ -161,9 +164,7 @@ class AcceptanceCreateScreen extends Screen
         if (isset($request->rwAcceptance['acc_id']) && $request->rwAcceptance['acc_id'] > 0) {
 
             rwAcceptance::where('acc_id', $request->rwAcceptance['acc_id'])->update([
-                'acc_status' => $request->rwAcceptance['acc_status'],
                 'acc_ext_id' => $request->rwAcceptance['acc_ext_id'],
-                'acc_wh_id' => $request->rwAcceptance['acc_wh_id'],
                 'acc_date' => $request->rwAcceptance['acc_date'],
                 'acc_type' => $request->rwAcceptance['acc_type'],
                 'acc_comment' => $request->rwAcceptance['acc_comment'],
@@ -173,13 +174,18 @@ class AcceptanceCreateScreen extends Screen
 
         } else {
 
-            rwAcceptance::insert([
-                'acc_status' => $request->rwAcceptance['acc_status'],
-                'acc_ext_id' => $request->rwAcceptance['acc_ext_id'],
-                'acc_wh_id' => $request->rwAcceptance['acc_wh_id'],
-                'acc_date' => $request->rwAcceptance['acc_date'],
-                'acc_type' => $request->rwAcceptance['acc_type'],
-                'acc_comment' => $request->rwAcceptance['acc_comment'],
+            $userId = rwWarehouse::query()->where('wh_id', $request->rwAcceptance['acc_wh_id'])->first()->wh_user_id;
+
+            rwAcceptance::create([
+                'acc_status'        => 1,
+                'acc_ext_id'        => $request->rwAcceptance['acc_ext_id'],
+                'acc_user_id'       => $userId,
+                'acc_wh_id'         => $request->rwAcceptance['acc_wh_id'],
+                'acc_shop_id'       => $request->rwAcceptance['acc_shop_id'],
+                'acc_date'          => $request->rwAcceptance['acc_date'],
+                'acc_type'          => $request->rwAcceptance['acc_type'],
+                'acc_domain_id'     => $currentUser->domain_id,
+                'acc_comment'       => $request->rwAcceptance['acc_comment'],
             ]);
 
             Alert::success(__('Накладная успешно создана!'));

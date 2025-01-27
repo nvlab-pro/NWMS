@@ -5,6 +5,119 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 14.44.1 - 2024-11-26
+
+### Fixed
+- Required `composer/semver`
+
+## 14.44.0 - 2024-11-23
+
+### Changed
+- Remove default limits for 'Attach' field file size and quantity
+- Use `whereLike` for case-insensitive search [#2924](https://github.com/orchidsoftware/platform/pull/2924)
+- Allow mutation elocument model on `getContent` [#2923](https://github.com/orchidsoftware/platform/issues/2923)
+- Refactored to modern PHP standards
+
+### Fixed
+- Loading `csrf` token for `axios` after login
+
+## 14.43.1 - 2024-11-09
+
+### Changed
+- Improve performance for simple model attribute [#2921](https://github.com/orchidsoftware/platform/pull/2921)
+
+## 14.43.0 - 2024-11-06
+
+### Added
+- Additional configuration parameters for Hotwire by default
+
+### Changed
+- The loading of modal windows in the browser has been redesigned. Now, upon invalidation, modal windows, including deferred ones, will automatically open.
+- Installed Psalm to run exclusively on GitHub Actions.
+- Set types to `static` in `Field`.
+
+### Fixed
+- Incorrect listeners names
+
+### Removed
+- Unused option when running PHPUnit
+
+## 14.42.0 - 2024-11-01
+
+### Changed
+- Restrict excessively long URLs in modal windows [#2917](https://github.com/orchidsoftware/platform/issues/2917)
+
+## 14.41.0 - 2024-10-29
+
+### Added
+- Template for grid columns on `Group` [#2913](https://github.com/orchidsoftware/platform/pull/2913)
+
+## 14.40.0 - 2024-10-28
+
+### Changed
+- Max and min width for sidebar 
+
+## 14.39.0 - 2024-10-24
+
+### Changed
+- Color favicon to monochrome
+- Improve install examples
+- Added `text-balance` for "Welcome Page"
+- Width for login form (large breakpoint)
+- Increment root font-size
+- Improve color on active item menu
+
+## 14.38.0 - 2024-10-23
+
+### Added
+- `addClass()` method to `Field` class for easier class manipulation [#2909](https://github.com/orchidsoftware/platform/pull/2909)
+
+### Changed
+- Padding for items `Selection`
+- Remove `memory_limit` for check max size upload [#2910](https://github.com/orchidsoftware/platform/issues/2910)
+
+## 14.37.0 - 2024-10-12
+
+### Added
+- Default balanced text style for `TD`
+- Property for word wrapping in table cells
+
+### Removed
+- Unused attributes on SimpleMDE
+
+### Fixed
+- Incorrect parsing of `HTML` in `SimpleMDE` field
+
+## 14.36.2 - 2024-10-11
+
+### Fixed
+- Incorrect parsing of `HTML` in `SimpleMDE` field
+
+## 14.36.1 - 2024-10-11
+
+### Fixed
+- Incorrect parsing of `HTML` in `SimpleMDE` field
+
+## 14.36.0 - 2024-09-27
+
+### Added
+- Secondary parameters for testing `Screen`
+- Missing group attribute for `Attach` field
+- Methods for define resources on packages
+- Autofill values on filters [#2895](https://github.com/orchidsoftware/platform/pull/2895)
+- Description for dont usage vendor user model
+
+### Changed
+- Changed stubs to usage `Attach` field
+- PHPStan issue when the return type of `Field::value` is `self` [#2898](https://github.com/orchidsoftware/platform/pull/2898)
+
+### Deprecated
+- `ComplexFieldConcern` interface and `isComplexFieldType` method in `TD` class
+
+### Fixed
+- Overlapping of part of the content in drop-down displayed list of fields in table
+- 12-hour format to 24-hour format of an hour with leading zeros [#2896](https://github.com/orchidsoftware/platform/pull/2896)
+
 ## 14.35.1 - 2024-09-10
 
 ### Fixed

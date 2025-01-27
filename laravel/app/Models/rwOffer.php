@@ -13,12 +13,22 @@ use Orchid\Filters\Types\Where;
 use Orchid\Filters\Types\WhereDate;
 use Orchid\Filters\Types\WhereMaxMin;
 use Orchid\Filters\Types\WhereDateStartEnd;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
 
-class rwOffer extends Model
+class rwOffer extends Model implements AuditableContract
 {
     protected $primaryKey = 'of_id';
 
-    use AsSource, Filterable, Attachable, HasFactory, SoftDeletes;
+    use AsSource, Filterable, Attachable, HasFactory, SoftDeletes, Auditable;
+
+    // Другие разрешённые для массового присвоения атрибуты
+    protected $fillable = [
+        'of_dimension_x',
+        'of_dimension_y',
+        'of_dimension_z',
+        'of_weight',
+    ];
 
     protected $allowedFilters = [
         'of_id'            => Where::class,

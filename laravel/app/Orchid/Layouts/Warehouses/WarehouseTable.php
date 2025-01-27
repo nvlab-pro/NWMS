@@ -39,10 +39,13 @@ class WarehouseTable extends Table
             TD::make('wh_type', 'Тип склада')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
-                ->render(function (rwWarehouse $modelName) {
-                    return Link::make($modelName->getWhType->lwt_name)
-                        ->route('platform.warehouses.edit',$modelName->wh_id);
-                }),
+                ->render(fn ($whList) => $whList->getWhType ?
+                    "<b style='background-color: {$whList->getWhType->lwt_bgcolor};
+                        padding: 5px;
+                        border-radius: 5px;'>
+                        {$whList->getWhType->lwt_name}
+                        </b>"
+                    : '-'),
 
             TD::make('sh_name', 'Название')
                 ->sort()

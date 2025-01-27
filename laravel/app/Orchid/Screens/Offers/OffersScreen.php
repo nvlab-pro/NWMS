@@ -19,7 +19,7 @@ class OffersScreen extends Screen
     {
         $currentUser = Auth::user();
 
-        $dbOffers = rwOffer::query();
+        $dbOffers = rwOffer::where('of_domain_id', $currentUser->domain_id);
 
         return [
             'offersList' => $dbOffers->filters()->paginate(50),

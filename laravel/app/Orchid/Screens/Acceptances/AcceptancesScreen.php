@@ -20,7 +20,7 @@ class AcceptancesScreen extends Screen
     {
         $currentUser = Auth::user();
 
-        $dbAcceptList = rwAcceptance::query();
+        $dbAcceptList = rwAcceptance::where('acc_domain_id', $currentUser->domain_id);
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 
@@ -32,7 +32,11 @@ class AcceptancesScreen extends Screen
         }
 
         return [
-            'acceptList' => $dbAcceptList->paginate(50),
+            'acceptList' => $dbAcceptList
+                ->with('getUser')
+                ->filters()
+                ->defaultSort('acc_id', 'desc')
+                ->paginate(50),
         ];
     }
 
