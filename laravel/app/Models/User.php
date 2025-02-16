@@ -29,6 +29,7 @@ class User extends Authenticatable
         'email',
         'storage_id',
         'domain_id',
+        'wh_id',
         'password',
     ];
 
