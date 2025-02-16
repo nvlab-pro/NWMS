@@ -54,27 +54,69 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.offers.index'),
 
             Menu::make(__('Заказы'))
-                ->icon('bs.stack')
+                ->icon('bs.box-seam-fill')
                 ->route('platform.orders.index'),
 
             Menu::make(__('Бибилотеки'))
                 ->icon('bs.list-check')
                 ->list([
                     Menu::make(__('Страны'))
-                        ->icon('bs.list')
+                        ->icon('bs.globe-central-south-asia')
                         ->route('platform.settings.countries.index'),
 
                     Menu::make(__('Города'))
-                        ->icon('bs.list')
+                        ->icon('bs.map')
                         ->route('platform.settings.cities.index'),
 
                     Menu::make(__('Валюты'))
-                        ->icon('bs.list')
+                        ->icon('bs.currency-exchange')
                         ->route('platform.settings.currencies.index'),
 
                     Menu::make(__('Языки'))
-                        ->icon('bs.list')
+                        ->icon('bs.translate')
                         ->route('platform.settings.languages.index'),
+                ]),
+
+            // *******************************
+            // *    Настройки склада         *
+            // *******************************
+
+            Menu::make(__('Управление складом'))
+                ->icon('bs.person-workspace')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                ->list([
+
+                    Menu::make(__('Волновая сборка'))
+                        ->icon('bs.cart3')
+                        ->route('platform.whmanagement.wave-assembly.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+
+                    Menu::make(__('Позаказная сборка'))
+                        ->icon('bs.basket3')
+                        ->route('platform.whmanagement.single-order-assembly.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+
+                ]),
+
+            // *******************************
+            // *    Настройки склада         *
+            // *******************************
+
+            Menu::make(__('Настройки склада'))
+                ->icon('bs.buildings-fill')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                ->list([
+
+                    Menu::make(__('Склады'))
+                        ->icon('bs.building')
+                        ->route('platform.warehouses.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+
+                    Menu::make(__('Места хранения'))
+                        ->icon('bs.inboxes')
+                        ->route('platform.warehouses.places.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+
                 ]),
 
             // ************************
@@ -87,10 +129,6 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make(__('Магазины'))
                         ->icon('bs.shop')
                         ->route('platform.shops.index'),
-
-                    Menu::make(__('Склады'))
-                        ->icon('bs.buildings')
-                        ->route('platform.warehouses.index'),
                 ]),
 
             // ************************

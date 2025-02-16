@@ -84,7 +84,7 @@ class mainScreen extends Screen
                                     margin-bottom: 5px;'),
 
                     Link::make('Привязка товара')
-                        ->route('platform.acceptances.index')
+                        ->route('platform.terminal.places.select')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                         ->icon('bs.inboxes')
                         ->style('border-bottom: 2px solid #999999; 
@@ -98,7 +98,7 @@ class mainScreen extends Screen
                                     margin-bottom: 5px;'),
 
                     Link::make('Сборка заказов (позаказно)')
-                        ->route('platform.acceptances.index')
+                        ->route('platform.terminal.soa.select')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                         ->icon('bs.box-seam')
                         ->style('border-bottom: 2px solid #999999; 

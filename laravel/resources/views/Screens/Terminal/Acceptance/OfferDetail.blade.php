@@ -221,7 +221,9 @@
                             <form action="" method="get"
                                   style="text-align: center; padding: 0px 0px 0px 0px; margin-top: 0px; margin-bottom: 0px;"
                                   id="goodsDetailSend">
-                                <input type="hidden" name="offerId" value="{{ $currentOffer['ao_wh_offer_id'] }}">
+                                <input type="hidden" name="offerWhId" value="{{ $currentOffer['ao_wh_offer_id'] }}">
+                                <input type="hidden" name="offerId" value="{{ $currentOffer['ao_offer_id'] }}">
+                                <input type="hidden" name="saveBarcode" value="{{ $saveBarcode }}">
                                 <input type="hidden" name="currentTime" value="{{ time() }}">
                                 <input type="text" name="scanCount" id="input_data" size="15" value=""
                                        placeholder="Количество"

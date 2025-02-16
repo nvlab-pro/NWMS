@@ -9,6 +9,7 @@ use App\Orchid\Layouts\User\UserDomainLayout;
 use App\Orchid\Layouts\User\UserEditLayout;
 use App\Orchid\Layouts\User\UserPasswordLayout;
 use App\Orchid\Layouts\User\UserRoleLayout;
+use App\Orchid\Layouts\User\UserWhLayout;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -125,6 +126,17 @@ class UserEditScreen extends Screen
             Layout::block(UserDomainLayout::class)
                 ->title(__('Домен'))
                 ->description(__('Выберите домен на которым будет работать пользователь.'))
+                ->commands(
+                    Button::make(__('Save'))
+                        ->type(Color::BASIC)
+                        ->icon('bs.check-circle')
+                        ->canSee($this->user->exists)
+                        ->method('save')
+                ),
+
+            Layout::block(UserWhLayout::class)
+                ->title(__('Склад'))
+                ->description(__('Выберите базовый склад, с которым будет работать пользователь.'))
                 ->commands(
                     Button::make(__('Save'))
                         ->type(Color::BASIC)

@@ -55,8 +55,8 @@
 
                     @if($Offer->ao_accepted == 0)
                         <tr>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_article }}</td>
-                            <td class="{{ $tdClass }}" style="text-align: left;" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_name }}
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_article }}</td>
+                            <td class="{{ $tdClass }}" style="text-align: left;" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_name }}
                                 @php
 
                                     if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00') {
@@ -65,8 +65,8 @@
 
                                 @endphp
                             </td>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_expected }}</td>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_accepted }}</td>
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_expected }}</td>
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_accepted }}</td>
                         </tr>
                     @endif
 
@@ -90,8 +90,8 @@
 
                     @if($Offer->ao_accepted > 0 && $Offer->ao_expected > $Offer->ao_accepted)
                         <tr>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_article }}</td>
-                            <td class="{{ $tdClass }}" style="text-align: left;" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_name }}
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_article }}</td>
+                            <td class="{{ $tdClass }}" style="text-align: left;" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_name }}
                                 @php
 
                                     if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00') {
@@ -100,8 +100,8 @@
 
                                 @endphp
                             </td>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_expected }}</td>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_accepted }}</td>
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_expected }}</td>
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_accepted }}</td>
                         </tr>
                     @endif
 
@@ -125,8 +125,8 @@
 
                     @if($Offer->ao_accepted > 0 && $Offer->ao_expected < $Offer->ao_accepted)
                         <tr>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_article }}</td>
-                            <td class="{{ $tdClass }}" style="text-align: left;" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_name }}
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_article }}</td>
+                            <td class="{{ $tdClass }}" style="text-align: left;" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_name }}
                                 @php
 
                                     if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00') {
@@ -135,8 +135,8 @@
 
                                 @endphp
                             </td>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_expected }}</td>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_accepted }}</td>
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_expected }}</td>
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_accepted }}</td>
                         </tr>
                     @endif
 
@@ -160,18 +160,20 @@
 
                     @if($Offer->ao_accepted > 0 && $Offer->ao_expected == $Offer->ao_accepted)
                         <tr>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_article }}</td>
-                            <td class="{{ $tdClass }}" style="text-align: left;" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_name }}
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_article }}</td>
+                            <td class="{{ $tdClass }}" style="text-align: left;" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_name }}
                                 @php
 
-                                    if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00') {
+                                    if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00')
                                         echo '<div style="border-top: 1px dotted #000000;">Exept. date: '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
-                                    }
+
+                                    if ($Offer->ao_batch != NULL)
+                                        echo '<div style="border-top: 1px dotted #000000;"> | Batch: '.$Offer->ao_batch.'</div>';
 
                                 @endphp
                             </td>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_expected }}</td>
-                            <td class="{{ $tdClass }}" onClick="location.href='?offerId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_accepted }}</td>
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_expected }}</td>
+                            <td class="{{ $tdClass }}" onClick="location.href='?offerWhId={{ $Offer->ao_wh_offer_id }}'">{{ $Offer->ao_accepted }}</td>
                         </tr>
                     @endif
 
@@ -193,7 +195,7 @@
             // Если пользователь подтвердил (нажал "ОК")
             if (result) {
                 // Переход по ссылке
-//                window.location.href = "{{ route('platform.terminal.acceptance.select') }}?action=close&docId={{ $docId }}";
+                window.location.href = "{{ route('platform.terminal.acceptance.select') }}?action=close&docId={{ $docId }}";
             }
         }
     </script>

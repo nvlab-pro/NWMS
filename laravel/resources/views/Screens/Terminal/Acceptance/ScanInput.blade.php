@@ -1,4 +1,8 @@
-</form>
+@if(isset($skip) && $skip)
+    <script>
+        location="{{ route('platform.terminal.acceptance.scan', $docId)  }}";
+    </script>
+@endif
 <form action="{{ route('platform.terminal.acceptance.scan', $docId)  }}" method="GET" style="text-align: center; padding: 0px 0px 0px 0px; margin-top: 0px; margin-bottom: 0px;">
     <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
 

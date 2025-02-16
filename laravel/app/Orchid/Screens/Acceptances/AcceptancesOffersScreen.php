@@ -23,7 +23,7 @@ use App\WhCore\WhCore;
 class AcceptancesOffersScreen extends Screen
 {
 
-    protected $acceptId, $shopId, $whId, $whName, $docStatus;
+    protected $acceptId, $shopId, $whId, $whName, $docStatus, $docDate;
 
     public function query($acceptId): iterable
     {
@@ -31,14 +31,15 @@ class AcceptancesOffersScreen extends Screen
 
         $currentUser = Auth::user();
 
-        $dbCurrentAcceptance = rwAcceptance::where('acc_id', $this->acceptId)->with('getWarehouse')->first();
+        $dbCurrentAcceptance = rwAcceptance::where('acc_id', $this->acceptId)->where('acc_domain_id', $currentUser->domain_id)->with('getWarehouse')->first();
         $this->shopId = $dbCurrentAcceptance->acc_shop_id;
         $this->whId = $dbCurrentAcceptance->acc_wh_id;
         $this->whName = $dbCurrentAcceptance->getWarehouse->wh_name;
         $this->docStatus = $dbCurrentAcceptance->acc_status;
+        $this->docDate = $dbCurrentAcceptance->acc_date;
 
-        $currentDocument = new DocumentService($this->whId);
-        $collection = $currentDocument->getAcceptanceList($this->acceptId);
+        $currentDocument = new DocumentService($this->acceptId);
+        $collection = $currentDocument->getAcceptanceList();
 
         return [
             'acceptId'              => $this->acceptId,
@@ -99,13 +100,6 @@ class AcceptancesOffersScreen extends Screen
                     ->modal('addOfferModal') // Имя модального окна
                     ->method('addOffer'), // Класс для стилизации (по желанию)
 
-//                Button::make(__('Закрыть накладную'))
-//                    ->icon('bs.lock')
-//                    ->method('closeDocument') // Метод, вызываемый на сервере
-//                    ->parameters([
-//                        '_token' => csrf_token(), // Добавляем CSRF-токен вручную
-//                    ])
-//                    ->confirm(__('Вы уверены, что хотите закрыть накладную?')),
             ];
 
             $arLinksList3 = [
@@ -120,6 +114,17 @@ class AcceptancesOffersScreen extends Screen
         // Статус 2 (Приемка)
         if ($this->docStatus == 2) {
 
+            $arLinksList = [
+                Button::make(__('Закрыть накладную'))
+                    ->icon('bs.lock')
+                    ->method('closeDocument') // Метод, вызываемый на сервере
+                    ->parameters([
+                        'docId' => $this->acceptId,
+                        '_token' => csrf_token(), // Добавляем CSRF-токен вручную
+                    ])
+                    ->confirm(__('Вы уверены, что хотите закрыть накладную?')),
+            ];
+
             $arLinksList3 = [
                 Button::make('Приемка')
                     ->class('btn')
@@ -127,6 +132,20 @@ class AcceptancesOffersScreen extends Screen
                     ->disabled(true),
 
             ];
+
+        }
+
+        // Статус 4 (Накладная закрыта)
+        if ($this->docStatus == 4) {
+
+            $arLinksList3 = [
+                Button::make(__('Закрыта'))
+                    ->class('btn')
+                    ->style('background-color: #119900; color: white;')
+                    ->disabled(true),
+
+            ];
+
 
         }
 
@@ -155,6 +174,10 @@ class AcceptancesOffersScreen extends Screen
                     Input::make('offer.shopId')
                         ->value($this->shopId)
                         ->type('hidden'),
+
+                    Input::make('offer.docDate')
+                        ->value($this->docDate)
+                        ->type('text'),
 
                     Select::make('offer.of_id')
                         ->title(__('Выберите добавляемый товар:'))
@@ -214,6 +237,10 @@ class AcceptancesOffersScreen extends Screen
                     ->type('hidden')
                     ->value($this->shopId),
 
+                Input::make('docDate')
+                    ->value($this->docDate)
+                    ->type('hidden'),
+
                 // Ваша форма и таблицы
                 Button::make('Сохранить изменения')
                     ->class('btn btn-primary d-block mx-auto')
@@ -241,6 +268,7 @@ class AcceptancesOffersScreen extends Screen
             'acceptId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
             'shopId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
             'whId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'docDate' => 'nullable|date_format:Y-m-d H:i:s', // Каждая дата должна быть обязательной и формата даты
         ]);
 
         $currentWarehouse = new WhCore($validatedData['whId']);
@@ -260,6 +288,7 @@ class AcceptancesOffersScreen extends Screen
 
                 $currentWarehouse->saveOffers(
                     $validatedData['acceptId'],
+                    $validatedData['docDate'],
                     1,                                  // Приемка (таблица rw_lib_type_doc)
                     $id,                                        // ID офера в документе
                     $validatedData['docOfferId'][$id],          // оригинальный ID товара
@@ -293,7 +322,7 @@ class AcceptancesOffersScreen extends Screen
             }
         }
 
-        $countPlaced = $currentWarehouse->getCountOfPlacedFromDocument($validatedData['acceptId'], 1);
+        $countPlaced = $currentWarehouse->getPlacedCount($validatedData['acceptId'], 1);
 
         rwAcceptance::where('acc_id', $validatedData['acceptId'])->update([
             'acc_count_expected'     => $countExpected,
@@ -379,6 +408,7 @@ class AcceptancesOffersScreen extends Screen
             'offer.of_id' => 'required|integer|min:1',
             'offer.acceptId' => 'required|integer|min:1',
             'offer.whId' => 'required|integer|min:1',
+            'offer.docDate' => 'nullable|date_format:Y-m-d H:i:s', // Каждая дата должна быть обязательной и формата даты
         ]);
 
         $dbOffersList = rwAcceptanceOffer::where('ao_acceptance_id', $validated['offer']['acceptId'])
@@ -400,6 +430,7 @@ class AcceptancesOffersScreen extends Screen
 
             $currentWarehouse->saveOffers(
                 $validated['offer']['acceptId'],
+                $validated['offer']['docDate'],
                 1,                       // Приемка (таблица rw_lib_type_doc)
                 $dbAccptence->ao_id,                                // ID офера в документе
                 $validated['offer']['of_id'],                                // оригинальный ID товара
@@ -420,12 +451,17 @@ class AcceptancesOffersScreen extends Screen
 
     }
 
-    public function closeDocument()
+    public function closeDocument($docId)
     {
 
-        dump('CSRF Token:', request()->header('X-CSRF-TOKEN'));
-        dump('Session Token:', session()->token());
-        dump('OK!');
+        rwAcceptance::where('acc_id', $docId)
+            ->where('acc_status', 2)
+            ->update([
+                'acc_status' => 4,
+            ]);
+
+        Alert::info(__('Накладная закрыта!'));
+
     }
 
 }

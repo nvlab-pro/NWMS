@@ -2,7 +2,14 @@
 
 namespace App\Orchid\Screens\Orders;
 
+use App\Models\rwAcceptance;
+use App\Models\rwOffer;
+use App\Models\rwOrder;
+use App\Models\rwWarehouse;
+use App\Orchid\Layouts\Orders\OrdersTable;
 use App\WhCore\WhCore;
+use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 
 class OrdersScreen extends Screen
@@ -15,11 +22,27 @@ class OrdersScreen extends Screen
     public function query(): iterable
     {
 
-        $currentWarehouse = new WhCore(3);
+        $currentUser = Auth::user();
+        $dbOrders = rwOrder::where('o_domain_id', $currentUser->domain_id);
 
-        dump($currentWarehouse);
+        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager') || $currentUser->hasRole('warehouse_worker')) {
 
-        return [];
+            $arWhList = rwWarehouse::where('wh_parent_id', $currentUser->wh_id)
+                ->pluck('wh_id')
+                ->toArray();
+
+            $dbOrders = rwOrder::whereIn('o_wh_id', $arWhList);
+
+        } else {
+
+            $dbOrders = rwOrder::whereIn('o_user_id', [$currentUser->id, $currentUser->parent_id]);
+
+        }
+
+        return [
+            'ordersList'    => $dbOrders->filters()->defaultSort('o_id', 'desc')
+                ->paginate(50),
+        ];
     }
 
     /**
@@ -29,7 +52,7 @@ class OrdersScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'OrdersScreen';
+        return __('Список заказов');
     }
 
     /**
@@ -39,7 +62,11 @@ class OrdersScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make(__('Создать новый заказ'))
+                ->icon('bs.plus-circle')
+                ->route('platform.orders.create.index'),
+        ];
     }
 
     /**
@@ -49,7 +76,9 @@ class OrdersScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [];
+        return [
+            OrdersTable::class,
+        ];
     }
 
     private function WhCore(int $int)

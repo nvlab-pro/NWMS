@@ -591,16 +591,26 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'M' => 
+        array (
+            'Milon\\Barcode' => 
+            array (
+                0 => __DIR__ . '/..' . '/milon/barcode/src',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Middleware\\Offers\\OffersMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/Offers/OffersMiddleware.php',
         'App\\Http\\Middleware\\RoleMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/RoleMiddleware.php',
         'App\\Models\\Role' => __DIR__ . '/../..' . '/app/Models/Role.php',
-        'App\\Models\\RwBarcode' => __DIR__ . '/../..' . '/app/Models/RwBarcode.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\WhcWarehouse' => __DIR__ . '/../..' . '/app/Models/WhcWarehouse.php',
         'App\\Models\\rwAcceptance' => __DIR__ . '/../..' . '/app/Models/rwAcceptance.php',
         'App\\Models\\rwAcceptanceOffer' => __DIR__ . '/../..' . '/app/Models/rwAcceptanceOffer.php',
+        'App\\Models\\rwBarcode' => __DIR__ . '/../..' . '/app/Models/rwBarcode.php',
         'App\\Models\\rwDeliveryService' => __DIR__ . '/../..' . '/app/Models/rwDeliveryService.php',
         'App\\Models\\rwDomain' => __DIR__ . '/../..' . '/app/Models/rwDomain.php',
         'App\\Models\\rwLibAcceptStatus' => __DIR__ . '/../..' . '/app/Models/rwLibAcceptStatus.php',
@@ -614,6 +624,8 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'App\\Models\\rwLibWeight' => __DIR__ . '/../..' . '/app/Models/rwLibWeight.php',
         'App\\Models\\rwLibWhType' => __DIR__ . '/../..' . '/app/Models/rwLibWhType.php',
         'App\\Models\\rwOffer' => __DIR__ . '/../..' . '/app/Models/rwOffer.php',
+        'App\\Models\\rwPlaceTypes' => __DIR__ . '/../..' . '/app/Models/rwPlaceTypes.php',
+        'App\\Models\\rwPlaces' => __DIR__ . '/../..' . '/app/Models/rwPlaces.php',
         'App\\Models\\rwShop' => __DIR__ . '/../..' . '/app/Models/rwShop.php',
         'App\\Models\\rwWarehouse' => __DIR__ . '/../..' . '/app/Models/rwWarehouse.php',
         'App\\Orchid\\Filters\\RoleFilter' => __DIR__ . '/../..' . '/app/Orchid/Filters/RoleFilter.php',
@@ -639,6 +651,7 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'App\\Orchid\\Layouts\\User\\UserListLayout' => __DIR__ . '/../..' . '/app/Orchid/Layouts/User/UserListLayout.php',
         'App\\Orchid\\Layouts\\User\\UserPasswordLayout' => __DIR__ . '/../..' . '/app/Orchid/Layouts/User/UserPasswordLayout.php',
         'App\\Orchid\\Layouts\\User\\UserRoleLayout' => __DIR__ . '/../..' . '/app/Orchid/Layouts/User/UserRoleLayout.php',
+        'App\\Orchid\\Layouts\\Warehouses\\Places\\PlacesTable' => __DIR__ . '/../..' . '/app/Orchid/Layouts/Warehouses/Places/PlacesTable.php',
         'App\\Orchid\\Layouts\\Warehouses\\WarehouseTable' => __DIR__ . '/../..' . '/app/Orchid/Layouts/Warehouses/WarehouseTable.php',
         'App\\Orchid\\PlatformProvider' => __DIR__ . '/../..' . '/app/Orchid/PlatformProvider.php',
         'App\\Orchid\\Presenters\\UserPresenter' => __DIR__ . '/../..' . '/app/Orchid/Presenters/UserPresenter.php',
@@ -680,6 +693,7 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'App\\Orchid\\Screens\\User\\UserEditScreen' => __DIR__ . '/../..' . '/app/Orchid/Screens/User/UserEditScreen.php',
         'App\\Orchid\\Screens\\User\\UserListScreen' => __DIR__ . '/../..' . '/app/Orchid/Screens/User/UserListScreen.php',
         'App\\Orchid\\Screens\\User\\UserProfileScreen' => __DIR__ . '/../..' . '/app/Orchid/Screens/User/UserProfileScreen.php',
+        'App\\Orchid\\Screens\\Warehouses\\Places\\PlacesScreen' => __DIR__ . '/../..' . '/app/Orchid/Screens/Warehouses/Places/PlacesScreen.php',
         'App\\Orchid\\Screens\\Warehouses\\WarehouseCreateScreen' => __DIR__ . '/../..' . '/app/Orchid/Screens/Warehouses/WarehouseCreateScreen.php',
         'App\\Orchid\\Screens\\Warehouses\\WarehouseScreen' => __DIR__ . '/../..' . '/app/Orchid/Screens/Warehouses/WarehouseScreen.php',
         'App\\Orchid\\Screens\\terminal\\Acceptance\\ScanAcceptScreen' => __DIR__ . '/../..' . '/app/Orchid/Screens/terminal/Acceptance/ScanAcceptScreen.php',
@@ -3784,6 +3798,20 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'Livewire\\WithPagination' => __DIR__ . '/..' . '/livewire/livewire/src/WithPagination.php',
         'Livewire\\WithoutUrlPagination' => __DIR__ . '/..' . '/livewire/livewire/src/WithoutUrlPagination.php',
         'Livewire\\Wrapped' => __DIR__ . '/..' . '/livewire/livewire/src/Wrapped.php',
+        'Milon\\Barcode\\BarcodeServiceProvider' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/BarcodeServiceProvider.php',
+        'Milon\\Barcode\\DNS1D' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/DNS1D.php',
+        'Milon\\Barcode\\DNS2D' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/DNS2D.php',
+        'Milon\\Barcode\\Datamatrix' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/Datamatrix.php',
+        'Milon\\Barcode\\Facades\\DNS1DFacade' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/Facades/DNS1DFacade.php',
+        'Milon\\Barcode\\Facades\\DNS2DFacade' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/Facades/DNS2DFacade.php',
+        'Milon\\Barcode\\GS1_128\\AIData' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/GS1_128/AIData.php',
+        'Milon\\Barcode\\GS1_128\\GS1128' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/GS1_128/GS1128.php',
+        'Milon\\Barcode\\GS1_128\\Section' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/GS1_128/Section.php',
+        'Milon\\Barcode\\GS1_128\\SectionSlicer' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/GS1_128/SectionSlicer.php',
+        'Milon\\Barcode\\GS1_128\\Subsets' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/GS1_128/Subsets.php',
+        'Milon\\Barcode\\PDF417' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/PDF417.php',
+        'Milon\\Barcode\\QRcode' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/QRcode.php',
+        'Milon\\Barcode\\WrongCheckDigitException' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/WrongCheckDigitException.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
         'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',
@@ -7214,6 +7242,7 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423::$classMap;
 
         }, null, ClassLoader::class);

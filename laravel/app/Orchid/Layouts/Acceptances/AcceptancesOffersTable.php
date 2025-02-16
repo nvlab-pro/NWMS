@@ -138,7 +138,7 @@ class AcceptancesOffersTable extends Table
                 ->align(TD::ALIGN_CENTER)
                 ->render(function (rwAcceptanceOffer $modelName) {
                     if ($modelName->ao_placed > 0)
-                        return 'тут будет место';
+                        return $modelName->ao_placed;
                     else
                         return '-';
                 }),

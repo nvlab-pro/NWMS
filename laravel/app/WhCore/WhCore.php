@@ -2,6 +2,11 @@
 
 namespace App\WhCore;
 
+use App\Models\rwLibTypeDoc;
+use App\Models\rwOrder;
+use App\Models\rwStatsRest;
+use App\Models\WhcRest;
+use App\Models\whcWhItem;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +25,11 @@ class WhCore
      *  3 - размещен
      *  4 - зарезервирован
      *  6 - отгружен
+     *
+     * whci_id - ID элемента
+     * whci_offer_id -  ID оффера
+     * whci_doc_offer_id -  ID оффера в документе
+     *
      */
 
     public function __construct($warehouseId)
@@ -41,7 +51,7 @@ class WhCore
                 });
             }
 
-            $this->itemTableName = 'whc_wh'.$warehouseId.'_items';
+            $this->itemTableName = 'whc_wh' . $warehouseId . '_items';
 
             // Если таблица с элементами не создана, создаем её
             if (!Schema::hasTable($this->itemTableName)) {
@@ -50,7 +60,8 @@ class WhCore
 
                 Schema::create($this->itemTableName, function (Blueprint $table) {
                     $table->id('whci_id');
-                    $table->tinyInteger('whci_status')->unsigned()->index(); // 0 - не учитывать, 1 - учитывать в расчете остатков
+                    $table->dateTime('whci_date')->index();
+                    $table->tinyInteger('whci_status')->unsigned()->index()->comment('0 - не учитывать, 1 - учитывать в расчете остатков'); // 0 - не учитывать, 1 - учитывать в расчете остатков
                     $table->bigInteger('whci_offer_id')->unsigned()->index();
                     $table->bigInteger('whci_place_id')->unsigned()->nullable()->index();
                     $table->bigInteger('whci_doc_id')->unsigned()->index();
@@ -61,8 +72,8 @@ class WhCore
                     $table->date('whci_expiration_date')->nullable()->index();
                     $table->string('whci_batch', 15)->nullable()->index();
                     $table->string('whci_barcode', 30)->nullable()->index();
-                    $table->double('whci_price')->nullable()->unsigned();
-                    $table->integer('whci_cash')->nullable()->unsigned()->default(0);
+                    $table->double('whci_price')->nullable();
+                    $table->integer('whci_cash')->nullable()->unsigned()->default(0)->index();
                     $table->timestamps();
                     $table->softDeletes();
                 });
@@ -85,25 +96,224 @@ class WhCore
 
     }
 
+    // *******************************************************
+    // *** Работа с остатками
+    // *******************************************************
+
+    // *******************************************************
+    // *** Считаем остатки по конкретному товару
+    public function calcRestOffer($offerId, $saveStats = 0)
+    {
+        $rest = 0;
+
+        $dbPlaces = DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->selectRaw('whci_place_id')
+            ->where('whci_offer_id', $offerId)
+            ->groupBy('whci_place_id')
+            ->get();
+
+        WhcRest::where('whcr_offer_id', $offerId)->update([
+            'whcr_active'   => 0,
+        ]);
+
+        foreach ($dbPlaces as $place) {
+
+            $dbRest = DB::table('whc_wh' . $this->warehouseId . '_items')
+                ->selectRaw('sum(whci_count * whci_sign) as total')
+                ->where('whci_offer_id', $offerId)
+                ->where('whci_place_id', $place->whci_place_id)
+                ->first();
+
+            if (isset($dbRest->total)) {
+
+                $currantRest = $dbRest->total;
+
+                WhcRest::updateOrCreate(
+                    [
+                        'whcr_offer_id' => $offerId,
+                        'whcr_place_id' => $place->whci_place_id,
+                    ],  // Условие поиска
+                    [
+                        'whcr_wh_id'    => $this->warehouseId,
+                        'whcr_count'    => $currantRest,
+                        'whcr_place_id' => $place->whci_place_id,
+                        'whcr_active'   => 1,
+                    ]
+                );
+
+                $rest += $dbRest->total;
+
+            }
+        }
+
+        return $rest;
+    }
+
+    // ******************************************************
+    // *** Получаем список товаров находящийся на месте
+//    public function getRestOfOfferId($placeId, $offerId)
+//    {
+//
+//        $rest = 0;
+//
+//        $rest = $this->calcRestOffer($offerId);
+//
+//        return $rest;
+//
+//    }
+
+    public function getRestOfOfferId($offerId)
+    {
+
+        $rest = 0;
+
+        $rest = $this->calcRestOffer($offerId);
+
+        return $rest;
+
+    }
+
+    public function readyToReserve($orderId)
+    {
+        $dbItem = DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $orderId)
+            ->where('whci_doc_type', 2)
+            ->where('whci_status', 0)
+            ->first();
+
+        if (isset($dbItem->whci_id))
+            return false;
+
+        return true;
+    }
+
+    // Является ли товар зарезервированным
+    public function getReservedOffer($orderId, $offerId)
+    {
+        $dbItem = DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $orderId)
+            ->where('whci_offer_id', $offerId)
+            ->where('whci_doc_type', 2)
+            ->where('whci_status', 1)
+            ->first();
+
+        if (isset($dbItem->whci_id))
+            return true;
+
+        return false;
+    }
+
+    public function reservOffers($offerId)
+    {
+        $currentRest = $acceptanceCountSum = $ordersCountSum = 0;
+        $arOrders = [];
+
+        // Считаем сумму всех приемок
+        $dbRest = DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->selectRaw('sum(whci_count) as total')
+            ->where('whci_offer_id', $offerId)
+            ->where('whci_doc_type', 1)
+            ->first();
+
+        if (isset($dbRest->total)) $acceptanceCountSum = $dbRest->total;
+
+        // Считаю сумму всех заказов
+        $dbRest = DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->selectRaw('sum(whci_count) as total')
+            ->where('whci_offer_id', $offerId)
+            ->where('whci_doc_type', 2)
+            ->where('whci_status', 1)
+            ->first();
+        if (isset($dbRest->total)) $ordersCountSum = $dbRest->total;
+
+        // Получаем текущий остаток товара
+        $currentRest = $acceptanceCountSum - $ordersCountSum;
+
+        // Если товар еще есть, распределяем на оставшиеся заказы
+        if ($currentRest > 0) {
+
+            $dbItems = DB::table('whc_wh' . $this->warehouseId . '_items')
+                ->where('whci_offer_id', $offerId)
+                ->where('whci_doc_type', 2)
+                ->where('whci_status', 0)
+                ->get();
+
+            foreach ($dbItems as $dbItem) {
+
+                $currentRest -= $dbItem->whci_count;
+
+                // Если остатка хватает то резервируем заказ
+                if ($currentRest >= 0) {
+
+                    $dbCurrentOrder = rwOrder::where('o_id', $dbItem->whci_doc_id)
+                        ->first();
+
+                    if (isset($dbCurrentOrder->o_id) && $dbCurrentOrder->o_status_id < 50) {
+
+                        DB::table('whc_wh' . $this->warehouseId . '_items')
+                            ->where('whci_id', $dbItem->whci_id)
+                            ->update([
+                                'whci_status' => 1,
+                            ]);
+
+                        $arOrders[$dbItem->whci_doc_id] = 1;
+
+                    }
+
+                } else {
+
+                    $currentRest += $dbItem->whci_count;
+
+                }
+
+            }
+        }
+
+        return $arOrders;
+
+    }
+
+    // *******************************************************
+    // *** Получаем список всех товаров из документа
     public function getDocumentOffers($docId, $docType)
     {
-        return DB::table('whc_wh'.$this->warehouseId.'_items')
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_doc_id', $docId)
             ->where('whci_doc_type', $docType);
     }
 
+    // *******************************************************
+    // *** Получаем конкретный товар зная ID его элемента
     public function getDocumentOffer($docId, $whOfferId, $docType)
     {
-        return DB::table('whc_wh'.$this->warehouseId.'_items')
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_doc_id', $docId)
             ->where('whci_id', $whOfferId)
             ->where('whci_doc_type', $docType);
     }
 
+    // *******************************************************
+    // *** Получаем список всех товаров из документа
+    public function getDocumentOfferTurnover($offerId)
+    {
+        $items = whcWhItem::fromWarehouse($this->warehouseId)
+            ->where('whci_offer_id', $offerId)
+            ->orderBy('whci_date', 'ASC')
+            ->with('getStatus')
+            ->get();
+
+        return $items;
+
+//        return DB::table('whc_wh' . $this->warehouseId . '_items')
+//            ->where('whci_offer_id', $offerId)
+//            ->orderBy('whci_date', 'ASC')
+//            ->get();
+    }
+
 
     public function getWhOfferId($docId, $offerId, $docType)
     {
-        $offerId = DB::table('whc_wh'.$this->warehouseId.'_items')
+        $offerId = DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_doc_id', $docId)
             ->where('whci_offer_id', $offerId)
             ->where('whci_doc_type', $docType)
@@ -111,61 +321,147 @@ class WhCore
 
         if (isset($offerId->whci_id))
             return $offerId->whci_id;
-                else
-                    return 0;
+        else
+            return 0;
     }
 
-    /**
-     * @return string
-     */
-    // Удаляем элемент из склада
-    public function deleteItem($offerId, $docType): string
+    public function getPlacedCount($docId, $docType)
     {
-        return DB::table('whc_wh'.$this->warehouseId.'_items')
-            ->where('whci_id', $offerId)
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
+            ->where('whci_place_id', '>', 0)
+            ->sum('whci_count');
+    }
+
+    public function setPlaceCoutItem($itemId, $placeId, $count = 0)
+    {
+        if ($count == 0) {
+
+            $offerId = DB::table('whc_wh' . $this->warehouseId . '_items')
+                ->where('whci_id', $itemId)
+                ->update([
+                    'whci_place_id' => $placeId,
+                ]);
+
+        } else {
+
+            $offerId = DB::table('whc_wh' . $this->warehouseId . '_items')
+                ->where('whci_id', $itemId)
+                ->update([
+                    'whci_place_id' => $placeId,
+                    'whci_count' => $count,
+                ]);
+
+        }
+
+    }
+
+    public function getAcceptedCount($docId, $docType)
+    {
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
+            ->sum('whci_count');
+    }
+
+    public function getItem($itemId)
+    {
+        $offerId = DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_id', $itemId)
+            ->first();
+
+        if (isset($offerId->whci_id))
+            return $offerId;
+        else
+            return 0;
+
+    }
+
+    // Удаляем элемент из склада
+    public function deleteItem($whOfferId, $docType): string
+    {
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_id', $whOfferId)
             ->where('whci_doc_type', $docType)
             ->delete();
 
     }
 
-    public function addItemCount($offerId, $count, $currentTime = 0)
+    // Удаляем элемент со склада, зная его документ
+    public function deleteItemFromDocument($docOfferId, $docId, $docType): string
     {
-        $itemId = DB::table('whc_wh'.$this->warehouseId.'_items')
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_offer_id', $docOfferId)
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
+            ->delete();
+
+    }
+
+    public function addItemCount($offerId, $count, $currentTime = 0, $exeptDate = NULL, $batch = NULL)
+    {
+        if (strlen($exeptDate) == 6) {
+            $exeptDate = '20' . substr($exeptDate, 4, 2) . '-' . substr($exeptDate, 2, 2) . '-' . substr($exeptDate, 0, 2);
+        } else {
+            $exeptDate = NULL;
+        }
+        if ($batch == '') $batch = NULL;
+
+        $itemId = DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_id', $offerId)
+            ->where('whci_expiration_date', $exeptDate)
+            ->where('whci_batch', $batch)
             ->first();
 
+        if (!isset($itemId->whci_id)) {
+            $itemIdTmp = DB::table('whc_wh' . $this->warehouseId . '_items')
+                ->where('whci_id', $offerId)
+                ->first();
+
+            if (isset($itemIdTmp->whci_id)) {
+                $itemId = DB::table('whc_wh' . $this->warehouseId . '_items')
+                    ->where('whci_offer_id', $itemIdTmp->whci_offer_id)
+                    ->where('whci_expiration_date', $exeptDate)
+                    ->where('whci_batch', $batch)
+                    ->first();
+
+            }
+        }
+
         if (isset($itemId->whci_id)) {
+
+            // Товар с таким  ID и датой есть
+
             $lastCount = $itemId->whci_count + $count;
 
             $time = $itemId->whci_cash;
 
             if ($time != $currentTime) {
-                DB::table('whc_wh'.$this->warehouseId.'_items')
-                    ->where('whci_id', $offerId)
+                DB::table('whc_wh' . $this->warehouseId . '_items')
+                    ->where('whci_id', $itemId->whci_id)
                     ->update([
                         'whci_count' => $lastCount,
                         'whci_cash' => $currentTime,
                     ]);
             }
+
+            return true;
+
+        } else {
+
+            return false;
+
         }
 
-        return true;
     }
 
-    public function getCountOfPlacedFromDocument($docId, $docType)
-    {
-        return DB::table('whc_wh'.$this->warehouseId.'_items')
-            ->where('whci_doc_id', $docId)
-            ->where('whci_doc_type', $docType)
-            ->where('whci_place_id', '>', 0)
-            ->sum('whci_count');
-
-    }
-    public function saveOffers($docId, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL)
+    public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $timeCash = 0)
     {
 
         $validator = Validator::make([
             'docId' => $docId,
+            'docDate' => $docDate,
             'docType' => $docType,
             'docOfferId' => $docOfferId,
             'offerId' => $offerId,
@@ -177,6 +473,7 @@ class WhCore
             'batch' => $batch,
         ], [
             'docId' => 'required|integer',
+            'docDate' => 'nullable|date_format:Y-m-d H:i:s', // Допускаем оба формата
             'docType' => 'required|integer',
             'docOfferId' => 'required|integer',
             'offerId' => 'required|integer',
@@ -202,24 +499,31 @@ class WhCore
             }
         }
 
-        $dbCurrentOffer = DB::table('whc_wh'.$this->warehouseId.'_items')->where('whci_doc_offer_id', $docOfferId)->first();
+        $dbCurrentOffer = DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_offer_id', $docOfferId)
+            ->where('whci_expiration_date', $expDate)
+            ->where('whci_batch', $batch)
+            ->first();
 
         if (isset($dbCurrentOffer->whci_id)) {
 
-            DB::table('whc_wh'.$this->warehouseId.'_items')->where('whci_id', $dbCurrentOffer->whci_id)->update([
+            DB::table('whc_wh' . $this->warehouseId . '_items')->where('whci_id', $dbCurrentOffer->whci_id)->update([
+                'whci_date' => $docDate,
                 'whci_count' => $count,
                 'whci_expiration_date' => $expDate,
                 'whci_batch' => $batch,
                 'whci_barcode' => $barcode,
                 'whci_price' => $price,
+                'whci_cash' => $timeCash,
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
 
         } else {
 
-            $sign = 1;
+            $sign = rwLibTypeDoc::where('td_id', $docType)->first()->td_sign;
 
-            DB::table('whc_wh'.$this->warehouseId.'_items')->insert([
+            DB::table('whc_wh' . $this->warehouseId . '_items')->insert([
+                'whci_date' => $docDate,
                 'whci_status' => $status,
                 'whci_offer_id' => $offerId,
                 'whci_doc_id' => $docId,
@@ -231,6 +535,7 @@ class WhCore
                 'whci_batch' => $batch,
                 'whci_barcode' => $barcode,
                 'whci_price' => $price,
+                'whci_cash' => $timeCash,
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
 
@@ -239,39 +544,56 @@ class WhCore
     }
 
     // Создаем новые элементы
-    function addItems($offerId, $count, $docInId, $barcode = null, $expirationDate = null, $batch = null, $priceId = null) {
+    function addItems($docId, $offerId, $count, $offerDocId, $docType, $barcode = null, $expirationDate = null, $batch = null, $price = null, $timeCash = 0)
+    {
 
-        DB::table('whc_wh'.$warehouseId.'_items')->insert([
-            'whci_status' => $offerId,
+        $sign = 1;
+
+        DB::table('whc_wh' . $this->warehouseId . '_items')->insert([
+            'whci_status' => 0,
+            'whci_doc_id' => $docId,
             'whci_offer_id' => $offerId,
-            'whci_place_id' => $offerId,
-            'whci_doc_id' => $offerId,
-            'whci_doc_status' => $offerId,
-            'whci_doc_type' => $offerId,
+            'whci_doc_offer_id' => $offerDocId,
+            'whci_doc_type' => $docType,
             'whci_count' => $count,
-            'whci_sign' => $offerId,
-            'whci_expiration_date' => $offerId,
-            'whci_batch' => $offerId,
-            'whci_barcode' => $offerId,
-            'whci_price' => $offerId,
+            'whci_sign' => $sign,
+            'whci_expiration_date' => $expirationDate,
+            'whci_batch' => $batch,
+            'whci_barcode' => $barcode,
+            'whci_price' => $price,
+            'whci_cash' => $timeCash,
+            'created_at' => date('Y-m-d H:i:s'),
         ]);
 
     }
 
     // Привязываем элементы к месту хранения
-    function setPlace($offerId, $count, $docInId, $placeId) {
+//    function setPlace($offerId, $count, $docOfferId, $placeId)
+//    {
+//
+//        DB::table('whc_wh' . $warehouseId . '_items')
+//            ->where('whci_offer_id', $offerId)
+//            ->where('whci_in_doc_id', $docOfferId)
+//            ->where('whci_status', 1)
+//            ->select('whci_id')
+//            ->get();
+//
+////        DB::table('whc_wh'.$warehouseId.'_items')->where('whci_offer_id', $offerId)->update([]);
+//
+//    }
 
-        DB::table('whc_wh'.$warehouseId.'_items')
-            ->where('whci_offer_id', $offerId)
-            ->where('whci_in_doc_id', $docInId)
-            ->where('whci_status', 1)
-            ->select('whci_id')
-            ->get();
+    function setPlace($whOfferId, $placeId)
+    {
+
+        DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_id', $whOfferId)
+            ->update([
+                'whci_place_id' => $placeId,
+            ]);
 
 //        DB::table('whc_wh'.$warehouseId.'_items')->where('whci_offer_id', $offerId)->update([]);
 
     }
-
 
 
 }

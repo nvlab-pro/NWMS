@@ -3,9 +3,12 @@
 namespace App\Orchid\Screens\Offers;
 
 use App\Http\Middleware\Offers\OffersMiddleware;
+use App\Models\rwBarcode;
 use App\Models\rwLibStatus;
 use App\Models\rwOffer;
 use App\Models\rwShop;
+use App\Models\rwWarehouse;
+use App\Models\WhcRest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
@@ -20,7 +23,7 @@ use Orchid\Support\Facades\Layout;
 
 class OffersCreateScreen extends Screen
 {
-    public $offerId = 0;
+    public $offerId = 0, $offerName = '', $shopName = '';
 
     /**
      * Fetch data to be displayed on the screen.
@@ -29,33 +32,38 @@ class OffersCreateScreen extends Screen
      */
     public function query($offerId = 0): iterable
     {
+        $currentUser = Auth::user();
 
         $this->offerId = $offerId;
+
+        $arRests = [];
+
+        $dbOffer = rwOffer::with('getShop')->where('of_id', $offerId)->first();
 
         if ($offerId == 0) {
             return [];
         } else {
+
+            $this->offerName = $dbOffer->of_name;
+            $this->shopName = $dbOffer->getShop->sh_name;
+
             return [
-                'rwOffer' => rwOffer::where('of_id', $offerId)->first(),
+                'rwOffer' => $dbOffer,
             ];
+
         }
     }
 
-    /**
-     * The name of the screen displayed in the header.
-     *
-     * @return string|null
-     */
     public function name(): ?string
     {
-        return $this->offerId > 0 ? __('Редактирование товара') : __('Создание нового товара');
+        return $this->offerId > 0 ? $this->offerName : __('Создание нового товара');
     }
 
-    /**
-     * The screen's action buttons.
-     *
-     * @return \Orchid\Screen\Action[]
-     */
+    public function description(): ?string
+    {
+        return __('Магазин: ') . $this->shopName;
+    }
+
     public function commandBar(): iterable
     {
         return [];
@@ -104,10 +112,22 @@ class OffersCreateScreen extends Screen
 
                         Group::make([
 
+//                            Select::make('rwOffer.of_shop_id')
+//                                ->title(__('Магазин'))
+//                                ->width('100px')
+//                                ->fromModel($dbShopsList->get(), 'sh_name', 'sh_id')
+//                                ->disabled(OffersMiddleware::checkRule4SelectShop($this->offerId, 'admin,warehouse_manager')),
+
                             Select::make('rwOffer.of_shop_id')
                                 ->title(__('Магазин'))
                                 ->width('100px')
-                                ->fromModel($dbShopsList->get(), 'sh_name', 'sh_id')
+                                ->fromModel(
+                                    $currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')
+                                        ? $dbShopsList->get()
+                                        : $dbShopsList->whereIn('sh_user_id', [$currentUser->id, $currentUser->parent_id])->get(),
+                                    'sh_name',
+                                    'sh_id'
+                                )
                                 ->disabled(OffersMiddleware::checkRule4SelectShop($this->offerId, 'admin,warehouse_manager')),
 
                             Input::make('rwOffer.of_img')
@@ -174,16 +194,6 @@ class OffersCreateScreen extends Screen
                     ]),
 
                 ],
-                'Остатки' => [
-                    Layout::rows([
-                    ]),
-                ],
-                'Движение товара' => [
-                    Layout::rows([
-                    ]),
-                ],
-                'История' => [
-                ],
             ]),
         ];
     }
@@ -213,18 +223,18 @@ class OffersCreateScreen extends Screen
         if (isset($request->rwOffer['of_id']) && $request->rwOffer['of_id'] > 0) {
 
             rwOffer::where('of_id', $request->rwOffer['of_id'])->update([
-                'of_name'               => $request->rwOffer['of_name'],
-                'of_img'                => $request->rwOffer['of_img'],
-                'of_status'             => $request->rwOffer['of_status'],
-                'of_article'            => $request->rwOffer['of_article'],
-                'of_sku'                => $request->rwOffer['of_sku'],
-                'of_weight'             => $request->rwOffer['of_weight'],
-                'of_dimension_x'        => $request->rwOffer['of_dimension_x'],
-                'of_dimension_y'        => $request->rwOffer['of_dimension_y'],
-                'of_dimension_z'        => $request->rwOffer['of_dimension_z'],
-                'of_price'              => $request->rwOffer['of_price'],
-                'of_estimated_price'    => $request->rwOffer['of_estimated_price'],
-                'of_comment'            => $request->rwOffer['of_comment'],
+                'of_name' => $request->rwOffer['of_name'],
+                'of_img' => $request->rwOffer['of_img'],
+                'of_status' => $request->rwOffer['of_status'],
+                'of_article' => $request->rwOffer['of_article'],
+                'of_sku' => $request->rwOffer['of_sku'],
+                'of_weight' => $request->rwOffer['of_weight'],
+                'of_dimension_x' => $request->rwOffer['of_dimension_x'],
+                'of_dimension_y' => $request->rwOffer['of_dimension_y'],
+                'of_dimension_z' => $request->rwOffer['of_dimension_z'],
+                'of_price' => $request->rwOffer['of_price'],
+                'of_estimated_price' => $request->rwOffer['of_estimated_price'],
+                'of_comment' => $request->rwOffer['of_comment'],
             ]);
 
             Alert::success(__('Данные успешно отредактированы!'));
@@ -232,20 +242,20 @@ class OffersCreateScreen extends Screen
         } else {
 
             rwOffer::insert([
-                'of_name'               => $request->rwOffer['of_name'],
-                'of_img'                => $request->rwOffer['of_img'],
-                'of_shop_id'            => $request->rwOffer['of_shop_id'],
-                'of_status'             => $request->rwOffer['of_status'],
-                'of_article'            => $request->rwOffer['of_article'],
-                'of_sku'                => $request->rwOffer['of_sku'],
-                'of_weight'             => $request->rwOffer['of_weight'],
-                'of_dimension_x'        => $request->rwOffer['of_dimension_x'],
-                'of_dimension_y'        => $request->rwOffer['of_dimension_y'],
-                'of_dimension_z'        => $request->rwOffer['of_dimension_z'],
-                'of_price'              => $request->rwOffer['of_price'],
-                'of_estimated_price'    => $request->rwOffer['of_estimated_price'],
-                'of_domain_id'          => $currentUser->domain_id,
-                'of_comment'            => $request->rwOffer['of_comment'],
+                'of_name' => $request->rwOffer['of_name'],
+                'of_img' => $request->rwOffer['of_img'],
+                'of_shop_id' => $request->rwOffer['of_shop_id'],
+                'of_status' => $request->rwOffer['of_status'],
+                'of_article' => $request->rwOffer['of_article'],
+                'of_sku' => $request->rwOffer['of_sku'],
+                'of_weight' => $request->rwOffer['of_weight'],
+                'of_dimension_x' => $request->rwOffer['of_dimension_x'],
+                'of_dimension_y' => $request->rwOffer['of_dimension_y'],
+                'of_dimension_z' => $request->rwOffer['of_dimension_z'],
+                'of_price' => $request->rwOffer['of_price'],
+                'of_estimated_price' => $request->rwOffer['of_estimated_price'],
+                'of_domain_id' => $currentUser->domain_id,
+                'of_comment' => $request->rwOffer['of_comment'],
             ]);
 
             Alert::success(__('Данные успешно добавлены!'));
