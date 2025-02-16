@@ -249,7 +249,7 @@ class AcceptancesOffersScreen extends Screen
                         '_token' => csrf_token(), // Добавляем CSRF-токен вручную
                     ]),
             ]),
-            Layout::view('acceptances.AcceptanceOffersFormFooter'),
+            Layout::view('Acceptances.AcceptanceOffersFormFooter'),
         ];
     }
 

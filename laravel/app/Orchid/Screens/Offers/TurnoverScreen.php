@@ -117,7 +117,7 @@ class TurnoverScreen extends Screen
     {
         return [
 //            TurnoverTable::class,
-            Layout::view('offers.OfferTurnoverList'),
+            Layout::view('Offers.OfferTurnoverList'),
         ];
     }
 }
