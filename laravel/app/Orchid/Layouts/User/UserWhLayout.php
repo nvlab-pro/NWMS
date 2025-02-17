@@ -22,8 +22,7 @@ class UserWhLayout extends Rows
     {
         $currentUser = Auth::user();
 
-        $query = rwWarehouse::where('wh_type', 1)
-            ->with('getDomain');
+        $query = rwWarehouse::with('getDomain');
 
         if (!$currentUser->hasRole('admin')) {
             $query->where('wh_domain_id', $currentUser->domain_id);
