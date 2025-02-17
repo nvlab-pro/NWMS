@@ -26,6 +26,7 @@ class UserListScreen extends Screen
     {
         return [
             'users' => User::with('roles')
+                ->with('getDomain')
                 ->filters(UserFiltersLayout::class)
                 ->defaultSort('id', 'desc')
                 ->paginate(),
@@ -37,7 +38,7 @@ class UserListScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'User Management';
+        return __('Пользователи');
     }
 
     /**
@@ -45,7 +46,7 @@ class UserListScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'A comprehensive list of all registered users, including their profiles and privileges.';
+        return 'Полный список всех зарегистрированных пользователей, включая их профили и привилегии.';
     }
 
     public function permission(): ?iterable
@@ -63,7 +64,7 @@ class UserListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Add'))
+            Link::make(__('Новый пользователь'))
                 ->icon('bs.plus-circle')
                 ->route('platform.systems.users.create'),
         ];

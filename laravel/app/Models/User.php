@@ -107,9 +107,14 @@ class User extends Authenticatable
         return new UserPresenter($this);
     }
 
-    public function showLocations()
+    public function getDomain()
     {
-        return $this->hasOne(MistralLocations::class, 'loc_Id', 'storage_id');
+        return $this->hasOne(rwDomain::class, 'dm_id', 'domain_id');
+    }
+
+    public function getWh()
+    {
+        return $this->hasOne(rwWarehouse::class, 'wh_id', 'wh_id');
     }
 
     public function role()
