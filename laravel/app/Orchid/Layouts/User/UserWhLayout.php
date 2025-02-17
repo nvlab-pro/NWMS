@@ -29,13 +29,13 @@ class UserWhLayout extends Rows
             $query->where('wh_domain_id', $currentUser->domain_id);
         }
 
-        $options = $query->get()->map(function ($warehouse) use ($currentUser) {
+        $options = $query->get()->mapWithKeys(function ($warehouse) use ($currentUser) {
             if ($currentUser->hasRole('admin')) {
                 return [$warehouse->wh_id => $warehouse->wh_name . ' (' . $warehouse->getDomain->dm_name . ')'];
             } else {
                 return [$warehouse->wh_id => $warehouse->wh_name];
             }
-        })->collapse();
+        });
 
         return [
             Select::make('user.wh_id')

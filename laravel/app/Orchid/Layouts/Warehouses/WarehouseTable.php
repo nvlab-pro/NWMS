@@ -31,6 +31,7 @@ class WarehouseTable extends Table
         return [
             TD::make('wh_id', 'ID')
                 ->sort()
+                ->align(TD::ALIGN_CENTER)
                 ->render(function (rwWarehouse $modelName) {
                     return Link::make($modelName->wh_id)
                         ->route('platform.warehouses.edit',$modelName->wh_id);
@@ -38,6 +39,7 @@ class WarehouseTable extends Table
 
             TD::make('wh_type', 'Тип склада')
                 ->sort()
+                ->align(TD::ALIGN_CENTER)
                 ->filter(TD::FILTER_TEXT)
                 ->render(fn ($whList) => $whList->getWhType ?
                     "<b style='background-color: {$whList->getWhType->lwt_bgcolor};
@@ -57,10 +59,24 @@ class WarehouseTable extends Table
 
             TD::make('getOwner.name', 'Владелец')
                 ->sort()
+                ->align(TD::ALIGN_CENTER)
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwWarehouse $modelName) {
                     return Link::make($modelName->getOwner->name)
                         ->route('platform.warehouses.edit',$modelName->wh_id);
+                }),
+
+            TD::make('getDomain.dm_name', 'Домен')
+                ->sort()
+                ->align(TD::ALIGN_CENTER)
+                ->filter(TD::FILTER_TEXT)
+                ->render(function (rwWarehouse $modelName) {
+                    if ($modelName->getDomain) {
+                        return Link::make($modelName->getDomain->dm_name)
+                            ->route('platform.warehouses.edit',$modelName->wh_id);
+                    } else {
+                        return '-';
+                    }
                 }),
 
             TD::make(__('Действия'))

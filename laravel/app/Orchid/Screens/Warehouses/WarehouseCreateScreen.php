@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Warehouses;
 
+use App\Models\rwDomain;
 use App\Models\rwLibWhType;
 use App\Models\rwWarehouse;
 use App\Models\User;
@@ -77,8 +78,25 @@ class WarehouseCreateScreen extends Screen
         $currentUser = Auth::user();
 
         $arAddFields = [];
+        $arAddFields2 = [];
+
+        if ($currentUser->hasRole('admin')) {
+
+            $arAddFields2[] = Select::make('whList.wh_domain_id')
+                ->fromModel(rwDomain::get(), 'dm_name', 'dm_id')
+                ->value($currentUser->domain_id)
+                ->title(__('Выберите домен'));
+
+        } else {
+
+            $arAddFields2[] = Input::make('whList.wh_domain_id')
+                ->type('hidden')
+                ->value($currentUser->domain_id);
+
+        }
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
+
             $arAddFields[] = Select::make('whList.wh_user_id')
                 ->fromModel(User::get(), 'name', 'id')
                 ->title(__('Выберите владельца'));
@@ -93,6 +111,7 @@ class WarehouseCreateScreen extends Screen
                 ->title(__('Выберите склад ФФ'));
 
         } else {
+
             $arAddFields[] = Input::make('whList.wh_user_id')
                 ->type('hidden')
                 ->value($currentUser->id);
@@ -100,9 +119,11 @@ class WarehouseCreateScreen extends Screen
             $arAddFields[] = Input::make('whList.wh_type')
                 ->type('hidden')
                 ->value(2);
+
         }
 
         return [
+
             Layout::rows(
                 array_merge(
                     [
@@ -114,6 +135,7 @@ class WarehouseCreateScreen extends Screen
                             ->title(__('Название')),
                     ],
                     $arAddFields,
+                    $arAddFields2,
                     [
                         Button::make(__('Сохранить'))
                             ->type(Color::DARK)
@@ -135,6 +157,7 @@ class WarehouseCreateScreen extends Screen
             'whList.wh_user_id' => 'required|integer',
             'whList.wh_type' => 'required|integer',
             'whList.wh_parent_id' => 'nullable|integer',
+            'whList.wh_domain_id' => 'nullable|integer',
         ]);
 
         // Если тип склада равен 2, то родительский ID не требуется
@@ -150,6 +173,7 @@ class WarehouseCreateScreen extends Screen
                 'wh_user_id' => $data['whList']['wh_user_id'],
                 'wh_type' => $data['whList']['wh_type'],
                 'wh_parent_id' => $data['whList']['wh_parent_id'],
+                'wh_domain_id' => $data['whList']['wh_domain_id'],
             ]);
 
             Alert::success(__('Склад успешно отредактирован!'));
@@ -161,7 +185,7 @@ class WarehouseCreateScreen extends Screen
                 'wh_user_id' => $data['whList']['wh_user_id'],
                 'wh_type' => $data['whList']['wh_type'],
                 'wh_parent_id' => $data['whList']['wh_parent_id'],
-                'wh_domain_id' => $currentUser->domain_id,
+                'wh_domain_id' => $data['whList']['wh_domain_id'],
             ]);
 
             Alert::success(__('Склад успешно создан!'));
