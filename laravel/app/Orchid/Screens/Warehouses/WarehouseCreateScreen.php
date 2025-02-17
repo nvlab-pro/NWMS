@@ -95,10 +95,10 @@ class WarehouseCreateScreen extends Screen
 
         }
 
-        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
+        if ($currentUser->hasRole('admin')) {
 
             $arAddFields[] = Select::make('whList.wh_user_id')
-                ->fromModel(User::get(), 'name', 'id')
+                ->fromModel(User::where('domain_id', $currentUser->domain_id), 'name', 'id')
                 ->title(__('Выберите владельца'));
 
             $arAddFields[] = Select::make('whList.wh_type')
@@ -112,9 +112,13 @@ class WarehouseCreateScreen extends Screen
 
         } else {
 
-            $arAddFields[] = Input::make('whList.wh_user_id')
-                ->type('hidden')
-                ->value($currentUser->id);
+            $arAddFields[] = Select::make('whList.wh_parent_id')
+                ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
+                ->title(__('Выберите склад ФФ'));
+
+            $arAddFields[] = Select::make('whList.wh_user_id')
+                ->fromModel(User::where('domain_id', $currentUser->domain_id), 'name', 'id')
+                ->title(__('Выберите владельца'));
 
             $arAddFields[] = Input::make('whList.wh_type')
                 ->type('hidden')

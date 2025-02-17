@@ -58,6 +58,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.orders.index'),
 
             Menu::make(__('Бибилотеки'))
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->icon('bs.list-check')
                 ->list([
                     Menu::make(__('Страны'))
@@ -124,6 +125,7 @@ class PlatformProvider extends OrchidServiceProvider
             // ************************
 
             Menu::make(__('Настройки'))
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->icon('bs.gear-fill')
                 ->list([
                     Menu::make(__('Магазины'))
@@ -137,6 +139,7 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(__('Доставка заказов'))
                 ->icon('bs.truck-front-fill')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
                     Menu::make(__('Службы доставки'))
@@ -151,6 +154,7 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(__('Пользователи'))
                 ->icon('bs.people')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
                     Menu::make('Пользователи')
                         ->icon('bs.people')
@@ -159,7 +163,7 @@ class PlatformProvider extends OrchidServiceProvider
 
                     Menu::make('Роли')
                         ->icon('bs.book')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                        ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->route('platform.systems.roles'),
                 ]),
 

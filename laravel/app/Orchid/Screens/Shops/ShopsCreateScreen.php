@@ -79,7 +79,7 @@ class ShopsCreateScreen extends Screen
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
             $arAddFields[] = Select::make('rwShop.sh_user_id')
-                ->fromModel(User::get(), 'name', 'id')
+                ->fromModel(User::where('domain_id', $currentUser->domain_id)->get(), 'name', 'id')
                 ->title(__('Выберите владельца'));
         } else {
             $arAddFields[] = Input::make('rwShop.sh_user_id')

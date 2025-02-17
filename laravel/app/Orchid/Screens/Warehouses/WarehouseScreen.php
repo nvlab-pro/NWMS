@@ -20,8 +20,7 @@ class WarehouseScreen extends Screen
     {
         $currentUser = Auth::user();
 
-        $dbWhList = rwWarehouse::query();
-//        $dbWhList = $dbWhList->with('getOwner');
+        $dbWhList = rwWarehouse::where('wh_domain_id', $currentUser->domain_id);
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 

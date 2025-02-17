@@ -21,7 +21,7 @@ class UserDomainLayout extends Rows
     {
         $currentUser = Auth::user();
 
-        $dbDomains = rwDomain::class;
+        $dbDomains = rwDomain::query();
 
         if (!$currentUser->hasRole('admin')) {
             $dbDomains->where('dm_id' , $currentUser->domain_id);

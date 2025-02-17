@@ -55,6 +55,10 @@ class PlatformScreen extends Screen
                     ->route('platform.terminal.main'),
             ];
 
+        } else {
+
+            return [];
+
         }
     }
 
