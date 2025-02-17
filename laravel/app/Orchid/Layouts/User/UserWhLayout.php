@@ -22,9 +22,24 @@ class UserWhLayout extends Rows
     {
         $currentUser = Auth::user();
 
+        $query = rwWarehouse::where('wh_type', 1)
+            ->with('getDomain');
+
+        if (!$currentUser->hasRole('admin')) {
+            $query->where('wh_domain_id', $currentUser->domain_id);
+        }
+
+        $options = $query->get()->map(function ($warehouse) use ($currentUser) {
+            if ($currentUser->hasRole('admin')) {
+                return [$warehouse->wh_id => $warehouse->wh_name . ' (' . $warehouse->getDomain->dm_name . ')'];
+            } else {
+                return [$warehouse->wh_id => $warehouse->wh_name];
+            }
+        })->collapse();
+
         return [
             Select::make('user.wh_id')
-                ->fromModel(rwWarehouse::where('wh_domain_id', $currentUser->domain_id)->where('wh_type', 1), 'wh_name')
+                ->options($options)
                 ->title(__('Склад'))
                 ->help('Specify which groups this account should belong to'),
         ];

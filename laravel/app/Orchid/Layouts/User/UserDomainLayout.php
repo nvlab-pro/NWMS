@@ -21,9 +21,15 @@ class UserDomainLayout extends Rows
     {
         $currentUser = Auth::user();
 
+        $dbDomains = rwDomain::class;
+
+        if (!$currentUser->hasRole('admin')) {
+            $dbDomains->where('dm_id' , $currentUser->domain_id);
+        }
+
         return [
             Select::make('user.domain_id')
-                ->fromModel(rwDomain::where('dm_id' , $currentUser->domain_id), 'dm_name')
+                ->fromModel($dbDomains, 'dm_name')
                 ->title(__('Домен'))
                 ->help('Specify which groups this account should belong to'),
         ];
