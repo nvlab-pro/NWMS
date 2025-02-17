@@ -8,6 +8,7 @@ use App\Orchid\Layouts\User\UserEditLayout;
 use App\Orchid\Layouts\User\UserFiltersLayout;
 use App\Orchid\Layouts\User\UserListLayout;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 use Orchid\Screen\Actions\Link;
@@ -24,8 +25,18 @@ class UserListScreen extends Screen
      */
     public function query(): iterable
     {
+        $currentUser = Auth::user();
+
+        $dbUsers = User::with('roles');
+
+        if (!$currentUser->hasRole('admin')) {
+
+            $dbUsers->where('domain_id', $currentUser->domain_id);
+
+        }
+
         return [
-            'users' => User::with('roles')
+            'users' => $dbUsers
                 ->with('getDomain')
                 ->filters(UserFiltersLayout::class)
                 ->defaultSort('id', 'desc')
