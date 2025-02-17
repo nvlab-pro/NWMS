@@ -22,15 +22,17 @@ class WarehouseScreen extends Screen
 
         $dbWhList = rwWarehouse::query();
 
-        if ($currentUser->hasRole('warehouse_manager')) {
+        if (!$currentUser->hasRole('admin')) {
+            if ($currentUser->hasRole('warehouse_manager')) {
 
-            $dbWhList->where('wh_domain_id', $currentUser->domain_id);
+                $dbWhList->where('wh_domain_id', $currentUser->domain_id);
 
-        } else {
+            } else {
 
-            $dbWhList->where('wh_user_id', $currentUser->id)
-                ->where('wh_domain_id', $currentUser->domain_id);
+                $dbWhList->where('wh_user_id', $currentUser->id)
+                    ->where('wh_domain_id', $currentUser->domain_id);
 
+            }
         }
 
         return [
