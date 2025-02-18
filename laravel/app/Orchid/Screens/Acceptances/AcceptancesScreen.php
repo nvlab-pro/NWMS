@@ -20,20 +20,25 @@ class AcceptancesScreen extends Screen
     {
         $currentUser = Auth::user();
 
-        $dbAcceptList = rwAcceptance::where('acc_domain_id', $currentUser->domain_id);
+        $dbAcceptList = rwAcceptance::query();
 
-        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager') || $currentUser->hasRole('warehouse_worker')) {
+        if (!$currentUser->hasRole('admin')) {
 
-            $arWhList = rwWarehouse::where('wh_parent_id', $currentUser->wh_id)
-                ->pluck('wh_id')
-                ->toArray();
+            if ($currentUser->hasRole('warehouse_manager') || $currentUser->hasRole('warehouse_worker')) {
 
-            $dbAcceptList = rwAcceptance::whereIn('acc_wh_id', $arWhList);
+                $dbAcceptList = rwAcceptance::where('acc_domain_id', $currentUser->domain_id);
 
-        } else {
+//                $arWhList = rwWarehouse::where('wh_parent_id', $currentUser->wh_id)
+//                    ->pluck('wh_id')
+//                    ->toArray();
+//
+//                $dbAcceptList = rwAcceptance::whereIn('acc_wh_id', $arWhList);
 
-            $dbAcceptList->whereIn('acc_user_id', [$currentUser->id, $currentUser->parent_id]);
+            } else {
 
+                $dbAcceptList->whereIn('acc_user_id', [$currentUser->id, $currentUser->parent_id]);
+
+            }
         }
 
         return [
