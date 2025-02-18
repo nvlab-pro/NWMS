@@ -29,7 +29,7 @@ class RoleListScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Role Management';
+        return 'Управление ролями';
     }
 
     /**
@@ -37,7 +37,7 @@ class RoleListScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'A comprehensive list of all roles, including their permissions and associated users.';
+        return 'Полный список всех ролей, включая их разрешения и связанных с ними пользователей.';
     }
 
     public function permission(): ?iterable
@@ -55,7 +55,7 @@ class RoleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Add'))
+            Link::make(__('Добавить роль'))
                 ->icon('bs.plus-circle')
                 ->href(route('platform.systems.roles.create')),
         ];

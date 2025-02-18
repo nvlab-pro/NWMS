@@ -44,8 +44,7 @@ class UserWhLayout extends Rows
         return [
             Select::make('user.wh_id')
                 ->options($options)
-                ->title(__('Склад'))
-                ->help('Specify which groups this account should belong to'),
+                ->title(__('Склад')),
         ];
     }
 }

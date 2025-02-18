@@ -98,7 +98,13 @@ class WarehouseCreateScreen extends Screen
         if ($currentUser->hasRole('admin')) {
 
             $arAddFields[] = Select::make('whList.wh_user_id')
-                ->fromModel(User::where('domain_id', $currentUser->domain_id), 'name', 'id')
+                ->options(
+                    User::with('getDomain')->get()->pluck('name', 'id')->map(function ($name, $id) {
+                        $user = User::find($id);
+                        isset($user->getDomain->dm_name) ? $domain = $user->getDomain->dm_name : $domain = '-';
+                        return $domain ? "$name ($domain)" : $name;
+                    })->toArray()
+                )
                 ->title(__('Выберите владельца'));
 
             $arAddFields[] = Select::make('whList.wh_type')
@@ -106,8 +112,14 @@ class WarehouseCreateScreen extends Screen
                 ->title(__('Выберите тип склада'));
 
             $arAddFields[] = Select::make('whList.wh_parent_id')
-                ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
-                ->empty('Не выбрано')
+//                ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
+                ->options(
+                    rwWarehouse::where('wh_type', 1)->with('getDomain')->get()->pluck('wh_name', 'wh_id')->map(function ($name, $id) {
+                        $wh = rwWarehouse::find($id);
+                        isset($wh->getDomain->dm_name) ? $domain = $wh->getDomain->dm_name : $domain = '-';
+                        return $domain ? "$name ($domain)" : $name;
+                    })->toArray()
+                )
                 ->title(__('Выберите склад ФФ'));
 
         } else {

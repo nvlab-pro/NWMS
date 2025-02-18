@@ -83,7 +83,7 @@ class UserListLayout extends Table
                 ->align(TD::ALIGN_RIGHT)
                 ->sort(),
 
-            TD::make(__('Actions'))
+            TD::make(__('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn (User $user) => DropDown::make()

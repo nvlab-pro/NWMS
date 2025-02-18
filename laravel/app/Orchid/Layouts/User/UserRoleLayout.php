@@ -33,8 +33,7 @@ class UserRoleLayout extends Rows
             Select::make('user.roles.')
                 ->fromModel(Role::where('id', '>=', $role_id), 'name')
                 ->multiple()
-                ->title(__('Name role'))
-                ->help('Specify which groups this account should belong to'),
+                ->title(__('Выбарите роли')),
         ];
     }
 }

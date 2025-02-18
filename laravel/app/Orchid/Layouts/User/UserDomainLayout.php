@@ -30,8 +30,7 @@ class UserDomainLayout extends Rows
         return [
             Select::make('user.domain_id')
                 ->fromModel($dbDomains, 'dm_name')
-                ->title(__('Домен'))
-                ->help('Specify which groups this account should belong to'),
+                ->title(__('Домен')),
         ];
     }
 }
