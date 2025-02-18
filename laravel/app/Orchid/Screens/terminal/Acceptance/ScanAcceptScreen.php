@@ -158,6 +158,9 @@ class ScanAcceptScreen extends Screen
                     // Обновляем остатки на морде документа
                     $currentDocument->updateRest(1);
 
+                    // Пересчитываем остатки
+                    $currentWarehouse->calcRestOffer($validatedData['offerId']);
+
                 } else {
 
                     // Если товара нет в накладной добавляем новый товар в накладную

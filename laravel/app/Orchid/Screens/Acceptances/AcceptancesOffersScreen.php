@@ -319,6 +319,7 @@ class AcceptancesOffersScreen extends Screen
                     }
                 }
 
+                $currentWarehouse->calcRestOffer($validatedData['docOfferId'][$id]);
 
             }
         }
