@@ -11,4 +11,4 @@ Artisan::command('inspire', function () {
 Artisan::command('reserveOrders', function () {
     $current = new scheduleOrders();
     $current->reserveOrders();
-})->daily();
+})->everyFiveMinutes();
