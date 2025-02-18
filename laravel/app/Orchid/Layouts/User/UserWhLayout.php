@@ -30,7 +30,12 @@ class UserWhLayout extends Rows
 
         $options = $query->get()->mapWithKeys(function ($warehouse) use ($currentUser) {
             if ($currentUser->hasRole('admin')) {
-                return [$warehouse->wh_id => $warehouse->wh_name . ' (' . $warehouse->getDomain->dm_name . ')'];
+                // Проверяем, существует ли связанный домен
+                if ($warehouse->getDomain) {
+                    return [$warehouse->wh_id => $warehouse->wh_name . ' (' . $warehouse->getDomain->dm_name . ')'];
+                } else {
+                    return [$warehouse->wh_id => $warehouse->wh_name . ' (Нет домена)'];
+                }
             } else {
                 return [$warehouse->wh_id => $warehouse->wh_name];
             }

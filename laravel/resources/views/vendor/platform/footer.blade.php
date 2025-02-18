@@ -4,7 +4,7 @@
 
     <div class="text-center user-select-none my-4 d-none d-lg-block">
         <p class="small mb-0">
-            (с) Copyright by NWMS. Version of deploy 0.511 from 17.02.2025
+            (с) Copyright by NWMS. Version of deploy 0.513 from 17.02.2025
         </p>
     </div>
 @endguest
