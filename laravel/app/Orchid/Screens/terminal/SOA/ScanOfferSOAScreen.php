@@ -6,7 +6,8 @@ use App\Models\rwBarcode;
 use App\Models\rwOffer;
 use App\Models\rwOrder;
 use App\Models\rwOrderOffer;
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
+use App\Models\rwWarehouse;
 use App\Orchid\Services\SOAService;
 use App\WhCore\WhCore;
 use App\WhPlaces\WhPlaces;
@@ -57,9 +58,14 @@ class ScanOfferSOAScreen extends Screen
             $whId = $dbOrder->o_wh_id;
 
             // Определяем место
-            $dbPlace = new WhPlaces($barcode);
+            $currentPlace = 0;
+            $dbParentWh = rwWarehouse::find($whId);
+            if (isset($dbParentWh) &&  $dbParentWh->wh_parent_id > 0) {
 
-            $currentPlace = $dbPlace->getPlaceId();
+                $dbPlace = new WhPlaces($barcode, $dbParentWh->wh_parent_id);
+                $currentPlace = $dbPlace->getPlaceId();
+
+            }
 
             // Ищем товары на этом месте
             if ($currentPlace > 0) {

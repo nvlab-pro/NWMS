@@ -2,7 +2,7 @@
 
 namespace App\Orchid\Screens\Warehouses\Places;
 
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
 use App\Orchid\Layouts\Warehouses\Places\PlacesTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +31,7 @@ class LabelPrintScreen extends Screen
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 
-            $dbPlacesList = rwPlaces::with('getWh')
+            $dbPlacesList = rwPlace::with('getWh')
                 ->with('getType')
                 ->where('pl_domain_id', $currentUser->domain_id);
 

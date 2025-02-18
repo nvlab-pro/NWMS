@@ -4,7 +4,7 @@ namespace App\Orchid\Services;
 
 use App\Models\rwAcceptance;
 use App\Models\rwAcceptanceOffer;
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
 use App\WhActionLog\WhActionLog;
 use App\WhCore\WhCore;
 use Illuminate\Support\Facades\Auth;
@@ -110,6 +110,9 @@ class DocumentService
 
             $this->updateRest(1);
 
+            // Пересчитываем остатки
+            $this->currentWarehouse->calcRestOffer($dbOffer->whci_offer_id);
+
             return true;
 
         } else {
@@ -155,7 +158,7 @@ class DocumentService
                 }
             }
 
-            $dbPlace = rwPlaces::where('pl_id', $placed)->first();
+            $dbPlace = rwPlace::where('pl_id', $placed)->first();
 
             $placeStr = 0;
             if (isset($dbPlace->pl_id)) {

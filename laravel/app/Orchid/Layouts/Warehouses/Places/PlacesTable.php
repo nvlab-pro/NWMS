@@ -3,7 +3,7 @@
 namespace App\Orchid\Layouts\Warehouses\Places;
 
 use App\Models\rwLibAcceptType;
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
 use App\Models\rwPlaceTypes;
 use App\Models\rwWarehouse;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +37,7 @@ class PlacesTable extends Table
             TD::make('pl_id', 'ID')
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
-                ->render(function (rwPlaces $place) {
+                ->render(function (rwPlace $place) {
                     return Link::make($place->pl_id)
                         ->route('platform.warehouses.places.index', $place->pl_id);
                 }),
@@ -124,7 +124,7 @@ class PlacesTable extends Table
             TD::make(__('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
-                ->render(fn(rwPlaces $place) => DropDown::make()
+                ->render(fn(rwPlace $place) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
 

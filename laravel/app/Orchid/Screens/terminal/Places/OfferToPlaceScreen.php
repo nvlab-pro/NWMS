@@ -5,7 +5,9 @@ namespace App\Orchid\Screens\terminal\Places;
 use App\Models\rwAcceptance;
 use App\Models\rwBarcode;
 use App\Models\rwOffer;
+use App\Models\rwWarehouse;
 use App\Orchid\Services\DocumentService;
+use App\WhCore\WhCore;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,12 +68,18 @@ class OfferToPlaceScreen extends Screen
 
             if ($action == 'savePlace' && isset($validatedData['offerWhId']) && isset($scanCount)) {
 
-                $place = new WhPlaces($barcode);
+                $placeId = 0;
+                $dbParentWh = rwWarehouse::find($this->whId);
 
-                if ($place->getPlaceId() > 0) {
+                if (isset($dbParentWh) &&  $dbParentWh->wh_parent_id > 0) {
+                    $place = new WhPlaces($barcode, $dbParentWh->wh_parent_id);
+                    $placeId = $place->getPlaceId();
+                }
+
+                if ($placeId > 0) {
                     // ШК нормальный, привязываем товар
 
-                    $currentDocument->saveOfferToPlace($validatedData['offerWhId'], $place->getPlaceId(), $scanCount, $currentTime);
+                    $currentDocument->saveOfferToPlace($validatedData['offerWhId'], $placeId, $scanCount, $currentTime);
                     $action = '';
                     $barcode = '';
                     $validatedData['offerWhId'] = 0;

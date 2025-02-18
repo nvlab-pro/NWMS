@@ -2,13 +2,13 @@
 
 namespace App\WhPlaces;
 
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
 
 class WhPlaces
 {
     private $barcode, $placeId;
 
-    public function __construct($barcode)
+    public function __construct($barcode, $whId)
     {
         $this->barcode = $barcode;
         $this->placeId = 0;
@@ -21,13 +21,22 @@ class WhPlaces
 
             if ($controlSum == $arBarcode[2]) {
 
-                $this->placeId = $arBarcode[1];
+                $tmpPlaceId = $arBarcode[1];
+
+                $dbPlace = rwPlace::where('pl_wh_id', $whId)
+                    ->where('pl_id', $tmpPlaceId)
+                    ->first();
+
+                if (isset($dbPlace) && $dbPlace->pl_id > 0) {
+                    $this->placeId = $dbPlace->pl_id;
+                }
 
             }
 
         }
 
-        return $this->placeId;
+//        return $this->placeId;
+        return false;
     }
 
     function getPlaceId()
@@ -37,7 +46,7 @@ class WhPlaces
 
     function getPlaceWeight()
     {
-        $currentPlace = rwPlaces::find($this->placeId);
+        $currentPlace = rwPlace::find($this->placeId);
 
         return $currentPlace->pl_place_weight;
     }
@@ -46,7 +55,7 @@ class WhPlaces
     {
 
         if ($placeId == NULL) $placeId = $this->placeId;
-        $currentPlace = rwPlaces::find($this->placeId);
+        $currentPlace = rwPlace::find($this->placeId);
 
         if ($currentPlace) {
 

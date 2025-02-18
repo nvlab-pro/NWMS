@@ -4,7 +4,7 @@ namespace App\Orchid\Screens\terminal\SOA;
 
 use App\Models\rwOrder;
 use App\Models\rwOrderOffer;
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
 use App\Orchid\Services\SOAService;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;

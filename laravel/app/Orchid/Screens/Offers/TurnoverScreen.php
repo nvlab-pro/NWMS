@@ -6,7 +6,7 @@ use App\Models\rwAcceptance;
 use App\Models\rwOffer;
 use App\Models\rwOrder;
 use App\Models\rwOrderOffer;
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
 use App\Models\rwWarehouse;
 use Orchid\Support\Facades\Layout;
 use App\WhCore\WhCore;
@@ -62,7 +62,7 @@ class TurnoverScreen extends Screen
             // Берем место хранения
             if ($item->whci_place_id > 0) {
 
-                $dbPlace = rwPlaces::where('pl_id', $item->whci_place_id)
+                $dbPlace = rwPlace::where('pl_id', $item->whci_place_id)
                     ->first();
 
                 if (isset($dbPlace->pl_id)) {

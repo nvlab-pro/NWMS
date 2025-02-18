@@ -26,7 +26,7 @@ class WhcRest extends Model
     ];
 
     public function getPlace() {
-        return $this->hasOne(rwPlaces::class, 'pl_id', 'whcr_place_id');
+        return $this->hasOne(rwPlace::class, 'pl_id', 'whcr_place_id');
     }
 
 }

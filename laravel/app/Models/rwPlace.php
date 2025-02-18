@@ -11,7 +11,7 @@ use Orchid\Filters\Types\Like;
 use Orchid\Filters\Types\Where;
 use Orchid\Screen\AsSource;
 
-class rwPlaces extends Model
+class rwPlace extends Model
 {
     protected $primaryKey = 'pl_id';
 

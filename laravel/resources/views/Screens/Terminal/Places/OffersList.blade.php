@@ -72,23 +72,7 @@
         </div>
     </div>
 </div>
-<div style="text-align: center;">
-    <button style="font-size: 26px; background-color: #3eb058;" onclick="confirmAction()"> &#10004; @lang('Приемка заверешна!')</button>
 
-    <script>
-        function confirmAction() {
-            // Появляется окно подтверждения
-            var result = confirm("Вы уверены что хотите закрыть накладную?");
-
-            // Если пользователь подтвердил (нажал "ОК")
-            if (result) {
-                // Переход по ссылке
-                window.location.href = "{{ route('platform.terminal.acceptance.select') }}?action=close&docId={{ $docId }}";
-            }
-        }
-    </script>
-</div>
-<hr>
 <div style="text-align: center;">
-    <a href="{{ route('platform.terminal.acceptance.select') }}"> &#9668; @lang('Вернуться к списку')</a>
+    <a href="{{ route('platform.terminal.places.select') }}"> &#9668; @lang('Вернуться к списку')</a>
 </div>

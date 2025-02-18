@@ -4,7 +4,8 @@ namespace App\Orchid\Screens\terminal\SOA;
 
 use App\Models\rwOrder;
 use App\Models\rwOrderOffer;
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
+use App\Models\rwWarehouse;
 use App\Orchid\Services\SOAService;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class ScanPlaceSOAScreen extends Screen
         $offerId = 0;
         $orderOfferId = 0;
         $nextPlaceId = 0;
+        $parentWhId = 0;
         $plWeight = 9999999999;
         $arPlace = [];
 
@@ -49,7 +51,16 @@ class ScanPlaceSOAScreen extends Screen
         // Если заказ есть
         if ($dbOrder) {
 
-            $tmpPlaceId = new WhPlaces($barcode);
+            // Получаем parentWhId
+            $dbParentWh = rwWarehouse::find($dbOrder->o_wh_id);
+            if (isset($dbParentWh) &&  $dbParentWh->wh_parent_id > 0) {
+
+                $parentWhId = $dbParentWh->wh_parent_id;
+
+            }
+
+            // Получаем вес текущего места нахождения кладовщика
+            $tmpPlaceId = new WhPlaces($barcode, $parentWhId);
             $currentWeight = $tmpPlaceId->getPlaceWeight();
 
             // Получаем список товаров

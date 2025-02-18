@@ -2,7 +2,7 @@
 
 namespace App\Orchid\Screens\Warehouses\Places;
 
-use App\Models\rwPlaces;
+use App\Models\rwPlace;
 use App\Models\rwPlaceTypes;
 use App\Models\rwWarehouse;
 use App\Orchid\Layouts\Warehouses\Places\PlacesTable;
@@ -29,7 +29,7 @@ class PlacesScreen extends Screen
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 
-            $dbPlacesList = rwPlaces::with('getWh')
+            $dbPlacesList = rwPlace::with('getWh')
                 ->with('getType')
                 ->where('pl_domain_id', $currentUser->domain_id);
 
@@ -251,7 +251,7 @@ class PlacesScreen extends Screen
                         if ($row > 0)       $placeWeight += $row * 1000;
                         if ($section > 0)   $placeWeight += $section * 10000;
 
-                        $id = rwPlaces::insertGetId([
+                        $id = rwPlace::insertGetId([
                             'pl_domain_id'      => $currentUser->domain_id,
                             'pl_wh_id'          => $validatedData['reqLoacation'],
                             'pl_type'           => $validatedData['reqPlaceType'] ?? 0,

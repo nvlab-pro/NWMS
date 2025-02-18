@@ -243,7 +243,7 @@
                                            style="margin-bottom: 5px;" class="countInput"><br>
 
                                     <br>
-                                    <input type="submit" value="PUT" id="btn2"
+                                    <input type="submit" value="@lang('ВЫБРАТЬ')" id="btn2"
                                            class="btn btn-success btn-block buttonPut">
 
                                     <script>
