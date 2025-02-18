@@ -43,5 +43,9 @@ class rwWarehouse extends Model implements AuditableContract
         return $this->hasOne(rwDomain::class, 'dm_id', 'wh_domain_id');
     }
 
+    public function getParent() {
+        return $this->hasOne(rwWarehouse::class, 'wh_id', 'wh_parent_id');
+    }
+
 
 }

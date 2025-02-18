@@ -66,6 +66,17 @@ class WarehouseTable extends Table
                         ->route('platform.warehouses.edit',$modelName->wh_id);
                 }),
 
+            TD::make('getParent.wh_name', 'Родитель')
+                ->sort()
+                ->align(TD::ALIGN_CENTER)
+                ->filter(TD::FILTER_TEXT)
+                ->render(function (rwWarehouse $modelName) {
+                    if (isset($modelName->getParent->wh_name))
+                        return Link::make($modelName->getParent->wh_name)
+                            ->route('platform.warehouses.edit',$modelName->wh_id);
+                    else return '-';
+                }),
+
             TD::make('getDomain.dm_name', 'Домен')
                 ->sort()
                 ->align(TD::ALIGN_CENTER)

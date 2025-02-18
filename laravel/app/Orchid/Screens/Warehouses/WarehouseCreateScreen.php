@@ -120,6 +120,7 @@ class WarehouseCreateScreen extends Screen
                         return $domain ? "$name ($domain)" : $name;
                     })->toArray()
                 )
+                ->empty('Не задан')
                 ->title(__('Выберите склад ФФ'));
 
         } else {
