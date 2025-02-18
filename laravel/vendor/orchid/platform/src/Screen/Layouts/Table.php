@@ -99,19 +99,19 @@ abstract class Table extends Layout
     protected function textNotFound(): string
     {
         if (count(request()->query()) !== 0) {
-            return __('No results found for your current filters');
+            return __('Результаты по вашим текущим фильтрам не найдены');
         }
 
-        return __('There are no objects currently displayed');
+        return __('Нет ни одного объекта для отображения');
     }
 
     protected function subNotFound(): string
     {
         if (count(request()->query()) !== 0) {
-            return __('Try adjusting your filter settings or removing it altogether to see more data');
+            return __('Попробуйте изменить настройки фильтра или вообще удалить его, чтобы увидеть больше данных.');
         }
 
-        return __('Import or create objects, or check back later for updates');
+        return __('Загружайте или создавайте объекты или проверяйте обновления позже.');
     }
 
     /**

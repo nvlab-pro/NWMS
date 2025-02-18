@@ -26,7 +26,7 @@ class PlatformScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Get Started';
+        return __('Главная страница');
     }
 
     /**
@@ -34,7 +34,7 @@ class PlatformScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Welcome to your Orchid application.';
+        return __('Добро пожаловать на главную страницу') . ' NWMS.cloud';
     }
 
     /**
@@ -70,7 +70,6 @@ class PlatformScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::view('platform::partials.update-assets'),
             Layout::view('platform::partials.welcome'),
         ];
     }
