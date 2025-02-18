@@ -74,7 +74,7 @@ class AcceptancesOffersTable extends Table
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $readonly = '';
-                    if ($modelName->ao_placed > 0) $readonly = 'readonly';
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
                     return '<input type="hidden" name="docOfferId[' . $modelName->ao_id . ']" value="' . e($modelName->ao_offer_id) . '" >
                     <input type="hidden" name="docOfferPlaced[' . $modelName->ao_id . ']" value="' . e($modelName->ao_placed) . '" >
                     <input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="Батч" ' . $readonly . '>';
@@ -97,7 +97,7 @@ class AcceptancesOffersTable extends Table
                         ])
                         ->class('form-control');
 
-                    if ($readonly == 'readonly') {
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) {
                         $input->readonly(); // Применяем readonly только если $readonly === true
                     }
 
@@ -110,7 +110,7 @@ class AcceptancesOffersTable extends Table
                     $bgColor = '';
                     if ($modelName->ao_barcode == '') $bgColor = 'style="background-color: #ffbdbf;"';
                     $readonly = '';
-                    if ($modelName->ao_placed > 0) $readonly = 'readonly';
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
                     return '<input type="text" name="docOfferBarcode[' . $modelName->ao_id . ']" value="' . e($modelName->ao_barcode) . '" class="form-control" size=15 placeHolder="Штрих-код" ' . $bgColor . ' ' . $readonly . '>';
                 }),
 
@@ -120,7 +120,7 @@ class AcceptancesOffersTable extends Table
                     $bgColor = '';
                     if ($modelName->ao_expected == 0) $bgColor = 'style="background-color: #ffbdbf;"';
                     $readonly = '';
-                    if ($modelName->ao_placed > 0) $readonly = 'readonly';
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status > 2) $readonly = 'readonly';
                     return '<input type="text" name="docOfferExept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_expected) . '" class="form-control" size=6 placeHolder="Ожидается" ' . $bgColor . ' ' . $readonly . '>';
                 }),
 
@@ -129,7 +129,7 @@ class AcceptancesOffersTable extends Table
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $isEditable = RoleMiddleware::checkUserPermission('admin,warehouse_manager'); // Проверка роли
                     $readonly = $isEditable ? '' : 'readonly'; // Установка атрибута readonly для пользователей без прав
-                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1) $readonly = 'readonly';
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
                     return '<input type="text" name="docOfferAccept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_accepted) . '" class="form-control" size=6 placeHolder="Принято" ' . $readonly . '>';
                 }),
 
@@ -147,7 +147,7 @@ class AcceptancesOffersTable extends Table
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $readonly = '';
-                    if ($modelName->ao_placed > 0) $readonly = 'readonly';
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
                     return '<input type="text" name="docOfferPrice[' . $modelName->ao_id . ']" value="' . e($modelName->ao_price) . '" class="form-control" size=6 placeHolder="Цена" ' . $readonly . '>';
                 }),
 

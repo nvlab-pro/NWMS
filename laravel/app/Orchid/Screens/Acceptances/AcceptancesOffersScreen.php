@@ -243,6 +243,7 @@ class AcceptancesOffersScreen extends Screen
 
                 // Ваша форма и таблицы
                 Button::make('Сохранить изменения')
+                    ->canSee($this->docStatus < 4 ? true : false)
                     ->class('btn btn-primary d-block mx-auto')
                     ->method('saveChanges') // Указывает метод экрана для вызова
                     ->parameters([
