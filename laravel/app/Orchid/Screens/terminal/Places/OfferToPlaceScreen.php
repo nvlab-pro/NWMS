@@ -71,8 +71,11 @@ class OfferToPlaceScreen extends Screen
                 $placeId = 0;
                 $dbParentWh = rwWarehouse::find($this->whId);
 
+                dump($dbParentWh);
+
                 if (isset($dbParentWh) &&  $dbParentWh->wh_parent_id > 0) {
                     $place = new WhPlaces($barcode, $dbParentWh->wh_parent_id);
+                    dump($place);
                     $placeId = $place->getPlaceId();
                 }
 

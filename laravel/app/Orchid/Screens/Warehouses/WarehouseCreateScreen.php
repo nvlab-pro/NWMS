@@ -177,8 +177,8 @@ class WarehouseCreateScreen extends Screen
             'whList.wh_domain_id' => 'nullable|integer',
         ]);
 
-        // Если тип склада равен 2, то родительский ID не требуется
-        if ($data['whList']['wh_type'] == 2) {
+        // Если тип склада равен 1, то родительский ID не требуется
+        if ($data['whList']['wh_type'] == 1) {
             $data['whList']['wh_parent_id'] = null;
         }
 

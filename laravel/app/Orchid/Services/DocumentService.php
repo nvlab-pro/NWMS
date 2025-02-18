@@ -92,6 +92,7 @@ class DocumentService
 
                 $this->currentWarehouse->addItems(
                     $dbOffer->whci_doc_id,
+                    $dbOffer->whci_date,
                     $dbOffer->whci_offer_id,
                     $newCount,
                     $dbCurrentAccept->ao_id,

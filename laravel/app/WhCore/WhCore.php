@@ -544,13 +544,14 @@ class WhCore
     }
 
     // Создаем новые элементы
-    function addItems($docId, $offerId, $count, $offerDocId, $docType, $barcode = null, $expirationDate = null, $batch = null, $price = null, $timeCash = 0)
+    function addItems($docId, $docDate, $offerId, $count, $offerDocId, $docType, $barcode = null, $expirationDate = null, $batch = null, $price = null, $timeCash = 0)
     {
 
         $sign = 1;
 
         DB::table('whc_wh' . $this->warehouseId . '_items')->insert([
             'whci_status' => 0,
+            'whci_date' => $docDate,
             'whci_doc_id' => $docId,
             'whci_offer_id' => $offerId,
             'whci_doc_offer_id' => $offerDocId,
