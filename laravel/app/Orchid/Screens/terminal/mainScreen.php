@@ -57,7 +57,7 @@ class mainScreen extends Screen
 
                     Link::make('Информация')
                         ->route('platform.acceptances.index')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
+                        ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.info-circle')
                         ->style('border-bottom: 2px solid #999999; 
                                     border-right: 2px solid #999999; 
@@ -97,9 +97,23 @@ class mainScreen extends Screen
                                     background-color: #FFF3CD; 
                                     margin-bottom: 5px;'),
 
+                    Link::make('Позаказная сборка заказов (вручную)')
+                        ->route('platform.terminal.soam.select')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
+                        ->icon('bs.box-seam')
+                        ->style('border-bottom: 2px solid #999999; 
+                                    border-right: 2px solid #999999; 
+                                    border-top: 1px solid #DDDDDD; 
+                                    border-left: 1px solid #DDDDDD; 
+                                    width: 100%; text-align: left; 
+                                    padding: 15px 15px 15px 15px; 
+                                    font-size: 20px; 
+                                    background-color: #CFE2FF; 
+                                    margin-bottom: 5px;'),
+
                     Link::make('Сборка заказов (позаказно)')
                         ->route('platform.terminal.soa.select')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
+                        ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.box-seam')
                         ->style('border-bottom: 2px solid #999999; 
                                     border-right: 2px solid #999999; 
@@ -113,7 +127,7 @@ class mainScreen extends Screen
 
                     Link::make('Сборка заказов (волной)')
                         ->route('platform.acceptances.index')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
+                        ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.cart3')
                         ->style('border-bottom: 2px solid #999999; 
                                     border-right: 2px solid #999999; 
@@ -127,7 +141,7 @@ class mainScreen extends Screen
 
                     Link::make('Сортировка сборки (волной)')
                         ->route('platform.acceptances.index')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
+                        ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.shuffle')
                         ->style('border-bottom: 2px solid #999999; 
                                     border-right: 2px solid #999999; 
@@ -141,7 +155,7 @@ class mainScreen extends Screen
 
                     Link::make('Инвентаризация')
                         ->route('platform.acceptances.index')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
+                        ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.calculator')
                         ->style('border-bottom: 2px solid #999999; 
                                     border-right: 2px solid #999999; 

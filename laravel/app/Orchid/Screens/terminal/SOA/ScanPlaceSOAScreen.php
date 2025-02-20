@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 
+// Зная где находится кладовщик, находим ближайшую полку где есть товар из этого заказа
 class ScanPlaceSOAScreen extends Screen
 {
     private $orderId;

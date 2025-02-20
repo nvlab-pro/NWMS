@@ -26,6 +26,7 @@
     .sizeBlock {
         width: 95%;
     }
+
     .warningDIV {
         font-size: 14px;
     }
@@ -51,9 +52,31 @@
                             <b>@lang('Арт.:')</b> {{ $dbOffer->of_article }}<br>
                             <hr>
                             <b>@lang('Я взял'):</b><br>
-                                <input type="text" name="count" id="count" value="{{ $dbOrderOffer->oo_qty }}" autofocus onkeyup="handleKeyPress(event)" class="sizeBlock" style="text-align: center;">
+                            <input type="text" name="count" id="count" value="{{ $dbOrderOffer->oo_qty }}"
+                                   autofocus onkeyup="handleDecimalInput(this, {{ $dbOrderOffer->oo_qty }});"
+                                   class="sizeBlock" style="text-align: center;">
+
+                            <script>
+                                function handleDecimalInput(input, max) {
+                                    // Разрешаем только цифры и одну точку
+                                    input.value = input.value.replace(/[^0-9.]/g, '');
+
+                                    // Убираем лишние точки
+                                    let parts = input.value.split('.');
+                                    if (parts.length > 2) {
+                                        input.value = parts[0] + '.' + parts.slice(1).join('');
+                                    }
+
+                                    // Проверяем число на превышение максимума
+                                    if (parseFloat(input.value) > max) {
+                                        input.value = max;
+                                    }
+                                }
+                            </script>
+
                             <hr>
-                            <div class="alert alert-info warningDIV" role="alert">@lang('Внимательно пересчитайте взятый товар и укажите количество!')</div>
+                            <div class="alert alert-info warningDIV"
+                                 role="alert">@lang('Внимательно пересчитайте взятый товар и укажите количество!')</div>
                         </td>
                     </tr>
                 </table>

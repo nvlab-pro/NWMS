@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Orders;
 
+use App\Console\scheduleOrders;
 use App\Models\rwOffer;
 use App\Models\rwOrder;
 use App\Models\rwOrderOffer;
@@ -69,7 +70,18 @@ class OrderEditScreen extends Screen
                 ->icon('bs.arrow-return-left')
                 ->style('border: 1px solid #D62222; color: #D62222; border-radius: 10px;')
                 ->method('changeStatusToNew')
-                ->canSee(in_array($this->order->o_status_id, [20, 30, 40]))
+                ->canSee(in_array($this->order->o_status_id, [15, 20, 30, 40]))
+                ->parameters([
+                    '_token' => csrf_token(),
+                    'docId' => $this->order->o_id,
+                    'status' => $this->order->o_status_id,
+                ]),
+
+            Button::make(__(' В обработку'))
+                ->icon('bs.check-circle')
+                ->style('border: 1px solid #dd66ff; color: #dd66ff; border-radius: 10px;')
+                ->method('changeStatusToProcessing')
+                ->canSee(in_array($this->order->o_status_id, [10]))
                 ->parameters([
                     '_token' => csrf_token(),
                     'docId' => $this->order->o_id,
@@ -80,7 +92,18 @@ class OrderEditScreen extends Screen
                 ->icon('bs.piggy-bank')
                 ->style('border: 1px solid #157347; color: #157347; border-radius: 10px;')
                 ->method('changeStatus')
-                ->canSee(in_array($this->order->o_status_id, [10, 30]))
+                ->canSee(in_array($this->order->o_status_id, [10, 15, 30]))
+                ->parameters([
+                    '_token' => csrf_token(),
+                    'docId' => $this->order->o_id,
+                    'status' => $this->order->o_status_id,
+                ]),
+
+            Button::make(__(' Зарезервировать вручную'))
+                ->icon('bs.piggy-bank')
+                ->style('border: 1px solid #9c4edb; color: #9c4edb; border-radius: 10px;')
+                ->method('tryReservOrder')
+                ->canSee(in_array($this->order->o_status_id, [20]))
                 ->parameters([
                     '_token' => csrf_token(),
                     'docId' => $this->order->o_id,
@@ -263,7 +286,32 @@ class OrderEditScreen extends Screen
         ];
     }
 
+    public function tryReservOrder(Request $request)
+    {
+        $validatedData = $request->validate([
+            'docId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'status' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+        ]);
 
+        if ($validatedData['status'] == 20) {
+
+            $order = rwOrder::where('o_id', $validatedData['docId'])
+                ->first();
+
+            if ($order) {
+
+                scheduleOrders::reserveOrders($validatedData['docId']);
+
+            }
+
+            Alert::success(__('Заказ ' . $validatedData['docId'] . ' перерезервирован!'));
+
+        } else {
+
+            Alert::error(__('Заказ ' . $validatedData['docId'] . ' не может быть зарезервирован!'));
+
+        }
+    }
     public function changeStatusToNew(Request $request)
     {
         $validatedData = $request->validate([
@@ -271,7 +319,7 @@ class OrderEditScreen extends Screen
             'status' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
         ]);
 
-        if ($validatedData['status'] == 10 || $validatedData['status'] == 20 || $validatedData['status'] == 30 || $validatedData['status'] == 40) {
+        if ($validatedData['status'] == 10 || $validatedData['status'] == 15 || $validatedData['status'] == 20 || $validatedData['status'] == 30 || $validatedData['status'] == 40) {
 
             $order = rwOrder::where('o_id', $validatedData['docId'])
                 ->first();
@@ -295,6 +343,37 @@ class OrderEditScreen extends Screen
         }
     }
 
+    public function changeStatusToProcessing(Request $request)
+    {
+        $validatedData = $request->validate([
+            'docId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'status' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+        ]);
+
+        if ($validatedData['status'] == 10) {
+
+            $order = rwOrder::where('o_id', $validatedData['docId'])
+                ->first();
+
+            if ($order) {
+
+                $order->o_status_id = 15;
+                $order->save(); // Автоматически вызовет аудит, если модель использует AuditableContract
+
+                $serviceOrder = new OrderService($validatedData['docId']);
+                $serviceOrder->resaveOrderList();
+
+            }
+
+            Alert::success(__('Заказ ' . $validatedData['docId'] . ' переведен в статус "В обработке"!'));
+
+        } else {
+
+            Alert::error(__('Заказ ' . $validatedData['docId'] . ' не может быть переведен в статус "В обработке"!'));
+
+        }
+    }
+
     public function changeStatus(Request $request)
     {
         $validatedData = $request->validate([
@@ -302,7 +381,7 @@ class OrderEditScreen extends Screen
             'status' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
         ]);
 
-        if ($validatedData['status'] == 10 || $validatedData['status'] == 30) {
+        if ($validatedData['status'] == 10 || $validatedData['status'] == 15 || $validatedData['status'] == 30) {
 
             $order = rwOrder::where('o_id', $validatedData['docId'])
                 ->first();
@@ -361,30 +440,40 @@ class OrderEditScreen extends Screen
                 $count = $validatedData['orderOfferQty'][$id];
                 if ($dbOrder->o_status_id <= 10) $count = 0; // Если статус документа "новый", товар не резервируем
 
-                $currentWarehouse->saveOffers(
-                    $validatedData['docId'],
-                    $validatedData['docDate'],
-                    2,                                  // Приемка (таблица rw_lib_type_doc)
-                    $id,                                        // ID офера в документе
-                    $validatedData['orderOfferId'][$id],          // оригинальный ID товара
-                    $status,
-                    $count,
-                    NULL,
-                    $validatedData['orderOfferOcPrice'][$id],
-                    NULL,
-                    NULL,
-                    time()
-                );
+                if ($count > 0) {
+                    // Сохраняем товар
+                    $currentWarehouse->saveOffers(
+                        $validatedData['docId'],
+                        $validatedData['docDate'],
+                        2,                                  // Приемка (таблица rw_lib_type_doc)
+                        $id,                                        // ID офера в документе
+                        $validatedData['orderOfferId'][$id],          // оригинальный ID товара
+                        $status,
+                        $count,
+                        NULL,
+                        $validatedData['orderOfferOcPrice'][$id],
+                        NULL,
+                        NULL,
+                        time()
+                    );
+                } else {
+                    // Удаляем товар
+                    $currentWarehouse->deleteItemFromDocument($id, $validatedData['docId'], 2);
+                }
 
                 $count += $offer->oo_qty;
                 $sum += $offer->oo_oc_price * $offer->oo_qty;
 
+                // Резервируем товары в заказе
                 $currentWarehouse->calcRestOffer($validatedData['orderOfferId'][$id]);
 
             }
 
 
         }
+
+        // Перерезервируем товары в заказе
+        $currentWarehouse->reservOffers($validatedData['orderOfferId'][$id]);
 
         $dbOrder = rwOrder::find($validatedData['docId']);
         $dbOrder->o_count = $count;

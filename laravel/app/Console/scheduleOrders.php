@@ -8,7 +8,7 @@ use App\WhCore\WhCore;
 
 class scheduleOrders
 {
-    public function reserveOrders()
+    public static function reserveOrders($orderId = 0)
     {
         $start = microtime(true);
 
@@ -16,7 +16,10 @@ class scheduleOrders
         $arOrders = [];
         $arWhCore = [];
 
-        $dbOrdersList = rwOrder::whereIn('o_status_id', [20, 30])->get();
+        if ($orderId == 0)
+            $dbOrdersList = rwOrder::whereIn('o_status_id', [20, 30])->get();
+        else
+            $dbOrdersList = rwOrder::whereIn('o_status_id', [20, 30])->where('o_id', $orderId)->get();
 
         foreach ($dbOrdersList as $dbOrder) {
             $orderId = $dbOrder->o_id;

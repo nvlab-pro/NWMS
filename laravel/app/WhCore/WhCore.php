@@ -500,6 +500,8 @@ class WhCore
         }
 
         $dbCurrentOffer = DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
             ->where('whci_doc_offer_id', $docOfferId)
             ->where('whci_expiration_date', $expDate)
             ->where('whci_batch', $batch)

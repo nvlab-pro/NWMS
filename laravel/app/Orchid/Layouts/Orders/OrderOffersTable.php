@@ -71,11 +71,20 @@ class OrderOffersTable extends Table
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
-                ->render(function (rwOrderOffer $modelName) use ($whCore) {
-                    if ($whCore->getReservedOffer($modelName->oo_order_id, $modelName->oo_offer_id))
-                        return '<div style="background-color: #1ebc33; color: #FFFFFF; border-radius: 10px;"><b>' . __('В резерве') . '</b></div>';
-                    else
-                        return '<div style="background-color: #ef2828; color: #FFFFFF; border-radius: 10px;"><b>' . __('Нет товара') . '</b></div>';
+                ->render(function (rwOrderOffer $modelName) use ($whCore, $status) {
+                    if ($status <= 10)
+                        return '-';
+                    if ($status == 15 )
+                        return '<div style="background-color: #AAAAAA; color: #FFFFFF; border-radius: 10px;"><b>' . __('Готов к резерву') . '</b></div>';
+                    if ($status == 20)
+                        return '<div style="background-color: #999999; color: #FFFFFF; border-radius: 10px;"><b>' . __('Резервирую...') . '</b></div>';
+
+                    if ($status > 20) {
+                        if ($whCore->getReservedOffer($modelName->oo_order_id, $modelName->oo_offer_id))
+                            return '<div style="background-color: #1ebc33; color: #FFFFFF; border-radius: 10px;"><b>' . __('В резерве') . '</b></div>';
+                        else
+                            return '<div style="background-color: #ef2828; color: #FFFFFF; border-radius: 10px;"><b>' . __('Нет товара') . '</b></div>';
+                    }
                 }),
 
             TD::make('oo_qty', __('Количество'))

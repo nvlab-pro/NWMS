@@ -111,7 +111,7 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make(__('Склады'))
                         ->icon('bs.building')
                         ->route('platform.warehouses.index')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
 
                     Menu::make(__('Места хранения'))
                         ->icon('bs.inboxes')
@@ -149,7 +149,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ]),
 
             // ************************
-            // *     Польщователи      *
+            // *     Пользователи      *
             // ************************
 
             Menu::make(__('Пользователи'))
