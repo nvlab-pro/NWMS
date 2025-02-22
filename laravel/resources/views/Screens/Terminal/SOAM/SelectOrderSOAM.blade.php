@@ -3,15 +3,16 @@
         font-size: 15px;
         margin-top: 10px;
     }
+
     .table tbody tr td.offerNameTD {
         font-size: 16px;
     }
 </style>
 
 @if(isset($currentOffer['offerId']))
-            <form action="{{ route('platform.terminal.soam.offer', [$soaId, $dbOrder->o_id])  }}" method="GET"
-          @else
-            <form action="{{ route('platform.terminal.soam.order', [$soaId, $dbOrder->o_id])  }}" method="GET"
+    <form action="{{ route('platform.terminal.soam.offer', [$soaId, $dbOrder->o_id])  }}" method="GET"
+@else
+    <form action="{{ route('platform.terminal.soam.order', [$soaId, $dbOrder->o_id])  }}" method="GET"
           @endif
           onsubmit="return validateForm()"
           style="text-align: center; padding: 0px; margin-top: 0px; margin-bottom: 0px;">
@@ -106,11 +107,11 @@
 
     </script>
 
- @if(count($arOffersList) == 0)
-     <script>
-         window.location.href = "{{ route('platform.terminal.soam.finish', [$soaId, $dbOrder->o_id]) }}";
-     </script>
- @endif
+    @if(count($arOffersList) == 0)
+        <script>
+            window.location.href = "{{ route('platform.terminal.soam.finish', [$soaId, $dbOrder->o_id]) }}";
+        </script>
+    @endif
 
     <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
         <div class="row g-0">
@@ -135,47 +136,53 @@
                         @if($action == '' || ($action == 'findOffers' && $arOffer['offerShow'] == 1))
 
                             <tr>
-                                <td style="background-color: #CFE2FF;" class="offerNameTD"><b>{{ $arOffer['offerName'] }}</b>
+                                <td style="background-color: #CFE2FF;" class="offerNameTD">
+                                    <b>{{ $arOffer['offerName'] }}</b>
                                     @if($arOffer['offerArt'] != '')
                                         ({{ $arOffer['offerArt'] }})
                                     @endif
                                 </td>
-                                <td style="text-align: center; color: #a30000; background-color: #CFF4FC;" class="offerNameTD"><b>
+                                <td style="text-align: center; color: #a30000; background-color: #CFF4FC;"
+                                    class="offerNameTD"><b>
                                         <nobr>{{ $arOffer['offerQty'] }}</nobr>
                                     </b></td>
                             </tr>
                             <tr>
                                 <td colspan="2">
                                     <table class="table table-striped">
-                                        @foreach($arPlacesList[$arOffer['offerId']] as $arPlace)
-                                            @php
-                                                $bgcolor = ' background-color: #D1E7DD;';
-                                                if ($arPlace['whcr_count'] < $arOffer['offerQty']) $bgcolor = ' background-color: #F8D7DA;';
-                                            @endphp
-                                            <tr>
-                                                @if($arPlace['pl_room'] != '')
-                                                    <td style="{{ $bgcolor }}">{{ $arPlace['pl_room'] }}<br><span style="font-size:10px; font-color: #AAAAAA;">{{ $arPlace['pl_id'] }}</span></td>
-                                                @endif
-                                                @if($arPlace['pl_floor'] != '')
-                                                    <td style="{{ $bgcolor }}">{{ $arPlace['pl_floor'] }}</td>
-                                                @endif
-                                                @if($arPlace['pl_section'] != '')
-                                                    <td style="{{ $bgcolor }}">{{ $arPlace['pl_section'] }}</td>
-                                                @endif
-                                                @if($arPlace['pl_row'] != '')
-                                                    <td style="{{ $bgcolor }}">{{ $arPlace['pl_row'] }}</td>
-                                                @endif
-                                                @if($arPlace['pl_rack'] != '')
-                                                    <td style="{{ $bgcolor }}">{{ $arPlace['pl_rack'] }}</td>
-                                                @endif
-                                                @if($arPlace['pl_shelf'] != '')
-                                                    <td style="{{ $bgcolor }}">{{ $arPlace['pl_shelf'] }}</td>
-                                                @endif
-                                                <td style="{{ $bgcolor }}"><b
-                                                            style="color: #0a870c;">{{ $arPlace['whcr_count'] }}</b>
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                        @if(isset($arPlacesList[$arOffer['offerId']]))
+                                            @foreach($arPlacesList[$arOffer['offerId']] as $arPlace)
+                                                @php
+                                                    $bgcolor = ' background-color: #D1E7DD;';
+                                                    if ($arPlace['whcr_count'] < $arOffer['offerQty']) $bgcolor = ' background-color: #F8D7DA;';
+                                                @endphp
+                                                <tr>
+                                                    @if($arPlace['pl_room'] != '')
+                                                        <td style="{{ $bgcolor }}">{{ $arPlace['pl_room'] }}<br><span
+                                                                    style="font-size:10px; font-color: #AAAAAA;">{{ $arPlace['pl_id'] }}</span>
+                                                        </td>
+                                                    @endif
+                                                    @if($arPlace['pl_floor'] != '')
+                                                        <td style="{{ $bgcolor }}">{{ $arPlace['pl_floor'] }}</td>
+                                                    @endif
+                                                    @if($arPlace['pl_section'] != '')
+                                                        <td style="{{ $bgcolor }}">{{ $arPlace['pl_section'] }}</td>
+                                                    @endif
+                                                    @if($arPlace['pl_row'] != '')
+                                                        <td style="{{ $bgcolor }}">{{ $arPlace['pl_row'] }}</td>
+                                                    @endif
+                                                    @if($arPlace['pl_rack'] != '')
+                                                        <td style="{{ $bgcolor }}">{{ $arPlace['pl_rack'] }}</td>
+                                                    @endif
+                                                    @if($arPlace['pl_shelf'] != '')
+                                                        <td style="{{ $bgcolor }}">{{ $arPlace['pl_shelf'] }}</td>
+                                                    @endif
+                                                    <td style="{{ $bgcolor }}"><b
+                                                                style="color: #0a870c;">{{ $arPlace['whcr_count'] }}</b>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     </table>
                                 </td>
                             </tr>
