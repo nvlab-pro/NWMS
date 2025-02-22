@@ -6,7 +6,7 @@ use App\Models\rwPlace;
 
 class WhPlaces
 {
-    private $barcode, $placeId;
+    private $barcode, $placeId, $prefix;
 
     public function __construct($barcode, $whId)
     {
@@ -15,16 +15,18 @@ class WhPlaces
 
         $arBarcode = explode("*", $barcode);
 
-        if ($arBarcode[0] == "102") {
+        if ($arBarcode[0] >= 102 && $arBarcode[0] <= 110) {
 
             $controlSum = $arBarcode[0] + $arBarcode[1];
 
             if ($controlSum == $arBarcode[2]) {
 
                 $tmpPlaceId = $arBarcode[1];
+                $this->prefix = $arBarcode[0];
 
                 $dbPlace = rwPlace::where('pl_wh_id', $whId)
                     ->where('pl_id', $tmpPlaceId)
+                    ->where('pl_type', $this->prefix)
                     ->first();
 
                 if (isset($dbPlace) && $dbPlace->pl_id > 0) {
@@ -39,12 +41,17 @@ class WhPlaces
         return false;
     }
 
-    function getPlaceId()
+    public function getPlaceId()
     {
         return $this->placeId;
     }
 
-    function getPlaceWeight()
+    public function getType()
+    {
+        return $this->prefix;
+    }
+
+    public function getPlaceWeight()
     {
         $currentPlace = rwPlace::find($this->placeId);
 

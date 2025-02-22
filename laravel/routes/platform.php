@@ -433,14 +433,40 @@ Route::prefix('terminal')
                     ->push('Очередь', route('platform.terminal.soam.select'));
             });
 
-
         // Териминал -> Позаказная сборка (manually) -> Определяем местоположение кладовщика
         Route::screen('soam/{soaId}/{orderId}/order', \App\Orchid\Screens\terminal\SOAM\SelectOrderSOAMScreen::class)
             ->name('.soam.order')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
-                    ->parent('platform.terminal.soa.select')
+                    ->parent('platform.terminal.soam.select')
                     ->push('Сборка', route('platform.terminal.soam.order', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка (manually) -> Определяем местоположение кладовщика
+        Route::screen('soam/{soaId}/{orderId}/offer', \App\Orchid\Screens\terminal\SOAM\GetOfferSOAMScreen::class)
+            ->name('.soam.offer')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soam.select')
+                    ->push('Сборка', route('platform.terminal.soam.offer', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка (manually) -> Завершаем процесс сборки
+        Route::screen('soam/{soaId}/{orderId}/finish', \App\Orchid\Screens\terminal\SOAM\FinishSOAMScreen::class)
+            ->name('.soam.finish')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soam.select')
+                    ->push('Сборка', route('platform.terminal.soam.finish', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка (manually) -> Сборка закончена
+        Route::screen('soam/{soaId}/{orderId}/end', \App\Orchid\Screens\terminal\SOAM\EndSOAMScreen::class)
+            ->name('.soam.end')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soam.select')
+                    ->push('Сборка', route('platform.terminal.soam.end', [$soaId, $orderId]));
             });
 
 

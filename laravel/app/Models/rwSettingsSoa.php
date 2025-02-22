@@ -32,6 +32,13 @@ class rwSettingsSoa extends Model implements AuditableContract
         'ssoa_order_to',
         'ssoa_ds_id',
         'ssoa_name',
+        'ssoa_lable_id',
+        'ssoa_doc_id',
+        'ssoa_count_ready',
+        'ssoa_count_process',
+        'ssoa_count_send',
+        'ssoa_finish_place_type',
+        'ssoa_all_offers',
     ];
 
     public function getWarehouse() {
@@ -48,6 +55,10 @@ class rwSettingsSoa extends Model implements AuditableContract
 
     public function getDS() {
         return $this->hasOne(rwDeliveryService::class, 'ds_id', 'ssoa_ds_id');
+    }
+
+    public function getFinishPlace() {
+        return $this->hasOne(rwPlaceTypes::class, 'pt_id', 'ssoa_finish_place_type');
     }
 
 }

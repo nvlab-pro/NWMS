@@ -38,7 +38,7 @@ class SOAManagementTable extends Table
                     return '<div onClick="window.location=\'' . route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id) . '\'" style="color: ' . $modelName->getStatus->ls_color . ';
                         background-color: ' . $modelName->getStatus->ls_bgcolor . ';
                         padding: 5px;
-                        border-radius: 5px;"><b>' . $modelName->getStatus->ls_name . '</b></div>';
+                        border-radius: 5px;"><b><nobr>' . $modelName->getStatus->ls_name . '</nobr></b></div>';
                 }),
 
             TD::make('ssoa_priority', __('Приоритет'))
@@ -141,9 +141,27 @@ class SOAManagementTable extends Table
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwSettingsSoa $modelName) {
-
                     $dsName = isset($modelName->getDS->ds_name) ? $modelName->getDS->ds_name : '-';
+                    return Link::make($dsName)
+                        ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
+                }),
 
+            TD::make('ssoa_finish_place_type', __('Место завершения сборки'))
+                ->align('center')
+                ->sort()
+                ->filter(TD::FILTER_TEXT)
+                ->render(function (rwSettingsSoa $modelName) {
+                    $dsName = isset($modelName->getFinishPlace->pt_name) ? $modelName->getFinishPlace->pt_name : '-';
+                    return Link::make($dsName)
+                        ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
+                }),
+
+            TD::make('ssoa_all_offers', __('Вид сборки'))
+                ->align('center')
+                ->sort()
+                ->filter(TD::FILTER_TEXT)
+                ->render(function (rwSettingsSoa $modelName) {
+                    $dsName = $modelName->ssoa_all_offers == 0 ? 'Частичная сборка' : 'Все товары';
                     return Link::make($dsName)
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),

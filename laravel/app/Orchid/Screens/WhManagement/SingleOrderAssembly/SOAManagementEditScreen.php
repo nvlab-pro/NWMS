@@ -57,24 +57,63 @@ class SOAManagementEditScreen extends Screen
                     ->hidden()
                     ->value($this->soaSettings->ssoa_id),
 
-                Input::make('queue.ssoa_name')
-                    ->title('Название очереди:')
-                    ->value($this->soaSettings->ssoa_name)
-                    ->required(),
+                Group::make([
+                    Input::make('queue.ssoa_name')
+                        ->title('Название очереди:')
+                        ->value($this->soaSettings->ssoa_name)
+                        ->required(),
 
-                Input::make('queue.ssoa_priority')
-                    ->title('Приоритет (чем больше, тем выше):')
-                    ->type('number')
-                    ->min(0)
-                    ->max(1000)
-                    ->value($this->soaSettings->ssoa_priority)
-                    ->required(),
+                    Select::make('queue.ssoa_finish_place_type')
+                        ->title(__('Место завершения сборки:'))
+                        ->popover(__('Если вы хотите собрать заказ и сразу отгрузить, то выберите "Место завершения сборки". Если же заказ затем нужно будет упаковывать на упаковочном столе, то выберите "Полка сортировки" или "Стол упаковки".'))
+                        ->options([
+                            104 => __('Полка сортировки'),
+                            105 => __('Стол упаковки'),
+                            107 => __('Место завершения сборки'),
+                        ])
+                        ->empty('Не выбрано', 0)
+                        ->value($this->soaSettings->ssoa_finish_place_type),
 
-                Select::make('queue.ssoa_wh_id')
-                    ->title(__('Склад:'))
-                    ->fromModel(rwWarehouse::where('wh_type', 2)->where('wh_domain_id', $currentUser->domain_id), 'wh_name', 'wh_id')
-                    ->empty('Не выбрано', 0)
-                    ->value($this->soaSettings->ssoa_wh_id),
+                ]),
+
+                Group::make([
+                    Input::make('queue.ssoa_priority')
+                        ->title('Приоритет (чем больше, тем выше):')
+                        ->type('number')
+                        ->min(0)
+                        ->max(1000)
+                        ->value($this->soaSettings->ssoa_priority)
+                        ->required(),
+
+                    Select::make('queue.ssoa_all_offers')
+                        ->title(__('Разрешить неполную сборку товара:'))
+                        ->popover(__('Если проставить "Да", то система позволит закончить сборку заказа, даже если товара не хватает.'))
+                        ->options([
+                            1 => __('Нет'),
+                            0 => __('Да'),
+                        ])
+                        ->value($this->soaSettings->ssoa_all_offers),
+
+                ]),
+
+                Group::make([
+
+                    Select::make('queue.ssoa_wh_id')
+                        ->title(__('Склад:'))
+                        ->fromModel(rwWarehouse::where('wh_type', 2)->where('wh_domain_id', $currentUser->domain_id), 'wh_name', 'wh_id')
+                        ->empty('Не выбрано', 0)
+                        ->value($this->soaSettings->ssoa_wh_id),
+
+                    Select::make('queue.ssoa_picking_type')
+                        ->title(__('Тип пикинга:'))
+                        ->popover(__('Выберите будет ли кладовщик сканировать каждый товар или только артикул и вводить количество.'))
+                        ->options([
+                            0 => __('Скан артикула (под пересчет)'),
+                            1 => __('Скан каждого товара'),
+                        ])
+                        ->value($this->soaSettings->ssoa_picking_type),
+
+                ]),
 
                 Select::make('queue.ssoa_user_id')
                     ->title(__('Конкретный пользователь:'))
@@ -91,14 +130,12 @@ class SOAManagementEditScreen extends Screen
                     Input::make('queue.ssoa_date_from')
                         ->title(__('Дата от:'))
                         ->type('date')
-                        ->value($this->soaSettings->ssoa_date_from)
-                        ->required(),
+                        ->value($this->soaSettings->ssoa_date_from),
 
                     Input::make('queue.ssoa_date_to')
                         ->title(__('Дата до:'))
                         ->type('date')
-                        ->value($this->soaSettings->ssoa_date_to)
-                        ->required(),
+                        ->value($this->soaSettings->ssoa_date_to),
                 ]),
 
                 Group::make([
@@ -155,6 +192,9 @@ class SOAManagementEditScreen extends Screen
             'ssoa_offers_count_to' => $data['ssoa_offers_count_to'] ?? $soa->ssoa_offers_count_to,
             'ssoa_order_from' => $data['ssoa_order_from'] ?? $soa->ssoa_order_from,
             'ssoa_order_to' => $data['ssoa_order_to'] ?? $soa->ssoa_order_to,
+            'ssoa_finish_place_type' => $data['ssoa_finish_place_type'] ?? $soa->ssoa_finish_place_type,
+            'ssoa_all_offers' => $data['ssoa_all_offers'] ?? $soa->ssoa_all_offers,
+            'ssoa_picking_type' => $data['ssoa_picking_type'] ?? $soa->ssoa_picking_type,
         ]);
 
         Alert::success(__('Данные волны сохранены!'));

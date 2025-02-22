@@ -29,6 +29,7 @@ class SOAManagementScreen extends Screen
             ->with('getWarehouse')
             ->with('getUser')
             ->with('getDS')
+            ->with('getFinishPlace')
             ->get();
 
         return [
@@ -66,22 +67,57 @@ class SOAManagementScreen extends Screen
 
         return [
             Layout::modal('createQueueModal', [
+                Layout::columns([
+                    Layout::rows([
+                        Input::make('queue.ssoa_name')
+                            ->title('Название очереди:')
+                            ->required(),
+
+                        Input::make('queue.ssoa_priority')
+                            ->title('Приоритет (чем больше, тем выше):')
+                            ->type('number')
+                            ->min(0)
+                            ->max(1000)
+                            ->required(),
+
+                        Select::make('queue.ssoa_wh_id')
+                            ->title(__('Склад:'))
+                            ->fromModel(rwWarehouse::where('wh_type', 2)->where('wh_domain_id', $currentUser->domain_id), 'wh_name', 'wh_id')
+                            ->empty('Не выбрано', 0),
+
+                    ]),
+                    Layout::rows([
+                        Select::make('queue.ssoa_finish_place_type')
+                            ->title(__('Место завершения сборки:'))
+                            ->popover(__('Если вы хотите собрать заказ и сразу отгрузить, то выберите "Место завершения сборки". Если же заказ затем нужно будет упаковывать на упаковочном столе, то выберите "Полка сортировки" или "Стол упаковки".'))
+                            ->options([
+                                104 => __('Полка сортировки'),
+                                105 => __('Стол упаковки'),
+                                107 => __('Место завершения сборки'),
+                            ])
+                            ->empty('Не выбрано', 0),
+
+                        Select::make('queue.ssoa_all_offers')
+                            ->title(__('Разрешить неполную сборку товара:'))
+                            ->popover(__('Если проставить "Да", то система позволит закончить сборку заказа, даже если товара не хватает.'))
+                            ->options([
+                                1 => __('Нет'),
+                                0 => __('Да'),
+                            ])
+                            ->value(1),
+
+                        Select::make('queue.ssoa_picking_type')
+                            ->title(__('Тип пикинга:'))
+                            ->popover(__('Выберите будет ли кладовщик сканировать каждый товар или только артикул и вводить количество.'))
+                            ->options([
+                                0 => __('Скан артикула (под пересчет)'),
+                                1 => __('Скан каждого товара'),
+                            ])
+                            ->value(0),
+
+                    ]),
+                ]),
                 Layout::rows([
-                    Input::make('queue.ssoa_name')
-                        ->title('Название очереди:')
-                        ->required(),
-
-                    Input::make('queue.ssoa_priority')
-                        ->title('Приоритет (чем больше, тем выше):')
-                        ->type('number')
-                        ->min(0)
-                        ->max(1000)
-                        ->required(),
-
-                    Select::make('queue.ssoa_wh_id')
-                        ->title(__('Склад:'))
-                        ->fromModel(rwWarehouse::where('wh_type', 2)->where('wh_domain_id', $currentUser->domain_id), 'wh_name', 'wh_id')
-                        ->empty('Не выбрано', 0),
 
                     Select::make('queue.ssoa_user_id')
                         ->title(__('Конкретный пользователь:'))
@@ -140,35 +176,43 @@ class SOAManagementScreen extends Screen
      */
     public function createQueue(Request $request)
     {
+        $currentUser = Auth::user();
+
         $validated = $request->validate([
-            'queue.ssoa_name'                => 'required|string|max:255',
-            'queue.ssoa_priority'            => 'required|integer|min:1|max:1000',
-            'queue.ssoa_wh_id'               => 'required|integer|min:1',
-            'queue.ssoa_user_id'             => 'nullable|integer',
-            'queue.ssoa_ds_id'               => 'nullable|integer',
-            'queue.ssoa_date_from'           => 'required|date',
-            'queue.ssoa_date_to'             => 'required|date',
-            'queue.ssoa_offers_count_from'   => 'nullable|integer',
-            'queue.ssoa_offers_count_to'     => 'nullable|integer',
-            'queue.ssoa_order_from'          => 'nullable|integer',
-            'queue.ssoa_order_to'            => 'nullable|integer',
+            'queue.ssoa_name' => 'required|string|max:255',
+            'queue.ssoa_priority' => 'required|integer|min:1|max:1000',
+            'queue.ssoa_wh_id' => 'required|integer|min:1',
+            'queue.ssoa_user_id' => 'nullable|integer',
+            'queue.ssoa_ds_id' => 'nullable|integer',
+            'queue.ssoa_date_from' => 'nullable|date',
+            'queue.ssoa_date_to' => 'nullable|date',
+            'queue.ssoa_offers_count_from' => 'nullable|integer',
+            'queue.ssoa_offers_count_to' => 'nullable|integer',
+            'queue.ssoa_order_from' => 'nullable|integer',
+            'queue.ssoa_order_to' => 'nullable|integer',
+            'queue.ssoa_finish_place_type' => 'nullable|integer',
+            'queue.ssoa_all_offers' => 'nullable|integer',
+            'queue.ssoa_picking_type' => 'nullable|integer',
         ]);
 
         // Создание записи в базе
         rwSettingsSoa::create([
-            'ssoa_name'               => $validated['queue']['ssoa_name'],
-            'ssoa_priority'           => $validated['queue']['ssoa_priority'],
-            'ssoa_wh_id'              => $validated['queue']['ssoa_wh_id'],
-            'ssoa_user_id'            => $validated['queue']['ssoa_user_id'],
-            'ssoa_ds_id'              => $validated['queue']['ssoa_ds_id'],
-            'ssoa_date_from'          => $validated['queue']['ssoa_date_from'],
-            'ssoa_date_to'            => $validated['queue']['ssoa_date_to'],
-            'ssoa_offers_count_from'  => $validated['queue']['ssoa_offers_count_from'],
-            'ssoa_offers_count_to'    => $validated['queue']['ssoa_offers_count_to'],
-            'ssoa_order_from'         => $validated['queue']['ssoa_order_from'],
-            'ssoa_order_to'           => $validated['queue']['ssoa_order_to'],
-            'ssoa_status_id'          => 1, // По умолчанию ставим статус 1 (можно изменить логику)
-            'ssoa_domain_id'          => 1, // Здесь можно подставить реальный домен, если нужно
+            'ssoa_name' => $validated['queue']['ssoa_name'],
+            'ssoa_priority' => $validated['queue']['ssoa_priority'],
+            'ssoa_wh_id' => $validated['queue']['ssoa_wh_id'],
+            'ssoa_user_id' => $validated['queue']['ssoa_user_id'],
+            'ssoa_ds_id' => $validated['queue']['ssoa_ds_id'],
+            'ssoa_date_from' => $validated['queue']['ssoa_date_from'],
+            'ssoa_date_to' => $validated['queue']['ssoa_date_to'],
+            'ssoa_offers_count_from' => $validated['queue']['ssoa_offers_count_from'],
+            'ssoa_offers_count_to' => $validated['queue']['ssoa_offers_count_to'],
+            'ssoa_order_from' => $validated['queue']['ssoa_order_from'],
+            'ssoa_order_to' => $validated['queue']['ssoa_order_to'],
+            'ssoa_status_id' => 1, // По умолчанию ставим статус 1 (можно изменить логику)
+            'ssoa_domain_id' => $currentUser->domain_id, // Здесь можно подставить реальный домен, если нужно
+            'ssoa_finish_place_type' => $validated['queue']['ssoa_finish_place_type'],
+            'ssoa_all_offers' => $validated['queue']['ssoa_all_offers'],
+            'ssoa_picking_type' => $validated['queue']['ssoa_picking_type'],
         ]);
 
         Toast::info('Очередь успешно создана!');

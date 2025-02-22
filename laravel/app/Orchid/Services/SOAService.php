@@ -33,7 +33,7 @@ class SOAService
                     ->where('o_id', '<=', $dbSOASetting->ssoa_order_to);
             }
 
-            $readyOrdersCount = $dbOrders->clone()->where('o_status_id', 40)->count();
+            $readyOrdersCount = $dbOrders->clone()->whereIn('o_status_id', [40, 50])->count();
             $processOrdersCount = $dbOrders->clone()->whereIn('o_status_id', [50, 60])->count();
             $sendOrdersCount = $dbOrders->clone()->where('o_status_id',  '>',60)->count();
 

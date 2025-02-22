@@ -101,7 +101,7 @@ class WhCore
     // *******************************************************
 
     // *******************************************************
-    // *** Считаем остатки по конкретному товару
+    // *** Считаем остатки по конкретному товару с учетом мест хранения
     public function calcRestOffer($offerId, $saveStats = 0)
     {
         $rest = 0;
@@ -389,12 +389,13 @@ class WhCore
     }
 
     // Удаляем элемент со склада, зная его документ
-    public function deleteItemFromDocument($docOfferId, $docId, $docType): string
+    public function deleteItemFromDocument($docOfferId, $docId, $docType, $placeId = NULL): string
     {
         return DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_doc_offer_id', $docOfferId)
             ->where('whci_doc_id', $docId)
             ->where('whci_doc_type', $docType)
+            ->where('whci_place_id', $placeId)
             ->delete();
 
     }
@@ -456,7 +457,7 @@ class WhCore
 
     }
 
-    public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $timeCash = 0)
+    public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $timeCash = 0, $placeId = NULL)
     {
 
         $validator = Validator::make([
@@ -471,6 +472,7 @@ class WhCore
             'price' => $price,
             'expDate' => $expDate,
             'batch' => $batch,
+            'placeId' => $placeId,
         ], [
             'docId' => 'required|integer',
             'docDate' => 'nullable|date_format:Y-m-d H:i:s', // Допускаем оба формата
@@ -483,6 +485,7 @@ class WhCore
             'price' => 'required|numeric',
             'expDate' => 'nullable|date_format:d.m.Y,Y-m-d', // Допускаем оба формата
             'batch' => 'nullable|string',
+            'placeId' => 'nullable|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -503,6 +506,7 @@ class WhCore
             ->where('whci_doc_id', $docId)
             ->where('whci_doc_type', $docType)
             ->where('whci_doc_offer_id', $docOfferId)
+            ->where('whci_place_id', $placeId)
             ->where('whci_expiration_date', $expDate)
             ->where('whci_batch', $batch)
             ->first();
@@ -528,6 +532,7 @@ class WhCore
                 'whci_date' => $docDate,
                 'whci_status' => $status,
                 'whci_offer_id' => $offerId,
+                'whci_place_id' => $placeId,
                 'whci_doc_id' => $docId,
                 'whci_doc_offer_id' => $docOfferId,
                 'whci_doc_type' => $docType,
@@ -542,6 +547,8 @@ class WhCore
             ]);
 
         }
+
+        $this->calcRestOffer($offerId);
 
     }
 
