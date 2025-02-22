@@ -182,6 +182,10 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
+                                        @else
+                                            <tr>
+                                                <td style="background-color: #ea868f;">@lang('Нет привязанного товара!')</td>
+                                            </tr>
                                         @endif
                                     </table>
                                 </td>
