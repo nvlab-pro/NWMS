@@ -230,9 +230,9 @@ class SelectOrderSOAMScreen extends Screen
                 }
 
             }
-        }
 
-        $this->orderId = $dbOrder->o_id;
+            $this->orderId = $dbOrder->o_id;
+        }
 
         return [
             'soaId'             => $soaId,

@@ -30,16 +30,19 @@ class SelectSOAMScreen extends Screen
                 ->where('ssoa_count_ready', '>', 0)
                 ->where('ssoa_status_id', 1);
 
+            dump($dbSettingsList);
+
             $arWhList = rwWarehouse::where('wh_parent_id', $currentUser->wh_id)
                 ->pluck('wh_id')
                 ->toArray();
 
             $dbSettingsList->whereIn('ssoa_wh_id', $arWhList);
+            $dbSettingsList->orderBy('ssoa_priority', 'DESC')->get();
 
         }
 
         return [
-            'dbSettingsList' => $dbSettingsList->orderBy('ssoa_priority', 'DESC')->get(),
+            'dbSettingsList' => $dbSettingsList,
         ];
     }
 

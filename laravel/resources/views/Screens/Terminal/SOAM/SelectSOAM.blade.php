@@ -20,14 +20,19 @@
     .acceptButtonText2 {
         font-size: 14px;
     }
+    .warningDIV {
+        font-size: 15px;
+        margin-top: 10px;
+    }
 </style>
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
-    <div class="row g-0">
-        <div style="margin: 10px 0px 10px 10px;">
+    <div style="padding: 10px 10px 10px 10px; text-align: center;">
 
             <h4>@lang('Выберите очередь сборки:')</h4>
 
-            @foreach($dbSettingsList as $dbQueue)
+            @php($countQueue = 0)
+
+                @foreach($dbSettingsList as $dbQueue)
 
                     <button type="button" class="acceptButton"
                             onClick="window.location.href='{{ route('platform.terminal.soam.order', [$dbQueue->ssoa_id, 0]) }}'">
@@ -37,9 +42,16 @@
                     </span>
                         </div>
                     </button><br>
+                    @php($countQueue++)
 
-            @endforeach
+                @endforeach
 
-        </div>
+            @if($countQueue == 0)
+
+            <div class="alert alert-danger warningDIV" role="alert">
+                @lang("Нет ни очереди с заказами доступными для сборке!")</div>
+
+            @endif
+
     </div>
 </div>
