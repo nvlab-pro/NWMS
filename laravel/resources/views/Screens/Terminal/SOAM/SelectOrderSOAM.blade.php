@@ -152,7 +152,7 @@
                                                 </b></td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2">
+                                            <td colspan="2" style="padding: 0px 0px 0px 0px;">
                                                 <table class="table table-striped">
                                                     @if(isset($arPlacesList[$arOffer['offerId']]))
                                                         @foreach($arPlacesList[$arOffer['offerId']] as $arPlace)
@@ -189,7 +189,7 @@
                                                         @endforeach
                                                     @else
                                                         <tr>
-                                                            <td style="background-color: #f4bcc1;">@lang('Нет привязанного товара!')</td>
+                                                            <td style="background-color: #a30000; color: #FFFFFF;">@lang('Нет привязанного товара!')</td>
                                                         </tr>
                                                     @endif
                                                 </table>
