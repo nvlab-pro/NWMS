@@ -69,7 +69,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.box-seam-fill')
                 ->route('platform.orders.index'),
 
-            Menu::make(__('Бибилотеки'))
+            Menu::make(__('Библиотеки'))
                 ->canSee(RoleMiddleware::checkUserPermission('admin'))
                 ->icon('bs.list-check')
                 ->list([
