@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Orchid\Attachment\Attachable;
 use Orchid\Filters\Filterable;
@@ -12,30 +11,25 @@ use Orchid\Screen\AsSource;
 use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
-class rwOrderAssembly extends Model implements AuditableContract
+class rwOrderPacking extends Model implements AuditableContract
 {
-    protected $primaryKey = 'oa_id';
+    protected $primaryKey = 'op_id';
 
     use AsSource, Filterable, Attachable, HasFactory, Auditable;
 
     // Другие разрешённые для массового присвоения атрибуты
     protected $fillable = [
-        'oa_order_id',
-        'oa_offer_id',
-        'oa_user_id',
-        'oa_place_id',
-        'oa_data',
-        'oa_qty',
-        'oa_cash',
+        'op_id',
+        'op_order_id',
+        'op_offer_id',
+        'op_user_id',
+        'op_barcode',
+        'op_data',
+        'op_qty',
+        'op_cash',
     ];
-
-    public function getPlace()
-    {
-        return $this->hasOne(rwPlace::class, 'pl_id', 'oa_place_id');
-    }
-
     public function getUser()
     {
-        return $this->hasOne(User::class, 'id', 'oa_user_id');
+        return $this->hasOne(User::class, 'id', 'op_user_id');
     }
 }

@@ -45,6 +45,18 @@ class PlatformProvider extends OrchidServiceProvider
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                 ->route('platform.terminal.main'),
 
+            Menu::make(__('Рабочие столы'))
+                ->icon('bs.person-workspace')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
+                ->list([
+
+                    Menu::make(__('Столы упаковки'))
+                        ->icon('bs.person-workspace')
+                        ->route('platform.tables.queue.select')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker')),
+
+                ]),
+
             Menu::make(__('Приемка товара'))
                 ->icon('bs.building-add')
                 ->route('platform.acceptances.index'),
@@ -83,7 +95,7 @@ class PlatformProvider extends OrchidServiceProvider
             // *******************************
 
             Menu::make(__('Управление складом'))
-                ->icon('bs.person-workspace')
+                ->icon('bs.display')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
@@ -95,6 +107,11 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make(__('Позаказная сборка'))
                         ->icon('bs.basket3')
                         ->route('platform.whmanagement.single-order-assembly.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+
+                    Menu::make(__('Настройка упаковки'))
+                        ->icon('bs.dropbox')
+                        ->route('platform.whmanagement.packing-process-settings.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
 
                 ]),

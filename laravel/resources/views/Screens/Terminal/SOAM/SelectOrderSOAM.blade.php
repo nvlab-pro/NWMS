@@ -189,7 +189,7 @@
                                                         @endforeach
                                                     @else
                                                         <tr>
-                                                            <td style="background-color: #a30000; color: #FFFFFF;">@lang('Нет привязанного товара!')</td>
+                                                            <td style="background-color: #a30000; color: #FFFFFF;"><b>@lang('Нет привязанного товара!')</b></td>
                                                         </tr>
                                                     @endif
                                                 </table>

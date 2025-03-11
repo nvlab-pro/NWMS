@@ -1,6 +1,26 @@
 <style>
     .turnoverTD {
+        text-align: center; !
+    }
+    .place-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px; /* Add some space between the place info and the arrow */
+        width: 100%;
         text-align: center;
+    }
+    .place-box{
+        border: 1px solid #999999;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .place-box span {
+        color: #999999;
+        font-size: 10px;
+        display: block; /* Ensure the type name is on a new line */
+        white-space: nowrap;
     }
 </style>
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
@@ -70,14 +90,21 @@
                             {!! $docStatus[$item->whci_id] !!}
                         </td>
                         <td class="{{ $className }} turnoverTD">
-                            @if($docPlace[$item->whci_id] == '')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-sign-no-parking" viewBox="0 0 16 16" style="color: #d60000;">
-                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m5.29-3.416L9.63 8.923C10.5 8.523 11 7.66 11 6.586c0-1.482-.955-2.584-2.538-2.584H5.5v.79L3.416 2.71a7 7 0 0 1 9.874 9.874m-.706.707A7 7 0 0 1 2.71 3.417l2.79 2.79V12h1.283V9.164h1.674zM8.726 8.019 6.777 6.07v-.966H8.27c.893 0 1.419.539 1.419 1.482 0 .769-.35 1.273-.963 1.433m-1.949-.534.59.59h-.59z"/>
-                                </svg>
-                            @else
-                                {!! $docPlace[$item->whci_id] !!}
-                            @endif
-                        </td>
+                            <div class="place-container">
+                                @if($docPlace[$item->whci_id] == '')
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-sign-no-parking" viewBox="0 0 16 16" style="color: #d60000;">
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m5.29-3.416L9.63 8.923C10.5 8.523 11 7.66 11 6.586c0-1.482-.955-2.584-2.538-2.584H5.5v.79L3.416 2.71a7 7 0 0 1 9.874 9.874m-.706.707A7 7 0 0 1 2.71 3.417l2.79 2.79V12h1.283V9.164h1.674zM8.726 8.019 6.777 6.07v-.966H8.27c.893 0 1.419.539 1.419 1.482 0 .769-.35 1.273-.963 1.433m-1.949-.534.59.59h-.59z"/>
+                                    </svg>
+                                @else
+                                    <div class="place-box">{!! $docPlace[$item->whci_id] !!}</div>
+                                @endif
+                                @if($docPlace2[$item->whci_id] != '')
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                    </svg>
+                                    <div class="place-box">{!! $docPlace2[$item->whci_id] !!}</div>
+                                @endif
+                            </div>                        </td>
                         <td class="{{ $className }} turnoverTD">
                             {{ $count }}
                         </td>

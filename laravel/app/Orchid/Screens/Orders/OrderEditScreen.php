@@ -5,11 +5,14 @@ namespace App\Orchid\Screens\Orders;
 use App\Console\scheduleOrders;
 use App\Models\rwOffer;
 use App\Models\rwOrder;
+use App\Models\rwOrderAssembly;
 use App\Models\rwOrderOffer;
+use App\Models\rwOrderPacking;
 use App\Models\rwOrderStatus;
 use App\Orchid\Layouts\Orders\OrderOffersTable;
 use App\Orchid\Services\OrderService;
 use App\WhCore\WhCore;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Fields\Group;
@@ -25,14 +28,21 @@ use Orchid\Support\Facades\Alert;
 
 class OrderEditScreen extends Screen
 {
-    public $order;
+    public $order, $currentUser;
 
     public function query($orderId): array
     {
         $currentUser = Auth::user();
+        $this->currentUser = $currentUser;
+        $arPickingOffersList = [];
+        $arPackedOffersList = [];
+
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 
-            $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)->where('o_id', $orderId)->firstOrFail();
+            $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)
+                ->where('o_id', $orderId)
+                ->with('getPlace')
+                ->firstOrFail();
 
         } else {
 
@@ -41,16 +51,119 @@ class OrderEditScreen extends Screen
                     $query->whereIn('o_user_id', [$currentUser->id, $currentUser->parent_id]);
                 })
                 ->where('o_id', $orderId)
+                ->with('getPlace')
                 ->firstOrFail();
 
         }
 
-        $dbOrderOffersList = rwOrderOffer::where('oo_order_id', $orderId)->with('getOffer')->get();
+        $dbOrderOffersList = rwOrderOffer::where('oo_order_id', $orderId)
+            ->with('getOffer')
+            ->with('getPackingOffer')
+            ->get();
+
+        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
+
+            if ($this->order->o_status_id >= 50) {
+                // ****************************************
+                // ** Собираем список собранных товаров
+                $arPickingOffersList = [];
+                foreach ($dbOrderOffersList as $currentOffer) {
+
+                    $dbOfferPicking = rwOrderAssembly::where('oa_order_id', $orderId)
+                        ->where('oa_offer_id', $currentOffer->oo_offer_id)
+                        ->with('getPlace')
+                        ->with('getUser')
+                        ->orderBy('oa_data', 'ASC')
+                        ->get();
+
+                    foreach ($dbOfferPicking as $dbOffer) {
+
+                        isset($dbOffer->getPlace->pl_id) ? $currentPlace = $this->getPageStr($dbOffer->getPlace) : $currentPlace = '-';
+                        isset($this->order->getPlace->pl_id) ? $endPlace = $this->getPageStr($this->order->getPlace) : $endPlace = '-';
+
+                        $arPickingOffersList[] = [
+                            'of_name' => $currentOffer->getOffer->of_name,
+                            'of_article' => $currentOffer->getOffer->of_article,
+                            'oa_data' => Carbon::parse($dbOffer->oa_data)->format('d.m.Y H:i:s'),
+                            'oa_timestamp' => Carbon::parse($dbOffer->oa_data)->timestamp,
+                            'oa_user_name' => $dbOffer->getUser->name,
+                            'oo_qty' => $currentOffer->oo_qty,
+                            'oa_qty' => $dbOffer->oa_qty,
+                            'picking_place' => $currentPlace,
+                            'end_place' => $endPlace,
+                        ];
+                    }
+                }
+
+                // Сортируем $arPickingOffersList по oa_timestamp по возрастанию
+                usort($arPickingOffersList, function ($a, $b) {
+                    return $a['oa_timestamp'] <=> $b['oa_timestamp'];
+                });
+            }
+
+            // ****************************************
+            // ** Собираем список упакованных товаров
+            if ($this->order->o_status_id >= 90) {
+
+                foreach ($dbOrderOffersList as $currentOffer) {
+
+                    $dbOffer = [];
+
+                    $packDate = '-';
+                    $packTime = '0';
+                    $packQty = 0;
+                    $userName = '-';
+
+                    if (isset($currentOffer->getPackingOffer->op_id) && $currentOffer->getPackingOffer->op_qty > 0) {
+
+                        $dbOffer = $currentOffer->getPackingOffer;
+                        $packQty = $currentOffer->getPackingOffer->op_qty;
+                        $userName = $currentOffer->getPackingOffer->getUser->name;
+
+                        $packDate = Carbon::parse($currentOffer->getPackingOffer->op_data)->format('d.m.Y H:i:s');
+                        $packTime = Carbon::parse($currentOffer->getPackingOffer->op_data)->timestamp;
+                    }
+
+                    $arPackedOffersList[] = [
+                        'of_name' => $currentOffer->getOffer->of_name,
+                        'of_article' => $currentOffer->getOffer->of_article,
+                        'op_data' => $packDate,
+                        'op_timestamp' => $packTime,
+                        'op_user_name' => $userName,
+                        'oo_qty' => $currentOffer->oo_qty,
+                        'op_qty' => $packQty,
+                        'picking_place' => $currentPlace,
+                        'end_place' => $endPlace,
+                    ];
+
+                }
+            }
+        }
 
         return [
             'order' => $this->order,
             'dbOrderOffersList' => $dbOrderOffersList,
+            'arPickingOffersList' => $arPickingOffersList,
+            'arPackedOffersList' => $arPackedOffersList,
         ];
+    }
+
+    protected function getPageStr($dbPlace)
+    {
+
+        $currentPlace = '';
+
+        $currentPlace .= $dbPlace->pl_room;
+        if (strlen($dbPlace->pl_floor) > 0) $currentPlace .= ' | ' . $dbPlace->pl_floor;
+        if (strlen($dbPlace->pl_section) > 0) $currentPlace .= ' | ' . $dbPlace->pl_section;
+        if ($dbPlace->pl_row > 0) $currentPlace .= ' | ' . $dbPlace->pl_row;
+        if ($dbPlace->pl_rack > 0) $currentPlace .= ' | ' . $dbPlace->pl_rack;
+        if ($dbPlace->pl_shelf > 0) $currentPlace .= ' | ' . $dbPlace->pl_shelf;
+
+        if (substr($currentPlace, 0, 3) == ' | ') $currentPlace = substr($currentPlace, 3);
+
+        return $currentPlace;
+
     }
 
     public function name(): ?string
@@ -66,18 +179,30 @@ class OrderEditScreen extends Screen
         $dbStatus = rwOrderStatus::where('os_id', $this->order->o_status_id)->first();
 
         return [
-            Button::make(__(' Откатить'))
-                ->icon('bs.arrow-return-left')
-                ->style('border: 1px solid #D62222; color: #D62222; border-radius: 10px;')
-                ->method('changeStatusToNew')
-                ->canSee(in_array($this->order->o_status_id, [15, 20, 30, 40]))
+            Button::make(' ' . __('Отменить'))
+                ->icon('bs.trash3')
+                ->style('border: 1px solid #D62222; background-color: #D62222; color: #FFFFFF; border-radius: 10px;')
+                ->method('changeStatusToCancel')
+                ->canSee(in_array($this->order->o_status_id, [10, 15, 20, 30, 40]))
+                ->confirm(__('Вы уверены, что хотите отменить этот заказ?'))
                 ->parameters([
                     '_token' => csrf_token(),
                     'docId' => $this->order->o_id,
                     'status' => $this->order->o_status_id,
                 ]),
 
-            Button::make(__(' В обработку'))
+            Button::make(' ' .__('Откатить'))
+                ->icon('bs.arrow-return-left')
+                ->style('border: 1px solid #D62222; color: #D62222; border-radius: 10px;')
+                ->method('changeStatusToNew')
+                ->canSee(in_array($this->order->o_status_id, [5, 15, 20, 30, 40]))
+                ->parameters([
+                    '_token' => csrf_token(),
+                    'docId' => $this->order->o_id,
+                    'status' => $this->order->o_status_id,
+                ]),
+
+            Button::make(' ' .__('В обработку'))
                 ->icon('bs.check-circle')
                 ->style('border: 1px solid #dd66ff; color: #dd66ff; border-radius: 10px;')
                 ->method('changeStatusToProcessing')
@@ -88,7 +213,7 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            Button::make(__(' В резерв'))
+            Button::make(' ' .__('В резерв'))
                 ->icon('bs.piggy-bank')
                 ->style('border: 1px solid #157347; color: #157347; border-radius: 10px;')
                 ->method('changeStatus')
@@ -99,7 +224,7 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            Button::make(__(' Зарезервировать вручную'))
+            Button::make(' ' .__('Зарезервировать вручную'))
                 ->icon('bs.piggy-bank')
                 ->style('border: 1px solid #9c4edb; color: #9c4edb; border-radius: 10px;')
                 ->method('tryReservOrder')
@@ -110,7 +235,7 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            ModalToggle::make(__(' Добавить товар'))
+            ModalToggle::make(' ' .__('Добавить товар'))
                 ->icon('bs.plus-circle')
                 ->modal('addOfferModal')
                 ->method('addOffer')
@@ -126,7 +251,101 @@ class OrderEditScreen extends Screen
     {
         $currentUser = Auth::user();
 
+        $tabs = [
+            'Основная' => [
+                Layout::rows([
+                    Input::make('order.o_status_id')
+                        ->type('hidden'),
+
+                    Input::make('order.o_domain_id')
+                        ->type('hidden')
+                        ->value($currentUser->domain_id),
+
+                    Input::make('order.o_user_id')
+                        ->type('hidden'),
+
+
+                    Group::make([
+                        // Модальное окно для редактирования Внешнего ID
+                        ModalToggle::make($this->order->o_ext_id ?? __('Не указана'))
+                            ->modal('editExtIdModal')
+                            ->method('update')
+                            ->title('Внешний ID')
+                            ->asyncParameters([
+                                'order' => $this->order->o_id
+                            ]),
+
+                        Label::make('order.getType.ot_name')
+                            ->title('Тип заказа: '),
+
+
+                    ]),
+
+                    Group::make([
+                        // Модальное окно для редактирования Даты заказа
+                        ModalToggle::make($this->order->o_date)
+                            ->modal('editOrderDateModal')
+                            ->method('update')
+                            ->title('Дата заказа')
+                            ->asyncParameters([
+                                'order' => $this->order->o_id
+                            ]),
+
+                        Label::make('order.getShop.sh_name')
+                            ->title('Магазин: '),
+
+                    ]),
+
+                    Group::make([
+
+                        // Модальное окно для редактирования Даты отправки
+                        ModalToggle::make($this->order->o_date_send ?? __('Не указана'))
+                            ->modal('editOrderDateSendModal')
+                            ->method('update')
+                            ->title('Дата отправки')
+                            ->asyncParameters([
+                                'order' => $this->order->o_id
+                            ]),
+
+                        Label::make('order.getWarehouse.wh_name')
+                            ->title('Склад: '),
+
+                    ]),
+                ]),
+            ],
+            __('Товары') => [
+                OrderOffersTable::class,
+
+                Layout::rows([
+                    Button::make('Сохранить изменения')
+                        ->class('btn btn-primary d-block mx-auto')
+                        ->method('saveChanges') // Указывает метод экрана для вызова
+                        ->parameters([
+                            '_token' => csrf_token(),
+                            'docId' => $this->order->o_id,
+                            'shopId' => $this->order->o_shop_id,
+                            'whId' => $this->order->o_wh_id,
+                            'docDate' => $this->order->o_date,
+                        ]),
+                ])
+                    ->canSee($this->order->o_status_id <= 10),
+            ],
+        ];
+
+        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
+
+            if ($this->order->o_status_id >= 50) {
+                $tabs[__('Сборка')] = Layout::view('Orders/OrderPickedOffersList');
+            }
+            if ($this->order->o_status_id >= 90) {
+                $tabs[__('Упаковка')] = Layout::view('Orders/OrderpackedOffersList');
+            }
+
+        }
+
         return [
+            Layout::tabs($tabs),
+
             Layout::modal('addOfferModal', [
                 Layout::rows([
                     Input::make('offer.oo_order_id')
@@ -164,86 +383,6 @@ class OrderEditScreen extends Screen
                 ->method('addOffer')
                 ->title('Добавление нового товара')->applyButton('Добавить')->closeButton('Закрыть'),
 
-            Layout::tabs([
-                'Основная' => [
-                    Layout::rows([
-                        Input::make('order.o_status_id')
-                            ->type('hidden'),
-
-                        Input::make('order.o_domain_id')
-                            ->type('hidden')
-                            ->value($currentUser->domain_id),
-
-                        Input::make('order.o_user_id')
-                            ->type('hidden'),
-
-
-                        Group::make([
-                            // Модальное окно для редактирования Внешнего ID
-                            ModalToggle::make($this->order->o_ext_id ?? __('Не указана'))
-                                ->modal('editExtIdModal')
-                                ->method('update')
-                                ->title('Внешний ID')
-                                ->asyncParameters([
-                                    'order' => $this->order->o_id
-                                ]),
-
-                            Label::make('order.getType.ot_name')
-                                ->title('Тип заказа: '),
-
-
-                        ]),
-
-                        Group::make([
-                            // Модальное окно для редактирования Даты заказа
-                            ModalToggle::make($this->order->o_date)
-                                ->modal('editOrderDateModal')
-                                ->method('update')
-                                ->title('Дата заказа')
-                                ->asyncParameters([
-                                    'order' => $this->order->o_id
-                                ]),
-
-                            Label::make('order.getShop.sh_name')
-                                ->title('Магазин: '),
-
-                        ]),
-
-                        Group::make([
-
-                            // Модальное окно для редактирования Даты отправки
-                            ModalToggle::make($this->order->o_date_send ?? __('Не указана'))
-                                ->modal('editOrderDateSendModal')
-                                ->method('update')
-                                ->title('Дата отправки')
-                                ->asyncParameters([
-                                    'order' => $this->order->o_id
-                                ]),
-
-                            Label::make('order.getWarehouse.wh_name')
-                                ->title('Склад: '),
-
-                        ]),
-                    ]),
-                ],
-                __('Товары') => [
-                    OrderOffersTable::class,
-
-                    Layout::rows([
-                        Button::make('Сохранить изменения')
-                            ->class('btn btn-primary d-block mx-auto')
-                            ->method('saveChanges') // Указывает метод экрана для вызова
-                            ->parameters([
-                                '_token' => csrf_token(),
-                                'docId' => $this->order->o_id,
-                                'shopId' => $this->order->o_shop_id,
-                                'whId' => $this->order->o_wh_id,
-                                'docDate' => $this->order->o_date,
-                            ]),
-                    ])
-                        ->canSee($this->order->o_status_id <= 10),
-                ],
-            ]),
 
             // Определение модальных окон
             Layout::modal('editExtIdModal', [
@@ -319,7 +458,7 @@ class OrderEditScreen extends Screen
             'status' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
         ]);
 
-        if ($validatedData['status'] == 10 || $validatedData['status'] == 15 || $validatedData['status'] == 20 || $validatedData['status'] == 30 || $validatedData['status'] == 40) {
+        if ($validatedData['status'] == 5 || $validatedData['status'] == 10 || $validatedData['status'] == 15 || $validatedData['status'] == 20 || $validatedData['status'] == 30 || $validatedData['status'] == 40) {
 
             $order = rwOrder::where('o_id', $validatedData['docId'])
                 ->first();
@@ -339,6 +478,37 @@ class OrderEditScreen extends Screen
         } else {
 
             Alert::error(__('Заказ ' . $validatedData['docId'] . ' не может быть переведен в статус "Новый"!'));
+
+        }
+    }
+
+    public function changeStatusToCancel(Request $request)
+    {
+        $validatedData = $request->validate([
+            'docId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'status' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+        ]);
+
+        if ($validatedData['status'] == 10 || $validatedData['status'] == 15 || $validatedData['status'] == 20 || $validatedData['status'] == 30 || $validatedData['status'] == 40) {
+
+            $order = rwOrder::where('o_id', $validatedData['docId'])
+                ->first();
+
+            if ($order) {
+
+                $order->o_status_id = 5;
+                $order->save(); // Автоматически вызовет аудит, если модель использует AuditableContract
+
+                $serviceOrder = new OrderService($validatedData['docId']);
+                $serviceOrder->resaveOrderList();
+
+            }
+
+            Alert::success(__('Заказ ' . $validatedData['docId'] . ' был отменен!'));
+
+        } else {
+
+            Alert::error(__('Заказ ' . $validatedData['docId'] . ' не может быть отменен!'));
 
         }
     }

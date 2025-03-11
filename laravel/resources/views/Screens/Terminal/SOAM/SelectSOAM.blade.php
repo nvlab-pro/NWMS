@@ -53,7 +53,7 @@
         @if($countQueue == 0)
 
             <div class="alert alert-danger warningDIV" role="alert">
-                @lang("Нет ни очереди с заказами доступными для сборке!")</div>
+                @lang("Нет ни одной очереди с заказами доступными для сборке!")</div>
 
         @endif
 

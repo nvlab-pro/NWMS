@@ -24,6 +24,10 @@ class SOAService
                 $dbOrders = $dbOrders->where('o_date_send', '>=', $dbSOASetting->ssoa_date_from)
                     ->where('o_date_send', '<=', $dbSOASetting->ssoa_date_to);
             }
+//            foreach ($dbOrders->get() as $order) {
+//                dump($order->o_id . ' - ' . $order->o_status_id);
+//            }
+
             if ($dbSOASetting->ssoa_offers_count_from > 0 && $dbSOASetting->ssoa_offers_count_to > 0) {
                 $dbOrders = $dbOrders->where('o_count', '>=', $dbSOASetting->ssoa_offers_count_from)
                     ->where('o_count', '<=', $dbSOASetting->ssoa_offers_count_to);

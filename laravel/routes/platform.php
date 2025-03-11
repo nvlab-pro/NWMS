@@ -48,6 +48,196 @@ use Tabuna\Breadcrumbs\Trail;
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');
 
+// **************************************************
+// *** Терминал
+// **************************************************
+
+Route::prefix('terminal')
+    ->name('platform.terminal')
+    ->group(function () {
+
+        // Териминал -> Главная старница терминала
+        Route::screen('main', \App\Orchid\Screens\terminal\mainScreen::class)
+            ->name('.main')
+            ->breadcrumbs(fn(Trail $trail) => $trail
+                ->parent('platform.index')
+                ->push(__('Терминал'), route('platform.terminal.main')),
+            );
+
+        // Териминал -> Приемка товара (выбор товара)
+        Route::screen('acceptance/select', \App\Orchid\Screens\terminal\Acceptance\SelectAcceptanceScreen::class)
+            ->name('.acceptance.select')
+            ->breadcrumbs(function (Trail $trail) {
+                return $trail
+                    ->parent('platform.terminal.main')
+                    ->push('Выбор приемки', route('platform.terminal.acceptance.select'));
+            });
+
+        // Териминал -> Приемка товара (основной экран)
+        Route::screen('acceptance/{docId}/scan', \App\Orchid\Screens\terminal\Acceptance\ScanAcceptScreen::class)
+            ->name('.acceptance.scan')
+            ->breadcrumbs(function (Trail $trail, $docId) {
+                return $trail
+                    ->parent('platform.terminal.acceptance.select')
+                    ->push('Приемка', route('platform.terminal.acceptance.scan', $docId));
+            });
+
+        // Териминал -> Приемка товара (выбор товара)
+        Route::screen('places/select', \App\Orchid\Screens\terminal\Places\SelectPlaceScreen::class)
+            ->name('.places.select')
+            ->breadcrumbs(function (Trail $trail) {
+                return $trail
+                    ->parent('platform.terminal.main')
+                    ->push('Выбор приемки', route('platform.terminal.places.select'));
+            });
+
+        // Териминал -> Приемка товара (выбор товара)
+        Route::screen('places/{docId}/offer2place', \App\Orchid\Screens\terminal\Places\OfferToPlaceScreen::class)
+            ->name('.places.offer2place.index')
+            ->breadcrumbs(function (Trail $trail, $docId) {
+                return $trail
+                    ->parent('platform.terminal.main')
+                    ->push('Место хранения', route('platform.terminal.places.offer2place.index', $docId));
+            });
+
+        // Териминал -> Позаказная сборка (manually) -> Выбираем очередь
+        Route::screen('soam/select', \App\Orchid\Screens\terminal\SOAM\SelectSOAMScreen::class)
+            ->name('.soam.select')
+            ->breadcrumbs(function (Trail $trail) {
+                return $trail
+                    ->parent('platform.terminal.main')
+                    ->push('Очередь', route('platform.terminal.soam.select'));
+            });
+
+        // Териминал -> Позаказная сборка (manually) -> Определяем местоположение кладовщика
+        Route::screen('soam/{soaId}/{orderId}/order', \App\Orchid\Screens\terminal\SOAM\SelectOrderSOAMScreen::class)
+            ->name('.soam.order')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soam.select')
+                    ->push('Сборка', route('platform.terminal.soam.order', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка (manually) -> Определяем местоположение кладовщика
+        Route::screen('soam/{soaId}/{orderId}/offer', \App\Orchid\Screens\terminal\SOAM\GetOfferSOAMScreen::class)
+            ->name('.soam.offer')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soam.select')
+                    ->push('Сборка', route('platform.terminal.soam.offer', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка (manually) -> Завершаем процесс сборки
+        Route::screen('soam/{soaId}/{orderId}/finish', \App\Orchid\Screens\terminal\SOAM\FinishSOAMScreen::class)
+            ->name('.soam.finish')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soam.select')
+                    ->push('Сборка', route('platform.terminal.soam.finish', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка (manually) -> Сборка закончена
+        Route::screen('soam/{soaId}/{orderId}/end', \App\Orchid\Screens\terminal\SOAM\EndSOAMScreen::class)
+            ->name('.soam.end')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soam.select')
+                    ->push('Сборка', route('platform.terminal.soam.end', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка -> Выбираем очередь
+        Route::screen('soa/select', \App\Orchid\Screens\terminal\SOA\SelectSOAScreen::class)
+            ->name('.soa.select')
+            ->breadcrumbs(function (Trail $trail) {
+                return $trail
+                    ->parent('platform.terminal.main')
+                    ->push('Очередь', route('platform.terminal.soa.select'));
+            });
+
+        // Териминал -> Позаказная сборка -> Определяем местоположение кладовщика
+        Route::screen('soa/{soaId}/{orderId}/location', \App\Orchid\Screens\terminal\SOA\FindUserLocationSOAScreen::class)
+            ->name('.soa.location')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soa.select')
+                    ->push('Сборка', route('platform.terminal.soa.location', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка -> Сканируем место расположения товара
+        Route::screen('soa/{soaId}/{orderId}/scan-place', \App\Orchid\Screens\terminal\SOA\ScanPlaceSOAScreen::class)
+            ->name('.soa.scan.place')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soa.select')
+                    ->push('Сборка', route('platform.terminal.soa.scan.place', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка -> Сканируем товар
+        Route::screen('soa/{soaId}/{orderId}/scan-offer', \App\Orchid\Screens\terminal\SOA\ScanOfferSOAScreen::class)
+            ->name('.soa.scan.offer')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soa.select')
+                    ->push('Сборка', route('platform.terminal.soa.scan.offer', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка -> Берем товар с полки
+        Route::screen('soa/{soaId}/{orderId}/get-offer', \App\Orchid\Screens\terminal\SOA\GetOfferSOAScreen::class)
+            ->name('.soa.get.offer')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soa.select')
+                    ->push('Сборка', route('platform.terminal.soa.get.offer', [$soaId, $orderId]));
+            });
+
+        // Териминал -> Позаказная сборка
+        Route::screen('soa/{soaId}/{orderId}/scan', \App\Orchid\Screens\terminal\SOA\ScanSOAScreen::class)
+            ->name('.soa.scan')
+            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
+                return $trail
+                    ->parent('platform.terminal.soa.select')
+                    ->push('Сборка', route('platform.terminal.soa.scan', [$soaId, $orderId]));
+            });
+
+    });
+
+// **************************************************
+// *** Терминал
+// **************************************************
+
+Route::prefix('tables')
+    ->name('platform.tables')
+    ->group(function () {
+
+        // Териминал -> Приемка товара (выбор товара)
+        Route::screen('packing/queue', \App\Orchid\Screens\WorkTables\Packing\SelectPackingQueueScreen::class)
+            ->name('.queue.select')
+            ->breadcrumbs(function (Trail $trail) {
+                return $trail
+                    ->parent('platform.index')
+                    ->push('Выбор очереди упаковки', route('platform.tables.queue.select'));
+            });
+
+        // Териминал -> Приемка товара (выбор товара)
+        Route::screen('packing/select/{queueId}', \App\Orchid\Screens\WorkTables\Packing\SelectPackingTableScreen::class)
+            ->name('.packing.select')
+            ->breadcrumbs(function (Trail $trail, $queueId) {
+                return $trail
+                    ->parent('platform.index')
+                    ->push('Выбор стола упаковки', route('platform.tables.packing.select', $queueId));
+            });
+
+        // Териминал -> Приемка товара (выбор товара)
+        Route::screen('packing/scan/{queueId}/{tableId}/{orderId}', \App\Orchid\Screens\WorkTables\Packing\PackingScreen::class)
+            ->name('.packing.scan')
+            ->breadcrumbs(function (Trail $trail, $queueId, $tableId, $orderId) {
+                return $trail
+                    ->parent('platform.tables.packing.select', $queueId)
+                    ->push('Упаковка заказов', route('platform.tables.packing.scan', [$queueId, $tableId, $orderId]));
+            });
+
+    });
+
 // ******************************************************
 // *** Список товаров
 // *** Platform > offers
@@ -136,17 +326,32 @@ Route::screen('whmanagement/wave-assembly', \App\Orchid\Screens\WhManagement\Wav
         ->parent('platform.index')
         ->push(__('Волновая сборка'), route('platform.whmanagement.wave-assembly.index')));
 
+// Настройка очереди позаказной сборки (manually)
 Route::screen('whmanagement/single-order-assembly', \App\Orchid\Screens\WhManagement\SingleOrderAssembly\SOAManagementScreen::class)
     ->name('platform.whmanagement.single-order-assembly.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Волновая сборка'), route('platform.whmanagement.single-order-assembly.index')));
+        ->push(__('Позаказаная сборка'), route('platform.whmanagement.single-order-assembly.index')));
 
 Route::screen('whmanagement/single-order-assembly/{soaId}/edit', \App\Orchid\Screens\WhManagement\SingleOrderAssembly\SOAManagementEditScreen::class)
     ->name('platform.whmanagement.single-order-assembly.edit')
     ->breadcrumbs(fn(Trail $trail, $soaId) => $trail
         ->parent('platform.whmanagement.single-order-assembly.index')
-        ->push(__('Редактирование волновой сборки'), route('platform.whmanagement.single-order-assembly.edit', $soaId)));
+        ->push(__('Редактирование позаказной сборки'), route('platform.whmanagement.single-order-assembly.edit', $soaId)));
+
+// Настройки упаковки
+Route::screen('whmanagement/packing-process-settings', \App\Orchid\Screens\WhManagement\PackingProcessSettings\PPManagementScreen::class)
+    ->name('platform.whmanagement.packing-process-settings.index')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Настройка упаковки'), route('platform.whmanagement.packing-process-settings.index')));
+
+Route::screen('whmanagement/packing-process-settings/{ppId}/edit', \App\Orchid\Screens\WhManagement\PackingProcessSettings\PPManagementEditScreen::class)
+    ->name('platform.whmanagement.packing-process-settings.edit')
+    ->breadcrumbs(fn(Trail $trail, $ppId) => $trail
+        ->parent('platform.whmanagement.packing-process-settings.index')
+        ->push(__('Редактирование настроек упаковки'), route('platform.whmanagement.packing-process-settings.edit', $ppId)));
+
 
 // ******************************************************
 // *** Список складов
@@ -369,162 +574,6 @@ Route::prefix('delivery-services')
             ->breadcrumbs(fn(Trail $trail, $dsId) => $trail
                 ->parent('platform.delivery-services.list')
                 ->push(__('Редактирование службы доставки'), route('platform.delivery-services.edit', $dsId)));
-
-    });
-
-// **************************************************
-// *** Терминал
-// **************************************************
-
-Route::prefix('terminal')
-    ->name('platform.terminal')
-    ->group(function () {
-
-        // Териминал -> Главная старница терминала
-        Route::screen('main', \App\Orchid\Screens\terminal\mainScreen::class)
-            ->name('.main')
-            ->breadcrumbs(fn(Trail $trail) => $trail
-                ->parent('platform.index')
-                ->push(__('Терминал'), route('platform.terminal.main')),
-            );
-
-        // Териминал -> Приемка товара (выбор товара)
-        Route::screen('acceptance/select', \App\Orchid\Screens\terminal\Acceptance\SelectAcceptanceScreen::class)
-            ->name('.acceptance.select')
-            ->breadcrumbs(function (Trail $trail) {
-                return $trail
-                    ->parent('platform.terminal.main')
-                    ->push('Выбор приемки', route('platform.terminal.acceptance.select'));
-            });
-
-        // Териминал -> Приемка товара (основной экран)
-        Route::screen('acceptance/{docId}/scan', \App\Orchid\Screens\terminal\Acceptance\ScanAcceptScreen::class)
-            ->name('.acceptance.scan')
-            ->breadcrumbs(function (Trail $trail, $docId) {
-                return $trail
-                    ->parent('platform.terminal.acceptance.select')
-                    ->push('Приемка', route('platform.terminal.acceptance.scan', $docId));
-            });
-
-        // Териминал -> Приемка товара (выбор товара)
-        Route::screen('places/select', \App\Orchid\Screens\terminal\Places\SelectPlaceScreen::class)
-            ->name('.places.select')
-            ->breadcrumbs(function (Trail $trail) {
-                return $trail
-                    ->parent('platform.terminal.main')
-                    ->push('Выбор приемки', route('platform.terminal.places.select'));
-            });
-
-        // Териминал -> Приемка товара (выбор товара)
-        Route::screen('places/{docId}/offer2place', \App\Orchid\Screens\terminal\Places\OfferToPlaceScreen::class)
-            ->name('.places.offer2place.index')
-            ->breadcrumbs(function (Trail $trail, $docId) {
-                return $trail
-                    ->parent('platform.terminal.main')
-                    ->push('Место хранения', route('platform.terminal.places.offer2place.index', $docId));
-            });
-
-        // Териминал -> Позаказная сборка (manually) -> Выбираем очередь
-        Route::screen('soam/select', \App\Orchid\Screens\terminal\SOAM\SelectSOAMScreen::class)
-            ->name('.soam.select')
-            ->breadcrumbs(function (Trail $trail) {
-                return $trail
-                    ->parent('platform.terminal.main')
-                    ->push('Очередь', route('platform.terminal.soam.select'));
-            });
-
-        // Териминал -> Позаказная сборка (manually) -> Определяем местоположение кладовщика
-        Route::screen('soam/{soaId}/{orderId}/order', \App\Orchid\Screens\terminal\SOAM\SelectOrderSOAMScreen::class)
-            ->name('.soam.order')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soam.select')
-                    ->push('Сборка', route('platform.terminal.soam.order', [$soaId, $orderId]));
-            });
-
-        // Териминал -> Позаказная сборка (manually) -> Определяем местоположение кладовщика
-        Route::screen('soam/{soaId}/{orderId}/offer', \App\Orchid\Screens\terminal\SOAM\GetOfferSOAMScreen::class)
-            ->name('.soam.offer')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soam.select')
-                    ->push('Сборка', route('platform.terminal.soam.offer', [$soaId, $orderId]));
-            });
-
-        // Териминал -> Позаказная сборка (manually) -> Завершаем процесс сборки
-        Route::screen('soam/{soaId}/{orderId}/finish', \App\Orchid\Screens\terminal\SOAM\FinishSOAMScreen::class)
-            ->name('.soam.finish')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soam.select')
-                    ->push('Сборка', route('platform.terminal.soam.finish', [$soaId, $orderId]));
-            });
-
-        // Териминал -> Позаказная сборка (manually) -> Сборка закончена
-        Route::screen('soam/{soaId}/{orderId}/end', \App\Orchid\Screens\terminal\SOAM\EndSOAMScreen::class)
-            ->name('.soam.end')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soam.select')
-                    ->push('Сборка', route('platform.terminal.soam.end', [$soaId, $orderId]));
-            });
-
-
-
-
-        // Териминал -> Позаказная сборка -> Выбираем очередь
-        Route::screen('soa/select', \App\Orchid\Screens\terminal\SOA\SelectSOAScreen::class)
-            ->name('.soa.select')
-            ->breadcrumbs(function (Trail $trail) {
-                return $trail
-                    ->parent('platform.terminal.main')
-                    ->push('Очередь', route('platform.terminal.soa.select'));
-            });
-
-        // Териминал -> Позаказная сборка -> Определяем местоположение кладовщика
-        Route::screen('soa/{soaId}/{orderId}/location', \App\Orchid\Screens\terminal\SOA\FindUserLocationSOAScreen::class)
-            ->name('.soa.location')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.location', [$soaId, $orderId]));
-            });
-
-        // Териминал -> Позаказная сборка -> Сканируем место расположения товара
-        Route::screen('soa/{soaId}/{orderId}/scan-place', \App\Orchid\Screens\terminal\SOA\ScanPlaceSOAScreen::class)
-            ->name('.soa.scan.place')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.scan.place', [$soaId, $orderId]));
-            });
-
-        // Териминал -> Позаказная сборка -> Сканируем товар
-        Route::screen('soa/{soaId}/{orderId}/scan-offer', \App\Orchid\Screens\terminal\SOA\ScanOfferSOAScreen::class)
-            ->name('.soa.scan.offer')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.scan.offer', [$soaId, $orderId]));
-            });
-
-        // Териминал -> Позаказная сборка -> Берем товар с полки
-        Route::screen('soa/{soaId}/{orderId}/get-offer', \App\Orchid\Screens\terminal\SOA\GetOfferSOAScreen::class)
-            ->name('.soa.get.offer')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.get.offer', [$soaId, $orderId]));
-            });
-
-        // Териминал -> Позаказная сборка
-        Route::screen('soa/{soaId}/{orderId}/scan', \App\Orchid\Screens\terminal\SOA\ScanSOAScreen::class)
-            ->name('.soa.scan')
-            ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
-                return $trail
-                    ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.scan', [$soaId, $orderId]));
-            });
 
     });
 

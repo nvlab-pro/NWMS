@@ -73,4 +73,8 @@ class rwOrder extends Model implements AuditableContract
     public function getWarehouse() {
         return $this->hasOne(rwWarehouse::class, 'wh_id', 'o_wh_id');
     }
+
+    public function getPlace() {
+        return $this->hasOne(rwPlace::class, 'pl_id', 'o_order_place');
+    }
 }

@@ -31,12 +31,18 @@ class AcceptancesOffersScreen extends Screen
 
         $currentUser = Auth::user();
 
-        $dbCurrentAcceptance = rwAcceptance::where('acc_id', $this->acceptId)->where('acc_domain_id', $currentUser->domain_id)->with('getWarehouse')->first();
-        $this->shopId = $dbCurrentAcceptance->acc_shop_id;
-        $this->whId = $dbCurrentAcceptance->acc_wh_id;
-        $this->whName = $dbCurrentAcceptance->getWarehouse->wh_name;
-        $this->docStatus = $dbCurrentAcceptance->acc_status;
-        $this->docDate = $dbCurrentAcceptance->acc_date;
+        if ($currentUser->hasRole('admin'))
+            $dbCurrentAcceptance = rwAcceptance::where('acc_id', $this->acceptId)->with('getWarehouse')->first();
+        else
+            $dbCurrentAcceptance = rwAcceptance::where('acc_id', $this->acceptId)->where('acc_domain_id', $currentUser->domain_id)->with('getWarehouse')->first();
+
+        if ($dbCurrentAcceptance) {
+            $this->shopId = $dbCurrentAcceptance->acc_shop_id;
+            $this->whId = $dbCurrentAcceptance->acc_wh_id;
+            $this->whName = $dbCurrentAcceptance->getWarehouse->wh_name;
+            $this->docStatus = $dbCurrentAcceptance->acc_status;
+            $this->docDate = $dbCurrentAcceptance->acc_date;
+        }
 
         $currentDocument = new DocumentService($this->acceptId);
         $collection = $currentDocument->getAcceptanceList();
@@ -332,7 +338,7 @@ class AcceptancesOffersScreen extends Screen
             'acc_count_placed'       => $countPlaced,
         ]);
 
-        Alert::success('Данные успешно сохранены');
+        Alert::success(__('Данные успешно сохранены'));
     }
 
     public function deleteOffer(Request $request)
@@ -345,7 +351,7 @@ class AcceptancesOffersScreen extends Screen
 
         $currentWarehouse->deleteItem($data['offerId'], 1);
 
-        Toast::error('Данные успешно удалены!');
+        Toast::error(__('Данные успешно удалены!'));
     }
 
     public function asyncGetOfferDimensions(int $offerId): array
@@ -379,7 +385,7 @@ class AcceptancesOffersScreen extends Screen
             'of_weight' => $validated['offer']['weight'],
         ]);
 
-        Toast::info('Размеры успешно обновлены.');
+        Toast::info(__('Размеры успешно обновлены.'));
     }
 
     public function startAccepting($acceptId)

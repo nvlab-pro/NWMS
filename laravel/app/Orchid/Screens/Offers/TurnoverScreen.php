@@ -35,6 +35,7 @@ class TurnoverScreen extends Screen
 
             $docStatus[$item->whci_id] = '-';
             $docPlace[$item->whci_id] = '';
+            $docPlace2[$item->whci_id] = '';
             $docReserv[$item->whci_id] = '';
 
             // Выясняем статус приемки
@@ -57,17 +58,41 @@ class TurnoverScreen extends Screen
                 if (isset($dbOrderStatus->getStatus->os_name))
                     $docStatus[$item->whci_id] ='<div style="color: '.$dbOrderStatus->getStatus->os_color.'; background-color: '.$dbOrderStatus->getStatus->os_bgcolor.'; border-radius: 5px; padding: 3px;"><b>'.$dbOrderStatus->getStatus->os_name.'</b></div>';
 
+                if (isset($dbOrderStatus->o_order_place) && $dbOrderStatus->o_order_place > 0) {
+                    $dbPlace = rwPlace::with('getType')
+                        ->where('pl_id', $dbOrderStatus->o_order_place)
+                        ->first();
+
+                    if (isset($dbPlace->pl_id)) {
+
+                        $docPlace2[$item->whci_id] = '';
+
+                        $docPlace2[$item->whci_id] .= $dbPlace->pl_room;
+                        if (strlen($dbPlace->pl_floor) > 0) $docPlace2[$item->whci_id] .= ' | ' . $dbPlace->pl_floor;
+                        if (strlen($dbPlace->pl_section) > 0) $docPlace2[$item->whci_id] .= ' | ' . $dbPlace->pl_section;
+                        if ($dbPlace->pl_row > 0) $docPlace2[$item->whci_id] .= ' | ' . $dbPlace->pl_row;
+                        if ($dbPlace->pl_rack > 0) $docPlace2[$item->whci_id] .= ' | ' . $dbPlace->pl_rack;
+                        if ($dbPlace->pl_shelf > 0) $docPlace2[$item->whci_id] .= $dbPlace->pl_shelf;
+
+                        $docPlace2[$item->whci_id] .= '<br><span style="color: #999999; font-size: 10px;">'. $dbPlace->getType->pt_name.'</span>';
+
+                        $docPlace2[$item->whci_id] .= '';
+
+                    }
+                }
+
             }
 
             // Берем место хранения
             if ($item->whci_place_id > 0) {
 
-                $dbPlace = rwPlace::where('pl_id', $item->whci_place_id)
+                $dbPlace = rwPlace::with('getType')
+                    ->where('pl_id', $item->whci_place_id)
                     ->first();
 
                 if (isset($dbPlace->pl_id)) {
 
-                    $docPlace[$item->whci_id] = '<div>';
+                    $docPlace[$item->whci_id] = '<nobr>';
 
                     $docPlace[$item->whci_id] .= $dbPlace->pl_room;
                     if (strlen($dbPlace->pl_floor) > 0) $docPlace[$item->whci_id] .= ' | ' . $dbPlace->pl_floor;
@@ -76,7 +101,9 @@ class TurnoverScreen extends Screen
                     if ($dbPlace->pl_rack > 0) $docPlace[$item->whci_id] .= ' | ' . $dbPlace->pl_rack;
                     if ($dbPlace->pl_shelf > 0) $docPlace[$item->whci_id] .= ' | ' . $dbPlace->pl_shelf;
 
-                    $docPlace[$item->whci_id] .= '</div>';
+                    $docPlace[$item->whci_id] .= '</nobr><br><span style="color: #999999; font-size: 10px;">'. $dbPlace->getType->pt_name.'</span>';
+
+                    $docPlace[$item->whci_id] .= '';
 
                 }
 
@@ -90,6 +117,7 @@ class TurnoverScreen extends Screen
             'offerId' => $offerId,
             'docStatus' => $docStatus,
             'docPlace' => $docPlace,
+            'docPlace2' => $docPlace2,
         ];
     }
 
