@@ -12,14 +12,15 @@ class CustomTranslator
     protected static array $translations = [];
     protected static string $locale = 'en';
     protected static bool $loaded = false; // Флаг загрузки переводов
-    protected static string $openAiApiKey = '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'; // Заменить на свой API-ключ
+    protected static string $openAiApiKey = ''; // Заменить на свой API-ключ
 
     protected static function loadTranslations(): void
     {
         if (self::$loaded) {
             return; // Если переводы уже загружены, пропускаем
         }
-
+        
+        self::$openAiApiKey = config('app.open_ai_api_key');
         $path = base_path("lang/" . self::$locale . ".json");
 
         if (File::exists($path)) {

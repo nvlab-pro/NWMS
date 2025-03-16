@@ -548,5 +548,17 @@
     "Создайте первую приемку": "Create the first acceptance.",
     "создайте перевую приходную\nнакладную и добавьте в нее товар, который вы планируете поставить на фулфилмент-склад": "Create the first incoming invoice and add the product you plan to stock in the fulfillment warehouse to it.",
     "Создайте заказ для отгрузки товара со склада": "Create an order for shipping goods from the warehouse.",
-    "и создайте новый заказ для\nотгрузки товара со склада": "and create a new order for shipping the goods from the warehouse"
+    "и создайте новый заказ для\nотгрузки товара со склада": "and create a new order for shipping the goods from the warehouse",
+    "Полочное место": "Shelf space",
+    "Паллетное место": "Pallet space",
+    "Стол маркировки": "Marking table",
+    "Место для отмененных заказов": "Place for canceled orders",
+    "Тип места": "Type of place",
+    "Помещение": "Room",
+    "Этаж": "Floor",
+    "Секция": "Section",
+    "Если вы хотите получить диаппазон значений, то можете использовать значение вида 2-4 (от 2 до 4). Либо (>, <, >=, <=). Например >10 выведет поля больше 10.": "If you want to get a range of values, you can use a value like 2-4 (from 2 to 4) or symbols (>, <, >=, <=). For example, >10 will display fields greater than 10.",
+    "Ряд": "Series",
+    "Стеллаж": "Shelf",
+    "Полка": "Shelf"
 }
