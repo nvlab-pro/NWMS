@@ -16,10 +16,12 @@
                 <div class="footer-section wow fadeInLeft animated">
                     <div class="footer-widget-social" style="padding-top: 10px;">
                         <ul>
-                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                            <li><a href="#"><i class="bi bi-youtube"></i></a></li>
+{{--                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>--}}
+{{--                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>--}}
+{{--                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>--}}
+{{--                            <li><a href="#"><i class="bi bi-youtube"></i></a></li>--}}
+                            <li><a href="https://t.me/+UJ5If6slQXZjYjMy"><i class="fab fa-telegram"></i></a></li>
+                            <li><a href="https://www.youtube.com/@nwms_en" target="_blank"><i class="fab fa-youtube"></i></a></li>
                         </ul>
                     </div>
                 </div>

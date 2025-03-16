@@ -51,7 +51,7 @@
 <div class="header-top-area">
     <div class="container">
         <div class="row align-items-center d-flex">
-            <div class="col-lg-5">
+            <div class="col-lg-9">
                 <div class="header-address-info">
                     <ul>
                         <li><a href="#"><i class="far fa-envelope"></i><span>info@nwms.cloud</span></a></li>
@@ -63,23 +63,19 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-1">
                 <!--header top address-->
                 <div class="header-top-right-social">
                     <ul>
-                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+{{--                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>--}}
+{{--                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>--}}
+{{--                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>--}}
+                        <li><a href="https://t.me/+UJ5If6slQXZjYjMy"><i class="fab fa-telegram"></i></a></li>
                         <li><a href="https://www.youtube.com/@nwms_en" target="_blank"><i class="fab fa-youtube"></i></a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="col-lg-1">
-                <!--header top address-->
-                <div class="header-top-right-social">
-                </div>
-            </div>
 
             <div class="col-lg-1 header-top-right-language">
                 <select id="language-selector" onchange="changeLanguage(this.value)">

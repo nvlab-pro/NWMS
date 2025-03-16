@@ -4,10 +4,10 @@
             <div class="col-lg-3">
                 <div class="logo">
                     <a class="logo_img" href="/" title="techo">
-                        <img src="/img/cm_logo.png" alt="logo" style= "width:130px" >
+                        <img src="/img/cm_logo.png" alt="logo" style="width:130px">
                     </a>
                     <a class="main_sticky" href="/" title="techo">
-                        <img src="/img/cm_logo.png" alt="logo" style= "width:130px" >
+                        <img src="/img/cm_logo.png" alt="logo" style="width:130px">
                     </a>
                 </div>
             </div>
@@ -25,7 +25,11 @@
                     </ul>
                     <!-- header button -->
                     <div class="header-src-btn">
-                        <div class="search-box-btn search-box-outer"><i class="fas fa-search"></i></div>
+                        <a href="/admin" target="_blank">
+                            <div class="search-box-btn search-box-outer">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </a>
                     </div>
                 </nav>
             </div>
