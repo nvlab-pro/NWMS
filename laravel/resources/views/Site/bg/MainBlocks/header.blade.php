@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>NWMS - free warehouse automation system</title>
+    <title>NWMS - Безплатна система за автоматизация на складове</title>
     <meta name="description"
-          content="Completely free, cloud-based warehouse management system (WMS). Receipt of goods, address storage of goods, work with data collection terminals, control of balances.">
+          content="Полностью бесплатная, облачная система управления складом (WMS). Прием товара, адресное хранение товара, работа с терминалами сбора данных, контроль остатков..">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="56x56" href="assets/images/fav-icon/icon.png">
@@ -92,10 +92,10 @@
             <div class="col-lg-1 header-top-right-language">
                 <select id="language-selector" onchange="changeLanguage(this.value)">
                     <option value="bel">🇧🇾 Belarusian</option>
-                    <option value="bg">🇧🇬 Bulgarian</option>
+                    <option value="bg" SELECTED>🇧🇬 Bulgarian</option>
                     <option value="ch">🇨🇳 Chinese</option>
                     <option value="de">🇩🇪 German</option>
-                    <option value="en" SELECTED>🇺🇸 English</option>
+                    <option value="en">🇺🇸 English</option>
                     <option value="fr">🇫🇷 French</option>
                     <option value="gr">🇬🇪 Georgian</option>
                     <option value="kz">🇰🇿 Kazakh</option>
@@ -111,8 +111,11 @@
 </div>
 <script>
     function changeLanguage(lang) {
-        // Здесь можно реализовать логику смены языка, например, редирект
-        window.location.href = '/' + lang + '/';
+        if (lang == 'en') {
+            window.location.href = '/';
+        } else {
+            window.location.href = '/' + lang + '/';
+        }
     }
 </script>
 <!--==================================================-->

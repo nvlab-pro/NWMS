@@ -40,10 +40,22 @@
     <script src="assets/js/vendor/modernizr-3.5.0.min.js"></script>
     <link href="https://fonts.cdnfonts.com/css/clash-display" rel="stylesheet">
 
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MLTHNSCT');</script>
+    <!-- End Google Tag Manager -->
 
 </head>
 
 <body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MLTHNSCT"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!--==================================================-->
 <!-- Start techo header top area  -->
@@ -79,18 +91,18 @@
 
             <div class="col-lg-1 header-top-right-language">
                 <select id="language-selector" onchange="changeLanguage(this.value)">
-                    <option value="en">🇺🇸 English</option>
-                    <option value="bg">🇧🇬 Bulgarian</option>
-                    <option value="de">🇩🇪 German</option>
-                    <option value="fr">🇫🇷 French</option>
-                    <option value="rus" SELECTED>🇷🇺 Russian</option>
-                    <option value="ukr">🇺🇦 Ukrainian</option>
-                    <option value="sp">🇪🇸 Spanish</option>
-                    <option value="ch">🇨🇳 Chinese</option>
-                    <option value="pr">🇵🇹 Portuguese</option>
-                    <option value="kz">🇰🇿 Kazakh</option>
                     <option value="bel">🇧🇾 Belarusian</option>
+                    <option value="bg">🇧🇬 Bulgarian</option>
+                    <option value="ch">🇨🇳 Chinese</option>
+                    <option value="de">🇩🇪 German</option>
+                    <option value="en">🇺🇸 English</option>
+                    <option value="fr">🇫🇷 French</option>
                     <option value="gr">🇬🇪 Georgian</option>
+                    <option value="kz">🇰🇿 Kazakh</option>
+                    <option value="pr">🇵🇹 Portuguese</option>
+                    <option value="rus" SELECTED>🇷🇺 Russian</option>
+                    <option value="sp">🇪🇸 Spanish</option>
+                    <option value="ukr">🇺🇦 Ukrainian</option>
                 </select>
             </div>
 
@@ -99,8 +111,11 @@
 </div>
 <script>
     function changeLanguage(lang) {
-        // Здесь можно реализовать логику смены языка, например, редирект
-        window.location.href = '/' + lang + '/';
+        if (lang == 'en') {
+            window.location.href = '/';
+        } else {
+            window.location.href = '/' + lang + '/';
+        }
     }
 </script>
 <!--==================================================-->

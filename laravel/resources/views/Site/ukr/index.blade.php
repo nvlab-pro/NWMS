@@ -1,16 +1,16 @@
-@include('Site.bg.MainBlocks.header')
+@include('Site.MainBlocks.header')
 
 <!--==================================================-->
 <!-- Start techo Main Menu  -->
 <!--==================================================-->
-@include('Site.bg.MainBlocks.menu')
+@include('Site.MainBlocks.menu')
 <!--==================================================-->
 <!-- End techo Main Menu  -->
 <!--==================================================-->
 
 
 <!--==================================================-->
-<!-- Начало секции Hero -->
+<!-- Start techo Hero Section  -->
 <!--==================================================-->
 <div class="hero-section d-flex align-items-center" style="height: 480px;">
     <div class="container">
@@ -18,21 +18,22 @@
             <div class="col-lg-8">
                 <div class="hero-content wow fadeInLeft animated">
                     <div class="hero-title">
-                        <h5>Система за автоматизация на складове</h5>
-                        <h1>Напълно безплатна WMS</h1>
+                        <h5>Warehouse automation system</h5>
+                        <h1>Completely free WMS</h1>
                     </div>
                     <div class="hero-text">
-                        <p>Облачната <b>система за управление на складове</b> NWMS предлага <b>напълно безплатно</b> решение
-                            за автоматизиране и оптимизиране на всички ваши складови операции. От проследяване на
-                            инвентара до изпълнение на поръчки и доставка, NWMS помага на бизнеса от всякакъв размер
-                            да намали грешките, да подобри ефективността и да получи актуални данни за движението
-                            на стоките – без разходите за традиционните WMS решения.<br>
+                        <p>The cloud <b>warehouse management system</b> NWMS offers a <b>completely free</b> solution to
+                            automate and
+                            streamline all your warehouse operations. From inventory tracking to order fulfillment and
+                            shipping,
+                            NWMS helps businesses of any size reduce errors, improve efficiency, and gain real-time
+                            insights into stock movement—all without the cost of traditional WMS solutions.<br>
                             <br>
-                            Започнете ефективната автоматизация на склада с NWMS още днес!</p>
+                            Start efficient warehouse automation with NWMS today!</p>
                     </div>
                     <div class="hero-button">
                         <div class="hero-main-button">
-                            <a href="about.html">Започнете проект</a>
+                            <a href="about.html">Start A Project</a>
                         </div>
                     </div>
                 </div>
@@ -44,16 +45,16 @@
     </div>
 </div>
 <!--==================================================-->
-<!-- Край на секцията Hero -->
+<!-- End techo Hero Section  -->
 <!--==================================================-->
 
 
 <!--==================================================-->
-<!-- Начало на секцията "Кой се нуждае от програмата" -->
+<!-- Start techo feature-area  -->
 <!--==================================================-->
 <div class="feature-area">
     <div class="container">
-        <h2>Кой има нужда от програмата:</h2>
+        <h2>Who needs the program:</h2>
         <br>
         <div class="row">
             <div class="col-lg-3 col-md-6">
@@ -62,10 +63,11 @@
                         <img src="/img/iconFFWMS2.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Оператори на фулфилмънт</h2>
+                        <h2>Fulfilment operators</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>WMS е проектирана да предоставя пълна гама от услуги за фулфилмънт като доставчик на складови услуги.</p>
+                        <p>WMS is designed to provide a full range of fulfillment services as a supplier of warehouse
+                            services.</p>
                     </div>
                 </div>
             </div>
@@ -75,11 +77,11 @@
                         <img src="/img/iconRetailersWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title" style="padding-top: 10px;">
-                        <h2>Складове на търговци на дребно</h2>
+                        <h2>Retailers warehouses</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>WMS може да работи като класически софтуер за автоматизиране на работата на стандартен склад
-                            на търговец на дребно.</p>
+                        <p>WMS can work as a classic software for automating the work of a regular retailer’s
+                            warehouse.</p>
                     </div>
                 </div>
             </div>
@@ -89,10 +91,11 @@
                         <img src="/img/iconEShopWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title" style="padding-top: 5px;">
-                        <h2>Складове за онлайн магазини</h2>
+                        <h2>Online store warehouses</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>NWMS напълно покрива всички нужди от складова обработка на вашите стоки в онлайн магазина ви.</p>
+                        <p>NWMS will completely cover all needs for warehouse processing of your goods in your online
+                            store.</p>
                     </div>
                 </div>
             </div>
@@ -102,10 +105,10 @@
                         <img src="/img/iconWarehousesWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title" style="padding-top: 20px;">
-                        <h2>Всички видове складове</h2>
+                        <h2>Any warehouses</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>Всъщност, NWMS е подходяща за автоматизиране на работата на всеки склад, независимо от неговия размер.</p>
+                        <p>Actually, NWMS is suitable for automating the work of any warehouse, of almost any size.</p>
                     </div>
                 </div>
             </div>
@@ -113,13 +116,12 @@
     </div>
 </div>
 <!--==================================================-->
-<!-- Край на секцията "Кой се нуждае от програмата" -->
+<!-- End techo feature-area  -->
 <!--==================================================-->
 
 
-
 <!--==================================================-->
-<!-- Начало секции "Защо да изберете нас" -->
+<!-- start techo WHY CHOOSE US area  -->
 <!--==================================================-->
 <div class="why-choose-us-area">
     <div class="container">
@@ -131,19 +133,21 @@
             </div>
             <div class="col-lg-7">
                 <div class="techo-section-title text-left wow fadeInRight animated">
-                    <h5>ЗАЩО БЕЗПЛАТНО?</h5>
-                    <h3>Защо програмата </h3>
-                    <h2>се предоставя безплатно?</h2>
+                    <h5>WHY FREE?</h5>
+                    <h3>Why is the program </h3>
+                    <h2>provided free of charge?</h2>
                     <div class="bar-main">
                     </div>
                     <p>
-                        Нашият екип се занимава с управление на складова логистика повече от 15 години и през това време
-                        натрупахме огромен опит в разработката на системи за автоматизация на складове и тяхното управление.<br>
+                        Our team has been involved in warehouse logistics for over 15 years and during this time we have
+                        accumulated vast
+                        experience in the processes of developing warehouse automation systems and in managing these
+                        warehouses.<br>
                         <br>
-                        Искаме да предоставим нашите разработки на възможно най-много потребители просто защото можем!<br>
+                        We want to offer our developments to as many users as possible simply because we can!<br>
                         <br>
-                        Надяваме се да създадем общност от складови логистици, които ще си помагат взаимно, както се случва
-                        в други индустрии.
+                        We hope to create a community of warehouse logisticians who will help each other, as it happens
+                        in other industries.
                     </p>
                 </div>
             </div>
@@ -152,16 +156,16 @@
 </div>
 
 <!--==================================================-->
-<!-- Край на секцията "Защо да изберете нас" -->
+<!-- End techo WHY CHOOSE US area  -->
 <!--==================================================-->
 
 
 <!--==================================================-->
-<!-- Начало на секцията "Основни функции" -->
+<!-- Start techo feature-area  -->
 <!--==================================================-->
 <div class="feature-area">
     <div class="container">
-        <h2>Основни функции:</h2>
+        <h2>Main features:</h2>
         <br>
         <div class="row">
             <div class="col-lg-3 col-md-6">
@@ -170,11 +174,11 @@
                         <img src="/img/iconFFWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Пълна функционалност на класическа WMS</h2>
+                        <h2>Full functionality of classic WMS</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>На първо място, NWMS е класическа WMS с всички възможности, включително адресно съхранение,
-                            работа с терминал за събиране на данни и контрол на складовите наличности и др.</p>
+                        <p>First of all, NWMS is a classic WMS with all the capabilities including address storage,
+                            working with a terminal for data collection and control of balances, etc.</p>
                     </div>
                 </div>
             </div>
@@ -184,10 +188,11 @@
                         <img src="/img/iconAPIWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Мощен REST API</h2><br>
+                        <h2>Powerful rest API</h2><br>
                     </div>
                     <div class="feature-box-description">
-                        <p>Мощен REST API, който ви позволява да интегрирате NWMS с вашия софтуер или външни услуги.
+                        <p>Powerful rest API allowing you to do any integration of NWMS with your software or third
+                            party services.
                             <br><br><br>
                         </p>
                     </div>
@@ -199,11 +204,11 @@
                         <img src="/img/iconStatsWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Статистика на всички складови операции</h2>
+                        <h2>Statistics of all warehouse operations</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>WMS включва модул за статистика, който показва данни за действията на служителите в склада,
-                            обработените поръчки, оборота и други ключови показатели.<br><br></p>
+                        <p>WMS includes a statistics module that displays data on employee actions in the warehouse,
+                            processed orders, turnover and other key indicators.<br><br></p>
                     </div>
                 </div>
             </div>
@@ -213,12 +218,12 @@
                         <img src="/img/iconBillingWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Фактуриране на операции</h2>
+                        <h2>Billing of operations</h2>
                     </div>
                     <div class="feature-box-description">
                         <br>
-                        <p>Модулът за фактуриране ви позволява да изчислявате стойността на всяка извършена операция.
-                            Това е особено важно за фирми, които предлагат складови услуги.</p>
+                        <p>The billing module allows you to calculate the cost of each operation performed on the
+                            company. This is especially relevant for service companies.</p>
                         <br>
                     </div>
                 </div>
@@ -227,13 +232,12 @@
     </div>
 </div>
 <!--==================================================-->
-<!-- Край на секцията "Основни функции" -->
+<!-- End techo feature-area  -->
 <!--==================================================-->
 
 
-
 <!--==================================================-->
-<!-- Начало на секцията "Статистика" -->
+<!-- start techo counter area  -->
 <!--==================================================-->
 <div class="counter-area">
     <div class="container">
@@ -249,7 +253,7 @@
                             <h2>+</h2>
                         </div>
                         <div class="counter-text">
-                            <span>Доволни складове</span>
+                            <span>Happy warehouses</span>
                         </div>
                     </div>
                 </div>
@@ -265,7 +269,7 @@
                             <h2>+</h2>
                         </div>
                         <div class="counter-text">
-                            <span>Изпълнени поръчки</span>
+                            <span>Orders Completed</span>
                         </div>
                     </div>
                 </div>
@@ -280,7 +284,7 @@
                             <h2 class="counter">500</h2>
                         </div>
                         <div class="counter-text">
-                            <span>Стоки в системата</span>
+                            <span>Goods in system</span>
                         </div>
                     </div>
                 </div>
@@ -296,7 +300,7 @@
                             <h2>k+</h2>
                         </div>
                         <div class="counter-text">
-                            <span>Общо налични артикули</span>
+                            <span>Total items in stock</span>
                         </div>
                     </div>
                 </div>
@@ -305,13 +309,12 @@
     </div>
 </div>
 <!--==================================================-->
-<!-- Край на секцията "Статистика" -->
+<!-- start techo counter area  -->
 <!--==================================================-->
 
 
-
 <!--==================================================-->
-<!-- Начало на секцията "За нас" -->
+<!-- start techo about us section -->
 <!--==================================================-->
 <div class="about-us-section">
     <div class="container">
@@ -323,12 +326,12 @@
             </div>
             <div class="col-lg-7 wow fadeInRight animated">
                 <div class="techo-section-title text-left">
-                    <h5>ДЕМО ВЕРСИЯ</h5>
-                    <h3>Изпробвайте системата веднага</h3>
-                    <h2>В нашата <span>демо версия</span></h2>
+                    <h5>DEMO VERSION</h5>
+                    <h3>Check out the system right now</h3>
+                    <h2>On our <span>demo version</span></h2>
                     <div class="bar-main">
                     </div>
-                    <p>За да тествате нашата WMS веднага, използвайте следните данни за достъп:</p>
+                    <p>To try our WMS right now, use the following accesses:</p>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
@@ -350,7 +353,7 @@
                             <div class="col-lg-6">
                                 <div class="about-single-box">
                                     <div class="about-icon">
-                                        <i class="fas">ИМЕ: </i>
+                                        <i class="fas">LOGIN: </i>
                                     </div>
                                     <div class="about-title" style="width: 100%">
                                         <h2 style="font-size: 20px;">admin@demo.com</h2>
@@ -364,7 +367,7 @@
                             <div class="col-lg-6">
                                 <div class="about-single-box">
                                     <div class="about-icon">
-                                        <i class="fas">ПАРОЛА:</i>
+                                        <i class="fas">PASSWORD:</i>
                                     </div>
                                     <div class="about-title" style="width: 100%">
                                         <h2 style="font-size: 20px;">demo</h2>
@@ -385,20 +388,19 @@
 <script>
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert("Копирано: " + text);
+            alert("Copied: " + text);
         }).catch(err => {
-            console.error('Неуспешно копиране: ', err);
+            console.error('Failed to copy: ', err);
         });
     }
 </script>
 <!--==================================================-->
-<!-- Край на секцията "За нас" -->
+<!-- End techo about us section -->
 <!--==================================================-->
 
 
-
 <!--==================================================-->
-<!-- Начало на секцията "Видео" -->
+<!-- Start techo  Video Area -->
 <!--==================================================-->
 <div class="video-area">
     <div class="container">
@@ -415,13 +417,13 @@
                         <div class="call-to-action_top_text wow fadeInLeft animated">
                             <div class="call-to-action-title">
                                 <span class="subtitlespan"></span>
-                                <h2>Бърз преглед на нашата WMS</h2>
+                                <h2>A quick tour of our WMS</h2>
                             </div>
                         </div>
                         <div class="call-to-action-inner wow fadeInRight animated">
                             <div class="call-to-action-desc">
-                                <p>За да се запознаете бързо с основните функции на NWMS, можете да гледате
-                                    въвеждащото видео в YouTube.</p>
+                                <p>To quickly familiarize yourself with the main features of NWMS, you can watch the
+                                    introductory video on youtube.</p>
                             </div>
                         </div>
                     </div>
@@ -431,23 +433,23 @@
     </div>
 </div>
 <!--==================================================-->
-<!-- Край на секцията "Видео" -->
+<!-- End techo  Video Area -->
 <!--==================================================-->
 
 
 <!--==================================================-->
-<!-- Начало на секцията "Започнете сега" -->
+<!-- Start techo Testimonial Area -->
 <!--==================================================-->
 <div class="testimonial-area">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="techo-section-title text-center">
-                    <h5>ЗАПОЧНЕТЕ СЕГА</h5>
-                    <h3>Форма за поръчка</h3>
+                    <h5>START NOW</h5>
+                    <h3>Order form</h3>
                     <div class="bar-main">
                     </div>
-                    <h4>Можете да започнете работа веднага след попълване на формуляра по-долу.</h4>
+                    <H4>You can start working immediately after filling out the form below.</H4>
                 </div>
             </div>
             <div class="col-lg-12 wow fadeInRight animated">
@@ -456,37 +458,37 @@
                     <div class="row form">
                         <div class="col-lg-6">
                             <div class="form-box">
-                                <input type="text" name="FName" placeholder="Име" required="">
+                                <input type="text" name="FName" placeholder="First Name" required="">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-box">
-                                <input type="text" name="LName" placeholder="Фамилия" required="">
+                                <input type="text" name="LName" placeholder="Last Name" required="">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-box">
-                                <input type="email" name="email" placeholder="Е-поща (вход)" required="">
+                                <input type="email" name="email" placeholder="E-mail (login)" required="">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-box">
-                                <input type="password" name="password" placeholder="Парола" required="">
+                                <input type="password" name="password" placeholder="Password" required="">
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <div class="form-box">
                                 <textarea name="massage" id="massage" cols="30" rows="10"
-                                          placeholder="Коментар"></textarea>
+                                          placeholder="Comment"></textarea>
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <div class="form-box">
                                 <div class="language-selector">
-                                    <h5>Изберете език на интерфейса:</h5> &nbsp;
+                                    <H5>Select interface language:</H5> &nbsp;
                                     <select id="language-select" name="language">
                                         <option value="en" data-flag="🇺🇸">🇺🇸 English</option>
-                                        <option value="bg" data-flag="🇧🇬" SELECTED>🇧🇬 Bulgarian</option>
+                                        <option value="bg" data-flag="🇧🇬">🇧🇬 Bulgarian</option>
                                         <option value="rus" data-flag="🇷🇺">🇷🇺 Russian</option>
                                         <option value="ukr" data-flag="🇺🇦">🇺🇦 Ukrainian</option>
                                         <option value="fr" data-flag="🇫🇷">🇫🇷 French</option>
@@ -506,7 +508,7 @@
                                 <input type="text" name="mName" value="" style="display:none;">
                                 <input type="hidden" name="fst" value="<?= time(); ?>">
 
-                                <button type="submit">Създайте акаунт</button>
+                                <button type="submit">Create account</button>
                             </div>
                         </div>
                     </div>
@@ -543,4 +545,4 @@ border-color: #007bff;
 <!-- END techo Testimonial Area -->
 <!--==================================================-->
 
-@include('Site.bg.MainBlocks.footer')
+@include('Site.MainBlocks.footer')

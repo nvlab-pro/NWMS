@@ -12,16 +12,16 @@
 <!--==================================================-->
 <!-- Start techo Hero Section  -->
 <!--==================================================-->
-<div class="banner-section d-flex align-items-center">
+<div class="hero-section d-flex align-items-center" style="height: 480px;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <div class="banner-content wow fadeInLeft animated">
-                    <div class="banner-title">
+                <div class="hero-content wow fadeInLeft animated">
+                    <div class="hero-title">
                         <h5>Warehouse automation system</h5>
                         <h1>Completely free WMS</h1>
                     </div>
-                    <div class="banner-text">
+                    <div class="hero-text">
                         <p>The cloud <b>warehouse management system</b> NWMS offers a <b>completely free</b> solution to
                             automate and
                             streamline all your warehouse operations. From inventory tracking to order fulfillment and
@@ -31,8 +31,10 @@
                             <br>
                             Start efficient warehouse automation with NWMS today!</p>
                     </div>
-                    <div class="banner-button">
-                        <a href="about.html">Start A Project<i class="bi bi-arrow-right"></i></a>
+                    <div class="hero-button">
+                        <div class="hero-main-button">
+                            <a href="about.html">Start A Project</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -481,6 +483,27 @@
                             </div>
                         </div>
                         <div class="col-lg-12">
+                            <div class="form-box">
+                                <div class="language-selector">
+                                    <H5>Select interface language:</H5> &nbsp;
+                                    <select id="language-select" name="language">
+                                        <option value="en" data-flag="🇺🇸">🇺🇸 English</option>
+                                        <option value="bg" data-flag="🇧🇬">🇧🇬 Bulgarian</option>
+                                        <option value="rus" data-flag="🇷🇺">🇷🇺 Russian</option>
+                                        <option value="ukr" data-flag="🇺🇦">🇺🇦 Ukrainian</option>
+                                        <option value="fr" data-flag="🇫🇷">🇫🇷 French</option>
+                                        <option value="de" data-flag="🇩🇪">🇩🇪 German</option>
+                                        <option value="sp" data-flag="🇪🇸">🇪🇸 Spanish</option>
+                                        <option value="ch" data-flag="🇨🇳">🇨🇳 Chinese</option>
+                                        <option value="pr" data-flag="🇵🇹">🇵🇹 Portuguese</option>
+                                        <option value="kz" data-flag="🇰🇿">🇰🇿 Kazakh</option>
+                                        <option value="bel" data-flag="🇧🇾">🇧🇾 Belarusian</option>
+                                        <option value="gr" data-flag="🇬🇪">🇬🇪 Georgian</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
                             <div class="submit-button">
                                 <input type="text" name="mName" value="" style="display:none;">
                                 <input type="hidden" name="fst" value="<?= time(); ?>">
@@ -494,6 +517,29 @@
         </div>
     </div>
 </div>
+
+<style>
+.language-selector {
+display: flex;
+justify-content: center;
+margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.language-selector select {
+font-size: 16px;
+padding: 8px 12px;
+border: 2px solid #ccc;
+border-radius: 5px;
+background-color: white;
+cursor: pointer;
+appearance: none;
+}
+
+.language-selector select:hover {
+border-color: #007bff;
+}
+</style>
 
 <!--==================================================-->
 <!-- END techo Testimonial Area -->

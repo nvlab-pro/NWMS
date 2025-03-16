@@ -19,7 +19,7 @@ class CustomTranslator
         if (self::$loaded) {
             return; // Если переводы уже загружены, пропускаем
         }
-        
+
         self::$openAiApiKey = config('app.open_ai_api_key');
         $path = base_path("lang/" . self::$locale . ".json");
 
