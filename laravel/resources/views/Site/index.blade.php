@@ -454,7 +454,7 @@
             </div>
             <div class="col-lg-12 wow fadeInRight animated">
                 <form action="/new-user-form" method="POST" id="dreamit-form">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    @csrf
                     <div class="row form">
                         <div class="col-lg-6">
                             <div class="form-box">
@@ -473,7 +473,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-box">
-                                <input type="password" name="password" placeholder="Password" required="">
+                                <input type="password" name="password" placeholder="Password" required minlength="6" pattern=".{6,}">
                             </div>
                         </div>
                         <div class="col-lg-12">
@@ -522,6 +522,18 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let form = document.getElementById("dreamit-form");
+        let submitButton = form.querySelector("button[type='submit']");
+
+        form.addEventListener("submit", function() {
+            submitButton.disabled = true; // Блокируем кнопку
+            submitButton.innerText = "Processing..."; // Меняем текст
+        });
+    });
+</script>
 
 <style>
 .language-selector {
