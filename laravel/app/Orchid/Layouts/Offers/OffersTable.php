@@ -56,11 +56,15 @@ class OffersTable extends Table
                 ->align('center')
                 ->filter(
                     TD::FILTER_SELECT,
-                    rwLibStatus::pluck('ls_name', 'ls_id')->toArray() // Замените 'id' на ключевое поле вашей таблицы
+                    rwLibStatus::all()->mapWithKeys(function ($status) {
+                        return [$status->ls_id => CustomTranslator::get($status->ls_name)]; // Применяем перевод
+                    })->toArray()
                 )
                 ->render(function (rwOffer $modelName) {
-                    return Link::make(CustomTranslator::get($modelName->getStatus->ls_name))
-                        ->route('platform.offers.edit', $modelName->of_id);
+                    return '<div onClick="window.location=\'' . route('platform.orders.edit', $modelName->of_id) . '\'" style="color: ' . $modelName->getStatus->ls_color . ';
+                        background-color: ' . $modelName->getStatus->ls_bgcolor . ';
+                        padding: 5px;
+                        border-radius: 5px;"><b>' . CustomTranslator::get($modelName->getStatus->ls_name) . '</b></div>';
                 }),
 
             TD::make('of_ext_id', CustomTranslator::get('Внешний ID'))

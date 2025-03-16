@@ -26,17 +26,25 @@ class OrdersScreen extends Screen
         $currentUser = Auth::user();
         $dbOrders = rwOrder::where('o_domain_id', $currentUser->domain_id);
 
-        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager') || $currentUser->hasRole('warehouse_worker')) {
+        if ($currentUser->hasRole('admin')) {
 
-            $arWhList = rwWarehouse::where('wh_parent_id', $currentUser->wh_id)
-                ->pluck('wh_id')
-                ->toArray();
-
-            $dbOrders = rwOrder::whereIn('o_wh_id', $arWhList);
+            $dbOrders = rwOrder::query();
 
         } else {
 
-            $dbOrders = rwOrder::whereIn('o_user_id', [$currentUser->id, $currentUser->parent_id]);
+            if ($currentUser->hasRole('warehouse_manager') || $currentUser->hasRole('warehouse_worker')) {
+
+                $arWhList = rwWarehouse::where('wh_parent_id', $currentUser->wh_id)
+                    ->pluck('wh_id')
+                    ->toArray();
+
+                $dbOrders = rwOrder::whereIn('o_wh_id', $arWhList);
+
+            } else {
+
+                $dbOrders = rwOrder::whereIn('o_user_id', [$currentUser->id, $currentUser->parent_id]);
+
+            }
 
         }
 

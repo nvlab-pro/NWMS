@@ -61,8 +61,9 @@ class OrdersTable extends Table
                 ->align('center')
                 ->filter(
                     TD::FILTER_SELECT,
-                    rwOrderStatus::pluck('os_name', 'os_id')
-                        ->toArray() // Замените 'id' на ключевое поле вашей таблицы
+                    rwOrderStatus::all()->mapWithKeys(function ($status) {
+                        return [$status->os_id => CustomTranslator::get($status->os_name)]; // Применяем перевод
+                    })->toArray()
                 )
                 ->render(function (rwOrder $modelName) {
                     return '<div onClick="window.location=\'' . route('platform.orders.edit', $modelName->o_id) . '\'" style="color: ' . $modelName->getStatus->os_color . ';
@@ -94,7 +95,13 @@ class OrdersTable extends Table
             TD::make('o_type_id', CustomTranslator::get('Тип'))
                 ->sort()
                 ->align('center')
-                ->filter(TD::FILTER_SELECT, rwOrderType::pluck('ot_name', 'ot_id')->toArray())
+                ->filter(
+                    TD::FILTER_SELECT,
+                    rwOrderType::all()->mapWithKeys(function ($type) {
+                        return [$type->ot_id => CustomTranslator::get($type->ot_name)]; // Применяем перевод
+                    })->toArray()
+
+                )
                 ->render(function (rwOrder $order) {
                     return $order->getType->ot_name ? Link::make($order->getType->ot_name)
                         ->route('platform.orders.edit', $order->o_id)

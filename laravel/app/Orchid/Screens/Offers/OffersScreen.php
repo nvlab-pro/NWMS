@@ -19,16 +19,25 @@ class OffersScreen extends Screen
     public function query(): iterable
     {
         $currentUser = Auth::user();
-        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 
-            $dbOffers = rwOffer::where('of_domain_id', $currentUser->domain_id);
+        if ($currentUser->hasRole('admin')) {
+
+            $dbOffers = rwOffer::query();
 
         } else {
 
-            $dbOffers = rwOffer::where('of_domain_id', $currentUser->domain_id)
-                ->whereHas('getShop', function ($query) use ($currentUser) {
-                    $query->whereIn('sh_user_id', [$currentUser->id, $currentUser->parent_id]);
-                });
+            if ($currentUser->hasRole('warehouse_manager')) {
+
+                $dbOffers = rwOffer::where('of_domain_id', $currentUser->domain_id);
+
+            } else {
+
+                $dbOffers = rwOffer::where('of_domain_id', $currentUser->domain_id)
+                    ->whereHas('getShop', function ($query) use ($currentUser) {
+                        $query->whereIn('sh_user_id', [$currentUser->id, $currentUser->parent_id]);
+                    });
+
+            }
 
         }
 

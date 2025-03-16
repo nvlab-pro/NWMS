@@ -47,9 +47,12 @@ class AcceptancesTable extends Table
             TD::make('acc_status', CustomTranslator::get('Статус'))
                 ->align('center')
                 ->sort()
-                ->filter(TD::FILTER_SELECT, rwLibAcceptStatus::query()
-                    ->pluck('las_name', 'las_id')
-                    ->toArray())
+                ->filter(
+                    TD::FILTER_SELECT,
+                    rwLibAcceptStatus::all()->mapWithKeys(function ($status) {
+                        return [$status->las_id => CustomTranslator::get($status->las_name)]; // Применяем перевод
+                    })->toArray()
+                )
                 ->align(TD::ALIGN_CENTER)
                 ->render(function (rwAcceptance $modelName) {
                     return '<div onClick="window.location=\''.route('platform.acceptances.offers', $modelName->acc_id).'\'" style="color: '.$modelName->getAccStatus->las_color.';
@@ -61,9 +64,12 @@ class AcceptancesTable extends Table
             TD::make('acc_type', CustomTranslator::get('Тип'))
                 ->align('center')
                 ->sort()
-                ->filter(TD::FILTER_SELECT, rwLibAcceptType::query()
-                    ->pluck('lat_name', 'lat_id')
-                    ->toArray())
+                ->filter(
+                    TD::FILTER_SELECT,
+                    rwLibAcceptType::all()->mapWithKeys(function ($type) {
+                        return [$type->lat_id => CustomTranslator::get($type->lat_name)]; // Применяем перевод
+                    })->toArray()
+                )
                 ->align(TD::ALIGN_CENTER)
                 ->render(function (rwAcceptance $modelName) {
                     return Link::make($modelName->getAccType->lat_name)

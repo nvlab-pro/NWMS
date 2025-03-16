@@ -3,7 +3,7 @@
 namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibLanguage;
-use App\Orchid\Layouts\Settings\libLanguageTable;
+use App\Orchid\Layouts\Settings\LibLanguageTable;
 use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;

@@ -3,7 +3,7 @@
 namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibCurrency;
-use App\Orchid\Layouts\Settings\libCurrencyTable;
+use App\Orchid\Layouts\Settings\LibCurrencyTable;
 use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
