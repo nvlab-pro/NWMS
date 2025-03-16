@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Orchid\Screen\Layout;
 use Orchid\Screen\Repository;
 use Orchid\Screen\TD;
+use App\Services\CustomTranslator;
 
 /**
  * Class Table.
@@ -99,19 +100,19 @@ abstract class Table extends Layout
     protected function textNotFound(): string
     {
         if (count(request()->query()) !== 0) {
-            return __('Результаты по вашим текущим фильтрам не найдены');
+            return CustomTranslator::get('Результаты по вашим текущим фильтрам не найдены');
         }
 
-        return __('Нет ни одного объекта для отображения');
+        return CustomTranslator::get('Нет ни одного объекта для отображения');
     }
 
     protected function subNotFound(): string
     {
         if (count(request()->query()) !== 0) {
-            return __('Попробуйте изменить настройки фильтра или вообще удалить его, чтобы увидеть больше данных.');
+            return CustomTranslator::get('Попробуйте изменить настройки фильтра или вообще удалить его, чтобы увидеть больше данных.');
         }
 
-        return __('Загружайте или создавайте объекты или проверяйте обновления позже.');
+        return CustomTranslator::get('Загружайте или создавайте объекты или проверяйте обновления позже.');
     }
 
     /**

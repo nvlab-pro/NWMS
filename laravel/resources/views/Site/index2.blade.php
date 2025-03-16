@@ -12,16 +12,16 @@
 <!--==================================================-->
 <!-- Start techo Hero Section  -->
 <!--==================================================-->
-<div class="hero-section d-flex align-items-center" style="height: 480px;">
+<div class="banner-section d-flex align-items-center">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <div class="hero-content wow fadeInLeft animated">
-                    <div class="hero-title">
+                <div class="banner-content wow fadeInLeft animated">
+                    <div class="banner-title">
                         <h5>Warehouse automation system</h5>
                         <h1>Completely free WMS</h1>
                     </div>
-                    <div class="hero-text">
+                    <div class="banner-text">
                         <p>The cloud <b>warehouse management system</b> NWMS offers a <b>completely free</b> solution to
                             automate and
                             streamline all your warehouse operations. From inventory tracking to order fulfillment and
@@ -31,10 +31,8 @@
                             <br>
                             Start efficient warehouse automation with NWMS today!</p>
                     </div>
-                    <div class="hero-button">
-                        <div class="hero-main-button">
-                            <a href="about.html">Start A Project</a>
-                        </div>
+                    <div class="banner-button">
+                        <a href="about.html">Start A Project<i class="bi bi-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
