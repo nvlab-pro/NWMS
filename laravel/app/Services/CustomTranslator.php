@@ -57,12 +57,14 @@ class CustomTranslator
             }
         } else {
             $translation = self::$translations[$key];
+
         }
 
         // Подставляем переменные в строку (если есть)
         foreach ($replace as $search => $value) {
             $translation = str_replace(":$search", $value, $translation);
         }
+
 
         return $translation;
     }
@@ -80,6 +82,8 @@ class CustomTranslator
 
             if (!$language) return $text;
 
+            dump(self::$openAiApiKey);
+
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . self::$openAiApiKey,
                 'Content-Type'  => 'application/json',
@@ -93,6 +97,7 @@ class CustomTranslator
                 'temperature' => 0.7,
                 'max_tokens' => 60,
             ]);
+            dump($response);
 
             $result = $response->json();
             return $result['choices'][0]['message']['content'] ?? null;

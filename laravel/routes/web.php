@@ -6,7 +6,7 @@ Route::get('/', function () {
     return view('Site/index');
 });
 
-Route::post('/new-user-form', [\App\Http\Controllers\FormNewUser  ::class, 'submit']);
+Route::post('/new-user-form', [\App\Http\Controllers\FormNewUser::class, 'submit']);
 
 
 Route::get('/bel', function () {

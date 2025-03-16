@@ -560,5 +560,7 @@
     "Если вы хотите получить диаппазон значений, то можете использовать значение вида 2-4 (от 2 до 4). Либо (>, <, >=, <=). Например >10 выведет поля больше 10.": "If you want to get a range of values, you can use a value like 2-4 (from 2 to 4) or symbols (>, <, >=, <=). For example, >10 will display fields greater than 10.",
     "Ряд": "Series",
     "Стеллаж": "Shelf",
-    "Полка": "Shelf"
+    "Полка": "Shelf",
+    "Для начала упаковки создайте хотя-бы одну очередь!": "To start packaging, create at least one queue!",
+    "Настройка очереди упаковки": "Packing queue setup"
 }
