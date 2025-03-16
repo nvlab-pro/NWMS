@@ -97,7 +97,7 @@ class CustomTranslator
                 'temperature' => 0.7,
                 'max_tokens' => 60,
             ]);
-            dump($response);
+            dump($response); 
 
             $result = $response->json();
             return $result['choices'][0]['message']['content'] ?? null;

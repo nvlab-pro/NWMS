@@ -34,21 +34,29 @@ function extractTranslations($files) {
     return $translations;
 }
 
-function updateTranslationFiles($translations, $jsonFile, $txtFile) {
-    $existingTranslations = [];
-
-    // Читаем существующий JSON-файл, если он есть
-    if (file_exists($jsonFile)) {
-        $existingTranslations = json_decode(file_get_contents($jsonFile), true) ?? [];
+function loadExistingTranslations($filePath) {
+    if (file_exists($filePath)) {
+        $data = json_decode(file_get_contents($filePath), true) ?? [];
+        return array_map('trim', array_keys($data)); // Получаем только ключи без пробелов
     }
+    return [];
+}
 
+function updateTranslationFiles($translations, $jsonFile, $txtFile, $langFile) {
+    $existingTranslations = loadExistingTranslations($jsonFile);
+    $existingLangStrings = loadExistingTranslations($langFile);
     $txtContent = "";
 
     foreach ($translations as $key => $data) {
-        if (!isset($existingTranslations[$key])) {
-            $existingTranslations[$key] = "";
-            $txtContent .= "$key - {$data['source']}\n";
+        $trimmedKey = trim($key); // Убираем лишние пробелы
+
+        // Проверяем, есть ли ключ в lang/en.json или в translations.json
+        if (in_array($trimmedKey, $existingLangStrings, true) || in_array($trimmedKey, $existingTranslations, true)) {
+            continue;
         }
+
+        $existingTranslations[$trimmedKey] = "";
+        $txtContent .= "$trimmedKey - {$data['source']}\n";
     }
 
     // Обновляем JSON-файл
@@ -63,11 +71,11 @@ $directory = __DIR__ . '/laravel';
 // Пути к выходным файлам
 $jsonFile = __DIR__ . '/img/translations.json';
 $txtFile = __DIR__ . '/img/translations.txt';
+$langFile = __DIR__ . '/lang/en.json';
 
 $files = [];
 scanDirectory($directory, $files);
 $translations = extractTranslations($files);
-updateTranslationFiles($translations, $jsonFile, $txtFile);
+updateTranslationFiles($translations, $jsonFile, $txtFile, $langFile);
 
 echo "Translations have been updated in $jsonFile and $txtFile";
-
