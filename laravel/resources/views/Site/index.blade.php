@@ -535,29 +535,6 @@
     });
 </script>
 
-<style>
-.language-selector {
-display: flex;
-justify-content: center;
-margin-bottom: 20px;
-    padding-left: 20px;
-}
-
-.language-selector select {
-font-size: 16px;
-padding: 8px 12px;
-border: 2px solid #ccc;
-border-radius: 5px;
-background-color: white;
-cursor: pointer;
-appearance: none;
-}
-
-.language-selector select:hover {
-border-color: #007bff;
-}
-</style>
-
 <!--==================================================-->
 <!-- END techo Testimonial Area -->
 <!--==================================================-->

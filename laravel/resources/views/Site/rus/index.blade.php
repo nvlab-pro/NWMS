@@ -444,7 +444,7 @@
             </div>
             <div class="col-lg-12 wow fadeInRight animated">
                 <form action="/new-user-form" method="POST" id="dreamit-form">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    @csrf
                     <div class="row form">
                         <div class="col-lg-6">
                             <div class="form-box">
@@ -463,13 +463,18 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-box">
-                                <input type="password" name="password" placeholder="Пароль" required="">
+                                <input type="password" name="password" placeholder="Пароль" required minlength="6" pattern=".{6,}">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-box">
+                                <input type="text" name="company" placeholder="Название компании" required="">
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <div class="form-box">
                                 <textarea name="massage" id="massage" cols="30" rows="10"
-                                          placeholder="Комментарий"></textarea>
+                                          placeholder="Comment"></textarea>
                             </div>
                         </div>
                         <div class="col-lg-12">
@@ -479,7 +484,7 @@
                                     <select id="language-select" name="language">
                                         <option value="en" data-flag="🇺🇸">🇺🇸 English</option>
                                         <option value="bg" data-flag="🇧🇬">🇧🇬 Bulgarian</option>
-                                        <option value="rus" data-flag="🇷🇺" SELECTED>🇷🇺 Russian</option>
+                                        <option value="rus" data-flag="🇷🇺">🇷🇺 Russian</option>
                                         <option value="ukr" data-flag="🇺🇦">🇺🇦 Ukrainian</option>
                                         <option value="fr" data-flag="🇫🇷">🇫🇷 French</option>
                                         <option value="de" data-flag="🇩🇪">🇩🇪 German</option>
@@ -508,28 +513,17 @@
     </div>
 </div>
 
-<style>
-    .language-selector {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-        padding-left: 20px;
-    }
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let form = document.getElementById("dreamit-form");
+        let submitButton = form.querySelector("button[type='submit']");
 
-    .language-selector select {
-        font-size: 16px;
-        padding: 8px 12px;
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        background-color: white;
-        cursor: pointer;
-        appearance: none;
-    }
-
-    .language-selector select:hover {
-        border-color: #007bff;
-    }
-</style>
+        form.addEventListener("submit", function() {
+            submitButton.disabled = true; // Блокируем кнопку
+            submitButton.innerText = "Processing..."; // Меняем текст
+        });
+    });
+</script>
 
 <!--==================================================-->
 <!-- END techo Testimonial Area -->
