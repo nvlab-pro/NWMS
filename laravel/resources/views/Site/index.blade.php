@@ -478,6 +478,11 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="form-box">
+                                <input type="text" name="company" placeholder="Company name" required="">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-box">
                                 <textarea name="massage" id="massage" cols="30" rows="10"
                                           placeholder="Comment"></textarea>
                             </div>

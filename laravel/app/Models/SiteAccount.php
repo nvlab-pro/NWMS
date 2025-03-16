@@ -16,6 +16,7 @@ class SiteAccount extends Model
 
     protected $fillable = [
         'sa_lang',
+        'sa_domain',
         'sa_first_name',
         'sa_last_name',
         'sa_email',

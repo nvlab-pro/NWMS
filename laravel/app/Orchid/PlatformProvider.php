@@ -129,7 +129,7 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make(CustomTranslator::get('Склады'))
                         ->icon('bs.building')
                         ->route('platform.warehouses.index')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
 
                     Menu::make(CustomTranslator::get('Места хранения'))
                         ->icon('bs.inboxes')

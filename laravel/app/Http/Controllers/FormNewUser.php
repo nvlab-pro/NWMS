@@ -20,6 +20,7 @@ class FormNewUser extends Controller
     {
         $validatedData = $request->validate([
             'language' => 'required|string|max:6',
+            'company' => 'required|string|max:100',
             'FName' => 'required|string|max:255',
             'LName' => 'required|string|max:255',
             'email' => 'required|email',
@@ -49,6 +50,7 @@ class FormNewUser extends Controller
                 // Если записи нет, создаём новую
                 SiteAccount::create([
                     'sa_lang' => $validatedData['language'],
+                    'sa_domain' => $validatedData['company'],
                     'sa_first_name' => $validatedData['FName'],
                     'sa_last_name' => $validatedData['LName'],
                     'sa_email' => $validatedData['email'],
@@ -57,6 +59,28 @@ class FormNewUser extends Controller
                     'sa_comment' => $validatedData['massage'],
                 ]);
                 $result = 'success';
+
+                // Создаем домен
+
+
+                // Создаем юзера
+
+
+                // Создаем ФФ склад
+
+
+                // Создаем Клиентский склад
+
+
+                // Создаем Магазин
+
+
+                // Создаем Очередь сборки
+
+
+                // Создаем очередь упаковки
+
+
             }else {
                 $result = 'exists';
             }
