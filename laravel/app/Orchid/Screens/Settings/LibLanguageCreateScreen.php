@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibLanguage;
 use App\Models\rwLibLength;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
@@ -40,7 +41,7 @@ class LibLanguageCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->langId > 0 ? __('Редактирование языка') : __('Создание нового языка');
+        return $this->langId > 0 ? CustomTranslator::get('Редактирование языка') : CustomTranslator::get('Создание нового языка');
     }
 
     /**
@@ -69,12 +70,12 @@ class LibLanguageCreateScreen extends Screen
 
                 Input::make('rwLibLanguage.llang_name')
                     ->width(50)
-                    ->title(__('Название')),
+                    ->title(CustomTranslator::get('Название')),
 
                 Input::make('rwLibLanguage.llang_code')
-                    ->title(__('Код')),
+                    ->title(CustomTranslator::get('Код')),
 
-                Button::make(__('Сохранить'))
+                Button::make(CustomTranslator::get('Сохранить'))
                     ->type(Color::DARK)
                     ->style('margin-bottom: 20px;')
                     ->method('saveLang'),
@@ -100,7 +101,7 @@ class LibLanguageCreateScreen extends Screen
                 'llang_name' => $request->cmLibLanguage['llang_name'],
             ]);
 
-            Alert::success(__('Данные успешно отредактированы!'));
+            Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
 
         } else {
 
@@ -109,7 +110,7 @@ class LibLanguageCreateScreen extends Screen
                 'llang_name' => $request->cmLibLanguage['llang_name'],
             ]);
 
-            Alert::success(__('Данные успешно добавлены!'));
+            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
 
         }
 

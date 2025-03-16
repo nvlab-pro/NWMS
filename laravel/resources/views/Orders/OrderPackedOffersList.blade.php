@@ -1,19 +1,20 @@
+@php use App\Services\CustomTranslator; @endphp
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
     <div class="row g-0">
         <div style="margin: 20px 20px 20px 20px;">
 
-            <h3>@lang('Информация по упаковке заказа')</h3>
+            <h3>{{ CustomTranslator::get('Информация по упаковке заказа') }}</h3>
 
             <table class="table">
                 <tr>
-                    <th class="tdMain">@lang('Дата')</th>
-                    <th class="tdMain">@lang('Кладовщик')</th>
-                    <th class="tdMain">@lang('Артикул')</th>
-                    <th class="tdMain">@lang('Название')</th>
-                    <th class="tdMain">@lang('Заказано')</th>
-                    <th class="tdMain">@lang('Собрано')</th>
-                    <th class="tdMain">@lang('Место подбора')</th>
-                    <th class="tdMain">@lang('Место завершения сборки')</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Дата') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Кладовщик') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Артикул') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Название') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Заказано') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Собрано') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Место подбора') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Место завершения сборки') }}</th>
                 </tr>
                 @foreach($arPackedOffersList as $offer)
                     <tr>

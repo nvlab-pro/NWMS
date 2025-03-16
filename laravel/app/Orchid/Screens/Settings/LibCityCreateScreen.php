@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\Settings;
 use App\Models\rwLibCity;
 use App\Models\rwLibCountry;
 use App\Models\rwLibLength;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
@@ -42,7 +43,7 @@ class LibCityCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->cityId > 0 ? __('Редактирование единицы измерения') : __('Создание новой единицы измерения');
+        return $this->cityId > 0 ? CustomTranslator::get('Редактирование единицы измерения') : CustomTranslator::get('Создание новой единицы измерения');
     }
 
     /**
@@ -71,23 +72,23 @@ class LibCityCreateScreen extends Screen
 
                 Input::make('rwLibCity.lcit_name')
                     ->width(50)
-                    ->title(__('Название')),
+                    ->title(CustomTranslator::get('Название')),
 
                 Input::make('rwLibCity.lcit_coord_latitude')
-                    ->title(__('Широта')),
+                    ->title(CustomTranslator::get('Широта')),
 
                 Input::make('rwLibCity.lcit_coord_longitude')
-                    ->title(__('Долгота')),
+                    ->title(CustomTranslator::get('Долгота')),
 
 
                 Select::make('rwLibCity.lcit_country_id')
-                    ->title(__('Страна'))
+                    ->title(CustomTranslator::get('Страна'))
                     ->width('100px')
                     ->fromModel(rwLibCountry::class, 'lco_name', 'lco_id')
-                    ->empty(__('Не выбрано'), 0)
+                    ->empty(CustomTranslator::get('Не выбрано'), 0)
                     ->required(0),
 
-                Button::make(__('Сохранить'))
+                Button::make(CustomTranslator::get('Сохранить'))
                     ->type(Color::DARK)
                     ->style('margin-bottom: 20px;')
                     ->method('saveCity'),
@@ -117,7 +118,7 @@ class LibCityCreateScreen extends Screen
                 'lcit_country_id'       => $request->cmLibCity['lcit_country_id'],
             ]);
 
-            Alert::success(__('Данные успешно отредактированы!'));
+            Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
 
         } else {
 
@@ -128,7 +129,7 @@ class LibCityCreateScreen extends Screen
                 'lcit_country_id'       => $request->cmLibCity['lcit_country_id'],
             ]);
 
-            Alert::success(__('Данные успешно добавлены!'));
+            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
 
         }
 

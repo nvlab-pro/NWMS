@@ -7,6 +7,7 @@ use App\Models\rwOrder;
 use App\Models\rwOrderOffer;
 use App\Models\rwOrderPacking;
 use App\Models\rwPlace;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Support\Facades\Alert;
@@ -77,7 +78,7 @@ class PackingScreen extends Screen
                             'op_cash' => $cash,
                         ]);
 
-                        Alert::success(__('Товар добавлен в заказ!'));
+                        Alert::success(CustomTranslator::get('Товар добавлен в заказ!'));
 
                     }
 
@@ -94,7 +95,7 @@ class PackingScreen extends Screen
                         'op_qty' => 1,
                     ]);
 
-                    Alert::success(__('Товар добавлен в заказ!'));
+                    Alert::success(CustomTranslator::get('Товар добавлен в заказ!'));
 
                 }
 
@@ -163,12 +164,12 @@ class PackingScreen extends Screen
 
     public function name(): ?string
     {
-        return __('Упаковка заказа') . ' № ' . $this->orderId;
+        return CustomTranslator::get('Упаковка заказа') . ' № ' . $this->orderId;
     }
 
     public function description(): ?string
     {
-        return __('Стол упаковки') . ' № ' . $this->tableId . ', ' . __('очередь упаковки') . ' № ' . $this->queueId;
+        return CustomTranslator::get('Стол упаковки') . ' № ' . $this->tableId . ', ' . CustomTranslator::get('очередь упаковки') . ' № ' . $this->queueId;
     }
 
     /**

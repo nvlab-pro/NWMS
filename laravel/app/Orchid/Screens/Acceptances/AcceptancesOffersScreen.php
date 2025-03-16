@@ -8,6 +8,7 @@ use App\Models\rwBarcode;
 use App\Models\rwOffer;
 use App\Orchid\Layouts\Acceptances\AcceptancesOffersTable;
 use App\Orchid\Services\DocumentService;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
@@ -62,7 +63,7 @@ class AcceptancesOffersScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Приемка № ') . $this->acceptId . ' (' . $this->whName . ')';
+        return CustomTranslator::get('Приемка № ') . $this->acceptId . ' (' . $this->whName . ')';
     }
 
     /**
@@ -85,14 +86,14 @@ class AcceptancesOffersScreen extends Screen
 
                 $arLinksList2 = [
 
-                    Button::make(__('Начать приемку'))
+                    Button::make(CustomTranslator::get('Начать приемку'))
                         ->class('btn btn-info')
                         ->method('startAccepting') // Метод, вызываемый на сервере
                         ->parameters([
                             'acceptId' => $this->acceptId,
                             '_token' => csrf_token() // Добавляем CSRF-токен вручную
                         ])
-                        ->confirm(__('Вы уверены, что хотите начать приемку?')),
+                        ->confirm(CustomTranslator::get('Вы уверены, что хотите начать приемку?')),
                 ];
 
             } else {
@@ -101,7 +102,7 @@ class AcceptancesOffersScreen extends Screen
             }
 
             $arLinksList = [
-                ModalToggle::make(__(' Добавить товар'))
+                ModalToggle::make(CustomTranslator::get(' Добавить товар'))
                     ->icon('bs.plus-circle')
                     ->modal('addOfferModal') // Имя модального окна
                     ->method('addOffer'), // Класс для стилизации (по желанию)
@@ -121,14 +122,14 @@ class AcceptancesOffersScreen extends Screen
         if ($this->docStatus == 2) {
 
             $arLinksList = [
-                Button::make(__('Закрыть накладную'))
+                Button::make(CustomTranslator::get('Закрыть накладную'))
                     ->icon('bs.lock')
                     ->method('closeDocument') // Метод, вызываемый на сервере
                     ->parameters([
                         'docId' => $this->acceptId,
                         '_token' => csrf_token(), // Добавляем CSRF-токен вручную
                     ])
-                    ->confirm(__('Вы уверены, что хотите закрыть накладную?')),
+                    ->confirm(CustomTranslator::get('Вы уверены, что хотите закрыть накладную?')),
             ];
 
             $arLinksList3 = [
@@ -145,7 +146,7 @@ class AcceptancesOffersScreen extends Screen
         if ($this->docStatus == 4) {
 
             $arLinksList3 = [
-                Button::make(__('Закрыта'))
+                Button::make(CustomTranslator::get('Закрыта'))
                     ->class('btn')
                     ->style('background-color: #119900; color: white;')
                     ->disabled(true),
@@ -186,7 +187,7 @@ class AcceptancesOffersScreen extends Screen
                         ->type('text'),
 
                     Select::make('offer.of_id')
-                        ->title(__('Выберите добавляемый товар:'))
+                        ->title(CustomTranslator::get('Выберите добавляемый товар:'))
                         ->width('100px')
                         ->options(
                             rwOffer::where('of_shop_id', $this->shopId)
@@ -206,24 +207,24 @@ class AcceptancesOffersScreen extends Screen
             ])
                 ->size('xl')
                 ->method('addOffer')
-                ->title('Добавление нового товара')->applyButton('Добавить')->closeButton('Закрыть'),
+                ->title(CustomTranslator::get('Добавление нового товара'))->applyButton(CustomTranslator::get('Добавить'))->closeButton(CustomTranslator::get('Закрыть')),
 
             Layout::modal('editDimensions', [
                 Layout::rows([
                     Input::make('offer.dimension_x')
-                        ->title('Длина')
+                        ->title(CustomTranslator::get('Длина'))
                         ->required(),
 
-                    Input::make('offer.dimension_y')
+                    Input::make(CustomTranslator::get('offer.dimension_y'))
                         ->title('Ширина')
                         ->required(),
 
-                    Input::make('offer.dimension_z')
+                    Input::make(CustomTranslator::get('offer.dimension_z'))
                         ->title('Высота')
                         ->required(),
 
                     Input::make('offer.weight')
-                        ->title('Вес')
+                        ->title(CustomTranslator::get('Вес'))
                         ->required(),
                 ]),
             ])->async('asyncGetOfferDimensions'), // Метод для загрузки данных
@@ -248,7 +249,7 @@ class AcceptancesOffersScreen extends Screen
                     ->type('hidden'),
 
                 // Ваша форма и таблицы
-                Button::make('Сохранить изменения')
+                Button::make(CustomTranslator::get('Сохранить изменения'))
                     ->canSee($this->docStatus < 4 ? true : false)
                     ->class('btn btn-primary d-block mx-auto')
                     ->method('saveChanges') // Указывает метод экрана для вызова
@@ -338,7 +339,7 @@ class AcceptancesOffersScreen extends Screen
             'acc_count_placed'       => $countPlaced,
         ]);
 
-        Alert::success(__('Данные успешно сохранены'));
+        Alert::success(CustomTranslator::get('Данные успешно сохранены'));
     }
 
     public function deleteOffer(Request $request)
@@ -351,7 +352,7 @@ class AcceptancesOffersScreen extends Screen
 
         $currentWarehouse->deleteItem($data['offerId'], 1);
 
-        Toast::error(__('Данные успешно удалены!'));
+        Toast::error(CustomTranslator::get('Данные успешно удалены!'));
     }
 
     public function asyncGetOfferDimensions(int $offerId): array
@@ -385,7 +386,7 @@ class AcceptancesOffersScreen extends Screen
             'of_weight' => $validated['offer']['weight'],
         ]);
 
-        Toast::info(__('Размеры успешно обновлены.'));
+        Toast::info(CustomTranslator::get('Размеры успешно обновлены.'));
     }
 
     public function startAccepting($acceptId)
@@ -399,11 +400,11 @@ class AcceptancesOffersScreen extends Screen
                 'acc_status' => 2,
             ]);
 
-            Alert::info(__('Приемка началась!'));
+            Alert::info(CustomTranslator::get('Приемка началась!'));
 
         } else {
 
-            Alert::error(__('Текущий статус накладной не позволяет перевод документа в статус приемки!'));
+            Alert::error(CustomTranslator::get('Текущий статус накладной не позволяет перевод документа в статус приемки!'));
 
         }
 
@@ -430,7 +431,7 @@ class AcceptancesOffersScreen extends Screen
                 'ao_offer_id' => $validated['offer']['of_id'],
             ]);
 
-            Alert::success(__('Товар добавлен в накладную'));
+            Alert::success(CustomTranslator::get('Товар добавлен в накладную'));
 
             $currentWarehouse = new WhCore($validated['offer']['whId']);
 
@@ -453,7 +454,7 @@ class AcceptancesOffersScreen extends Screen
 
         } else {
 
-            Alert::error(__('Данный товар уже есть в накладной!'));
+            Alert::error(CustomTranslator::get('Данный товар уже есть в накладной!'));
 
         }
 
@@ -468,7 +469,7 @@ class AcceptancesOffersScreen extends Screen
                 'acc_status' => 4,
             ]);
 
-        Alert::info(__('Накладная закрыта!'));
+        Alert::info(CustomTranslator::get('Накладная закрыта!'));
 
     }
 

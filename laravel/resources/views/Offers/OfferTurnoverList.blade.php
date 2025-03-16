@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .turnoverTD {
         text-align: center; !
@@ -30,15 +31,15 @@
             <table class="table table-hover table-striped-columns">
                 <thead>
                 <tr>
-                    <th class="table-secondary turnoverTD">#</th>
-                    <th class="table-secondary turnoverTD">@lang('Резерв')</th>
-                    <th class="table-secondary turnoverTD">@lang('Дата')</th>
-                    <th class="table-secondary turnoverTD">@lang('Тип')</th>
-                    <th class="table-secondary turnoverTD">@lang('№ документа')</th>
-                    <th class="table-secondary turnoverTD">@lang('Статус')</th>
-                    <th class="table-secondary turnoverTD">@lang('Место')</th>
-                    <th class="table-secondary turnoverTD">@lang('Количество')</th>
-                    <th class="table-secondary turnoverTD">@lang('Итого')</th>
+                    <th class="table-secondary turnoverTD">№</th>
+                    <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Резерв') }}</th>
+                    <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Дата') }}</th>
+                    <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Тип') }}</th>
+                    <th class="table-secondary turnoverTD">{{ CustomTranslator::get('№ документа') }}</th>
+                    <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Статус') }}</th>
+                    <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Место') }}</th>
+                    <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Количество') }}</th>
+                    <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Итого') }}</th>
                 </tr>
                 </thead>
                 @php
@@ -52,10 +53,10 @@
                         $sumCount += $count;
 
                         $className = 'table-success';
-                        $typeName = __('Приемка');
+                        $typeName = CustomTranslator::get('Приемка');
                         if ($item->whci_doc_type == 2) {
                             $className = 'table-danger';
-                            $typeName = __('Отгрузка');
+                            $typeName = CustomTranslator::get('Отгрузка');
                         }
                     @endphp
                     <tr>
@@ -116,7 +117,7 @@
                 @endforeach
             </table>
             <br>
-            <b>Текущий остаток:</b> {{ $sumCount }}
+            <b>{{ CustomTranslator::get('Текущий остаток') }}:</b> {{ $sumCount }}
 
         </div>
     </div>

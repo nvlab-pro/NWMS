@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
     <style>
         .placeTD {
             border: 2px solid #AAAAAA;
@@ -26,7 +27,7 @@
                 <input type="submit" value="Scan" id="btn">
                 <p id="error-message"
                    class="alert alert-danger warningDIV" role="alert" style="margin-top: 10px; display: none;"
-                >@lang("Ошибка: вы отсканировали не то место хранения!") (102*{{ $nextPlaceId }}*{{ $nextPlaceId+102 }})</p>
+                >{{ CustomTranslator::get("Ошибка: вы отсканировали не то место хранения!") }} (102*{{ $nextPlaceId }}*{{ $nextPlaceId+102 }})</p>
             </div>
         </div>
     </form>
@@ -60,7 +61,7 @@
         <div class="row g-0">
             <div style="margin: 10px 10px 20px 10px; text-align: center;">
 
-                <div style="width: 95%; padding-right: 10px; font-size: 20px; background-color: #c6e3ff; border-radius: 10px;">@lang('Пройдите к месту размещения и отсканируйте полку:')</div>
+                <div style="width: 95%; padding-right: 10px; font-size: 20px; background-color: #c6e3ff; border-radius: 10px;">{{ CustomTranslator::get('Пройдите к месту размещения и отсканируйте полку') }}</div>
                 <br>
                     <table style="width: 95%; background-color: #fff3cd;">
                         <tr>

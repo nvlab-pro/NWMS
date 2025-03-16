@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\terminal\SOAM;
 use App\Models\rwSettingsSoa;
 use App\Models\rwWarehouse;
 use App\Orchid\Services\SOAService;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
@@ -47,7 +48,7 @@ class SelectSOAMScreen extends Screen
 
     public function name(): ?string
     {
-        return __('Выберите очередь для сборки');
+        return CustomTranslator::get('Выберите очередь для сборки');
     }
 
     public function commandBar(): iterable

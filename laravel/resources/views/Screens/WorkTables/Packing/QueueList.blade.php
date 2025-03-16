@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .tableButton {
         border-bottom: 2px solid #999999;
@@ -45,7 +46,7 @@
                                     </svg>
                                 </td>
                                 <td style="padding-left: 20px;">
-                                    <span style="font-size: 16px">@lang('Очередь упаковки №:') {{ $queue->spp_id }}</span><br>
+                                    <span style="font-size: 16px">{{ CustomTranslator::get('Очередь упаковки') }} №: {{ $queue->spp_id }}</span><br>
                                     <b>{{ $queue->spp_name }}</b>
                                 </td>
                             </tr>
@@ -56,7 +57,7 @@
             @else
 
                 <div class="alert alert-warning" role="alert">
-                    <a href="{{ route('platform.whmanagement.packing-process-settings.index') }}">@lang('Для начала упаковки создайте хотя-бы одну очередь!')</a>
+                    <a href="{{ route('platform.whmanagement.packing-process-settings.index') }}">{{ CustomTranslator::get('Для начала упаковки создайте хотя-бы одну очередь!') }}</a>
                 </div>
 
             @endif

@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 @isset($currentOffer['ao_id'])
     <style>
         /* Общий стиль для всех экранов */
@@ -186,7 +187,7 @@
             <div class="row g-0 div-info-save-offer">
                 <div style="margin: 10px 0px 10px 10px;">
 
-                    <h4>@lang('Укажите количество привязываемого товара:')</h4>
+                    <h4>{{ CustomTranslator::get('Укажите количество привязываемого товара:') }}</h4>
 
                 </div>
             </div>
@@ -205,7 +206,7 @@
                                      border="1" class="photo">
                                 <hr>
                                 <button onclick="skipGoods()"
-                                        class="btn btn-warning btn-block offPut">@lang('ПРОПУСТИТЬ')</button>
+                                        class="btn btn-warning btn-block offPut">{{ CustomTranslator::get('ПРОПУСТИТЬ') }}</button>
 
                                 <script>
                                     function skipGoods() {
@@ -213,7 +214,7 @@
                                     }
 
                                     function offGoods() {
-                                        var result = confirm("@lang('Вы уверены что не нашли этот товар?')");
+                                        var result = confirm("{{ CustomTranslator::get('Вы уверены что не нашли этот товар?') }}");
 
                                         if (result) {
                                             window.location.href = "?offerId={{ $currentOffer['ao_wh_offer_id'] }}&action=skip";
@@ -224,11 +225,11 @@
                             </td>
                             <td style="vertical-align: top; padding-left: 15px;">
                                 <div align="left"
-                                     class="termText">@lang('Артикул: ') {{ $currentOffer['ao_article']  }}</div>
+                                     class="termText">{{ CustomTranslator::get('Артикул') }}: {{ $currentOffer['ao_article']  }}</div>
 
                                 <hr>
                                 <b><span
-                                            class="termText">@lang('Не привязано:') {{ $currentOffer['ao_accepted'] }}</span></b><br>
+                                            class="termText">{{ CustomTranslator::get('Не привязано') }}: {{ $currentOffer['ao_accepted'] }}</span></b><br>
                                 <hr>
 
                                 <form action="" method="get"
@@ -239,22 +240,22 @@
                                     <input type="hidden" name="offerId" value="{{ $currentOffer['ao_offer_id'] }}">
                                     <input type="hidden" name="currentTime" value="{{ time() }}">
                                     <input type="text" name="scanCount" id="input_data" size="15" value="{{ $currentOffer['ao_accepted'] }}"
-                                           placeholder="Количество"
+                                           placeholder="{{ CustomTranslator::get('Количество') }}"
                                            style="margin-bottom: 5px;" class="countInput"><br>
 
                                     <br>
-                                    <input type="submit" value="@lang('ВЫБРАТЬ')" id="btn2"
+                                    <input type="submit" value="{{ CustomTranslator::get('ВЫБРАТЬ') }}" id="btn2"
                                            class="btn btn-success btn-block buttonPut">
 
                                     <script>
                                         function checkData(event) {
                                             count = document.getElementById('input_data').value;
                                             if (count > 100000) {
-                                                alert('@lang('ОШИБКА! Склишком много товара!')');
+                                                alert('{{ CustomTranslator::get('ОШИБКА! Склишком много товара!') }}');
                                                 event.preventDefault();
                                             }
                                             if (count == 0 || count == '') {
-                                                alert('@lang('ОШИБКА! Пустая строка!')');
+                                                alert('{{ CustomTranslator::get('ОШИБКА! Пустая строка!') }}');
                                                 event.preventDefault();
                                             }
                                         }
@@ -310,7 +311,7 @@
         <div class="row g-0 div-info-select-offer">
             <div style="margin: 10px 0px 10px 10px;">
 
-                <h4>@lang('Выберите или отсканируйте товар для привязки:')</h4>
+                <h4>{{ CustomTranslator::get('Выберите или отсканируйте товар для привязки:') }}</h4>
 
             </div>
         </div>

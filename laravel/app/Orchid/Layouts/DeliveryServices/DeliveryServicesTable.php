@@ -3,6 +3,7 @@
 namespace App\Orchid\Layouts\DeliveryServices;
 
 use App\Models\rwDeliveryService;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
@@ -35,7 +36,7 @@ class DeliveryServicesTable extends Table
                         ->route('platform.delivery-services.edit',$modelName->ds_id);
                 }),
 
-            TD::make('ds_name', 'Название')
+            TD::make('ds_name', CustomTranslator::get('Название'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwDeliveryService $modelName) {
@@ -43,13 +44,13 @@ class DeliveryServicesTable extends Table
                         ->route('platform.delivery-services.edit',$modelName->ds_id);
                 }),
 
-            TD::make(__('Действия'))
+            TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn (rwDeliveryService $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Ред.'))
+                        Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.delivery-services.edit', $modelName->ds_id)
                             ->icon('bs.pencil'),
                     ])),

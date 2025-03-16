@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .acceptButton {
         border-bottom: 2px solid #999999;
@@ -35,9 +36,9 @@
                 <button type="button" class="acceptButton"
                         style="background-color: {{ $bgColor }}; color: {{ $textColor }}"
                         onClick="window.location.href='{{ route('platform.terminal.acceptance.scan', $Acceptance->acc_id) }}'">
-                    <b>@lang('Накладная №:') {{ $Acceptance->acc_id }}</b><br>
+                    <b>{{ CustomTranslator::get('Накладная') }} №: {{ $Acceptance->acc_id }}</b><br>
                     <div class="acceptButtonText">{{ $Acceptance->getWarehouse->wh_name }}
-                    <span class="acceptButtonText2">@lang('Ожидается:') {{ $Acceptance->acc_count_expected }} / @lang('Принято:') {{ $Acceptance->acc_count_accepted }} / @lang('Размещено:') {{ $Acceptance->acc_count_placed }}
+                    <span class="acceptButtonText2">{{ CustomTranslator::get('Ожидается') }}: {{ $Acceptance->acc_count_expected }} / {{ CustomTranslator::get('Принято') }}: {{ $Acceptance->acc_count_accepted }} / {{ CustomTranslator::get('Размещено') }}: {{ $Acceptance->acc_count_placed }}
                     </span>
                     </div>
                 </button><br>

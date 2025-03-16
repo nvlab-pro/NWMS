@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 @if($action == 'finishOrder')
     <style>
         .button-container {
@@ -10,14 +11,14 @@
         <div style="padding: 10px 10px 10px 10px; text-align: center;">
 
             <div class="alert alert-success warningDIV" role="alert">
-                @lang('Отлично! Заказ привязан к конечному месту хранения!')<br><br>
-                @lang('Можете приступить к сборке следующего!')<br>
+                {{ CustomTranslator::get('Отлично! Заказ привязан к конечному месту хранения!') }}<br><br>
+                {{ CustomTranslator::get('Можете приступить к сборке следующего!') }}<br>
             </div>
             <hr>
             <div class="button-container">
                 <button type="button" class="btn btn-primary"
                         onClick="location.href='{{ route('platform.terminal.soam.order', [$soaId, 0]) }}'">
-                    @lang('Перейти к сборке следующего')
+                    {{ CustomTranslator::get('Перейти к сборке следующего') }}
                 </button>
             </div>
             <hr>

@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\DeliveryServices;
 
 use App\Models\rwDeliveryService;
 use App\Orchid\Layouts\DeliveryServices\DeliveryServicesTable;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
@@ -35,7 +36,7 @@ class DeliveryServicesScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Список магазинов');
+        return CustomTranslator::get('Список магазинов');
     }
 
     /**
@@ -46,7 +47,7 @@ class DeliveryServicesScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Добавить новую службу доставки'))
+            Link::make(CustomTranslator::get('Добавить новую службу доставки'))
                 ->icon('bs.plus-circle')
                 ->route('platform.delivery-services.create'),
         ];

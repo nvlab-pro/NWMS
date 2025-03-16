@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\terminal;
 
 use App\Http\Middleware\RoleMiddleware;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
@@ -28,7 +29,7 @@ class mainScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Терминал сбора данных');
+        return CustomTranslator::get('Терминал сбора данных');
     }
 
     /**
@@ -55,7 +56,7 @@ class mainScreen extends Screen
             return [
                 Layout::rows([
 
-                    Link::make('Информация')
+                    Link::make(CustomTranslator::get('Информация'))
                         ->route('platform.acceptances.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.info-circle')
@@ -69,7 +70,7 @@ class mainScreen extends Screen
                                     background-color: #E2E3E5; 
                                     margin-bottom: 5px;'),
 
-                    Link::make('Приемка товара')
+                    Link::make(CustomTranslator::get('Приемка товара'))
                         ->route('platform.terminal.acceptance.select')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                         ->icon('bs.book')
@@ -83,7 +84,7 @@ class mainScreen extends Screen
                                     background-color: #D1E7DD; 
                                     margin-bottom: 5px;'),
 
-                    Link::make('Привязка товара')
+                    Link::make(CustomTranslator::get('Привязка товара'))
                         ->route('platform.terminal.places.select')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                         ->icon('bs.inboxes')
@@ -97,7 +98,7 @@ class mainScreen extends Screen
                                     background-color: #FFF3CD; 
                                     margin-bottom: 5px;'),
 
-                    Link::make('Позаказная сборка заказов (вручную)')
+                    Link::make(CustomTranslator::get('Позаказная сборка заказов (вручную)'))
                         ->route('platform.terminal.soam.select')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                         ->icon('bs.box-seam')
@@ -111,7 +112,7 @@ class mainScreen extends Screen
                                     background-color: #CFE2FF; 
                                     margin-bottom: 5px;'),
 
-                    Link::make('Сборка заказов (позаказно)')
+                    Link::make(CustomTranslator::get('Сборка заказов (позаказно)'))
                         ->route('platform.terminal.soa.select')
                         ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.box-seam')
@@ -125,7 +126,7 @@ class mainScreen extends Screen
                                     background-color: #CFE2FF; 
                                     margin-bottom: 5px;'),
 
-                    Link::make('Сборка заказов (волной)')
+                    Link::make(CustomTranslator::get('Сборка заказов (волной)'))
                         ->route('platform.acceptances.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.cart3')
@@ -139,7 +140,7 @@ class mainScreen extends Screen
                                     background-color: #CFF4FC; 
                                     margin-bottom: 5px;'),
 
-                    Link::make('Сортировка сборки (волной)')
+                    Link::make(CustomTranslator::get('Сортировка сборки (волной)'))
                         ->route('platform.acceptances.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.shuffle')
@@ -153,7 +154,7 @@ class mainScreen extends Screen
                                     background-color: #BFE4EC; 
                                     margin-bottom: 5px;'),
 
-                    Link::make('Инвентаризация')
+                    Link::make(CustomTranslator::get('Инвентаризация'))
                         ->route('platform.acceptances.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin'))
                         ->icon('bs.calculator')

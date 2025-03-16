@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\Acceptances;
 use App\Models\rwAcceptance;
 use App\Models\rwWarehouse;
 use App\Orchid\Layouts\Acceptances\AcceptancesTable;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
@@ -57,7 +58,7 @@ class AcceptancesScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Приемка товара';
+        return CustomTranslator::get('Приемка товара');
     }
 
     /**
@@ -68,7 +69,7 @@ class AcceptancesScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Создать новую накладную'))
+            Link::make(CustomTranslator::get('Создать новую накладную'))
                 ->icon('bs.plus-circle')
                 ->route('platform.acceptances.create'),
         ];

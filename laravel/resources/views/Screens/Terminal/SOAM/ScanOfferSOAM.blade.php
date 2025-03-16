@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .placeTD {
         border: 2px solid #AAAAAA;
@@ -43,17 +44,17 @@
                      border="1" class="photoOffer">
             </td>
             <td style="vertical-align: top; padding-left: 15px;" class="textOffer">
-                <b>@lang('Арт.:')</b> {{ $currentOffer['offerArt'] }}<br>
+                <b>{{ CustomTranslator::get('Арт.') }}:</b> {{ $currentOffer['offerArt'] }}<br>
                 <br>
-                <b>@lang('Возьмите'):</b><br>
+                <b>{{ CustomTranslator::get('Возьмите') }}:</b><br>
                 <div class="offerCount"><b>{{ $currentOffer['offerQty'] }}</b></div>
                 <br>
-                @lang('и отсканируйте штрих-код этого товара!')
+                {{ CustomTranslator::get('и отсканируйте штрих-код этого товара!') }}
             </td>
         </tr>
     </table>
     <hr>
-    <h4>@lang('Товар расположен на месте:')</h4>
+    <h4>{{ CustomTranslator::get('Товар расположен на месте') }}:</h4>
 
     @php
         $bgcolor = 'border: 1px solid #000000; background-color: #FFF3CD;';
@@ -83,7 +84,7 @@
         </tr>
     </table>
 
-    <button type="button" onclick="skipGoods()" class="btn btn-warning btn-block">@lang('ПРОПУСТИТЬ')</button>
+    <button type="button" onclick="skipGoods()" class="btn btn-warning btn-block">{{ CustomTranslator::get('ПРОПУСТИТЬ') }}</button>
     <script>
         function skipGoods() {
             window.location.href = "{{ route('platform.terminal.soam.order', [$soaId, $dbOrder->o_id]) }}";

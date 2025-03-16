@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .tdMain {
         text-align: center;
@@ -10,9 +11,9 @@
 
 <div class="alert alert-info" role="alert" style="text-align: center; font-size: 30px; border: #3ab0c3 dotted 1px; border-radius: 10px;">
     @if($dbCurrentPlace->pl_type == 105)
-        @lang('Товар находится в ячейке:') <b style="color: red;">@if($dbCurrentPlace->pl_rack > 0){{ $dbCurrentPlace->pl_rack }} / @endif {{ $dbCurrentPlace->pl_shelf }}</b>
+        {{ CustomTranslator::get('Товар находится в ячейке') }}: <b style="color: red;">@if($dbCurrentPlace->pl_rack > 0){{ $dbCurrentPlace->pl_rack }} / @endif {{ $dbCurrentPlace->pl_shelf }}</b>
     @else
-        @lang('Товар находится на столе:') <b style="color: red;">{{ $dbCurrentPlace->pl_shelf }}</b>
+        {{ CustomTranslator::get('Товар находится на столе') }}: <b style="color: red;">{{ $dbCurrentPlace->pl_shelf }}</b>
     @endif
 </div>
 
@@ -22,13 +23,13 @@
 
             <table class="table" style="width: 99%">
                 <tr>
-                    <th class="tdMain">@lang('№')</th>
-                    <th class="tdMain">@lang('Фото')</th>
-                    <th class="tdMain">@lang('Артикул')</th>
-                    <th class="tdMain">@lang('Название')</th>
-                    <th class="tdMain">@lang('Должно быть')</th>
-                    <th class="tdMain">@lang('Отсканировано')</th>
-                    <th class="tdMain">@lang('Осталось')</th>
+                    <th class="tdMain">№</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Фото') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Артикул') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Название') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Должно быть') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Отсканировано') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Осталось') }}</th>
                 </tr>
                 @php
                     $num = 0;
@@ -61,18 +62,18 @@
 
                 <tr>
                     <td colspan="7">
-                        <h2 align="center">@lang('Собранные товары')</h2>
+                        <h2 align="center">{{ CustomTranslator::get('Собранные товары') }}</h2>
                     </td>
                 </tr>
 
                 <tr>
-                    <th class="tdMain">@lang('№')</th>
-                    <th class="tdMain">@lang('Фото')</th>
-                    <th class="tdMain">@lang('Артикул')</th>
-                    <th class="tdMain">@lang('Название')</th>
-                    <th class="tdMain">@lang('Должно быть')</th>
-                    <th class="tdMain">@lang('Отсканировано')</th>
-                    <th class="tdMain">@lang('Осталось')</th>
+                    <th class="tdMain">№</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Фото') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Артикул') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Название') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Должно быть') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Отсканировано') }}</th>
+                    <th class="tdMain">{{ CustomTranslator::get('Осталось') }}</th>
                 </tr>
                 @php
                     $num = 0;

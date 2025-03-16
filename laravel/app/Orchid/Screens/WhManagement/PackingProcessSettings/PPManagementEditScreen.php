@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\WhManagement\PackingProcessSettings;
 use App\Models\rwSettingsProcPacking;
 use App\Models\rwWarehouse;
 use App\Models\User;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
@@ -31,7 +32,7 @@ class PPManagementEditScreen extends Screen
 
     public function name(): ?string
     {
-        return __('Очередь: ') . $this->ppSettings->spp_id;
+        return CustomTranslator::get('Очередь') . ': ' . $this->ppSettings->spp_id;
     }
 
     public function description(): string
@@ -57,12 +58,12 @@ class PPManagementEditScreen extends Screen
 
                 Group::make([
                     Input::make('queue.spp_name')
-                        ->title('Название очереди:')
+                        ->title(CustomTranslator::get('Название очереди'))
                         ->value($this->ppSettings->spp_name)
                         ->required(),
 
                     Input::make('queue.spp_priority')
-                        ->title('Приоритет (чем больше, тем выше):')
+                        ->title(CustomTranslator::get('Приоритет (чем больше, тем выше)'))
                         ->type('number')
                         ->min(0)
                         ->max(1000)
@@ -74,49 +75,49 @@ class PPManagementEditScreen extends Screen
                 Group::make([
 
                     Select::make('queue.spp_wh_id')
-                        ->title(__('Склад:'))
+                        ->title(CustomTranslator::get('Склад'))
                         ->fromModel(rwWarehouse::where('wh_type', 2)->where('wh_domain_id', $currentUser->domain_id), 'wh_name', 'wh_id')
-                        ->empty('Не выбрано', 0)
+                        ->empty(CustomTranslator::get('Не выбрано'), 0)
                         ->value($this->ppSettings->spp_wh_id),
 
                     Select::make('queue.spp_packing_type')
-                        ->title(__('Тип пикинга:'))
-                        ->popover(__('Выберите будет ли упаковщик сканировать каждый товар или только артикул и вводить количество.'))
+                        ->title(CustomTranslator::get('Тип пикинга'))
+                        ->popover(CustomTranslator::get('Выберите будет ли упаковщик сканировать каждый товар или только артикул и вводить количество.'))
                         ->options([
-                            0 => __('Скан артикула (под пересчет)'),
-                            1 => __('Скан каждого товара'),
-                            2 => __('Со сканом честного знака'),
+                            0 => CustomTranslator::get('Скан артикула (под пересчет)'),
+                            1 => CustomTranslator::get('Скан каждого товара'),
+                            2 => CustomTranslator::get('Со сканом честного знака'),
                         ])
                         ->value($this->ppSettings->spp_packing_type),
 
                 ]),
                 Group::make([
                     Select::make('queue.spp_start_place_type')
-                        ->title(__('Место начала упаковки:'))
-                        ->popover(__('Из какого места будут поступать заказы на упаковку.'))
+                        ->title(CustomTranslator::get('Место начала упаковки'))
+                        ->popover(CustomTranslator::get('Из какого места будут поступать заказы на упаковку.'))
                         ->options([
-                            102 => __('Упаковка с самостоятельным подбором'),
-                            104 => __('Полка сортировки'),
-                            105 => __('Стол упаковки'),
+                            102 => CustomTranslator::get('Упаковка с самостоятельным подбором'),
+                            104 => CustomTranslator::get('Полка сортировки'),
+                            105 => CustomTranslator::get('Стол упаковки'),
                         ])
-                        ->empty('Не выбрано', 0)
+                        ->empty(CustomTranslator::get('Не выбрано'), 0)
                         ->value($this->ppSettings->spp_start_place_type),
                 ]),
 
                 Select::make('queue.spp_user_id')
-                    ->title(__('Конкретный пользователь:'))
+                    ->title(CustomTranslator::get('Конкретный пользователь'))
                     ->fromModel(User::where('parent_id', $currentUser->id)->where('domain_id', $currentUser->domain_id), 'name', 'id')
-                    ->empty('Не выбрано', 0)
+                    ->empty(CustomTranslator::get('Не выбрано'), 0)
                     ->value($this->ppSettings->spp_user_id),
 
                 Input::make('queue.spp_ds_id')
-                    ->title(__('Служба доставки:'))
+                    ->title(CustomTranslator::get('Служба доставки'))
                     ->type('number')
                     ->value($this->ppSettings->spp_ds_id),
 
 
 
-                Button::make('Сохранить изменения')
+                Button::make(CustomTranslator::get('Сохранить изменения'))
                     ->class('btn btn-primary d-block mx-auto')
                     ->method('saveChanges')
                     ->parameters([
@@ -144,7 +145,7 @@ class PPManagementEditScreen extends Screen
             'spp_packing_type' => $data['spp_packing_type'] ?? $pp->spp_packing_type,
         ]);
 
-        Alert::success(__('Данные сохранены!'));
+        Alert::success(CustomTranslator::get('Данные сохранены!'));
 
         return redirect()->route('platform.whmanagement.packing-process-settings.index');
     }

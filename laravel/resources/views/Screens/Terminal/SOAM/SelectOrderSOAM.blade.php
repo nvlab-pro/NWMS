@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .warningDIV {
         font-size: 15px;
@@ -39,14 +40,14 @@
 
                             @if($action == 'badBarcode')
                                 <p class="alert alert-danger warningDIV" role="alert"
-                                >@lang("Ошибка: отсканирован неверный штрих-код! Пожалуйста отсканируйте правильную полку!")</p>
+                                >{{ CustomTranslator::get("Ошибка: отсканирован неверный штрих-код! Пожалуйста отсканируйте правильную полку!") }}</p>
                                 @php
                                     $action = '';
                                 @endphp
                             @endif
                             <p id="error-message"
                                class="alert alert-danger warningDIV" role="alert" style="display: none;"
-                            >@lang("Ошибка: отсканирован неверный штрих-код! Пожалуйста отсканируйте правильную полку!")</p>
+                            >{{ CustomTranslator::get("Ошибка: отсканирован неверный штрих-код! Пожалуйста отсканируйте правильную полку!") }}</p>
                         </div>
                     </div>
                 </form>
@@ -87,7 +88,7 @@
                         let match = barcodeValue.match(regex);
 
                         if (!match) {
-                            errorMessage.textContent = '@lang("Ошибка: отсканирован неверный штрихкод! Пожалуйста отсканируте ближайшую полку!")';
+                            errorMessage.textContent = '{{ CustomTranslator::get("Ошибка: отсканирован неверный штрихкод! Пожалуйста отсканируте ближайшую полку!") }}';
                             errorMessage.style.display = "block";
                             document.getElementById('barcode').value = '';
                             return false; // Отмена отправки формы
@@ -98,7 +99,7 @@
                         let expectedZZZ = 102 + yyy; // Вычисляем ожидаемую сумму
 
                         if (zzz !== expectedZZZ) {
-                            errorMessage.textContent = '@lang('Ошибка: не верная контрольная сумма штрих-кода! Пожалуйста отсканируйте ближайшую полку еще раз!')';
+                            errorMessage.textContent = '{{ CustomTranslator::get('Ошибка: не верная контрольная сумма штрих-кода! Пожалуйста отсканируйте ближайшую полку еще раз!') }}';
                             errorMessage.style.display = "block";
                             document.getElementById('barcode').value = '';
                             return false; // Отмена отправки формы
@@ -122,17 +123,17 @@
                         <div style="margin: 10px 10px 20px 10px; text-align: center;">
 
                             @if($action == '')
-                                <div style="width: 95%; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; font-size: 20px; background-color: #e8dcbb; border-radius: 10px;">@lang('Перейдите к выбранному месту хранения и отсканируйте полку:')</div>
+                                <div style="width: 95%; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; font-size: 20px; background-color: #e8dcbb; border-radius: 10px;">{{ CustomTranslator::get('Перейдите к выбранному месту хранения и отсканируйте полку') }}:</div>
                                 <br>
-                                <h4>@lang('Товары к подбору:')</h4>
+                                <h4>{{ CustomTranslator::get('Товары к подбору') }}:</h4>
                             @endif
                             @if($action == 'findOffers')
-                                <div style="width: 95%; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; font-size: 20px; background-color: #FFF3CD; border-radius: 10px;">@lang('Отсканируйте ШК следующего товара:')</div>
+                                <div style="width: 95%; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; font-size: 20px; background-color: #FFF3CD; border-radius: 10px;">{{ CustomTranslator::get('Отсканируйте ШК следующего товара') }}:</div>
                                 <br>
 
                                 @include('Screens.Terminal.SOAM.ScanOfferSOAM')
 
-                                <h4>@lang('Товары на этой полке:')</h4>
+                                <h4>{{ CustomTranslator::get('Товары на этой полке') }}:</h4>
                             @endif
 
                             <table class="table table-striped" style="width: 95%;">
@@ -189,7 +190,7 @@
                                                         @endforeach
                                                     @else
                                                         <tr>
-                                                            <td style="background-color: #a30000; color: #FFFFFF;"><b>@lang('Нет привязанного товара!')</b></td>
+                                                            <td style="background-color: #a30000; color: #FFFFFF;"><b>{{ CustomTranslator::get('Нет привязанного товара!') }}</b></td>
                                                         </tr>
                                                     @endif
                                                 </table>
@@ -207,7 +208,7 @@
 
                 <p id="error-message"
                    class="alert alert-danger warningDIV" role="alert"
-                >@lang("Ни одного товара для сборки в этой очереди нет!")</p>
+                >{{ CustomTranslator::get("Ни одного товара для сборки в этой очереди нет!") }}</p>
 
             </div>
         </div>

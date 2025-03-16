@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\terminal\Places;
 
 use App\Models\rwAcceptance;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
@@ -34,7 +35,7 @@ class SelectPlaceScreen extends Screen
                             'acc_status' => 4,
                         ]);
 
-                    Alert::info(__('Накладная закрыта!'));
+                    Alert::info(CustomTranslator::get('Накладная закрыта!'));
 
                 }
 
@@ -61,7 +62,7 @@ class SelectPlaceScreen extends Screen
 
     public function name(): ?string
     {
-        return __('Выберите приемку');
+        return CustomTranslator::get('Выберите приемку');
     }
 
     /**

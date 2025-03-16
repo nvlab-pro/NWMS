@@ -8,6 +8,7 @@ use App\Models\rwBarcode;
 use App\Models\rwOffer;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Services\DocumentService;
+use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -115,11 +116,11 @@ class ScanAcceptScreen extends Screen
 
                             ];
 
-                            Alert::warning(__('Такого товара нет в накладной, но вы можете его добавить!'));
+                            Alert::warning(CustomTranslator::get('Такого товара нет в накладной, но вы можете его добавить!'));
 
                         } else {
 
-                            Alert::error(__('Товара с таким штрих-кодом нет в базе!'));
+                            Alert::error(CustomTranslator::get('Товара с таким штрих-кодом нет в базе!'));
 
                         }
 
@@ -145,7 +146,7 @@ class ScanAcceptScreen extends Screen
                     // Если товар есть в накладной добавляем в нее товар
 
                     $currentDocument->addItemCount($validatedData['offerWhId'], $docDate, $validatedData['scanCount'], $currentTime, $scanExpDate, $scanBatch);
-                    Alert::success(__('Товар добавлен в накладную!'));
+                    Alert::success(CustomTranslator::get('Товар добавлен в накладную!'));
                     $validatedData['offerWhId'] = 0;
 
                     // Меняем статус у накладной с new на "принимается"
@@ -208,7 +209,7 @@ class ScanAcceptScreen extends Screen
 
                             $skip = true;
 
-                            Alert::success(__('Новый товар добавлен в накладную!'));
+                            Alert::success(CustomTranslator::get('Новый товар добавлен в накладную!'));
 
                             // Меняем статус у накладной с new на "принимается"
                             rwAcceptance::where('acc_id', $this->docId)
@@ -218,7 +219,7 @@ class ScanAcceptScreen extends Screen
                                 ]);
 
                         } else {
-                            Alert::error(__('Такого товара нет в базе!!'));
+                            Alert::error(CustomTranslator::get('Такого товара нет в базе!!'));
                         }
 
                     }
@@ -263,7 +264,7 @@ class ScanAcceptScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Приемкам № ' . $this->docId . ' (' . $this->whName . ')');
+        return CustomTranslator::get('Приемкам № ' . $this->docId . ' (' . $this->whName . ')');
     }
 
     /**

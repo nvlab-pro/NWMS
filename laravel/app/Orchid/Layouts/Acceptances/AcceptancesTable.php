@@ -7,6 +7,7 @@ use App\Models\rwLibAcceptStatus;
 use App\Models\rwLibAcceptType;
 use App\Models\rwShop;
 use App\Models\rwWarehouse;
+use App\Services\CustomTranslator;
 use Carbon\Carbon;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
@@ -34,7 +35,7 @@ class AcceptancesTable extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('acc_id', 'ID')
+            TD::make('acc_id', CustomTranslator::get('ID'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -43,7 +44,7 @@ class AcceptancesTable extends Table
                         ->route('platform.acceptances.offers', $modelName->acc_id);
                 }),
 
-            TD::make('acc_status', 'Статус')
+            TD::make('acc_status', CustomTranslator::get('Статус'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_SELECT, rwLibAcceptStatus::query()
@@ -54,10 +55,10 @@ class AcceptancesTable extends Table
                     return '<div onClick="window.location=\''.route('platform.acceptances.offers', $modelName->acc_id).'\'" style="color: '.$modelName->getAccStatus->las_color.';
                         background-color: '.$modelName->getAccStatus->las_bgcolor.';
                         padding: 5px;
-                        border-radius: 5px;"><b>'.$modelName->getAccStatus->las_name.'</b></div>';
+                        border-radius: 5px;"><b>'.CustomTranslator::get($modelName->getAccStatus->las_name).'</b></div>';
                 }),
 
-            TD::make('acc_type', 'Тип')
+            TD::make('acc_type', CustomTranslator::get('Тип'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_SELECT, rwLibAcceptType::query()
@@ -69,7 +70,7 @@ class AcceptancesTable extends Table
                         ->route('platform.acceptances.offers', $modelName->acc_id);
                 }),
 
-            TD::make('acc_ext_id', 'Внешний ID')
+            TD::make('acc_ext_id', CustomTranslator::get('Внешний ID'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -78,7 +79,7 @@ class AcceptancesTable extends Table
                         ->route('platform.acceptances.offers', $modelName->acc_id);
                 }),
 
-            TD::make('acc_date', 'Дата')
+            TD::make('acc_date', CustomTranslator::get('Дата'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -88,7 +89,7 @@ class AcceptancesTable extends Table
                         ->route('platform.acceptances.offers', $modelName->acc_id);
                 }),
 
-            TD::make('getUser.name', 'Владелец')
+            TD::make('getUser.name', CustomTranslator::get('Владелец'))
                 ->align('center')
                 ->render(function (rwAcceptance $modelName) {
                     $name = isset($modelName->getUser->name) ? $modelName->getUser->name : '-';
@@ -97,7 +98,7 @@ class AcceptancesTable extends Table
                         ->route('platform.acceptances.offers', $modelName->acc_id);
                 }),
 
-            TD::make('acc_wh_id', 'Склад')
+            TD::make('acc_wh_id', CustomTranslator::get('Склад'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwAcceptance $modelName) {
@@ -105,19 +106,19 @@ class AcceptancesTable extends Table
                         ->route('platform.acceptances.offers', $modelName->acc_id);
                 }),
 
-            TD::make('acc_count_expected', __('Ожидается'))
+            TD::make('acc_count_expected', CustomTranslator::get('Ожидается'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT),
 
-            TD::make('acc_count_accepted', __('Принято'))
+            TD::make('acc_count_accepted', CustomTranslator::get('Принято'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT),
 
-            TD::make('acc_count_placed', __('Привязано'))
+            TD::make('acc_count_placed', CustomTranslator::get('Привязано'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT),
 
-            TD::make('acc_comment', 'Комментарий')
+            TD::make('acc_comment', CustomTranslator::get('Комментарий'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwAcceptance $modelName) {
@@ -125,16 +126,16 @@ class AcceptancesTable extends Table
                         ->route('platform.acceptances.offers', $modelName->acc_id);
                 }),
 
-            TD::make(__('Действия'))
+            TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn(rwAcceptance $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Ред.'))
+                        Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.acceptances.edit', $modelName->acc_id)
                             ->icon('bs.pencil'),
-                        Link::make(__('Товары'))
+                        Link::make(CustomTranslator::get('Товары'))
                             ->route('platform.acceptances.offers', $modelName->acc_id)
                             ->icon('bs.pencil'),
                     ])),

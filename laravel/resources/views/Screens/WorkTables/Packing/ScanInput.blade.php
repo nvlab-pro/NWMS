@@ -1,4 +1,5 @@
 @php
+    use App\Services\CustomTranslator;
     use Milon\Barcode\DNS1D;
 @endphp
 
@@ -49,7 +50,7 @@
     <!-- Сообщение для пользователя -->
     <div class="alert alert-warning" role="alert"
          style="text-align: center; font-size: 30px; border: #3ab0c3 dotted 1px; border-radius: 10px;">
-        @lang('Заказ собран! Пожалуйста отсканируйте полученную этикетку!')
+        {{ CustomTranslator::get('Заказ собран! Пожалуйста отсканируйте полученную этикетку!') }}
     </div>
 
     <script>
@@ -61,7 +62,7 @@
     <form action="{{ route('platform.tables.packing.select', [$queueId]) }}" method="GET" style="text-align: center; padding: 0px; margin: 0px;">
         <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
             <div style="text-align: center; padding: 10px; margin: 5px;">
-                @lang('Отсканируйте этикетку для завершения упаковки заказа:')
+                {{ CustomTranslator::get('Отсканируйте этикетку для завершения упаковки заказа') }}:
                 <input type="text" name="barcode" id="barcode" size="30" autofocus onkeyup="handleKeyPress(event)">
                 <input type="hidden" name="cash" id="cash" value="{{ time() }}">
                 <input type="hidden" name="action" value="finishOrder">
@@ -69,7 +70,7 @@
                 <input type="hidden" name="tableId" value="{{ $tableId }}">
                 <input type="submit" value="Scan" id="btn">
                 <div id="error-message" style="display: none; margin-top: 10px; font-size: 20px;" class="alert alert-danger" role="alert">
-                    @lang('Это неверный код! Пожалуйста отсканируйте правильную этикетку для завершения заказа!')
+                    {{ CustomTranslator::get('Это неверный код! Пожалуйста отсканируйте правильную этикетку для завершения заказа!') }}
                 </div>
             </div>
         </div>
@@ -103,7 +104,7 @@
     <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
 
         <div style="text-align: center; padding: 10px 10px 10px 10px; margin-top: 5px; margin-bottom: 5px;">
-            @lang('Отсканируйте товар:')
+            {{ CustomTranslator::get('Отсканируйте товар') }}:
             <input type="text" name="barcode" id="barcode" size="30" autofocus onkeyup="handleKeyPress(event)">
             <input type="hidden" name="cash" id="cash" value="{{ time() }}">
             <input type="submit" value="Scan" id="btn">

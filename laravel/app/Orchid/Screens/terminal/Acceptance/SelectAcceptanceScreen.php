@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\terminal\Acceptance;
 
 use App\Models\rwAcceptance;
 use App\Orchid\Services\DocumentService;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
@@ -46,7 +47,7 @@ class SelectAcceptanceScreen extends Screen
                     $currentDocument = new DocumentService($validatedData['docId']);
                     $currentDocument->updateRest(1);
 
-                    Alert::info(__('Накладная закрыта!'));
+                    Alert::info(CustomTranslator::get('Накладная закрыта!'));
 
                 }
 
@@ -76,7 +77,7 @@ class SelectAcceptanceScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Выберите накладную для приемки');
+        return CustomTranslator::get('Выберите накладную для приемки');
     }
 
     /**

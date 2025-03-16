@@ -7,6 +7,7 @@ use App\Models\rwOffer;
 use App\Models\rwOrder;
 use App\Models\rwWarehouse;
 use App\Orchid\Layouts\Orders\OrdersTable;
+use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
@@ -52,7 +53,7 @@ class OrdersScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Список заказов');
+        return CustomTranslator::get('Список заказов');
     }
 
     /**
@@ -63,7 +64,7 @@ class OrdersScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Создать новый заказ'))
+            Link::make(CustomTranslator::get('Создать новый заказ'))
                 ->icon('bs.plus-circle')
                 ->route('platform.orders.create.index'),
         ];

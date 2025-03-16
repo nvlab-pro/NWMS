@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibWeight;
 use App\Orchid\Layouts\Settings\libWeightTable;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 
@@ -30,7 +31,7 @@ class LibWeightScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Единицы веса');
+        return CustomTranslator::get('Единицы веса');
     }
 
     /**
@@ -41,7 +42,7 @@ class LibWeightScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Добавить новую единицу веса'))
+            Link::make(CustomTranslator::get('Добавить новую единицу веса'))
                 ->icon('bs.plus-circle')
                 ->route('platform.settings.weight.create'),
         ];
@@ -55,7 +56,7 @@ class LibWeightScreen extends Screen
     public function layout(): iterable
     {
         return [
-            libWeightTable::class,
+            LibWeightTable::class,
         ];
     }
 }

@@ -3,12 +3,13 @@
 namespace App\Orchid\Layouts\Settings;
 
 use App\Models\rwLibLanguage;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 
-class libLanguageTable extends Table
+class LibLanguageTable extends Table
 {
     /**
      * Data source.
@@ -35,7 +36,7 @@ class libLanguageTable extends Table
                         ->route('platform.settings.languages.edit',$modelName->llang_id);
                 }),
 
-            TD::make('llang_name', 'Название')
+            TD::make('llang_name', CustomTranslator::get('Название'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwLibLanguage $modelName) {
@@ -43,7 +44,7 @@ class libLanguageTable extends Table
                         ->route('platform.settings.languages.edit',$modelName->llang_id);
                 }),
 
-            TD::make('llang_code', 'Код')
+            TD::make('llang_code', CustomTranslator::get('Код'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwLibLanguage $modelName) {
@@ -52,13 +53,13 @@ class libLanguageTable extends Table
                 }),
 
 
-            TD::make(__('Actions'))
+            TD::make(CustomTranslator::get('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn (rwLibLanguage $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Edit'))
+                        Link::make(CustomTranslator::get('Edit'))
                             ->route('platform.settings.languages.edit', $modelName->llang_id)
                             ->icon('bs.pencil'),
                     ])),

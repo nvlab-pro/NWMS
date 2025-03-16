@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Filters;
 
+use App\Services\CustomTranslator;
 use Illuminate\Database\Eloquent\Builder;
 use Orchid\Filters\Filter;
 use Orchid\Platform\Models\Role;
@@ -55,7 +56,10 @@ class RoleFilter extends Filter
                 ->fromModel(Role::class, 'name', 'slug')
                 ->empty()
                 ->value($this->request->get('role'))
-                ->title(__('Roles')),
+                ->title(CustomTranslator::get('Roles')) // ✅ Перевод заголовка
+                ->options(
+                    Role::all()->pluck('name', 'slug')->map(fn ($name) => CustomTranslator::get($name))->toArray()
+                ), // ✅ Перевод значений списка
         ];
     }
 

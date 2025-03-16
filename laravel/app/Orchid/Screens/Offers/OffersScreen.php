@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Offers;
 
 use App\Models\rwOffer;
 use App\Orchid\Layouts\Offers\OffersTable;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
@@ -43,7 +44,7 @@ class OffersScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Список товаров');
+        return CustomTranslator::get('Список товаров');
     }
 
     /**
@@ -54,7 +55,7 @@ class OffersScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Добавить новый товар'))
+            Link::make(CustomTranslator::get('Добавить новый товар'))
                 ->icon('bs.plus-circle')
                 ->route('platform.offers.create'),
         ];

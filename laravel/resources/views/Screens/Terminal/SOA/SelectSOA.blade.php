@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .acceptButton {
         border-bottom: 2px solid #999999;
@@ -25,15 +26,15 @@
     <div class="row g-0">
         <div style="margin: 10px 0px 10px 10px;">
 
-            <h4>@lang('Выберите очередь сборки:')</h4>
+            <h4>{{ CustomTranslator::get('Выберите очередь сборки') }}:</h4>
 
             @foreach($dbSettingsList as $dbQueue)
 
                     <button type="button" class="acceptButton"
                             onClick="window.location.href='{{ route('platform.terminal.soa.location', [$dbQueue->ssoa_id, 0]) }}'">
-                        <b>@lang('Очередь №:') {{ $dbQueue->ssoa_id }}</b><br>
+                        <b>{{ CustomTranslator::get('Очередь') }} №: {{ $dbQueue->ssoa_id }}</b><br>
                         <div class="acceptButtonText">{{ $dbQueue->ssoa_name }}<br>
-                            <span class="acceptButtonText2">@lang('Заказов к сборке:') {{ $dbQueue->ssoa_count_ready }}
+                            <span class="acceptButtonText2">{{ CustomTranslator::get('Заказов к сборке') }}: {{ $dbQueue->ssoa_count_ready }}
                     </span>
                         </div>
                     </button><br>

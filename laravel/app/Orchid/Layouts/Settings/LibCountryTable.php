@@ -4,12 +4,13 @@ namespace App\Orchid\Layouts\Settings;
 
 use App\Models\rwLibCountry;
 use App\Models\rwLibLength;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 
-class libCountryTable extends Table
+class LibCountryTable extends Table
 {
     /**
      * Data source.
@@ -36,7 +37,7 @@ class libCountryTable extends Table
                         ->route('platform.settings.countries.edit', $modelName->lco_id);
                 }),
 
-            TD::make('lco_name', 'Название')
+            TD::make('lco_name', CustomTranslator::get('Название'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwLibCountry $modelName) {
@@ -44,7 +45,7 @@ class libCountryTable extends Table
                         ->route('platform.settings.countries.edit', $modelName->lco_id);
                 }),
 
-            TD::make('lco_code', 'Код')
+            TD::make('lco_code', CustomTranslator::get('Код'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwLibCountry $modelName) {
@@ -52,41 +53,41 @@ class libCountryTable extends Table
                         ->route('platform.settings.countries.edit', $modelName->lco_id);
                 }),
 
-            TD::make('getCurrency.lcur_name', __('Валюта'))
+            TD::make('getCurrency.lcur_name', CustomTranslator::get('Валюта'))
                 ->sort()
                 ->render(function (rwLibCountry $modelName) {
                     return Link::make($modelName->getCurrency->lcur_name)
                         ->route('platform.settings.countries.edit', $modelName->lco_id);
                 }),
 
-            TD::make('getLanguage.llang_name', __('Язык'))
+            TD::make('getLanguage.llang_name', CustomTranslator::get('Язык'))
                 ->sort()
                 ->render(function (rwLibCountry $modelName) {
                     return Link::make($modelName->getLanguage->llang_name)
                         ->route('platform.settings.countries.edit', $modelName->lco_id);
                 }),
 
-            TD::make('getWeight.lw_name', __('Мера веса'))
+            TD::make('getWeight.lw_name', CustomTranslator::get('Мера веса'))
                 ->sort()
                 ->render(function (rwLibCountry $modelName) {
                     return Link::make($modelName->getWeight->lw_name)
                         ->route('platform.settings.countries.edit', $modelName->lco_id);
                 }),
 
-            TD::make('getLength.llen_name', __('Мера длины'))
+            TD::make('getLength.llen_name', CustomTranslator::get('Мера длины'))
                 ->sort()
                 ->render(function (rwLibCountry $modelName) {
                     return Link::make($modelName->getLength->llen_name)
                         ->route('platform.settings.countries.edit', $modelName->lco_id);
                 }),
 
-            TD::make(__('Actions'))
+            TD::make(CustomTranslator::get('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn (rwLibCountry $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Edit'))
+                        Link::make(CustomTranslator::get('Edit'))
                             ->route('platform.settings.countries.edit', $modelName->lco_id)
                             ->icon('bs.pencil'),
                     ])),

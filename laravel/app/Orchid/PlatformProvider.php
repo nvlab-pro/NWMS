@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Orchid;
 
 use App\Http\Middleware\RoleMiddleware;
+use App\Services\CustomTranslator;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\ItemPermission;
 use Orchid\Platform\OrchidServiceProvider;
@@ -35,57 +36,57 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         return [
-            Menu::make(__('Main'))
+            Menu::make(CustomTranslator::get('Main'))
                 ->icon('bs.bank2')
                 ->route(config('platform.index')),
 
             // Терминал
-            Menu::make(__('Терминал'))
+            Menu::make(CustomTranslator::get('Терминал'))
                 ->icon('bs.tablet')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                 ->route('platform.terminal.main'),
 
-            Menu::make(__('Рабочие столы'))
+            Menu::make(CustomTranslator::get('Рабочие столы'))
                 ->icon('bs.person-workspace')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                 ->list([
 
-                    Menu::make(__('Столы упаковки'))
+                    Menu::make(CustomTranslator::get('Столы упаковки'))
                         ->icon('bs.person-workspace')
                         ->route('platform.tables.queue.select')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker')),
 
                 ]),
 
-            Menu::make(__('Приемка товара'))
+            Menu::make(CustomTranslator::get('Приемка товара'))
                 ->icon('bs.building-add')
                 ->route('platform.acceptances.index'),
 
-            Menu::make(__('Список товаров'))
+            Menu::make(CustomTranslator::get('Список товаров'))
                 ->icon('bs.stack')
                 ->route('platform.offers.index'),
 
-            Menu::make(__('Заказы'))
+            Menu::make(CustomTranslator::get('Заказы'))
                 ->icon('bs.box-seam-fill')
                 ->route('platform.orders.index'),
 
-            Menu::make(__('Библиотеки'))
+            Menu::make(CustomTranslator::get('Библиотеки'))
                 ->canSee(RoleMiddleware::checkUserPermission('admin'))
                 ->icon('bs.list-check')
                 ->list([
-                    Menu::make(__('Страны'))
+                    Menu::make(CustomTranslator::get('Страны'))
                         ->icon('bs.globe-central-south-asia')
                         ->route('platform.settings.countries.index'),
 
-                    Menu::make(__('Города'))
+                    Menu::make(CustomTranslator::get('Города'))
                         ->icon('bs.map')
                         ->route('platform.settings.cities.index'),
 
-                    Menu::make(__('Валюты'))
+                    Menu::make(CustomTranslator::get('Валюты'))
                         ->icon('bs.currency-exchange')
                         ->route('platform.settings.currencies.index'),
 
-                    Menu::make(__('Языки'))
+                    Menu::make(CustomTranslator::get('Языки'))
                         ->icon('bs.translate')
                         ->route('platform.settings.languages.index'),
                 ]),
@@ -94,22 +95,22 @@ class PlatformProvider extends OrchidServiceProvider
             // *    Настройки склада         *
             // *******************************
 
-            Menu::make(__('Управление складом'))
+            Menu::make(CustomTranslator::get('Управление складом'))
                 ->icon('bs.display')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
-                    Menu::make(__('Волновая сборка'))
+                    Menu::make(CustomTranslator::get('Волновая сборка'))
                         ->icon('bs.cart3')
                         ->route('platform.whmanagement.wave-assembly.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
 
-                    Menu::make(__('Позаказная сборка'))
+                    Menu::make(CustomTranslator::get('Позаказная сборка'))
                         ->icon('bs.basket3')
                         ->route('platform.whmanagement.single-order-assembly.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
 
-                    Menu::make(__('Настройка упаковки'))
+                    Menu::make(CustomTranslator::get('Настройка упаковки'))
                         ->icon('bs.dropbox')
                         ->route('platform.whmanagement.packing-process-settings.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
@@ -120,17 +121,17 @@ class PlatformProvider extends OrchidServiceProvider
             // *    Настройки склада         *
             // *******************************
 
-            Menu::make(__('Настройки склада'))
+            Menu::make(CustomTranslator::get('Настройки склада'))
                 ->icon('bs.buildings-fill')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
-                    Menu::make(__('Склады'))
+                    Menu::make(CustomTranslator::get('Склады'))
                         ->icon('bs.building')
                         ->route('platform.warehouses.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin')),
 
-                    Menu::make(__('Места хранения'))
+                    Menu::make(CustomTranslator::get('Места хранения'))
                         ->icon('bs.inboxes')
                         ->route('platform.warehouses.places.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
@@ -141,11 +142,11 @@ class PlatformProvider extends OrchidServiceProvider
             // *    Настройка      *
             // ************************
 
-            Menu::make(__('Настройки'))
+            Menu::make(CustomTranslator::get('Настройки'))
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->icon('bs.gear-fill')
                 ->list([
-                    Menu::make(__('Магазины'))
+                    Menu::make(CustomTranslator::get('Магазины'))
                         ->icon('bs.shop')
                         ->route('platform.shops.index'),
                 ]),
@@ -154,12 +155,12 @@ class PlatformProvider extends OrchidServiceProvider
             // *    Службы доставки      *
             // ************************
 
-            Menu::make(__('Доставка заказов'))
+            Menu::make(CustomTranslator::get('Доставка заказов'))
                 ->icon('bs.truck-front-fill')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
-                    Menu::make(__('Службы доставки'))
+                    Menu::make(CustomTranslator::get('Службы доставки'))
                         ->icon('bs.truck')
                         ->route('platform.delivery-services.list'),
 
@@ -169,7 +170,7 @@ class PlatformProvider extends OrchidServiceProvider
             // *     Пользователи      *
             // ************************
 
-            Menu::make(__('Пользователи'))
+            Menu::make(CustomTranslator::get('Пользователи'))
                 ->icon('bs.people')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
@@ -196,9 +197,9 @@ class PlatformProvider extends OrchidServiceProvider
     public function permissions(): array
     {
         return [
-            ItemPermission::group(__('System'))
-                ->addPermission('platform.systems.roles', __('Roles'))
-                ->addPermission('platform.systems.users', __('Users')),
+            ItemPermission::group(CustomTranslator::get('System'))
+                ->addPermission('platform.systems.roles', CustomTranslator::get('Roles'))
+                ->addPermission('platform.systems.users', CustomTranslator::get('Users')),
         ];
     }
 }

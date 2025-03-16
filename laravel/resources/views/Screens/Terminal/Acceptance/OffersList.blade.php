@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .th_title {
         text-align: center;
@@ -31,10 +32,10 @@
 
             <table border="1" style="border: 1px solid #000000; " width="95%">
                 <tr>
-                    <th class="th_title">@lang('Артикул')</th>
-                    <th class="th_title">@lang('Название')</th>
-                    <th class="th_title">@lang('Ожид.')</th>
-                    <th class="th_title">@lang('Принято')</th>
+                    <th class="th_title">{{ CustomTranslator::get('Артикул') }}</th>
+                    <th class="th_title">{{ CustomTranslator::get('Название') }}</th>
+                    <th class="th_title">{{ CustomTranslator::get('Ожид.') }}</th>
+                    <th class="th_title">{{ CustomTranslator::get('Принято') }}</th>
                 </tr>
 
                 {{-- Выводим список несобранных товаров (красный) --}}
@@ -95,7 +96,7 @@
                                 @php
 
                                     if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00') {
-                                        echo '<div style="border-top: 1px dotted #000000;">Exept. date: '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
+                                        echo '<div style="border-top: 1px dotted #000000;">'.CustomTranslator::get('Срок').': '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
                                     }
 
                                 @endphp
@@ -130,7 +131,7 @@
                                 @php
 
                                     if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00') {
-                                        echo '<div style="border-top: 1px dotted #000000;">Exept. date: '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
+                                        echo '<div style="border-top: 1px dotted #000000;">'.CustomTranslator::get('Срок').': '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
                                     }
 
                                 @endphp
@@ -165,7 +166,7 @@
                                 @php
 
                                     if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00')
-                                        echo '<div style="border-top: 1px dotted #000000;">Exept. date: '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
+                                        echo '<div style="border-top: 1px dotted #000000;">'.CustomTranslator::get('Срок').': '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
 
                                     if ($Offer->ao_batch != NULL)
                                         echo '<div style="border-top: 1px dotted #000000;"> | Batch: '.$Offer->ao_batch.'</div>';
@@ -185,12 +186,12 @@
     </div>
 </div>
 <div style="text-align: center;">
-    <button style="font-size: 26px; background-color: #3eb058;" onclick="confirmAction()"> &#10004; @lang('Приемка заверешна!')</button>
+    <button style="font-size: 26px; background-color: #3eb058;" onclick="confirmAction()"> &#10004; {{ CustomTranslator::get('Приемка заверешна!') }}</button>
 
     <script>
         function confirmAction() {
             // Появляется окно подтверждения
-            var result = confirm("Вы уверены что хотите закрыть накладную?");
+            var result = confirm("{{ CustomTranslator::get('Вы уверены что хотите закрыть накладную') }}?");
 
             // Если пользователь подтвердил (нажал "ОК")
             if (result) {
@@ -202,5 +203,5 @@
 </div>
 <hr>
 <div style="text-align: center;">
-    <a href="{{ route('platform.terminal.acceptance.select') }}"> &#9668; @lang('Вернуться к списку')</a>
+    <a href="{{ route('platform.terminal.acceptance.select') }}"> &#9668; {{ CustomTranslator::get('Вернуться к списку') }}</a>
 </div>

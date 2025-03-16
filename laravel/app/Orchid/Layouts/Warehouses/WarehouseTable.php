@@ -4,6 +4,7 @@ namespace App\Orchid\Layouts\Warehouses;
 
 use App\Models\rwShop;
 use App\Models\rwWarehouse;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
@@ -37,7 +38,7 @@ class WarehouseTable extends Table
                         ->route('platform.warehouses.edit',$modelName->wh_id);
                 }),
 
-            TD::make('wh_type', 'Тип склада')
+            TD::make('wh_type', CustomTranslator::get('Тип склада'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->filter(TD::FILTER_TEXT)
@@ -45,11 +46,11 @@ class WarehouseTable extends Table
                     "<b style='background-color: {$whList->getWhType->lwt_bgcolor};
                         padding: 5px;
                         border-radius: 5px;'>
-                        {$whList->getWhType->lwt_name}
+                        ".CustomTranslator::get($whList->getWhType->lwt_name)."
                         </b>"
                     : '-'),
 
-            TD::make('sh_name', 'Название')
+            TD::make('sh_name', CustomTranslator::get('Название'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwWarehouse $modelName) {
@@ -57,7 +58,7 @@ class WarehouseTable extends Table
                         ->route('platform.warehouses.edit',$modelName->wh_id);
                 }),
 
-            TD::make('getOwner.name', 'Владелец')
+            TD::make('getOwner.name', CustomTranslator::get('Владелец'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->filter(TD::FILTER_TEXT)
@@ -66,7 +67,7 @@ class WarehouseTable extends Table
                         ->route('platform.warehouses.edit',$modelName->wh_id);
                 }),
 
-            TD::make('getParent.wh_name', 'Родитель')
+            TD::make('getParent.wh_name', CustomTranslator::get('Родитель'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->filter(TD::FILTER_TEXT)
@@ -77,7 +78,7 @@ class WarehouseTable extends Table
                     else return '-';
                 }),
 
-            TD::make('getDomain.dm_name', 'Домен')
+            TD::make('getDomain.dm_name', CustomTranslator::get('Домен'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->filter(TD::FILTER_TEXT)
@@ -90,13 +91,13 @@ class WarehouseTable extends Table
                     }
                 }),
 
-            TD::make(__('Действия'))
+            TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn (rwWarehouse $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Ред.'))
+                        Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.warehouses.edit', $modelName->wh_id)
                             ->icon('bs.pencil'),
                     ])),

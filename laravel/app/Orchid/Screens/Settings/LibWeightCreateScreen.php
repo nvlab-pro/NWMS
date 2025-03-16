@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibLength;
 use App\Models\rwLibWeight;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
@@ -40,7 +41,7 @@ class LibWeightCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->whId > 0 ? __('Редактирование единицы веса') : __('Создание новой единицы веса');
+        return $this->whId > 0 ? CustomTranslator::get('Редактирование единицы веса') : CustomTranslator::get('Создание новой единицы веса');
     }
 
     /**
@@ -69,12 +70,12 @@ class LibWeightCreateScreen extends Screen
 
                 Input::make('rwLibWeight.lw_name')
                     ->width(50)
-                    ->title(__('Название')),
+                    ->title(CustomTranslator::get('Название')),
 
                 Input::make('rwLibWeight.lw_unit')
-                    ->title(__('Код')),
+                    ->title(CustomTranslator::get('Код')),
 
-                Button::make(__('Сохранить'))
+                Button::make(CustomTranslator::get('Сохранить'))
                     ->type(Color::DARK)
                     ->style('margin-bottom: 20px;')
                     ->method('saveWeight'),
@@ -99,7 +100,7 @@ class LibWeightCreateScreen extends Screen
                 'lw_name' => $request->cmLibWeight['lw_name'],
             ]);
 
-            Alert::success(__('Данные успешно отредактированы!'));
+            Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
 
         } else {
 
@@ -108,7 +109,7 @@ class LibWeightCreateScreen extends Screen
                 'lw_name' => $request->cmLibWeight['lw_name'],
             ]);
 
-            Alert::success(__('Данные успешно добавлены!'));
+            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
 
         }
 

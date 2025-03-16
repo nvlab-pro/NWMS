@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Presenters;
 
+use App\Services\CustomTranslator;
 use Illuminate\Support\Str;
 use Laravel\Scout\Builder;
 use Orchid\Screen\Contracts\Personable;
@@ -33,7 +34,7 @@ class UserPresenter extends Presenter implements Personable, Searchable
      */
     public function subTitle(): string
     {
-        $roles = $this->entity->roles->pluck('name')->implode(' / ');
+        $roles = CustomTranslator::get($this->entity->roles->pluck('name')->implode(' / '));
 
         return (string) Str::of($roles)
             ->limit(20)

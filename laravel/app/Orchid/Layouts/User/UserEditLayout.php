@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\User;
 
+use App\Services\CustomTranslator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Layouts\Rows;
 
 class UserEditLayout extends Rows
@@ -17,19 +21,29 @@ class UserEditLayout extends Rows
      */
     public function fields(): array
     {
+        $currentUser = Auth::user();
+
+        // ✅ Загружаем список языков из конфига
+        $languages = Config::get('languages', $currentUser->lang);
+
         return [
             Input::make('user.name')
                 ->type('text')
                 ->max(255)
                 ->required()
-                ->title(__('Имя пользователя'))
-                ->placeholder(__('Name')),
+                ->title(CustomTranslator::get('Имя пользователя'))
+                ->placeholder(CustomTranslator::get('Name')),
 
             Input::make('user.email')
                 ->type('email')
                 ->required()
-                ->title(__('Email'))
-                ->placeholder(__('Email')),
+                ->title(CustomTranslator::get('Email'))
+                ->placeholder(CustomTranslator::get('Email')),
+
+            Select::make('user.lang')
+                ->options($languages)
+                ->title(CustomTranslator::get('Язык интерфейса'))
+                ->value($currentUser->lang), // ✅ Устанавливаем текущий язык
         ];
     }
 }

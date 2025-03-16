@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Orchid\Layouts\User;
 
 use App\Models\rwDomain;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Select;
@@ -30,7 +31,7 @@ class UserDomainLayout extends Rows
         return [
             Select::make('user.domain_id')
                 ->fromModel($dbDomains, 'dm_name')
-                ->title(__('Домен')),
+                ->title(CustomTranslator::get('Домен')),
         ];
     }
 }

@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .th_title {
         text-align: center;
@@ -32,9 +33,9 @@
 
             <table border="1" style="border: 1px solid #000000; " width="95%">
                 <tr>
-                    <th class="th_title">@lang('Артикул')</th>
-                    <th class="th_title">@lang('Название')</th>
-                    <th class="th_title">@lang('Не привязано')</th>
+                    <th class="th_title">{{ CustomTranslator::get('Артикул') }}</th>
+                    <th class="th_title">{{ CustomTranslator::get('Название') }}</th>
+                    <th class="th_title">{{ CustomTranslator::get('Не привязано') }}</th>
                 </tr>
 
                 {{-- Выводим список несобранных товаров (красный) --}}
@@ -55,7 +56,7 @@
                                 @php
 
                                     if ($Offer->ao_expiration_date != NULL && $Offer->ao_expiration_date != '0000-00-00') {
-                                        echo '<div style="border-top: 1px dotted #000000;">Exept. date: '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
+                                        echo '<div style="border-top: 1px dotted #000000;">'.CustomTranslator::get('Срок').': '.date('d.m.Y', strtotime($Offer->ao_expiration_date)).'</div>';
                                     }
 
                                 @endphp
@@ -74,5 +75,5 @@
 </div>
 
 <div style="text-align: center;">
-    <a href="{{ route('platform.terminal.places.select') }}"> &#9668; @lang('Вернуться к списку')</a>
+    <a href="{{ route('platform.terminal.places.select') }}"> &#9668; {{ CustomTranslator::get('Вернуться к списку') }}</a>
 </div>

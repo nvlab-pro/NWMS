@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\WhManagement\WaveAssembly;
 
+use App\Services\CustomTranslator;
 use Orchid\Screen\Screen;
 
 class WAManagementScreen extends Screen
@@ -23,7 +24,7 @@ class WAManagementScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Создание волны для сборки');
+        return CustomTranslator::get('Создание волны для сборки');
     }
 
     /**

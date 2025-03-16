@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\User;
 
+use App\Services\CustomTranslator;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Password;
 use Orchid\Screen\Layouts\Rows;
@@ -19,18 +20,18 @@ class ProfilePasswordLayout extends Rows
     {
         return [
             Password::make('old_password')
-                ->placeholder(__('Введите текущий пароль'))
-                ->title(__('Текущий пароль'))
-                ->help('Это ваш пароль, установленный на данный момент.'),
+                ->placeholder(CustomTranslator::get('Введите текущий пароль'))
+                ->title(CustomTranslator::get('Текущий пароль'))
+                ->help(CustomTranslator::get('Это ваш пароль, установленный на данный момент.')),
 
             Password::make('password')
-                ->placeholder(__('Введите пароль, который нужно установить'))
-                ->title(__('Новый пароль')),
+                ->placeholder(CustomTranslator::get('Введите пароль, который нужно установить'))
+                ->title(CustomTranslator::get('Новый пароль')),
 
             Password::make('password_confirmation')
-                ->placeholder(__('Введите пароль, который нужно установить'))
-                ->title(__('Подтвердите новый пароль'))
-                ->help('Хороший пароль должен содержать не менее 15 символов или не менее 8 символов, включая цифру и строчную букву.'),
+                ->placeholder(CustomTranslator::get('Введите пароль, который нужно установить'))
+                ->title(CustomTranslator::get('Подтвердите новый пароль'))
+                ->help(CustomTranslator::get('Хороший пароль должен содержать не менее 15 символов или не менее 8 символов, включая цифру и строчную букву.')),
         ];
     }
 }

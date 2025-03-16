@@ -4,6 +4,7 @@ namespace App\Orchid\Layouts\Acceptances;
 
 use App\Http\Middleware\RoleMiddleware;
 use App\Models\rwAcceptanceOffer;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\ModalToggle;
@@ -28,11 +29,11 @@ class AcceptancesOffersTable extends Table
     {
         return [
 
-            TD::make('ao_id', 'ID')
+            TD::make('ao_id', CustomTranslator::get('ID'))
                 ->sort()
                 ->align('center'),
 
-            TD::make('Изображение')
+            TD::make(CustomTranslator::get('Изображение'))
                 ->align('center')
                 ->render(function ($model) {
                     if ($model->ao_img == '')
@@ -42,13 +43,13 @@ class AcceptancesOffersTable extends Table
                 })
                 ->width('100px'),
 
-            TD::make('ao_article', 'Артикул')
+            TD::make('ao_article', CustomTranslator::get('Артикул'))
                 ->sort(),
 
-            TD::make('ao_name', 'Товар')
+            TD::make('ao_name', CustomTranslator::get('Товар'))
                 ->sort(),
 
-            TD::make('ao_dimension', 'Размеры')
+            TD::make('ao_dimension', CustomTranslator::get('Размеры'))
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $currentUser = Auth::user(); // Получение текущего пользователя
@@ -59,7 +60,7 @@ class AcceptancesOffersTable extends Table
                             $modelName->ao_dimension,
                         )
                             ->modal('editDimensions') // Имя модального окна
-                            ->modalTitle('Редактировать размеры')
+                            ->modalTitle(CustomTranslator::get('Редактировать размеры'))
                             ->method('saveDimensions') // Метод для обработки данных
                             ->parameters([
                                 'offerId' => $modelName->ao_id,
@@ -70,17 +71,17 @@ class AcceptancesOffersTable extends Table
                     }
                 }),
 
-            TD::make('ao_batch', 'Батч')
+            TD::make('ao_batch', CustomTranslator::get('Батч'))
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
                     return '<input type="hidden" name="docOfferId[' . $modelName->ao_id . ']" value="' . e($modelName->ao_offer_id) . '" >
                     <input type="hidden" name="docOfferPlaced[' . $modelName->ao_id . ']" value="' . e($modelName->ao_placed) . '" >
-                    <input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="Батч" ' . $readonly . '>';
+                    <input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="'.CustomTranslator::get('Батч').'" ' . $readonly . '>';
                 }),
 
-            TD::make('ao_expiration_date', 'Срок годности')
+            TD::make('ao_expiration_date', CustomTranslator::get('Срок годности'))
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
 
@@ -93,7 +94,7 @@ class AcceptancesOffersTable extends Table
                         ->mask([
                             'alias' => 'datetime',
                             'inputFormat' => 'dd.mm.yyyy',
-                            'placeholder' => __('дд.мм.гггг'),
+                            'placeholder' => CustomTranslator::get('дд.мм.гггг'),
                         ])
                         ->class('form-control');
 
@@ -104,27 +105,27 @@ class AcceptancesOffersTable extends Table
                     return $input;
                 }),
 
-            TD::make('ao_barcode', 'Штрих-код')
+            TD::make('ao_barcode', CustomTranslator::get('Штрих-код'))
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $bgColor = '';
                     if ($modelName->ao_barcode == '') $bgColor = 'style="background-color: #ffbdbf;"';
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferBarcode[' . $modelName->ao_id . ']" value="' . e($modelName->ao_barcode) . '" class="form-control" size=15 placeHolder="Штрих-код" ' . $bgColor . ' ' . $readonly . '>';
+                    return '<input type="text" name="docOfferBarcode[' . $modelName->ao_id . ']" value="' . e($modelName->ao_barcode) . '" class="form-control" size=15 placeHolder="'.CustomTranslator::get('Штрих-код').'" ' . $bgColor . ' ' . $readonly . '>';
                 }),
 
-            TD::make('ao_expected', 'Ожидается')
+            TD::make('ao_expected', CustomTranslator::get('Ожидается'))
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $bgColor = '';
                     if ($modelName->ao_expected == 0) $bgColor = 'style="background-color: #ffbdbf;"';
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status > 2) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferExept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_expected) . '" class="form-control" size=6 placeHolder="Ожидается" ' . $bgColor . ' ' . $readonly . '>';
+                    return '<input type="text" name="docOfferExept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_expected) . '" class="form-control" size=6 placeHolder="'.CustomTranslator::get('Ожидается').'" ' . $bgColor . ' ' . $readonly . '>';
                 }),
 
-            TD::make('ao_accepted', 'Принято')
+            TD::make('ao_accepted', CustomTranslator::get('Принято'))
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $isEditable = RoleMiddleware::checkUserPermission('admin,warehouse_manager'); // Проверка роли
@@ -133,7 +134,7 @@ class AcceptancesOffersTable extends Table
                     return '<input type="text" name="docOfferAccept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_accepted) . '" class="form-control" size=6 placeHolder="Принято" ' . $readonly . '>';
                 }),
 
-            TD::make('ao_placed', 'Размещено')
+            TD::make('ao_placed', CustomTranslator::get('Размещено'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->render(function (rwAcceptanceOffer $modelName) {
@@ -143,22 +144,22 @@ class AcceptancesOffersTable extends Table
                         return '-';
                 }),
 
-            TD::make('ao_price', 'Закупочная цена')
+            TD::make('ao_price', CustomTranslator::get('Закупочная цена'))
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferPrice[' . $modelName->ao_id . ']" value="' . e($modelName->ao_price) . '" class="form-control" size=6 placeHolder="Цена" ' . $readonly . '>';
+                    return '<input type="text" name="docOfferPrice[' . $modelName->ao_id . ']" value="' . e($modelName->ao_price) . '" class="form-control" size=6 placeHolder="'.CustomTranslator::get('Цена').'" ' . $readonly . '>';
                 }),
 
-            TD::make(__('Действия'))
+            TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn(rwAcceptanceOffer $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list(array_filter([
                         ($modelName->ao_placed === null && $modelName->oa_status == 1)
-                            ? Button::make(__('Удалить'))
+                            ? Button::make(CustomTranslator::get('Удалить'))
                             ->icon('bs.trash')
                             ->method('deleteItem')
                             ->parameters([
@@ -166,7 +167,7 @@ class AcceptancesOffersTable extends Table
                                 'docType' => 1,
                                 '_token' => csrf_token(), // Добавляем CSRF-токен вручную
                             ])
-                            ->confirm(__('Вы уверены, что хотите удалить этот товар из накладной?'))
+                            ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить этот товар из накладной?'))
                             : null, // Кнопка не добавляется, если условие не выполнено
                     ]))
                 ),
@@ -177,7 +178,7 @@ class AcceptancesOffersTable extends Table
     protected function toolbar(): array
     {
         return [
-            Button::make('Сохранить изменения')
+            Button::make(CustomTranslator::get('Сохранить изменения'))
                 ->method('saveChanges')
                 ->class('btn btn-primary'),
         ];

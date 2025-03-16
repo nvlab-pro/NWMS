@@ -7,12 +7,14 @@ namespace App\Orchid\Screens\User;
 use App\Orchid\Layouts\User\UserEditLayout;
 use App\Orchid\Layouts\User\UserFiltersLayout;
 use App\Orchid\Layouts\User\UserListLayout;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
@@ -49,7 +51,7 @@ class UserListScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Пользователи');
+        return CustomTranslator::get('Пользователи');
     }
 
     /**
@@ -57,7 +59,7 @@ class UserListScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Полный список всех зарегистрированных пользователей, включая их профили и привилегии.';
+        return CustomTranslator::get('Полный список всех зарегистрированных пользователей, включая их профили и привилегии.');
     }
 
     public function permission(): ?iterable
@@ -75,7 +77,7 @@ class UserListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Новый пользователь'))
+            Link::make(CustomTranslator::get('Новый пользователь'))
                 ->icon('bs.plus-circle')
                 ->route('platform.systems.users.create'),
         ];
@@ -120,13 +122,13 @@ class UserListScreen extends Screen
 
         $user->fill($request->input('user'))->save();
 
-        Toast::info(__('User was saved.'));
+        Alert::success(CustomTranslator::get('Данные были сохранены!'));
     }
 
     public function remove(Request $request): void
     {
         User::findOrFail($request->get('id'))->delete();
 
-        Toast::info(__('User was removed'));
+        Alert::error(CustomTranslator::get('Пользователь был удален!'));
     }
 }

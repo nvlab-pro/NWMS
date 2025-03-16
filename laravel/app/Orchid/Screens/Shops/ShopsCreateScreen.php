@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Shops;
 
 use App\Models\User;
 use App\Models\rwShop;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
@@ -53,7 +54,7 @@ class ShopsCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->shopId > 0 ? __('Редактирование магазина') : __('Создание магазина');
+        return $this->shopId > 0 ? CustomTranslator::get('Редактирование магазина') : CustomTranslator::get('Создание магазина');
     }
 
     /**
@@ -81,7 +82,7 @@ class ShopsCreateScreen extends Screen
 
             $arAddFields[] = Select::make('rwShop.sh_user_id')
                 ->fromModel(User::query()->get(), 'name', 'id')
-                ->title(__('Выберите владельца'));
+                ->title(CustomTranslator::get('Выберите владельца'));
 
         } else {
 
@@ -89,7 +90,7 @@ class ShopsCreateScreen extends Screen
 
                 $arAddFields[] = Select::make('rwShop.sh_user_id')
                     ->fromModel(User::where('domain_id', $currentUser->domain_id)->get(), 'name', 'id')
-                    ->title(__('Выберите владельца'));
+                    ->title(CustomTranslator::get('Выберите владельца'));
 
             } else {
 
@@ -110,11 +111,11 @@ class ShopsCreateScreen extends Screen
 
                         Input::make('rwShop.sh_name')
                             ->width(50)
-                            ->title(__('Название')),
+                            ->title(CustomTranslator::get('Название')),
                     ],
                     $arAddFields,
                     [
-                        Button::make(__('Сохранить'))
+                        Button::make(CustomTranslator::get('Сохранить'))
                             ->type(Color::DARK)
                             ->style('margin-bottom: 20px;')
                             ->method('saveShop'),
@@ -141,7 +142,7 @@ class ShopsCreateScreen extends Screen
                 'sh_user_id' => $request->rwShop['sh_user_id'],
             ]);
 
-            Alert::success(__('Магазин успешно отредактирован!'));
+            Alert::success(CustomTranslator::get('Магазин успешно отредактирован!'));
 
         } else {
 
@@ -151,7 +152,7 @@ class ShopsCreateScreen extends Screen
                 'sh_domain_id' => $currentUser->domain_id,
             ]);
 
-            Alert::success(__('Магазин успешно создан!'));
+            Alert::success(CustomTranslator::get('Магазин успешно создан!'));
 
         }
 

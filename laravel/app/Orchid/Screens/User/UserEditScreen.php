@@ -7,9 +7,11 @@ namespace App\Orchid\Screens\User;
 use App\Orchid\Layouts\Role\RolePermissionLayout;
 use App\Orchid\Layouts\User\UserDomainLayout;
 use App\Orchid\Layouts\User\UserEditLayout;
+use App\Orchid\Layouts\User\UserLangLayout;
 use App\Orchid\Layouts\User\UserPasswordLayout;
 use App\Orchid\Layouts\User\UserRoleLayout;
 use App\Orchid\Layouts\User\UserWhLayout;
+use App\Services\CustomTranslator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -50,7 +52,7 @@ class UserEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->user->exists ? 'Редактировать пользователя' : 'Создать пользователя';
+        return $this->user->exists ? CustomTranslator::get('Редактировать пользователя') : CustomTranslator::get('Создать пользователя');
     }
 
     /**
@@ -58,7 +60,7 @@ class UserEditScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Профиль пользователя и его привилегии, включая связанную с ним роль.';
+        return CustomTranslator::get('Профиль пользователя и его привилегии, включая связанную с ним роль.');
     }
 
     public function permission(): ?iterable
@@ -76,19 +78,19 @@ class UserEditScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Button::make(__('Выдать себя за пользователя'))
+            Button::make(CustomTranslator::get('Выдать себя за пользователя'))
                 ->icon('bg.box-arrow-in-right')
-                ->confirm(__('Вы можете вернуться в исходное состояние, выйдя из системы.'))
+                ->confirm(CustomTranslator::get('Вы можете вернуться в исходное состояние, выйдя из системы.'))
                 ->method('loginAs')
                 ->canSee($this->user->exists && $this->user->id !== \request()->user()->id),
 
-            Button::make(__('Удалить'))
+            Button::make(CustomTranslator::get('Удалить'))
                 ->icon('bs.trash3')
-                ->confirm(__('После удаления учетной записи все ее ресурсы и данные будут удалены навсегда. Перед удалением учетной записи загрузите любые данные или информацию, которые вы хотите сохранить.'))
+                ->confirm(CustomTranslator::get('После удаления учетной записи все ее ресурсы и данные будут удалены навсегда. Перед удалением учетной записи загрузите любые данные или информацию, которые вы хотите сохранить.'))
                 ->method('remove')
                 ->canSee($this->user->exists),
 
-            Button::make(__('Сохранить'))
+            Button::make(CustomTranslator::get('Сохранить'))
                 ->icon('bs.check-circle')
                 ->method('save'),
         ];
@@ -102,10 +104,10 @@ class UserEditScreen extends Screen
         return [
 
             Layout::block(UserEditLayout::class)
-                ->title(__('Информация о профиле'))
-                ->description(__('Обновите информацию профиля вашей учетной записи и адрес электронной почты.'))
+                ->title(CustomTranslator::get('Информация о профиле'))
+                ->description(CustomTranslator::get('Обновите информацию профиля вашей учетной записи и адрес электронной почты.'))
                 ->commands(
-                    Button::make(__('Сохранить'))
+                    Button::make(CustomTranslator::get('Сохранить'))
                         ->type(Color::BASIC)
                         ->icon('bs.check-circle')
                         ->canSee($this->user->exists)
@@ -113,10 +115,10 @@ class UserEditScreen extends Screen
                 ),
 
             Layout::block(UserPasswordLayout::class)
-                ->title(__('Пароль'))
-                ->description(__('Для обеспечения безопасности убедитесь, что в вашей учетной записи используется длинный случайный пароль.'))
+                ->title(CustomTranslator::get('Пароль'))
+                ->description(CustomTranslator::get('Для обеспечения безопасности убедитесь, что в вашей учетной записи используется длинный случайный пароль.'))
                 ->commands(
-                    Button::make(__('Сохранить'))
+                    Button::make(CustomTranslator::get('Сохранить'))
                         ->type(Color::BASIC)
                         ->icon('bs.check-circle')
                         ->canSee($this->user->exists)
@@ -124,10 +126,21 @@ class UserEditScreen extends Screen
                 ),
 
             Layout::block(UserDomainLayout::class)
-                ->title(__('Домен'))
-                ->description(__('Выберите домен на которым будет работать пользователь.'))
+                ->title(CustomTranslator::get('Домен'))
+                ->description(CustomTranslator::get('Выберите домен на которым будет работать пользователь.'))
                 ->commands(
-                    Button::make(__('Сохранить'))
+                    Button::make(CustomTranslator::get('Сохранить'))
+                        ->type(Color::BASIC)
+                        ->icon('bs.check-circle')
+                        ->canSee($this->user->exists)
+                        ->method('save')
+                ),
+
+            Layout::block(UserLangLayout::class)
+                ->title(CustomTranslator::get('Язык'))
+                ->description(CustomTranslator::get('Выберите язык с которым будет работать пользователь.'))
+                ->commands(
+                    Button::make(CustomTranslator::get('Сохранить'))
                         ->type(Color::BASIC)
                         ->icon('bs.check-circle')
                         ->canSee($this->user->exists)
@@ -135,10 +148,10 @@ class UserEditScreen extends Screen
                 ),
 
             Layout::block(UserWhLayout::class)
-                ->title(__('Склад'))
-                ->description(__('Выберите базовый склад, с которым будет работать пользователь.'))
+                ->title(CustomTranslator::get('Склад'))
+                ->description(CustomTranslator::get('Выберите базовый склад, с которым будет работать пользователь.'))
                 ->commands(
-                    Button::make(__('Сохранить'))
+                    Button::make(CustomTranslator::get('Сохранить'))
                         ->type(Color::BASIC)
                         ->icon('bs.check-circle')
                         ->canSee($this->user->exists)
@@ -146,10 +159,10 @@ class UserEditScreen extends Screen
                 ),
 
             Layout::block(UserRoleLayout::class)
-                ->title(__('Роли'))
-                ->description(__('Роль определяет набор задач, которые разрешено выполнять пользователю, которому назначена эта роль.'))
+                ->title(CustomTranslator::get('Роли'))
+                ->description(CustomTranslator::get('Роль определяет набор задач, которые разрешено выполнять пользователю, которому назначена эта роль.'))
                 ->commands(
-                    Button::make(__('Сохранить'))
+                    Button::make(CustomTranslator::get('Сохранить'))
                         ->type(Color::BASIC)
                         ->icon('bs.check-circle')
                         ->canSee($this->user->exists)
@@ -157,10 +170,10 @@ class UserEditScreen extends Screen
                 ),
 
             Layout::block(RolePermissionLayout::class)
-                ->title(__('Разрешения'))
-                ->description(__('Разрешить пользователю выполнять некоторые действия, не предусмотренные его ролями'))
+                ->title(CustomTranslator::get('Разрешения'))
+                ->description(CustomTranslator::get('Разрешить пользователю выполнять некоторые действия, не предусмотренные его ролями'))
                 ->commands(
-                    Button::make(__('Сохранить'))
+                    Button::make(CustomTranslator::get('Сохранить'))
                         ->type(Color::BASIC)
                         ->icon('bs.check-circle')
                         ->canSee($this->user->exists)
@@ -198,7 +211,7 @@ class UserEditScreen extends Screen
 
         $user->replaceRoles($request->input('user.roles'));
 
-        Toast::info(__('Пользователь был сохранен'));
+        Toast::info(CustomTranslator::get('Пользователь был сохранен'));
 
         return redirect()->route('platform.systems.users');
     }
@@ -212,7 +225,7 @@ class UserEditScreen extends Screen
     {
         $user->delete();
 
-        Toast::info(__('Пользователь был удален'));
+        Toast::info(CustomTranslator::get('Пользователь был удален'));
 
         return redirect()->route('platform.systems.users');
     }
@@ -224,7 +237,7 @@ class UserEditScreen extends Screen
     {
         Impersonation::loginAs($user);
 
-        Toast::info(__('Сейчас вы выдаете себя за этого пользователя'));
+        Toast::info(CustomTranslator::get('Сейчас вы выдаете себя за этого пользователя'));
 
         return redirect()->route(config('platform.index'));
     }

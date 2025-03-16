@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\terminal\SOAM;
 
 use App\Models\rwOrder;
 use App\Models\rwSettingsSoa;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Orchid\Screen\Screen;
 
@@ -50,7 +51,7 @@ class EndSOAMScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Заказ') . ' ' . $this->orderId . ' ' . __('завершен') . '!';
+        return CustomTranslator::get('Заказ') . ' ' . $this->orderId . ' ' . CustomTranslator::get('завершен') . '!';
     }
 
     /**

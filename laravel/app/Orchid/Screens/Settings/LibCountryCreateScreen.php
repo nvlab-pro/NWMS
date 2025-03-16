@@ -8,6 +8,7 @@ use App\Models\rwLibLanguage;
 use App\Models\rwLibLength;
 use App\Models\rwLibWeight;
 use App\Models\MistralPartners;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
@@ -45,7 +46,7 @@ class LibCountryCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->countryId > 0 ? __('Редактирование страны') : __('Создание новой страны');
+        return $this->countryId > 0 ? CustomTranslator::get('Редактирование страны') : CustomTranslator::get('Создание новой страны');
     }
 
     /**
@@ -74,40 +75,40 @@ class LibCountryCreateScreen extends Screen
 
                 Input::make('rwLibCountry.lco_name')
                     ->width(50)
-                    ->title(__('Название')),
+                    ->title(CustomTranslator::get('Название')),
 
                 Input::make('rwLibCountry.lco_code')
-                    ->title(__('Код')),
+                    ->title(CustomTranslator::get('Код')),
 
                 Select::make('rwLibCountry.lco_currency_id')
-                    ->title(__('Валюта'))
+                    ->title(CustomTranslator::get('Валюта'))
                     ->width('100px')
                     ->fromModel(rwLibCurrency::class, 'lcur_name', 'lcur_id')
-                    ->empty(__('Не выбрано'), 0)
+                    ->empty(CustomTranslator::get('Не выбрано'), 0)
                     ->required(0),
 
                 Select::make('rwLibCountry.lco_lang_id')
-                    ->title(__('Язык'))
+                    ->title(CustomTranslator::get('Язык'))
                     ->width('100px')
                     ->fromModel(rwLibLanguage::class, 'llang_name', 'llang_id')
-                    ->empty(__('Не выбрано'), 0)
+                    ->empty(CustomTranslator::get('Не выбрано'), 0)
                     ->required(0),
 
                 Select::make('rwLibCountry.lco_weight_id')
-                    ->title(__('Мера веса'))
+                    ->title(CustomTranslator::get('Мера веса'))
                     ->width('100px')
                     ->fromModel(rwLibWeight::class, 'lw_name', 'lw_id')
-                    ->empty(__('Не выбрано'), 0)
+                    ->empty(CustomTranslator::get('Не выбрано'), 0)
                     ->required(0),
 
                 Select::make('rwLibCountry.lco_length_id')
-                    ->title(__('Мера длины'))
+                    ->title(CustomTranslator::get('Мера длины'))
                     ->width('100px')
                     ->fromModel(rwLibLength::class, 'llen_name', 'llen_id')
-                    ->empty(__('Не выбрано'), 0)
+                    ->empty(CustomTranslator::get('Не выбрано'), 0)
                     ->required(0),
 
-                Button::make(__('Сохранить'))
+                Button::make(CustomTranslator::get('Сохранить'))
                     ->type(Color::DARK)
                     ->style('margin-bottom: 20px;')
                     ->method('saveCurrency'),
@@ -141,7 +142,7 @@ class LibCountryCreateScreen extends Screen
                 'lco_length_id'     => $request->cmLibCountry['lco_length_id'],
             ]);
 
-            Alert::success(__('Данные успешно отредактированы!'));
+            Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
 
         } else {
 
@@ -154,7 +155,7 @@ class LibCountryCreateScreen extends Screen
                 'lco_length_id'     => $request->cmLibCountry['lco_length_id'],
             ]);
 
-            Alert::success(__('Данные успешно добавлены!'));
+            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
 
         }
 

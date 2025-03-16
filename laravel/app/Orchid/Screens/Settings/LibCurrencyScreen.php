@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibCurrency;
 use App\Orchid\Layouts\Settings\libCurrencyTable;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 
@@ -30,7 +31,7 @@ class LibCurrencyScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Валюты');
+        return CustomTranslator::get('Валюты');
     }
 
     /**
@@ -41,7 +42,7 @@ class LibCurrencyScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Добавить новую валюту'))
+            Link::make(CustomTranslator::get('Добавить новую валюту'))
                 ->icon('bs.plus-circle')
                 ->route('platform.settings.currencies.create'),
         ];

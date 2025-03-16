@@ -4,6 +4,7 @@ namespace App\Orchid\Layouts\WhManagement\SingleOrderAssembly;
 
 use App\Models\rwAcceptance;
 use App\Models\rwSettingsSoa;
+use App\Services\CustomTranslator;
 use Carbon\Carbon;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
@@ -30,7 +31,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_status_id', __('Статус'))
+            TD::make('ssoa_status_id', CustomTranslator::get('Статус'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -38,10 +39,10 @@ class SOAManagementTable extends Table
                     return '<div onClick="window.location=\'' . route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id) . '\'" style="color: ' . $modelName->getStatus->ls_color . ';
                         background-color: ' . $modelName->getStatus->ls_bgcolor . ';
                         padding: 5px;
-                        border-radius: 5px;"><b><nobr>' . $modelName->getStatus->ls_name . '</nobr></b></div>';
+                        border-radius: 5px;"><b><nobr>' . CustomTranslator::get($modelName->getStatus->ls_name) . '</nobr></b></div>';
                 }),
 
-            TD::make('ssoa_priority', __('Приоритет'))
+            TD::make('ssoa_priority', CustomTranslator::get('Приоритет'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -50,7 +51,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_name', __('Название'))
+            TD::make('ssoa_name', CustomTranslator::get('Название'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -59,7 +60,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_wh_id', __('Склад'))
+            TD::make('ssoa_wh_id', CustomTranslator::get('Склад'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -68,19 +69,19 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_user_id', __('Пользователь'))
+            TD::make('ssoa_user_id', CustomTranslator::get('Пользователь'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwSettingsSoa $modelName) {
 
-                    isset($modelName->getUser->name) ? $userName = $modelName->getUser->name : $userName = __('Не указан');
+                    isset($modelName->getUser->name) ? $userName = $modelName->getUser->name : $userName = CustomTranslator::get('Не указан');
 
                     return Link::make($userName)
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_date_from', __('Дата с'))
+            TD::make('ssoa_date_from', CustomTranslator::get('Дата с'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -90,7 +91,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_date_to', __('Дата по'))
+            TD::make('ssoa_date_to', CustomTranslator::get('Дата по'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -100,7 +101,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_offers_count_from', __('Кол-во товаров с'))
+            TD::make('ssoa_offers_count_from', CustomTranslator::get('Кол-во товаров с'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -109,7 +110,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_offers_count_to', __('Кол-во товаров по'))
+            TD::make('ssoa_offers_count_to', CustomTranslator::get('Кол-во товаров по'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -118,7 +119,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_order_from', __('Заказы с'))
+            TD::make('ssoa_order_from', CustomTranslator::get('Заказы с'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -127,7 +128,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_order_to', __('Заказы по'))
+            TD::make('ssoa_order_to', CustomTranslator::get('Заказы по'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -136,7 +137,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_ds_id', __('Служба доставки'))
+            TD::make('ssoa_ds_id', CustomTranslator::get('Служба доставки'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -146,7 +147,7 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_finish_place_type', __('Место завершения сборки'))
+            TD::make('ssoa_finish_place_type', CustomTranslator::get('Место завершения сборки'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
@@ -156,12 +157,12 @@ class SOAManagementTable extends Table
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),
 
-            TD::make('ssoa_all_offers', __('Вид сборки'))
+            TD::make('ssoa_all_offers', CustomTranslator::get('Вид сборки'))
                 ->align('center')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwSettingsSoa $modelName) {
-                    $dsName = $modelName->ssoa_all_offers == 0 ? 'Частичная сборка' : 'Все товары';
+                    $dsName = $modelName->ssoa_all_offers == 0 ? CustomTranslator::get('Частичная сборка') : CustomTranslator::get('Все товары');
                     return Link::make($dsName)
                         ->route('platform.whmanagement.single-order-assembly.edit', $modelName->ssoa_id);
                 }),

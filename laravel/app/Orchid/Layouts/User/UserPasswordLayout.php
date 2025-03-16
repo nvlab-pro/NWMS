@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\User;
 
+use App\Services\CustomTranslator;
 use Orchid\Platform\Models\User;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Password;
@@ -22,13 +23,13 @@ class UserPasswordLayout extends Rows
         $user = $this->query->get('user');
 
         $placeholder = $user->exists
-            ? __('Оставьте пустым, чтобы сохранить текущий пароль.')
-            : __('Введите пароль, который нужно установить');
+            ? CustomTranslator::get('Оставьте пустым, чтобы сохранить текущий пароль.')
+            : CustomTranslator::get('Введите пароль, который нужно установить');
 
         return [
             Password::make('user.password')
                 ->placeholder($placeholder)
-                ->title(__('Пароль')),
+                ->title(CustomTranslator::get('Пароль')),
         ];
     }
 }

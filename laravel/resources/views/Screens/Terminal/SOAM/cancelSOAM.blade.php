@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 @if($action == 'cancelOrder')
     <style>
         .button-container {
@@ -14,14 +15,14 @@
         <div style="padding: 10px 10px 10px 10px; text-align: center;">
 
             <div class="alert alert-danger warningDIV" role="alert">
-                @lang('Заказ был привязан к месту для отмененных заказов!')<br><br>
-                @lang('Не забудьте разнести оставшиеся товары по местам хранения!')<br>
+                {{ CustomTranslator::get('Заказ был привязан к месту для отмененных заказов!') }}<br><br>
+                {{ CustomTranslator::get('Не забудьте разнести оставшиеся товары по местам хранения!') }}<br>
             </div>
             <hr>
             <div class="button-container">
                 <button type="button" class="btn btn-primary"
                         onClick="location.href='{{ route('platform.terminal.soam.order', [$soaId, 0]) }}'">
-                    @lang('Перейти к сборке следующего')
+                    {{ CustomTranslator::get('Перейти к сборке следующего') }}
                 </button>
             </div>
             <hr>

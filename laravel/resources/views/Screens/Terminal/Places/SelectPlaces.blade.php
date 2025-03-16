@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .acceptButton {
         border-bottom: 2px solid #999999;
@@ -25,7 +26,7 @@
     <div class="row g-0">
         <div style="margin: 10px 0px 10px 10px;">
 
-            <h4>@lang('Выберите накладную, товары из которой вы хотите привязать: ')</h4>
+            <h4>{{ CustomTranslator::get('Выберите накладную, товары из которой вы хотите привязать') }}:</h4>
 
             @foreach($dbAcceptList as $Acceptance)
 
@@ -38,9 +39,9 @@
                 <button type="button" class="acceptButton"
                         style="background-color: {{ $bgColor }}; color: {{ $textColor }}"
                         onClick="window.location.href='{{ route('platform.terminal.places.offer2place.index', $Acceptance->acc_id) }}'">
-                    <b>@lang('Накладная №:') {{ $Acceptance->acc_id }}</b><br>
+                    <b>{{ CustomTranslator::get('Накладная') }} №: {{ $Acceptance->acc_id }}</b><br>
                     <div class="acceptButtonText">{{ $Acceptance->getWarehouse->wh_name }}<br>
-                        <span class="acceptButtonText2">@lang('Принято:') {{ $Acceptance->acc_count_accepted }} / @lang('Размещено:') {{ $Acceptance->acc_count_placed }}
+                        <span class="acceptButtonText2">{{ CustomTranslator::get('Принято') }}: {{ $Acceptance->acc_count_accepted }} / {{ CustomTranslator::get('Размещено') }}: {{ $Acceptance->acc_count_placed }}
                     </span>
                     </div>
                 </button><br>

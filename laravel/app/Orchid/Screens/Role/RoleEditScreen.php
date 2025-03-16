@@ -6,6 +6,7 @@ namespace App\Orchid\Screens\Role;
 
 use App\Orchid\Layouts\Role\RoleEditLayout;
 use App\Orchid\Layouts\Role\RolePermissionLayout;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Orchid\Platform\Models\Role;
@@ -40,7 +41,7 @@ class RoleEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Edit Role';
+        return CustomTranslator::get('Изменить роль');
     }
 
     /**
@@ -48,7 +49,7 @@ class RoleEditScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Modify the privileges and permissions associated with a specific role.';
+        return CustomTranslator::get('Изменить привилегии и разрешения, связанные с определенной ролью.');
     }
 
     /**
@@ -69,11 +70,11 @@ class RoleEditScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Button::make(__('Save'))
+            Button::make(CustomTranslator::get('Save'))
                 ->icon('bs.check-circle')
                 ->method('save'),
 
-            Button::make(__('Remove'))
+            Button::make(CustomTranslator::get('Remove'))
                 ->icon('bs.trash3')
                 ->method('remove')
                 ->canSee($this->role->exists),
@@ -92,13 +93,13 @@ class RoleEditScreen extends Screen
                 RoleEditLayout::class,
             ])
                 ->title('Role')
-                ->description('A role is a collection of privileges (of possibly different services like the Users service, Moderator, and so on) that grants users with that role the ability to perform certain tasks or operations.'),
+                ->description(CustomTranslator::get('Роль — это набор привилегий (возможно, различных служб, таких как служба «Пользователи», «Модератор» и т. д.), который предоставляет пользователям с этой ролью возможность выполнять определенные задачи или операции.')),
 
             Layout::block([
                 RolePermissionLayout::class,
             ])
                 ->title('Permission/Privilege')
-                ->description('A privilege is necessary to perform certain tasks and operations in an area.'),
+                ->description(CustomTranslator::get('Привилегия необходима для выполнения определенных задач и операций в определенной области.')),
         ];
     }
 
@@ -124,7 +125,7 @@ class RoleEditScreen extends Screen
 
         $role->save();
 
-        Toast::info(__('Role was saved'));
+        Toast::info(CustomTranslator::get('Роль была сохранена'));
 
         return redirect()->route('platform.systems.roles');
     }
@@ -138,7 +139,7 @@ class RoleEditScreen extends Screen
     {
         $role->delete();
 
-        Toast::info(__('Role was removed'));
+        Toast::info(CustomTranslator::get('Роль была удалена'));
 
         return redirect()->route('platform.systems.roles');
     }

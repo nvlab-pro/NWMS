@@ -6,6 +6,7 @@ use App\Models\rwPlace;
 use App\Models\rwPlaceTypes;
 use App\Models\rwWarehouse;
 use App\Orchid\Layouts\Warehouses\Places\PlacesTable;
+use App\Services\CustomTranslator;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +74,7 @@ class PlacesScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Места хранения');
+        return CustomTranslator::get('Места хранения');
     }
 
     /**
@@ -89,7 +90,7 @@ class PlacesScreen extends Screen
 
         return [
 
-            Link::make(__('Распечатать места'))
+            Link::make(CustomTranslator::get('Распечатать места'))
                 ->icon('bs.printer')
                 ->href($urlWithQuery),
 
@@ -108,34 +109,38 @@ class PlacesScreen extends Screen
         return [
 
             Layout::accordion([
-                __('Создание новых мест хранения') => [
+                CustomTranslator::get('Создание новых мест хранения') => [
                     Layout::rows([
 
                         Group::make([
 
                             Select::make('reqLoacation')
-                                ->title(__('Выберите склад, на котором будут созданы места:'))
+                                ->title(CustomTranslator::get('Выберите склад, на котором будут созданы места:'))
                                 ->width('100px')
                                 ->value($currentUser->storage_id ?? null)
                                 ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id), 'wh_name', 'wh_id')
-                                ->empty('Не выбрано', 0),
+                                ->empty(CustomTranslator::get('Не выбрано'), 0),
 
                             Select::make('reqPlaceType')
-                                ->title(__('Выберите тип места:'))
+                                ->title(CustomTranslator::get('Выберите тип места:'))
                                 ->width('100px')
-                                ->fromModel(rwPlaceTypes::class, 'pt_name', 'pt_id'),
+                                ->options(
+                                    rwPlaceTypes::all()
+                                        ->pluck('pt_name', 'pt_id')
+                                        ->map(fn($name) => CustomTranslator::get($name)) // Переводим названия
+                                ),
 
                         ])->fullWidth(),
 
                         Group::make([
 
                             Input::make('reqRoom')
-                                ->title(__('Помещение:'))
+                                ->title(CustomTranslator::get('Помещение:'))
                                 ->maxlength(6)
                                 ->popover('Обозначение помещения в котором будет располагаться место. Не более 6 символов.'),
 
                             Input::make('reqFloor')
-                                ->title(__('Этаж:'))
+                                ->title(CustomTranslator::get('Этаж:'))
                                 ->maxlength(6)
                                 ->popover('Этаж. Не более 6 символов.'),
 
@@ -144,13 +149,13 @@ class PlacesScreen extends Screen
                         Group::make([
 
                             Input::make('reqSectionFrom')
-                                ->title(__('Секция от:'))
+                                ->title(CustomTranslator::get('Секция от:'))
                                 ->type('number')
                                 ->min(0)
                                 ->popover('Секция (ОТ). Цифровое поле от 1 до бесконечности.'),
 
                             Input::make('reqSectionTo')
-                                ->title(__('Секция до:'))
+                                ->title(CustomTranslator::get('Секция до:'))
                                 ->type('number')
                                 ->min(0)
                                 ->popover('Секция (ДО). Цифровое поле от 1 до бесконечности.'),
@@ -160,12 +165,12 @@ class PlacesScreen extends Screen
                         Group::make([
 
                             Input::make('reqRowFrom')
-                                ->title(__('Ряд с:'))
+                                ->title(CustomTranslator::get('Ряд с:'))
                                 ->type('number')
                                 ->min(0),
 
                             Input::make('reqRowTo')
-                                ->title(__('Ряд до:'))
+                                ->title(CustomTranslator::get('Ряд до:'))
                                 ->type('number')
                                 ->min(0),
 
@@ -174,12 +179,12 @@ class PlacesScreen extends Screen
                         Group::make([
 
                             Input::make('reqRackFrom')
-                                ->title(__('Стеллаж с:'))
+                                ->title(CustomTranslator::get('Стеллаж с:'))
                                 ->type('number')
                                 ->min(0),
 
                             Input::make('reqRackTo')
-                                ->title(__('Стеллаж по:'))
+                                ->title(CustomTranslator::get('Стеллаж по:'))
                                 ->type('number')
                                 ->min(0),
 
@@ -188,13 +193,13 @@ class PlacesScreen extends Screen
                         Group::make([
 
                             Input::make('reqShelfFrom')
-                                ->title(__('Полка с:'))
+                                ->title(CustomTranslator::get('Полка с:'))
                                 ->type('number')
                                 ->min(0)
                                 ->required(),
 
                             Input::make('reqShelfTo')
-                                ->title(__('Полка по:'))
+                                ->title(CustomTranslator::get('Полка по:'))
                                 ->type('number')
                                 ->min(0)
                                 ->required(),
@@ -203,10 +208,10 @@ class PlacesScreen extends Screen
 
                         Group::make([
 
-                            Button::make(__('Создать'))
+                            Button::make(CustomTranslator::get('Создать'))
                                 ->type(Color::DARK)
                                 ->method('MakeBarcodes')
-                                ->confirm(__('Вы уверены, что хотите создать места?')),
+                                ->confirm(CustomTranslator::get('Вы уверены, что хотите создать места?')),
 
                         ])->fullWidth(),
 
@@ -272,6 +277,6 @@ class PlacesScreen extends Screen
 
         Alert::success('Места успешно созданы!');
 
-        return redirect()->back()->with('success', __('Места хранения успешно созданы.'));
+        return redirect()->back()->with('success', CustomTranslator::get('Места хранения успешно созданы.'));
     }
 }

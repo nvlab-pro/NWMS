@@ -30,6 +30,7 @@ use App\Orchid\Screens\Settings\SettingScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -61,7 +62,7 @@ Route::prefix('terminal')
             ->name('.main')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.index')
-                ->push(__('Терминал'), route('platform.terminal.main')),
+                ->push(CustomTranslator::get('Терминал'), route('platform.terminal.main')),
             );
 
         // Териминал -> Приемка товара (выбор товара)
@@ -70,7 +71,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail) {
                 return $trail
                     ->parent('platform.terminal.main')
-                    ->push('Выбор приемки', route('platform.terminal.acceptance.select'));
+                    ->push(CustomTranslator::get('Выбор приемки'), route('platform.terminal.acceptance.select'));
             });
 
         // Териминал -> Приемка товара (основной экран)
@@ -79,7 +80,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $docId) {
                 return $trail
                     ->parent('platform.terminal.acceptance.select')
-                    ->push('Приемка', route('platform.terminal.acceptance.scan', $docId));
+                    ->push(CustomTranslator::get('Приемка'), route('platform.terminal.acceptance.scan', $docId));
             });
 
         // Териминал -> Приемка товара (выбор товара)
@@ -88,7 +89,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail) {
                 return $trail
                     ->parent('platform.terminal.main')
-                    ->push('Выбор приемки', route('platform.terminal.places.select'));
+                    ->push(CustomTranslator::get('Выбор приемки'), route('platform.terminal.places.select'));
             });
 
         // Териминал -> Приемка товара (выбор товара)
@@ -97,7 +98,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $docId) {
                 return $trail
                     ->parent('platform.terminal.main')
-                    ->push('Место хранения', route('platform.terminal.places.offer2place.index', $docId));
+                    ->push(CustomTranslator::get('Место хранения'), route('platform.terminal.places.offer2place.index', $docId));
             });
 
         // Териминал -> Позаказная сборка (manually) -> Выбираем очередь
@@ -106,7 +107,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail) {
                 return $trail
                     ->parent('platform.terminal.main')
-                    ->push('Очередь', route('platform.terminal.soam.select'));
+                    ->push(CustomTranslator::get('Очередь'), route('platform.terminal.soam.select'));
             });
 
         // Териминал -> Позаказная сборка (manually) -> Определяем местоположение кладовщика
@@ -115,7 +116,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soam.select')
-                    ->push('Сборка', route('platform.terminal.soam.order', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soam.order', [$soaId, $orderId]));
             });
 
         // Териминал -> Позаказная сборка (manually) -> Определяем местоположение кладовщика
@@ -124,7 +125,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soam.select')
-                    ->push('Сборка', route('platform.terminal.soam.offer', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soam.offer', [$soaId, $orderId]));
             });
 
         // Териминал -> Позаказная сборка (manually) -> Завершаем процесс сборки
@@ -133,7 +134,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soam.select')
-                    ->push('Сборка', route('platform.terminal.soam.finish', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soam.finish', [$soaId, $orderId]));
             });
 
         // Териминал -> Позаказная сборка (manually) -> Сборка закончена
@@ -142,7 +143,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soam.select')
-                    ->push('Сборка', route('platform.terminal.soam.end', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soam.end', [$soaId, $orderId]));
             });
 
         // Териминал -> Позаказная сборка -> Выбираем очередь
@@ -151,7 +152,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail) {
                 return $trail
                     ->parent('platform.terminal.main')
-                    ->push('Очередь', route('platform.terminal.soa.select'));
+                    ->push(CustomTranslator::get('Очередь'), route('platform.terminal.soa.select'));
             });
 
         // Териминал -> Позаказная сборка -> Определяем местоположение кладовщика
@@ -160,7 +161,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.location', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soa.location', [$soaId, $orderId]));
             });
 
         // Териминал -> Позаказная сборка -> Сканируем место расположения товара
@@ -169,7 +170,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.scan.place', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soa.scan.place', [$soaId, $orderId]));
             });
 
         // Териминал -> Позаказная сборка -> Сканируем товар
@@ -178,7 +179,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.scan.offer', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soa.scan.offer', [$soaId, $orderId]));
             });
 
         // Териминал -> Позаказная сборка -> Берем товар с полки
@@ -187,7 +188,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.get.offer', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soa.get.offer', [$soaId, $orderId]));
             });
 
         // Териминал -> Позаказная сборка
@@ -196,7 +197,7 @@ Route::prefix('terminal')
             ->breadcrumbs(function (Trail $trail, $soaId, $orderId) {
                 return $trail
                     ->parent('platform.terminal.soa.select')
-                    ->push('Сборка', route('platform.terminal.soa.scan', [$soaId, $orderId]));
+                    ->push(CustomTranslator::get('Сборка'), route('platform.terminal.soa.scan', [$soaId, $orderId]));
             });
 
     });
@@ -215,7 +216,7 @@ Route::prefix('tables')
             ->breadcrumbs(function (Trail $trail) {
                 return $trail
                     ->parent('platform.index')
-                    ->push('Выбор очереди упаковки', route('platform.tables.queue.select'));
+                    ->push(CustomTranslator::get('Выбор очереди упаковки'), route('platform.tables.queue.select'));
             });
 
         // Териминал -> Приемка товара (выбор товара)
@@ -224,7 +225,7 @@ Route::prefix('tables')
             ->breadcrumbs(function (Trail $trail, $queueId) {
                 return $trail
                     ->parent('platform.index')
-                    ->push('Выбор стола упаковки', route('platform.tables.packing.select', $queueId));
+                    ->push(CustomTranslator::get('Выбор стола упаковки'), route('platform.tables.packing.select', $queueId));
             });
 
         // Териминал -> Приемка товара (выбор товара)
@@ -233,7 +234,7 @@ Route::prefix('tables')
             ->breadcrumbs(function (Trail $trail, $queueId, $tableId, $orderId) {
                 return $trail
                     ->parent('platform.tables.packing.select', $queueId)
-                    ->push('Упаковка заказов', route('platform.tables.packing.scan', [$queueId, $tableId, $orderId]));
+                    ->push(CustomTranslator::get('Упаковка заказов'), route('platform.tables.packing.scan', [$queueId, $tableId, $orderId]));
             });
 
     });
@@ -247,25 +248,25 @@ Route::screen('offers', \App\Orchid\Screens\Offers\OffersScreen::class)
     ->name('platform.offers.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Список товаров'), route('platform.offers.index')));
+        ->push(CustomTranslator::get('Список товаров'), route('platform.offers.index')));
 
 Route::screen('offers/create', \App\Orchid\Screens\Offers\OffersCreateScreen::class)
     ->name('platform.offers.create')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.offers.index')
-        ->push(__('Создание нового товара'), route('platform.offers.create')));
+        ->push(CustomTranslator::get('Создание нового товара'), route('platform.offers.create')));
 
 Route::screen('offers/{offerId}/edit', \App\Orchid\Screens\Offers\OfferEditScreen::class)
     ->name('platform.offers.edit')
     ->breadcrumbs(fn(Trail $trail, $offerId) => $trail
         ->parent('platform.offers.index')
-        ->push(__('Создание нового товара'), route('platform.offers.edit', $offerId)));
+        ->push(CustomTranslator::get('Создание нового товара'), route('platform.offers.edit', $offerId)));
 
 Route::screen('offers/{whId}/{offerId}/turnover', \App\Orchid\Screens\Offers\TurnoverScreen::class)
     ->name('platform.offers.turnover')
     ->breadcrumbs(fn(Trail $trail, $whId, $offerId) => $trail
         ->parent('platform.offers.index')
-        ->push(__('Движение товара'), route('platform.offers.turnover', ['whId' => $whId, 'offerId' => $offerId])));
+        ->push(CustomTranslator::get('Движение товара'), route('platform.offers.turnover', ['whId' => $whId, 'offerId' => $offerId])));
 
 
 
@@ -278,19 +279,19 @@ Route::screen('orders', \App\Orchid\Screens\Orders\OrdersScreen::class)
     ->name('platform.orders.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Список заказов'), route('platform.orders.index')));
+        ->push(CustomTranslator::get('Список заказов'), route('platform.orders.index')));
 
 Route::screen('orders/create', \App\Orchid\Screens\Orders\OrderCreateScreen::class)
     ->name('platform.orders.create.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.orders.index')
-        ->push(__('Создание нового заказа'), route('platform.orders.create.index')));
+        ->push(CustomTranslator::get('Создание нового заказа'), route('platform.orders.create.index')));
 
 Route::screen('orders/{orderId}/edit', \App\Orchid\Screens\Orders\OrderEditScreen::class)
     ->name('platform.orders.edit')
     ->breadcrumbs(fn(Trail $trail, $orderId) => $trail
         ->parent('platform.orders.index')
-        ->push(__('Создание нового заказа'), route('platform.orders.edit', $orderId)));
+        ->push(CustomTranslator::get('Создание нового заказа'), route('platform.orders.edit', $orderId)));
 
 // ******************************************************
 // *** Список магазинов
@@ -301,19 +302,19 @@ Route::screen('shops', \App\Orchid\Screens\Shops\ShopsScreen::class)
     ->name('platform.shops.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Магазины'), route('platform.shops.index')));
+        ->push(CustomTranslator::get('Магазины'), route('platform.shops.index')));
 
 Route::screen('shops/create', \App\Orchid\Screens\Shops\ShopsCreateScreen::class)
     ->name('platform.shops.create')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Магазины'), route('platform.shops.create')));
+        ->push(CustomTranslator::get('Магазины'), route('platform.shops.create')));
 
 Route::screen('shops/{shopId}/edit', \App\Orchid\Screens\Shops\ShopsCreateScreen::class)
     ->name('platform.shops.edit')
     ->breadcrumbs(fn(Trail $trail, $shopId) => $trail
         ->parent('platform.shops.index')
-        ->push(__('Магазины'), route('platform.shops.edit', $shopId)));
+        ->push(CustomTranslator::get('Магазины'), route('platform.shops.edit', $shopId)));
 
 // ******************************************************
 // *** Список складов
@@ -324,33 +325,33 @@ Route::screen('whmanagement/wave-assembly', \App\Orchid\Screens\WhManagement\Wav
     ->name('platform.whmanagement.wave-assembly.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Волновая сборка'), route('platform.whmanagement.wave-assembly.index')));
+        ->push(CustomTranslator::get('Волновая сборка'), route('platform.whmanagement.wave-assembly.index')));
 
 // Настройка очереди позаказной сборки (manually)
 Route::screen('whmanagement/single-order-assembly', \App\Orchid\Screens\WhManagement\SingleOrderAssembly\SOAManagementScreen::class)
     ->name('platform.whmanagement.single-order-assembly.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Позаказаная сборка'), route('platform.whmanagement.single-order-assembly.index')));
+        ->push(CustomTranslator::get('Позаказаная сборка'), route('platform.whmanagement.single-order-assembly.index')));
 
 Route::screen('whmanagement/single-order-assembly/{soaId}/edit', \App\Orchid\Screens\WhManagement\SingleOrderAssembly\SOAManagementEditScreen::class)
     ->name('platform.whmanagement.single-order-assembly.edit')
     ->breadcrumbs(fn(Trail $trail, $soaId) => $trail
         ->parent('platform.whmanagement.single-order-assembly.index')
-        ->push(__('Редактирование позаказной сборки'), route('platform.whmanagement.single-order-assembly.edit', $soaId)));
+        ->push(CustomTranslator::get('Редактирование позаказной сборки'), route('platform.whmanagement.single-order-assembly.edit', $soaId)));
 
 // Настройки упаковки
 Route::screen('whmanagement/packing-process-settings', \App\Orchid\Screens\WhManagement\PackingProcessSettings\PPManagementScreen::class)
     ->name('platform.whmanagement.packing-process-settings.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Настройка упаковки'), route('platform.whmanagement.packing-process-settings.index')));
+        ->push(CustomTranslator::get('Настройка упаковки'), route('platform.whmanagement.packing-process-settings.index')));
 
 Route::screen('whmanagement/packing-process-settings/{ppId}/edit', \App\Orchid\Screens\WhManagement\PackingProcessSettings\PPManagementEditScreen::class)
     ->name('platform.whmanagement.packing-process-settings.edit')
     ->breadcrumbs(fn(Trail $trail, $ppId) => $trail
         ->parent('platform.whmanagement.packing-process-settings.index')
-        ->push(__('Редактирование настроек упаковки'), route('platform.whmanagement.packing-process-settings.edit', $ppId)));
+        ->push(CustomTranslator::get('Редактирование настроек упаковки'), route('platform.whmanagement.packing-process-settings.edit', $ppId)));
 
 
 // ******************************************************
@@ -362,31 +363,31 @@ Route::screen('warehouses', \App\Orchid\Screens\Warehouses\WarehouseScreen::clas
     ->name('platform.warehouses.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Список складов'), route('platform.warehouses.index')));
+        ->push(CustomTranslator::get('Список складов'), route('platform.warehouses.index')));
 
 Route::screen('warehouses/create', \App\Orchid\Screens\Warehouses\WarehouseCreateScreen::class)
     ->name('platform.warehouses.create')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.warehouses.index')
-        ->push(__('Список складов'), route('platform.warehouses.create')));
+        ->push(CustomTranslator::get('Список складов'), route('platform.warehouses.create')));
 
 Route::screen('warehouses/{whId}/edit', \App\Orchid\Screens\Warehouses\WarehouseCreateScreen::class)
     ->name('platform.warehouses.edit')
     ->breadcrumbs(fn(Trail $trail, $whId) => $trail
         ->parent('platform.warehouses.index')
-        ->push(__('Список складов'), route('platform.warehouses.edit', $whId)));
+        ->push(CustomTranslator::get('Список складов'), route('platform.warehouses.edit', $whId)));
 
 Route::screen('warehouses/places', \App\Orchid\Screens\Warehouses\Places\PlacesScreen::class)
     ->name('platform.warehouses.places.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.warehouses.index')
-        ->push(__('Места хранения'), route('platform.warehouses.places.index')));
+        ->push(CustomTranslator::get('Места хранения'), route('platform.warehouses.places.index')));
 
 Route::screen('warehouses/places/print/labels', \App\Orchid\Screens\Warehouses\Places\LabelPrintScreen::class)
     ->name('platform.warehouses.print.labels.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.warehouses.places.index')
-        ->push(__('Печать этикеток'), route('platform.warehouses.print.labels.index')));
+        ->push(CustomTranslator::get('Печать этикеток'), route('platform.warehouses.print.labels.index')));
 
 // ******************************************************
 // *** Список складов
@@ -397,25 +398,25 @@ Route::screen('acceptances', \App\Orchid\Screens\Acceptances\AcceptancesScreen::
     ->name('platform.acceptances.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Список накладных'), route('platform.acceptances.index')));
+        ->push(CustomTranslator::get('Список накладных'), route('platform.acceptances.index')));
 
 Route::screen('acceptances/create', \App\Orchid\Screens\Acceptances\AcceptanceCreateScreen::class)
     ->name('platform.acceptances.create')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.acceptances.index')
-        ->push(__('Список накладных'), route('platform.acceptances.create')));
+        ->push(CustomTranslator::get('Список накладных'), route('platform.acceptances.create')));
 
 Route::screen('acceptances/{acceptId}/edit', \App\Orchid\Screens\Acceptances\AcceptanceCreateScreen::class)
     ->name('platform.acceptances.edit')
     ->breadcrumbs(fn(Trail $trail, $acceptId) => $trail
         ->parent('platform.acceptances.index')
-        ->push(__('Список накладных'), route('platform.acceptances.edit', $acceptId)));
+        ->push(CustomTranslator::get('Список накладных'), route('platform.acceptances.edit', $acceptId)));
 
 Route::screen('acceptances/{acceptId}/offers', \App\Orchid\Screens\Acceptances\AcceptancesOffersScreen::class)
     ->name('platform.acceptances.offers')
     ->breadcrumbs(fn(Trail $trail, $acceptId) => $trail
         ->parent('platform.acceptances.index')
-        ->push(__('Список накладных'), route('platform.acceptances.offers', $acceptId)));
+        ->push(CustomTranslator::get('Список накладных'), route('platform.acceptances.offers', $acceptId)));
 
 // Route::post('acceptances/{acceptId}/offers/save', [\App\Orchid\Screens\Acceptances\AcceptancesOffersScreen::class, 'save'])
 //    ->name('platform.acceptances.offers.save');
@@ -429,7 +430,7 @@ Route::screen('settings', SettingScreen::class)
     ->name('platform.settings.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Настройки'), route('platform.settings.index')));
+        ->push(CustomTranslator::get('Настройки'), route('platform.settings.index')));
 
 Route::prefix('settings')
     ->name('platform.settings')
@@ -440,114 +441,114 @@ Route::prefix('settings')
             ->name('.countries.index')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.index')
-                ->push(__('Страны'), route('platform.settings.countries.index')));
+                ->push(CustomTranslator::get('Страны'), route('platform.settings.countries.index')));
 
         Route::screen('countries/create', LibCountryCreateScreen::class)
             ->name('.countries.create')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.countries.index')
-                ->push(__('Создание новой страны'), route('platform.settings.countries.create')));
+                ->push(CustomTranslator::get('Создание новой страны'), route('platform.settings.countries.create')));
 
         Route::screen('countries/{countryId}/edit', LibCountryCreateScreen::class)
             ->name('.countries.edit')
             ->breadcrumbs(fn(Trail $trail, $countryId) => $trail
                 ->parent('platform.settings.countries.index')
-                ->push(__('Редактирование страны'), route('platform.settings.countries.edit', $countryId)));
+                ->push(CustomTranslator::get('Редактирование страны'), route('platform.settings.countries.edit', $countryId)));
 
         // Города
         Route::screen('cities', LibCityScreen::class)
             ->name('.cities.index')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.index')
-                ->push(__('Города'), route('platform.settings.cities.index')));
+                ->push(CustomTranslator::get('Города'), route('platform.settings.cities.index')));
 
         Route::screen('cities/create', LibCityCreateScreen::class)
             ->name('.cities.create')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.cities.index')
-                ->push(__('Создание нового города'), route('platform.settings.cities.create')));
+                ->push(CustomTranslator::get('Создание нового города'), route('platform.settings.cities.create')));
 
         Route::screen('cities/{cityId}/edit', LibCityCreateScreen::class)
             ->name('.cities.edit')
             ->breadcrumbs(fn(Trail $trail, $cityId) => $trail
                 ->parent('platform.settings.cities.index')
-                ->push(__('Редактирование города'), route('platform.settings.cities.edit', $cityId)));
+                ->push(CustomTranslator::get('Редактирование города'), route('platform.settings.cities.edit', $cityId)));
 
         // Валюты
         Route::screen('currencies', LibCurrencyScreen::class)
             ->name('.currencies.index')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.index')
-                ->push(__('Валюта'), route('platform.settings.currencies.index')));
+                ->push(CustomTranslator::get('Валюта'), route('platform.settings.currencies.index')));
 
         Route::screen('currencies/create', LibCurrencyCreateScreen::class)
             ->name('.currencies.create')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.currencies.index')
-                ->push(__('Создание новой валюты'), route('platform.settings.currencies.create')));
+                ->push(CustomTranslator::get('Создание новой валюты'), route('platform.settings.currencies.create')));
 
         Route::screen('currencies/{curId}/edit', LibCurrencyCreateScreen::class)
             ->name('.currencies.edit')
             ->breadcrumbs(fn(Trail $trail, $langId) => $trail
                 ->parent('platform.settings.currencies.index')
-                ->push(__('Редактирование валюты'), route('platform.settings.currencies.edit', $langId)));
+                ->push(CustomTranslator::get('Редактирование валюты'), route('platform.settings.currencies.edit', $langId)));
 
         // Языки
         Route::screen('languages', LibLanguageScreen::class)
             ->name('.languages.index')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.index')
-                ->push(__('Языки'), route('platform.settings.languages.index')));
+                ->push(CustomTranslator::get('Языки'), route('platform.settings.languages.index')));
 
         Route::screen('languages/create', LibLanguageCreateScreen::class)
             ->name('.languages.create')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.languages.index')
-                ->push(__('Создание новой единицы веса'), route('platform.settings.languages.create')));
+                ->push(CustomTranslator::get('Создание новой единицы веса'), route('platform.settings.languages.create')));
 
         Route::screen('languages/{langId}/edit', LibLanguageCreateScreen::class)
             ->name('.languages.edit')
             ->breadcrumbs(fn(Trail $trail, $langId) => $trail
                 ->parent('platform.settings.languages.index')
-                ->push(__('Редактирование единицы веса'), route('platform.settings.languages.edit', $langId)));
+                ->push(CustomTranslator::get('Редактирование единицы веса'), route('platform.settings.languages.edit', $langId)));
 
         // Единицы размера
         Route::screen('weight', LibWeightScreen::class)
             ->name('.weight.index')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.index')
-                ->push(__('Веса'), route('platform.settings.weight.index')));
+                ->push(CustomTranslator::get('Веса'), route('platform.settings.weight.index')));
 
         Route::screen('weight/create', LibWeightCreateScreen::class)
             ->name('.weight.create')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.weight.index')
-                ->push(__('Создание новой единицы веса'), route('platform.settings.weight.create')));
+                ->push(CustomTranslator::get('Создание новой единицы веса'), route('platform.settings.weight.create')));
 
         Route::screen('weight/{whId}/edit', LibWeightCreateScreen::class)
             ->name('.weight.edit')
             ->breadcrumbs(fn(Trail $trail, $whId) => $trail
                 ->parent('platform.settings.weight.index')
-                ->push(__('Редактирование единицы веса'), route('platform.settings.weight.edit', $whId)));
+                ->push(CustomTranslator::get('Редактирование единицы веса'), route('platform.settings.weight.edit', $whId)));
 
         // Единицы размера
         Route::screen('length', LibLengthScreen::class)
             ->name('.length.index')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.index')
-                ->push(__('Размеры'), route('platform.settings.length.index')));
+                ->push(CustomTranslator::get('Размеры'), route('platform.settings.length.index')));
 
         Route::screen('length/create', LibLengthCreateScreen::class)
             ->name('.length.create')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.settings.length.index')
-                ->push(__('Создание новой единицы измерения'), route('platform.settings.length.create')));
+                ->push(CustomTranslator::get('Создание новой единицы измерения'), route('platform.settings.length.create')));
 
         Route::screen('length/{libId}/edit', LibLengthCreateScreen::class)
             ->name('.length.edit')
             ->breadcrumbs(fn(Trail $trail, $lenId) => $trail
                 ->parent('platform.settings.length.index')
-                ->push(__('Редактирование единицы измерения'), route('platform.settings.length.edit', $lenId)));
+                ->push(CustomTranslator::get('Редактирование единицы измерения'), route('platform.settings.length.edit', $lenId)));
 
     });
 
@@ -560,20 +561,20 @@ Route::prefix('delivery-services')
             ->name('.list')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.index')
-                ->push(__('Службы доставки')),
+                ->push(CustomTranslator::get('Службы доставки')),
             );
 
         Route::screen('create', \App\Orchid\Screens\DeliveryServices\DeliveryServicesCreateScreen::class)
             ->name('.create')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.delivery-services.list')
-                ->push(__('Создание службы доставки'), route('platform.delivery-services.create')));
+                ->push(CustomTranslator::get('Создание службы доставки'), route('platform.delivery-services.create')));
 
         Route::screen('{dsId}/edit', \App\Orchid\Screens\DeliveryServices\DeliveryServicesCreateScreen::class)
             ->name('.edit')
             ->breadcrumbs(fn(Trail $trail, $dsId) => $trail
                 ->parent('platform.delivery-services.list')
-                ->push(__('Редактирование службы доставки'), route('platform.delivery-services.edit', $dsId)));
+                ->push(CustomTranslator::get('Редактирование службы доставки'), route('platform.delivery-services.edit', $dsId)));
 
     });
 
@@ -582,7 +583,7 @@ Route::screen('profile', UserProfileScreen::class)
     ->name('platform.profile')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Профиль'), route('platform.profile')));
+        ->push(CustomTranslator::get('Профиль'), route('platform.profile')));
 
 // Platform > System > Users > User
 Route::screen('users/{user}/edit', UserEditScreen::class)
@@ -596,14 +597,14 @@ Route::screen('users/create', UserEditScreen::class)
     ->name('platform.systems.users.create')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.systems.users')
-        ->push(__('Создать'), route('platform.systems.users.create')));
+        ->push(CustomTranslator::get('Создать'), route('platform.systems.users.create')));
 
 // Platform > System > Users
 Route::screen('users', UserListScreen::class)
     ->name('platform.systems.users')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Пользователи'), route('platform.systems.users')));
+        ->push(CustomTranslator::get('Пользователи'), route('platform.systems.users')));
 
 // Platform > System > Roles > Role
 Route::screen('roles/{role}/edit', RoleEditScreen::class)
@@ -617,14 +618,14 @@ Route::screen('roles/create', RoleEditScreen::class)
     ->name('platform.systems.roles.create')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.systems.roles')
-        ->push(__('Создать'), route('platform.systems.roles.create')));
+        ->push(CustomTranslator::get('Создать'), route('platform.systems.roles.create')));
 
 // Platform > System > Roles
 Route::screen('roles', RoleListScreen::class)
     ->name('platform.systems.roles')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Роли'), route('platform.systems.roles')));
+        ->push(CustomTranslator::get('Роли'), route('platform.systems.roles')));
 
 // Example...
 Route::screen('example', ExampleScreen::class)

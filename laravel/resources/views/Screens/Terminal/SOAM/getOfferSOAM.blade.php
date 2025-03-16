@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .placeTD {
         border: 2px solid #AAAAAA;
@@ -52,11 +53,11 @@
                                  border="1" class="photoOffer">
                         </td>
                         <td style="vertical-align: top; padding-left: 15px;" class="textOffer">
-                            <b>@lang('Арт.:')</b> {{ $dbOffer->of_article }}<br>
+                            <b>{{ CustomTranslator::get('Арт.') }}:</b> {{ $dbOffer->of_article }}<br>
                             <hr>
-                            <b>@lang('Всего нужно этого товара'): {{ $offerRest }}</b><br>
+                            <b>{{ CustomTranslator::get('Всего нужно этого товара') }}: {{ $offerRest }}</b><br>
                             <hr>
-                            <b>@lang('Я взял'):</b><br>
+                            <b>{{ CustomTranslator::get('Я взял') }}:</b><br>
                             <input type="text" name="count" id="count" value="{{ $maxCount > $offerRest ? $offerRest : $maxCount }}"
                                    autofocus onkeyup="handleDecimalInput(this, {{ $maxCount > $offerRest ? $offerRest : $maxCount }});"
                                    class="sizeBlock" style="text-align: center;">
@@ -85,15 +86,15 @@
                 @if($maxCount < $offerRest)
                     <hr>
                     <div class="alert alert-danger"
-                         role="alert">@lang('Внимание: на этой полке товара меньше, чем нужно для заказа! Возьмите только эту часть.')</div>
+                         role="alert">{{ CustomTranslator::get('Внимание: на этой полке товара меньше, чем нужно для заказа! Возьмите только эту часть.') }}</div>
                 @endif
                 <hr>
-                <button type="submit" class="btn btn-success btn-block">@lang('ВЗЯТЬ')</button>
+                <button type="submit" class="btn btn-success btn-block">{{ CustomTranslator::get('ВЗЯТЬ') }}</button>
                 <hr>
                 <div class="alert alert-info warningDIV"
-                     role="alert">@lang('Внимательно пересчитайте взятый товар и укажите количество!')</div>
+                     role="alert">{{ CustomTranslator::get('Внимательно пересчитайте взятый товар и укажите количество!') }}</div>
                 <hr>
-                <button type="button" onclick="skipGoods()" class="btn btn-warning btn-block">@lang('ПРОПУСТИТЬ')</button>
+                <button type="button" onclick="skipGoods()" class="btn btn-warning btn-block">{{ CustomTranslator::get('ПРОПУСТИТЬ') }}</button>
                 <script>
                     function skipGoods() {
                         window.location.href = "{{ route('platform.terminal.soam.order', [$soaId, $dbOrder->o_id]) }}";
@@ -106,7 +107,7 @@
 </form>
 
 <hr>
-<h4>@lang('Товар расположен на месте:')</h4>
+<h4>{{ CustomTranslator::get('Товар расположен на месте') }}:</h4>
 
 @php
     $bgcolor = 'border: 1px solid #000000; background-color: #FFF3CD;';

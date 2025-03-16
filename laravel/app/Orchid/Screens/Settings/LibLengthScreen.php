@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibLength;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use App\Orchid\Layouts\Settings\LibLengthTable;
@@ -30,7 +31,7 @@ class LibLengthScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Единицы размера');
+        return CustomTranslator::get('Единицы размера');
     }
 
     /**
@@ -41,7 +42,7 @@ class LibLengthScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Добавить новую единицу измерения'))
+            Link::make(CustomTranslator::get('Добавить новую единицу измерения'))
                 ->icon('bs.plus-circle')
                 ->route('platform.settings.length.create'),
         ];

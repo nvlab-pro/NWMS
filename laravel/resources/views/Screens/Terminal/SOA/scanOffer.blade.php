@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .placeTD {
         border: 2px solid #AAAAAA;
@@ -38,15 +39,15 @@
     <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
         <div style="text-align: center; padding: 10px; margin-top: 5px; margin-bottom: 5px;">
             <div class="alert alert-success warningDIV" role="alert">
-                <h4>@lang('Найдите и отсканируйте указанный товар'):</h4>
+                <h4>{{ CustomTranslator::get('Найдите и отсканируйте указанный товар') }}:</h4>
             </div>
 
             <input type="text" name="barcode" id="barcode" size="30" autofocus onkeyup="handleKeyPress(event)">
             <input type="hidden" name="offerId" id="offerId" value="{{ $offerId }}">
             <input type="hidden" name="orderOfferId" id="orderOfferId" value="{{ $orderOfferId }}">
             <input type="submit" value="Scan" id="btn">
-            <p id="error-message" class="alert alert-danger warningDIV" style="margin-top: 10px; display: none;"><b>@lang('Ошибка: отсканирован штрих-код не
-                    того товара!')</b></p>
+            <p id="error-message" class="alert alert-danger warningDIV" style="margin-top: 10px; display: none;"><b>{{ CustomTranslator::get('Ошибка: отсканирован штрих-код не
+                    того товара!') }}</b></p>
         </div>
     </div>
 </form>
@@ -93,17 +94,17 @@
                              border="1" class="photoOffer">
                     </td>
                     <td style="vertical-align: top; padding-left: 15px;" class="textOffer">
-                        <b>@lang('Арт.:')</b> {{ $dbOffer->of_article }}<br>
+                        <b>{{ CustomTranslator::get('Арт.') }}:</b> {{ $dbOffer->of_article }}<br>
                         <br>
-                        <b>@lang('Возьмите'):</b><br>
+                        <b>{{ CustomTranslator::get('Возьмите') }}:</b><br>
                         <div class="offerCount"><b>{{ $dbOrderOffer->oo_qty }}</b></div>
                         <br>
-                        @lang('и отсканируйте штрих-код этого товара!')
+                        {{ CustomTranslator::get('и отсканируйте штрих-код этого товара!') }}
                     </td>
                 </tr>
             </table>
             <hr>
-            <button onclick="skipGoods()" class="btn btn-warning btn-block">@lang('ПРОПУСТИТЬ')</button>
+            <button onclick="skipGoods()" class="btn btn-warning btn-block">{{ CustomTranslator::get('ПРОПУСТИТЬ') }}</button>
             <script>
                 function skipGoods() {
                     window.location.href = "";

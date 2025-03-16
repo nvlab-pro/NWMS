@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Orchid\Layouts\User;
 
 use App\Models\User;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
@@ -28,13 +29,13 @@ class UserListLayout extends Table
     public function columns(): array
     {
         return [
-            TD::make('name', __('Имя'))
+            TD::make('name', CustomTranslator::get('Имя'))
                 ->sort()
                 ->cantHide()
                 ->filter(Input::make())
                 ->render(fn(User $user) => new Persona($user->presenter())),
 
-            TD::make('email', __('Email'))
+            TD::make('email', CustomTranslator::get('Email'))
                 ->sort()
                 ->cantHide()
                 ->filter(Input::make())
@@ -43,7 +44,7 @@ class UserListLayout extends Table
                         ->route('platform.systems.users.edit', $modelName->id);
                 }),
 
-            TD::make('users.getDomain', 'Домен')
+            TD::make('users.getDomain', CustomTranslator::get('Домен'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->filter(TD::FILTER_TEXT)
@@ -56,7 +57,7 @@ class UserListLayout extends Table
                     }
                 }),
 
-            TD::make('users.getWh', 'Склад')
+            TD::make('users.getWh', CustomTranslator::get('Склад'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->filter(TD::FILTER_TEXT)
@@ -69,31 +70,31 @@ class UserListLayout extends Table
                     }
                 }),
 
-            TD::make('created_at', __('Дата создания'))
+            TD::make('created_at', CustomTranslator::get('Дата создания'))
                 ->usingComponent(DateTimeSplit::class)
                 ->align(TD::ALIGN_RIGHT)
                 ->defaultHidden()
                 ->sort(),
 
-            TD::make('updated_at', __('Дата редактирования'))
+            TD::make('updated_at', CustomTranslator::get('Дата редактирования'))
                 ->usingComponent(DateTimeSplit::class)
                 ->align(TD::ALIGN_RIGHT)
                 ->sort(),
 
-            TD::make(__('Действия'))
+            TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn(User $user) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
 
-                        Link::make(__('Ред.'))
+                        Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.systems.users.edit', $user->id)
                             ->icon('bs.pencil'),
 
-                        Button::make(__('Удалить'))
+                        Button::make(CustomTranslator::get('Удалить'))
                             ->icon('bs.trash3')
-                            ->confirm(__('Once the account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
+                            ->confirm(CustomTranslator::get('Once the account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
                             ->method('remove', [
                                 'id' => $user->id,
                             ]),

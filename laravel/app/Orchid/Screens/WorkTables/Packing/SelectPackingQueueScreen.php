@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\WorkTables\Packing;
 
 use App\Models\rwSettingsProcPacking;
 use App\Models\rwWarehouse;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
@@ -46,7 +47,7 @@ class SelectPackingQueueScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Выбор очереди упаковки');
+        return CustomTranslator::get('Выбор очереди упаковки');
     }
 
     /**

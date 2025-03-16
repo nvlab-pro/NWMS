@@ -13,6 +13,7 @@ use App\Models\rwWarehouse;
 use App\Models\WhcRest;
 use App\Orchid\Services\OrderService;
 use App\Orchid\Services\SOAService;
+use App\Services\CustomTranslator;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -95,7 +96,7 @@ class SelectOrderSOAMScreen extends Screen
                         $dbOrderAssembly->oa_qty += $count;
                         $dbOrderAssembly->save();
 
-                        Alert::success(__('Товар подобран, выберите следующий!'));
+                        Alert::success(CustomTranslator::get('Товар подобран, выберите следующий!'));
 
                         // Пересчитываем остатки
                         $serviceOrder = new OrderService($dbOrder->o_id);
@@ -115,7 +116,7 @@ class SelectOrderSOAMScreen extends Screen
                         'oa_cash'     => $cash,
                     ]);
 
-                    Alert::success(__('Товар подобран, выберите следующий!'));
+                    Alert::success(CustomTranslator::get('Товар подобран, выберите следующий!'));
 
                     // Пересчитываем остатки
                     $serviceOrder = new OrderService($dbOrder->o_id);
@@ -249,7 +250,7 @@ class SelectOrderSOAMScreen extends Screen
 
     public function name(): ?string
     {
-        return __('Сборка заказа') . ' ' . $this->orderId;
+        return CustomTranslator::get('Сборка заказа') . ' ' . $this->orderId;
     }
 
     public function commandBar(): iterable

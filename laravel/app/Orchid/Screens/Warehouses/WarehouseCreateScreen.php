@@ -6,6 +6,7 @@ use App\Models\rwDomain;
 use App\Models\rwLibWhType;
 use App\Models\rwWarehouse;
 use App\Models\User;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
@@ -55,7 +56,7 @@ class WarehouseCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->whId > 0 ? __('Редактирование склада') : __('Создание склада');
+        return $this->whId > 0 ? CustomTranslator::get('Редактирование склада') : CustomTranslator::get('Создание склада');
     }
 
     /**
@@ -85,7 +86,7 @@ class WarehouseCreateScreen extends Screen
             $arAddFields2[] = Select::make('whList.wh_domain_id')
                 ->fromModel(rwDomain::get(), 'dm_name', 'dm_id')
                 ->value($currentUser->domain_id)
-                ->title(__('Выберите домен'));
+                ->title(CustomTranslator::get('Выберите домен'));
 
         } else {
 
@@ -105,11 +106,15 @@ class WarehouseCreateScreen extends Screen
                         return $domain ? "$name ($domain)" : $name;
                     })->toArray()
                 )
-                ->title(__('Выберите владельца'));
+                ->title(CustomTranslator::get('Выберите владельца'));
 
             $arAddFields[] = Select::make('whList.wh_type')
-                ->fromModel(rwLibWhType::get(), 'lwt_name', 'lwt_id')
-                ->title(__('Выберите тип склада'));
+                ->options(
+                    rwLibWhType::all()
+                        ->pluck('lwt_name', 'lwt_id')
+                        ->map(fn($name) => CustomTranslator::get($name)) // Переводим названия
+                )
+                ->title(CustomTranslator::get('Выберите тип склада'));
 
             $arAddFields[] = Select::make('whList.wh_parent_id')
 //                ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
@@ -120,18 +125,18 @@ class WarehouseCreateScreen extends Screen
                         return $domain ? "$name ($domain)" : $name;
                     })->toArray()
                 )
-                ->empty('Не задан')
-                ->title(__('Выберите склад ФФ'));
+                ->empty(CustomTranslator::get('Не задан'))
+                ->title(CustomTranslator::get('Выберите склад ФФ'));
 
         } else {
 
             $arAddFields[] = Select::make('whList.wh_parent_id')
                 ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
-                ->title(__('Выберите склад ФФ'));
+                ->title(CustomTranslator::get('Выберите склад ФФ'));
 
             $arAddFields[] = Select::make('whList.wh_user_id')
                 ->fromModel(User::where('domain_id', $currentUser->domain_id), 'name', 'id')
-                ->title(__('Выберите владельца'));
+                ->title(CustomTranslator::get('Выберите владельца'));
 
             $arAddFields[] = Input::make('whList.wh_type')
                 ->type('hidden')
@@ -149,12 +154,12 @@ class WarehouseCreateScreen extends Screen
 
                         Input::make('whList.wh_name')
                             ->width(50)
-                            ->title(__('Название')),
+                            ->title(CustomTranslator::get('Название')),
                     ],
                     $arAddFields,
                     $arAddFields2,
                     [
-                        Button::make(__('Сохранить'))
+                        Button::make(CustomTranslator::get('Сохранить'))
                             ->type(Color::DARK)
                             ->style('margin-bottom: 20px;')
                             ->method('saveShop'),
@@ -193,7 +198,7 @@ class WarehouseCreateScreen extends Screen
                 'wh_domain_id' => $data['whList']['wh_domain_id'],
             ]);
 
-            Alert::success(__('Склад успешно отредактирован!'));
+            Alert::success(CustomTranslator::get('Склад успешно отредактирован!'));
         } else {
 
             // Создание нового склада
@@ -205,7 +210,7 @@ class WarehouseCreateScreen extends Screen
                 'wh_domain_id' => $data['whList']['wh_domain_id'],
             ]);
 
-            Alert::success(__('Склад успешно создан!'));
+            Alert::success(CustomTranslator::get('Склад успешно создан!'));
         }
 
 

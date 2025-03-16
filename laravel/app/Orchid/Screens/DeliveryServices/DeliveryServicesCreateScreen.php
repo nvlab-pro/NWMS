@@ -6,6 +6,7 @@ use App\Models\rwDeliveryService;
 use App\Models\rwLibWhType;
 use App\Models\rwWarehouse;
 use App\Models\User;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
@@ -49,7 +50,7 @@ class DeliveryServicesCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->dsId > 0 ? __('Редактирование службы доставки') : __('Создание службы доставки');
+        return $this->dsId > 0 ? CustomTranslator::get('Редактирование службы доставки') : CustomTranslator::get('Создание службы доставки');
     }
 
     /**
@@ -78,9 +79,9 @@ class DeliveryServicesCreateScreen extends Screen
 
                 Input::make('dsList.ds_name')
                     ->width(50)
-                    ->title(__('Название')),
+                    ->title(CustomTranslator::get('Название')),
 
-                Button::make(__('Сохранить'))
+                Button::make(CustomTranslator::get('Сохранить'))
                     ->type(Color::DARK)
                     ->style('margin-bottom: 20px;')
                     ->method('saveShop'),
@@ -104,7 +105,7 @@ class DeliveryServicesCreateScreen extends Screen
                 'ds_name' => $data['dsList']['ds_name'],
             ]);
 
-            Alert::success(__('Служба доставки успешно отредактирована!'));
+            Alert::success(CustomTranslator::get('Служба доставки успешно отредактирована!'));
         } else {
 
             // Создание нового склада
@@ -112,7 +113,7 @@ class DeliveryServicesCreateScreen extends Screen
                 'ds_name' => $data['dsList']['ds_name'],
             ]);
 
-            Alert::success(__('Служба доставка успешно создана!'));
+            Alert::success(CustomTranslator::get('Служба доставка успешно создана!'));
         }
 
 

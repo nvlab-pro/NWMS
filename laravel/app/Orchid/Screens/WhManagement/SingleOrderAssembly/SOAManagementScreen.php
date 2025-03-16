@@ -6,6 +6,7 @@ use App\Models\rwSettingsSoa;
 use App\Models\rwWarehouse;
 use App\Models\User;
 use App\Orchid\Layouts\WhManagement\SingleOrderAssembly\SOAManagementTable;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Select;
@@ -42,7 +43,7 @@ class SOAManagementScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Настройка очереди позаказной сборки';
+        return CustomTranslator::get('Настройка очереди позаказной сборки');
     }
 
     /**
@@ -51,7 +52,7 @@ class SOAManagementScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            ModalToggle::make(__('Создать новую очередь'))
+            ModalToggle::make(CustomTranslator::get('Создать новую очередь'))
                 ->modal('createQueueModal')
                 ->method('createQueue')
                 ->icon('bs.plus-circle'),
@@ -70,48 +71,48 @@ class SOAManagementScreen extends Screen
                 Layout::columns([
                     Layout::rows([
                         Input::make('queue.ssoa_name')
-                            ->title('Название очереди:')
+                            ->title(CustomTranslator::get('Название очереди'))
                             ->required(),
 
                         Input::make('queue.ssoa_priority')
-                            ->title('Приоритет (чем больше, тем выше):')
+                            ->title(CustomTranslator::get('Приоритет (чем больше, тем выше)'))
                             ->type('number')
                             ->min(0)
                             ->max(1000)
                             ->required(),
 
                         Select::make('queue.ssoa_wh_id')
-                            ->title(__('Склад:'))
+                            ->title(CustomTranslator::get('Склад'))
                             ->fromModel(rwWarehouse::where('wh_type', 2)->where('wh_domain_id', $currentUser->domain_id), 'wh_name', 'wh_id')
-                            ->empty('Не выбрано', 0),
+                            ->empty(CustomTranslator::get('Не выбрано'), 0),
 
                     ]),
                     Layout::rows([
                         Select::make('queue.ssoa_finish_place_type')
-                            ->title(__('Место завершения сборки:'))
-                            ->popover(__('Если вы хотите собрать заказ и сразу отгрузить, то выберите "Место завершения сборки". Если же заказ затем нужно будет упаковывать на упаковочном столе, то выберите "Полка сортировки" или "Стол упаковки".'))
+                            ->title(CustomTranslator::get('Место завершения сборки'))
+                            ->popover(CustomTranslator::get('Если вы хотите собрать заказ и сразу отгрузить, то выберите "Место завершения сборки". Если же заказ затем нужно будет упаковывать на упаковочном столе, то выберите "Полка сортировки" или "Стол упаковки".'))
                             ->options([
-                                104 => __('Полка сортировки'),
-                                105 => __('Стол упаковки'),
-                                107 => __('Место завершения сборки'),
+                                104 => CustomTranslator::get('Полка сортировки'),
+                                105 => CustomTranslator::get('Стол упаковки'),
+                                107 => CustomTranslator::get('Место завершения сборки'),
                             ])
-                            ->empty('Не выбрано', 0),
+                            ->empty(CustomTranslator::get('Не выбрано'), 0),
 
                         Select::make('queue.ssoa_all_offers')
-                            ->title(__('Разрешить неполную сборку товара:'))
-                            ->popover(__('Если проставить "Да", то система позволит закончить сборку заказа, даже если товара не хватает.'))
+                            ->title(CustomTranslator::get('Разрешить неполную сборку товара'))
+                            ->popover(CustomTranslator::get('Если проставить "Да", то система позволит закончить сборку заказа, даже если товара не хватает.'))
                             ->options([
-                                1 => __('Нет'),
-                                0 => __('Да'),
+                                1 => CustomTranslator::get('Нет'),
+                                0 => CustomTranslator::get('Да'),
                             ])
                             ->value(1),
 
                         Select::make('queue.ssoa_picking_type')
-                            ->title(__('Тип пикинга:'))
-                            ->popover(__('Выберите будет ли кладовщик сканировать каждый товар или только артикул и вводить количество.'))
+                            ->title(CustomTranslator::get('Тип пикинга'))
+                            ->popover(CustomTranslator::get('Выберите будет ли кладовщик сканировать каждый товар или только артикул и вводить количество.'))
                             ->options([
-                                0 => __('Скан артикула (под пересчет)'),
-                                1 => __('Скан каждого товара'),
+                                0 => CustomTranslator::get('Скан артикула (под пересчет)'),
+                                1 => CustomTranslator::get('Скан каждого товара'),
                             ])
                             ->value(0),
 
@@ -120,50 +121,50 @@ class SOAManagementScreen extends Screen
                 Layout::rows([
 
                     Select::make('queue.ssoa_user_id')
-                        ->title(__('Конкретный пользователь:'))
+                        ->title(CustomTranslator::get('Конкретный пользователь'))
                         ->fromModel(User::where('parent_id', $currentUser->id)->where('domain_id', $currentUser->domain_id), 'name', 'id')
-                        ->empty('Не выбрано', 0),
+                        ->empty(CustomTranslator::get('Не выбрано'), 0),
 
                     Input::make('queue.ssoa_ds_id')
-                        ->title(__('Служба доставки:'))
+                        ->title(CustomTranslator::get('Служба доставки'))
                         ->type('number'),
                 ]),
 
                 Layout::columns([
                     Layout::rows([
                         Input::make('queue.ssoa_date_from')
-                            ->title(__('Дата от:'))
+                            ->title(CustomTranslator::get('Дата от'))
                             ->type('date')
                             ->required(),
 
                         Input::make('queue.ssoa_offers_count_from')
-                            ->title(__('Количество товаров в заказе от:'))
+                            ->title(CustomTranslator::get('Количество товаров в заказе от'))
                             ->type('number'),
 
                         Input::make('queue.ssoa_order_from')
-                            ->title(__('ID заказа от:'))
+                            ->title(CustomTranslator::get('ID заказа от'))
                             ->type('number'),
 
                     ]),
                     Layout::rows([
                         Input::make('queue.ssoa_date_to')
-                            ->title(__('Дата до:'))
+                            ->title(CustomTranslator::get('Дата до'))
                             ->type('date')
                             ->required(),
 
                         Input::make('queue.ssoa_offers_count_to')
-                            ->title(__('Количество товаров в заказе до:'))
+                            ->title(CustomTranslator::get('Количество товаров в заказе до'))
                             ->type('number'),
 
                         Input::make('queue.ssoa_order_to')
-                            ->title(__('ID заказа до:'))
+                            ->title(CustomTranslator::get('ID заказа до'))
                             ->type('number'),
                     ]),
                 ]),
             ])
-                ->title(__('Создать новую очередь позаказной сборки'))
-                ->applyButton('Сохранить')
-                ->closeButton('Отмена')
+                ->title(CustomTranslator::get('Создать новую очередь позаказной сборки'))
+                ->applyButton(CustomTranslator::get('Сохранить'))
+                ->closeButton(CustomTranslator::get('Отмена'))
                 ->size(Modal::SIZE_XL),
 
             SOAManagementTable::class,
@@ -215,6 +216,6 @@ class SOAManagementScreen extends Screen
             'ssoa_picking_type' => $validated['queue']['ssoa_picking_type'],
         ]);
 
-        Toast::info('Очередь успешно создана!');
+        Toast::info(CustomTranslator::get('Очередь успешно создана!'));
     }
 }

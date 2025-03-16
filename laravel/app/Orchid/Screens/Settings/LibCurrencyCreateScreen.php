@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibCurrency;
 use App\Models\rwLibLength;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
@@ -40,7 +41,7 @@ class LibCurrencyCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->curId > 0 ? __('Редактирование валюты') : __('Создание новой валюты');
+        return $this->curId > 0 ? CustomTranslator::get('Редактирование валюты') : CustomTranslator::get('Создание новой валюты');
     }
 
     /**
@@ -69,15 +70,15 @@ class LibCurrencyCreateScreen extends Screen
 
                 Input::make('rwLibCurrency.lcur_name')
                     ->width(50)
-                    ->title(__('Название')),
+                    ->title(CustomTranslator::get('Название')),
 
                 Input::make('rwLibCurrency.lcur_code')
-                    ->title(__('Код')),
+                    ->title(CustomTranslator::get('Код')),
 
                 Input::make('rwLibCurrency.lcur_symbol')
-                    ->title(__('Символ')),
+                    ->title(CustomTranslator::get('Символ')),
 
-                Button::make(__('Сохранить'))
+                Button::make(CustomTranslator::get('Сохранить'))
                     ->type(Color::DARK)
                     ->style('margin-bottom: 20px;')
                     ->method('saveCurrency'),
@@ -105,7 +106,7 @@ class LibCurrencyCreateScreen extends Screen
                 'lcur_symbol' => $request->cmLibCurrency['lcur_symbol'],
             ]);
 
-            Alert::success(__('Данные успешно отредактированы!'));
+            Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
 
         } else {
 
@@ -115,7 +116,7 @@ class LibCurrencyCreateScreen extends Screen
                 'lcur_symbol' => $request->cmLibCurrency['lcur_symbol'],
             ]);
 
-            Alert::success(__('Данные успешно добавлены!'));
+            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
 
         }
 

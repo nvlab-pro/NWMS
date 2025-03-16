@@ -9,6 +9,7 @@ use App\Models\rwOrderStatus;
 use App\Models\rwOrderType;
 use App\Models\rwShop;
 use App\Models\rwWarehouse;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Layouts\Table;
@@ -55,7 +56,7 @@ class OrdersTable extends Table
                         ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make('o_status_id', __('Статус'))
+            TD::make('o_status_id', CustomTranslator::get('Статус'))
                 ->sort()
                 ->align('center')
                 ->filter(
@@ -67,10 +68,10 @@ class OrdersTable extends Table
                     return '<div onClick="window.location=\'' . route('platform.orders.edit', $modelName->o_id) . '\'" style="color: ' . $modelName->getStatus->os_color . ';
                         background-color: ' . $modelName->getStatus->os_bgcolor . ';
                         padding: 5px;
-                        border-radius: 5px;"><b>' . $modelName->getStatus->os_name . '</b></div>';
+                        border-radius: 5px;"><b>' . CustomTranslator::get($modelName->getStatus->os_name) . '</b></div>';
                 }),
 
-            TD::make('o_ext_id', __('Внешний ID'))
+            TD::make('o_ext_id', CustomTranslator::get('Внешний ID'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOrder $order) {
@@ -80,7 +81,7 @@ class OrdersTable extends Table
                             ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make('o_parcel_id', __('Посылка'))
+            TD::make('o_parcel_id', CustomTranslator::get('Посылка'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOrder $order) {
@@ -90,7 +91,7 @@ class OrdersTable extends Table
                             ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make('o_type_id', __('Тип'))
+            TD::make('o_type_id', CustomTranslator::get('Тип'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_SELECT, rwOrderType::pluck('ot_name', 'ot_id')->toArray())
@@ -101,7 +102,7 @@ class OrdersTable extends Table
                             ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make('o_date', __('Дата заказа'))
+            TD::make('o_date', CustomTranslator::get('Дата заказа'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOrder $order) {
@@ -111,7 +112,7 @@ class OrdersTable extends Table
                             ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make('o_date_send', __('Дата отправки'))
+            TD::make('o_date_send', CustomTranslator::get('Дата отправки'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOrder $order) {
@@ -121,7 +122,7 @@ class OrdersTable extends Table
                             ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make('o_count', 'Кол-во твара')
+            TD::make('o_count', CustomTranslator::get('Кол-во твара'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -130,7 +131,7 @@ class OrdersTable extends Table
                         ->route('platform.orders.edit', $modelName->o_id);
                 }),
 
-            TD::make('o_sum', 'Сумма')
+            TD::make('o_sum', CustomTranslator::get('Сумма'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -139,7 +140,7 @@ class OrdersTable extends Table
                         ->route('platform.orders.edit', $modelName->o_id);
                 }),
 
-            TD::make('o_shop_id', __('Магазин'))
+            TD::make('o_shop_id', CustomTranslator::get('Магазин'))
                 ->sort()
                 ->align('center')
                 ->filter(
@@ -155,7 +156,7 @@ class OrdersTable extends Table
                             ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make('o_wh_id', __('Склад'))
+            TD::make('o_wh_id', CustomTranslator::get('Склад'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_SELECT, rwWarehouse::pluck('wh_name', 'wh_id')->toArray())
@@ -166,13 +167,13 @@ class OrdersTable extends Table
                             ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make(__('Действия'))
+            TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn(rwOrder $order) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Ред.'))
+                        Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.orders.index', $order->id)
                             ->icon('bs.pencil'),
                     ])),

@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     /* Общий стиль для всех экранов */
     body, td {
@@ -181,10 +182,10 @@
                                  border="1" class="photo">
                             <hr>
                             <button onclick="skipGoods()"
-                                    class="btn btn-warning btn-block offPut">@lang('ПРОПУСТИТЬ')</button>
+                                    class="btn btn-warning btn-block offPut">{{ CustomTranslator::get('ПРОПУСТИТЬ') }}</button>
                             <hr>
                             <button onclick="offGoods()"
-                                    class="btn btn-outline-danger btn-block offPut">@lang('НЕ НАШЕЛ')</button>
+                                    class="btn btn-outline-danger btn-block offPut">{{ CustomTranslator::get('НЕ НАШЕЛ') }}</button>
 
                             <script>
                                 function skipGoods() {
@@ -192,7 +193,7 @@
                                 }
 
                                 function offGoods() {
-                                    var result = confirm("@lang('Вы уверены что не нашли этот товар?')");
+                                    var result = confirm("{{ CustomTranslator::get('Вы уверены что не нашли этот товар?') }}");
 
                                     if (result) {
                                         window.location.href = "?offerId={{ $currentOffer['ao_wh_offer_id'] }}&action=skip";
@@ -203,19 +204,19 @@
                         </td>
                         <td style="vertical-align: top; padding-left: 15px;">
                             <div align="left"
-                                 class="termText">@lang('Артикул: ') {{ $currentOffer['ao_article']  }}</div>
+                                 class="termText">{{ CustomTranslator::get('Артикул') }}: {{ $currentOffer['ao_article']  }}</div>
 
                             <hr>
                             <b style="color: #AAAAAA;"
-                               class="termText">@lang('Ожидается:') {{ round($currentOffer['ao_expected'], 2) }}</b><br>
+                               class="termText">{{ CustomTranslator::get('Ожидается') }}: {{ round($currentOffer['ao_expected'], 2) }}</b><br>
                             <b style="color: #AAAAAA;"
-                               class="termText">@lang('Принято:') {{ round($currentOffer['ao_accepted'], 2)  }}</b><br>
+                               class="termText">{{ CustomTranslator::get('Принято') }}: {{ round($currentOffer['ao_accepted'], 2)  }}</b><br>
                             @php
                                 $restOfCount = $currentOffer['ao_expected'] - $currentOffer['ao_accepted'];
                             @endphp
                             <b><span
                                         onclick="document.getElementById('input_data').value='{{ $restOfCount }}'"
-                                        class="termText">@lang('Не принято:') {{ $restOfCount }}</span></b><br>
+                                        class="termText">{{ CustomTranslator::get('Не принято') }}: {{ $restOfCount }}</span></b><br>
                             <hr>
 
                             <form action="" method="get"
@@ -226,7 +227,7 @@
                                 <input type="hidden" name="saveBarcode" value="{{ $saveBarcode }}">
                                 <input type="hidden" name="currentTime" value="{{ time() }}">
                                 <input type="text" name="scanCount" id="input_data" size="15" value=""
-                                       placeholder="Количество"
+                                       placeholder="{{ CustomTranslator::get('Количество') }}"
                                        style="margin-bottom: 5px;" class="countInput"><br>
 
                                 @if($settingExeptDate)
@@ -236,7 +237,7 @@
                                                 echo substr($tDate, 0, 2).substr($tDate, 3, 2).substr($tDate, 8, 2);
                                             }
                                         @endphp"
-                                           placeholder="Срок (DDMMYY)" style="margin-top: 10px;"><br>
+                                           placeholder="{{ CustomTranslator::get('Срок (DDMMYY)') }}" style="margin-top: 10px;"><br>
                                     <input type="text" name="scanBatch" id="scanBatch" size="15" value="@php
                                             if (isset($currentOffer['ao_batch']))
                                                 echo $currentOffer['ao_batch'];
@@ -259,11 +260,11 @@
                                     function checkData(event) {
                                         count = document.getElementById('input_data').value;
                                         if (count > 100000) {
-                                            alert('@lang('ОШИБКА! Склишком много товара!')');
+                                            alert('{{ CustomTranslator::get('ОШИБКА! Склишком много товара!') }}');
                                             event.preventDefault();
                                         }
                                         if (count == 0 || count == '') {
-                                            alert('@lang('ОШИБКА! Пустая строка!')');
+                                            alert('{{ CustomTranslator::get('ОШИБКА! Пустая строка!') }}');
                                             event.preventDefault();
                                         }
                                     }

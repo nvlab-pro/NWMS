@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\Role;
 
+use App\Services\CustomTranslator;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Rows;
@@ -22,17 +23,17 @@ class RoleEditLayout extends Rows
                 ->type('text')
                 ->max(255)
                 ->required()
-                ->title(__('Name'))
-                ->placeholder(__('Name'))
-                ->help(__('Role display name')),
+                ->title(CustomTranslator::get('Name'))
+                ->placeholder(CustomTranslator::get('Name'))
+                ->help(CustomTranslator::get('Role display name')),
 
             Input::make('role.slug')
                 ->type('text')
                 ->max(255)
                 ->required()
-                ->title(__('Slug'))
-                ->placeholder(__('Slug'))
-                ->help(__('Actual name in the system')),
+                ->title(CustomTranslator::get('Slug'))
+                ->placeholder(CustomTranslator::get('Slug'))
+                ->help(CustomTranslator::get('Actual name in the system')),
         ];
     }
 }

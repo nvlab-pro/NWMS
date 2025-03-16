@@ -8,6 +8,7 @@ use App\Models\rwOrder;
 use App\Models\rwOrderOffer;
 use App\Models\rwPlace;
 use App\Models\rwWarehouse;
+use App\Services\CustomTranslator;
 use Orchid\Support\Facades\Layout;
 use App\WhCore\WhCore;
 use Orchid\Screen\Screen;
@@ -46,7 +47,7 @@ class TurnoverScreen extends Screen
                     ->first();
 
                 if (isset($dbAcceptanceStatus->getAccStatus->las_name))
-                    $docStatus[$item->whci_id] = '<div style="color: '.$dbAcceptanceStatus->getAccStatus->las_color.'; background-color: '.$dbAcceptanceStatus->getAccStatus->las_bgcolor.'; border-radius: 5px; padding: 3px;"><b>'.$dbAcceptanceStatus->getAccStatus->las_name.'</b></div>';
+                    $docStatus[$item->whci_id] = '<div style="color: '.$dbAcceptanceStatus->getAccStatus->las_color.'; background-color: '.$dbAcceptanceStatus->getAccStatus->las_bgcolor.'; border-radius: 5px; padding: 3px;"><b>'.CustomTranslator::get($dbAcceptanceStatus->getAccStatus->las_name).'</b></div>';
             }
                 // Выясняем статус заказа
             if ($item->whci_doc_type == 2) {
@@ -56,7 +57,7 @@ class TurnoverScreen extends Screen
                     ->first();
 
                 if (isset($dbOrderStatus->getStatus->os_name))
-                    $docStatus[$item->whci_id] ='<div style="color: '.$dbOrderStatus->getStatus->os_color.'; background-color: '.$dbOrderStatus->getStatus->os_bgcolor.'; border-radius: 5px; padding: 3px;"><b>'.$dbOrderStatus->getStatus->os_name.'</b></div>';
+                    $docStatus[$item->whci_id] ='<div style="color: '.$dbOrderStatus->getStatus->os_color.'; background-color: '.$dbOrderStatus->getStatus->os_bgcolor.'; border-radius: 5px; padding: 3px;"><b>'.CustomTranslator::get($dbOrderStatus->getStatus->os_name).'</b></div>';
 
                 if (isset($dbOrderStatus->o_order_place) && $dbOrderStatus->o_order_place > 0) {
                     $dbPlace = rwPlace::with('getType')
@@ -101,7 +102,7 @@ class TurnoverScreen extends Screen
                     if ($dbPlace->pl_rack > 0) $docPlace[$item->whci_id] .= ' | ' . $dbPlace->pl_rack;
                     if ($dbPlace->pl_shelf > 0) $docPlace[$item->whci_id] .= ' | ' . $dbPlace->pl_shelf;
 
-                    $docPlace[$item->whci_id] .= '</nobr><br><span style="color: #999999; font-size: 10px;">'. $dbPlace->getType->pt_name.'</span>';
+                    $docPlace[$item->whci_id] .= '</nobr><br><span style="color: #999999; font-size: 10px;">'. CustomTranslator::get($dbPlace->getType->pt_name).'</span>';
 
                     $docPlace[$item->whci_id] .= '';
 
@@ -128,7 +129,7 @@ class TurnoverScreen extends Screen
 
     public function description(): ?string
     {
-        return __('Склад: ') . $this->whName;
+        return CustomTranslator::get('Склад') . ': ' . $this->whName;
     }
 
     public function commandBar(): iterable

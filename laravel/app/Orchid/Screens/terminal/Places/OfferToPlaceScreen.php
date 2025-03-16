@@ -7,6 +7,7 @@ use App\Models\rwBarcode;
 use App\Models\rwOffer;
 use App\Models\rwWarehouse;
 use App\Orchid\Services\DocumentService;
+use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
@@ -84,12 +85,12 @@ class OfferToPlaceScreen extends Screen
                     $barcode = '';
                     $validatedData['offerWhId'] = 0;
 
-                    Alert::info(__('Товар привязан!'));
+                    Alert::info(CustomTranslator::get('Товар привязан!'));
 
                 } else {
                     // Это ШК не место хранения
 
-                    Alert::error(__('Отсканированный штрих-код не является штрих-кодом места хранения!'));
+                    Alert::error(CustomTranslator::get('Отсканированный штрих-код не является штрих-кодом места хранения!'));
                     $action = 'selectPlace';
                     $barcode = '';
 
@@ -116,7 +117,7 @@ class OfferToPlaceScreen extends Screen
 
                     } else {
 
-                        Alert::error(__('Товара слишком много! Я не смогу столько привязать!'));
+                        Alert::error(CustomTranslator::get('Товара слишком много! Я не смогу столько привязать!'));
 
                     }
 
@@ -138,11 +139,11 @@ class OfferToPlaceScreen extends Screen
                     $validatedData['offerWhId'] = $currentDocument->getWhOfferId($offerId, 1);
 
                     if ($validatedData['offerWhId'] == 0)
-                        Alert::error(__('Товара с таким штрих-кодом нет в данной накладной или он весь превязан!'));
+                        Alert::error(CustomTranslator::get('Товара с таким штрих-кодом нет в данной накладной или он весь превязан!'));
 
                 } else {
 
-                    Alert::error(__('Товара с таким штрих-кодом нет в базе!'));
+                    Alert::error(CustomTranslator::get('Товара с таким штрих-кодом нет в базе!'));
 
                 }
             }
@@ -185,12 +186,12 @@ class OfferToPlaceScreen extends Screen
 
     public function name(): ?string
     {
-        return __('Размещение товаров для приемки № ' . $this->docId);
+        return CustomTranslator::get('Размещение товаров для приемки № ' . $this->docId);
     }
 
     public function description(): ?string
     {
-        return __('Склад: ' . $this->whName);
+        return CustomTranslator::get('Склад: ' . $this->whName);
     }
 
     public function commandBar(): iterable

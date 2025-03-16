@@ -1,8 +1,9 @@
+@php use App\Services\CustomTranslator; @endphp
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
     <div class="row g-0">
         <div style="margin: 20px 20px 20px 20px;">
 
-            <h2>@lang('Список штрих-кодов товара:')</h2>
+            <h2>{{ CustomTranslator::get('Список штрих-кодов товара:') }}</h2>
             <br>
 
             <table>

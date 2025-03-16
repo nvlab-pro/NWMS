@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Screens;
 
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
@@ -26,7 +27,7 @@ class PlatformScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Главная страница');
+        return CustomTranslator::get('Главная страница');
     }
 
     /**
@@ -34,7 +35,7 @@ class PlatformScreen extends Screen
      */
     public function description(): ?string
     {
-        return __('Добро пожаловать на главную страницу') . ' NWMS.cloud';
+        return CustomTranslator::get('Добро пожаловать на главную страницу') . ' NWMS.cloud';
     }
 
     /**
@@ -49,7 +50,7 @@ class PlatformScreen extends Screen
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager') || $currentUser->hasRole('warehouse_worker')) {
 
             return [
-                Link::make(__('Terminal'))
+                Link::make(CustomTranslator::get('Terminal'))
                     ->icon('bs.tablet')
                     ->style('vertical-align: right; width: 200px; background-color: #E0E0E0; text-align:center; border-bottom: 2px solid #000000; border-right: 2px solid #000000; border-left: 2px solid #A0A0A0; border-top: 2px solid #A0A0A0;')
                     ->route('platform.terminal.main'),

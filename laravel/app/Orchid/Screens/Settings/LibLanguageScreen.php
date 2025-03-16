@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibLanguage;
 use App\Orchid\Layouts\Settings\libLanguageTable;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 
@@ -32,7 +33,7 @@ class LibLanguageScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Языки');
+        return CustomTranslator::get('Языки');
     }
 
     /**
@@ -43,7 +44,7 @@ class LibLanguageScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Добавить новый язык'))
+            Link::make(CustomTranslator::get('Добавить новый язык'))
                 ->icon('bs.plus-circle')
                 ->route('platform.settings.languages.create'),
         ];
@@ -57,7 +58,7 @@ class LibLanguageScreen extends Screen
     public function layout(): iterable
     {
         return [
-            libLanguageTable::class,
+            LibLanguageTable::class,
         ];
     }
 }

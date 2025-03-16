@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .tableButton {
         border-bottom: 2px solid #999999;
@@ -192,12 +193,12 @@
                                     @endif
                             </td>
                             <td style="padding-left: 20px;">
-                                <b>@lang('Стол №:') {{ $table->pl_shelf }}</b>
+                                <b>{{ CustomTranslator::get('Стол') }} №: {{ $table->pl_shelf }}</b>
                                 <div class="tableButtonText">
                                     @if($userId == 0)
-                                        <span class="tableButtonText2">@lang('Кол-во заказов готовых к упаковке:') {{ count($arOrdersList[$table->pl_id]) }}</span>
+                                        <span class="tableButtonText2">{{ CustomTranslator::get('Кол-во заказов готовых к упаковке') }}: {{ count($arOrdersList[$table->pl_id]) }}</span>
                                             @else
-                                                <span class="tableButtonText2">@lang('Заказ упаковывается:') {{ $userName }}</span>
+                                                <span class="tableButtonText2">{{ CustomTranslator::get('Заказ упаковывается') }}: {{ $userName }}</span>
                                                     @endif
                                 </div>
                             </td>

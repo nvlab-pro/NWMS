@@ -3,6 +3,7 @@
 namespace App\Orchid\Layouts\Orders;
 
 use App\Models\rwOrderOffer;
+use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
@@ -31,7 +32,7 @@ class OrderOffersTable extends Table
                     return $num;
                 }),
 
-            TD::make(__('Изображение'))
+            TD::make(CustomTranslator::get('Изображение'))
                 ->render(function ($model) {
                     if ($model->getOffer->of_img == '')
                         return "<img src='/img/no_image.png' alt='Image' width='75' height='75'>";
@@ -40,7 +41,7 @@ class OrderOffersTable extends Table
                 })
                 ->width('100px'),
 
-            TD::make('of_article', __('Артикул'))
+            TD::make('of_article', CustomTranslator::get('Артикул'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -48,14 +49,14 @@ class OrderOffersTable extends Table
                     return Link::make(isset($modelName->getOffer->of_article) ? $modelName->getOffer->of_article : '-');
                 }),
 
-            TD::make('of_name', __('Название'))
+            TD::make('of_name', CustomTranslator::get('Название'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwOrderOffer $modelName) {
                     return Link::make($modelName->getOffer->of_name);
                 }),
 
-            TD::make('rest', __('Остаток'))
+            TD::make('rest', CustomTranslator::get('Остаток'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -67,7 +68,7 @@ class OrderOffersTable extends Table
                     ]);
                 }),
 
-            TD::make('reserv', __('Резерв'))
+            TD::make('reserv', CustomTranslator::get('Резерв'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -75,19 +76,19 @@ class OrderOffersTable extends Table
                     if ($status <= 10)
                         return '-';
                     if ($status == 15 )
-                        return '<div style="background-color: #AAAAAA; color: #FFFFFF; border-radius: 10px;"><b>' . __('Готов к резерву') . '</b></div>';
+                        return '<div style="background-color: #AAAAAA; color: #FFFFFF; border-radius: 10px;"><b>' . CustomTranslator::get('Готов к резерву') . '</b></div>';
                     if ($status == 20)
-                        return '<div style="background-color: #999999; color: #FFFFFF; border-radius: 10px;"><b>' . __('Резервирую...') . '</b></div>';
+                        return '<div style="background-color: #999999; color: #FFFFFF; border-radius: 10px;"><b>' . CustomTranslator::get('Резервирую...') . '</b></div>';
 
                     if ($status > 20) {
                         if ($whCore->getReservedOffer($modelName->oo_order_id, $modelName->oo_offer_id))
-                            return '<div style="background-color: #1ebc33; color: #FFFFFF; border-radius: 10px;"><b>' . __('В резерве') . '</b></div>';
+                            return '<div style="background-color: #1ebc33; color: #FFFFFF; border-radius: 10px;"><b>' . CustomTranslator::get('В резерве') . '</b></div>';
                         else
-                            return '<div style="background-color: #ef2828; color: #FFFFFF; border-radius: 10px;"><b>' . __('Нет товара') . '</b></div>';
+                            return '<div style="background-color: #ef2828; color: #FFFFFF; border-radius: 10px;"><b>' . CustomTranslator::get('Нет товара') . '</b></div>';
                     }
                 }),
 
-            TD::make('oo_qty', __('Количество'))
+            TD::make('oo_qty', CustomTranslator::get('Количество'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOrderOffer $model) use ($status) {
@@ -101,7 +102,7 @@ class OrderOffersTable extends Table
                         return $model->oo_qty;
                 }),
 
-            TD::make('oo_oc_price', __('Цена (ОЦ)'))
+            TD::make('oo_oc_price', CustomTranslator::get('Цена (оценка)'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOrderOffer $model) use ($status) {
@@ -111,7 +112,7 @@ class OrderOffersTable extends Table
                         return $model->oo_oc_price;
                 }),
 
-            TD::make('oo_price', 'Цена (наложка)')
+            TD::make('oo_price', CustomTranslator::get('Цена (наложка)'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOrderOffer $model) use ($status) {
@@ -122,12 +123,12 @@ class OrderOffersTable extends Table
 
                 }),
 
-            TD::make(__(''))
+            TD::make(CustomTranslator::get(''))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->canSee($status <= 10)
                 ->render(fn(rwOrderOffer $model) =>
-                Button::make(__('Удалить'))
+                Button::make(CustomTranslator::get('Удалить'))
                     ->icon('bs.trash')
                     ->method('deleteOrderOffer')
                     ->style('color: red;')
@@ -135,7 +136,7 @@ class OrderOffersTable extends Table
                         'offerDocId' => $model->oo_id,
                         '_token' => csrf_token(),
                     ])
-                    ->confirm(__('Вы уверены, что хотите удалить это предложение?'))
+                    ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить это предложение?'))
                 ),
         ];
     }
@@ -143,7 +144,7 @@ class OrderOffersTable extends Table
     protected function toolbar(): array
     {
         return [
-            Button::make('Сохранить изменения')
+            Button::make(CustomTranslator::get('Сохранить изменения'))
                 ->method('saveOrderChanges')
                 ->class('btn btn-primary'),
         ];

@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .placeTD {
         border: 2px solid #AAAAAA;
@@ -49,9 +50,9 @@
                                  border="1" class="photoOffer">
                         </td>
                         <td style="vertical-align: top; padding-left: 15px;" class="textOffer">
-                            <b>@lang('Арт.:')</b> {{ $dbOffer->of_article }}<br>
+                            <b>{{ CustomTranslator::get('Арт.') }}:</b> {{ $dbOffer->of_article }}<br>
                             <hr>
-                            <b>@lang('Я взял'):</b><br>
+                            <b>{{ CustomTranslator::get('Я взял') }}:</b><br>
                             <input type="text" name="count" id="count" value="{{ $dbOrderOffer->oo_qty }}"
                                    autofocus onkeyup="handleDecimalInput(this, {{ $dbOrderOffer->oo_qty }});"
                                    class="sizeBlock" style="text-align: center;">
@@ -76,12 +77,12 @@
 
                             <hr>
                             <div class="alert alert-info warningDIV"
-                                 role="alert">@lang('Внимательно пересчитайте взятый товар и укажите количество!')</div>
+                                 role="alert">{{ CustomTranslator::get('Внимательно пересчитайте взятый товар и укажите количество!') }}</div>
                         </td>
                     </tr>
                 </table>
                 <hr>
-                <button type="submit" onclick="skipGoods()" class="btn btn-success btn-block">@lang('ВЗЯТЬ')</button>
+                <button type="submit" onclick="skipGoods()" class="btn btn-success btn-block">{{ CustomTranslator::get('ВЗЯТЬ') }}</button>
                 <script>
                     function skipGoods() {
                         window.location.href = "";

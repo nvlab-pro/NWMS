@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibLength;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
@@ -39,7 +40,7 @@ class LibLengthCreateScreen extends Screen
      */
     public function name(): ?string
     {
-        return $this->libId > 0 ? __('Редактирование единицы измерения') : __('Создание новой единицы измерения');
+        return $this->libId > 0 ? CustomTranslator::get('Редактирование единицы измерения') : CustomTranslator::get('Создание новой единицы измерения');
     }
 
     /**
@@ -68,12 +69,12 @@ class LibLengthCreateScreen extends Screen
 
                 Input::make('rwLibLength.llen_name')
                     ->width(50)
-                    ->title(__('Название')),
+                    ->title(CustomTranslator::get('Название')),
 
                 Input::make('rwLibLength.llen_unit')
-                    ->title(__('Код')),
+                    ->title(CustomTranslator::get('Код')),
 
-                Button::make(__('Сохранить'))
+                Button::make(CustomTranslator::get('Сохранить'))
                     ->type(Color::DARK)
                     ->style('margin-bottom: 20px;')
                     ->method('saveLength'),
@@ -98,7 +99,7 @@ class LibLengthCreateScreen extends Screen
                 'llen_name' => $request->cmLibLength['llen_name'],
             ]);
 
-            Alert::success(__('Данные успешно отредактированы!'));
+            Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
 
         } else {
 
@@ -107,7 +108,7 @@ class LibLengthCreateScreen extends Screen
                 'llen_name' => $request->cmLibLength['llen_name'],
             ]);
 
-            Alert::success(__('Данные успешно добавлены!'));
+            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
 
         }
 

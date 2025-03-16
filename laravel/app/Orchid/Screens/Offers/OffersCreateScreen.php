@@ -9,6 +9,7 @@ use App\Models\rwOffer;
 use App\Models\rwShop;
 use App\Models\rwWarehouse;
 use App\Models\WhcRest;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
@@ -56,12 +57,12 @@ class OffersCreateScreen extends Screen
 
     public function name(): ?string
     {
-        return $this->offerId > 0 ? $this->offerName : __('Создание нового товара');
+        return $this->offerId > 0 ? $this->offerName : CustomTranslator::get('Создание нового товара');
     }
 
     public function description(): ?string
     {
-        return __('Магазин: ') . $this->shopName;
+        return CustomTranslator::get('Магазин') . ': ' . $this->shopName;
     }
 
     public function commandBar(): iterable
@@ -101,25 +102,29 @@ class OffersCreateScreen extends Screen
 
                             Input::make('rwOffer.of_name')
                                 ->width(50)
-                                ->title(__('Название')),
+                                ->title(CustomTranslator::get('Название')),
 
                             Select::make('rwOffer.of_status')
-                                ->title(__('Статус'))
+                                ->title(CustomTranslator::get('Статус'))
                                 ->width('100px')
-                                ->fromModel(rwLibStatus::class, 'ls_name', 'ls_id')
+                                ->options(
+                                    rwLibStatus::all()
+                                        ->pluck('ls_name', 'ls_id')
+                                        ->map(fn($name) => CustomTranslator::get($name)) // Переводим название
+                                )
                                 ->required(0),
                         ]),
 
                         Group::make([
 
 //                            Select::make('rwOffer.of_shop_id')
-//                                ->title(__('Магазин'))
+//                                ->title(CustomTranslator::get('Магазин'))
 //                                ->width('100px')
 //                                ->fromModel($dbShopsList->get(), 'sh_name', 'sh_id')
 //                                ->disabled(OffersMiddleware::checkRule4SelectShop($this->offerId, 'admin,warehouse_manager')),
 
                             Select::make('rwOffer.of_shop_id')
-                                ->title(__('Магазин'))
+                                ->title(CustomTranslator::get('Магазин'))
                                 ->width('100px')
                                 ->fromModel(
                                     $currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')
@@ -132,62 +137,62 @@ class OffersCreateScreen extends Screen
 
                             Input::make('rwOffer.of_img')
                                 ->width(50)
-                                ->title(__('URL изображения')),
+                                ->title(CustomTranslator::get('URL изображения')),
 
                         ]),
                         Group::make([
 
                             Input::make('rwOffer.of_article')
                                 ->width(50)
-                                ->title(__('Артикул')),
+                                ->title(CustomTranslator::get('Артикул')),
 
                             Input::make('rwOffer.of_weight')
                                 ->width(10)
-                                ->title(__('Вес (гр)')),
+                                ->title(CustomTranslator::get('Вес (гр)')),
 
                         ]),
                         Group::make([
 
                             Input::make('rwOffer.of_sku')
                                 ->width(50)
-                                ->title(__('SKU')),
+                                ->title(CustomTranslator::get('SKU')),
 
                             Input::make('rwOffer.of_dimension_x')
                                 ->width(10)
-                                ->title(__('Длина (мм)')),
+                                ->title(CustomTranslator::get('Длина (мм)')),
 
                         ]),
                         Group::make([
 
                             Input::make('rwOffer.of_price')
                                 ->width(50)
-                                ->title(__('Стоимость')),
+                                ->title(CustomTranslator::get('Стоимость')),
 
                             Input::make('rwOffer.of_dimension_y')
                                 ->width(10)
-                                ->title(__('Ширина (мм)')),
+                                ->title(CustomTranslator::get('Ширина (мм)')),
 
                         ]),
                         Group::make([
 
                             Input::make('rwOffer.of_estimated_price')
                                 ->width(50)
-                                ->title(__('Оценочная стоимость')),
+                                ->title(CustomTranslator::get('Оценочная стоимость')),
 
                             Input::make('rwOffer.of_dimension_z')
                                 ->width(10)
-                                ->title(__('Высота (мм)')),
+                                ->title(CustomTranslator::get('Высота (мм)')),
 
                         ]),
                         Group::make([
 
                             TextArea::make('rwOffer.of_comment')
                                 ->width(50)
-                                ->title(__('Комментарий')),
+                                ->title(CustomTranslator::get('Комментарий')),
 
                         ]),
 
-                        Button::make(__('Сохранить'))
+                        Button::make(CustomTranslator::get('Сохранить'))
                             ->type(Color::DARK)
                             ->style('margin-bottom: 20px;')
                             ->method('saveOffer'),
@@ -237,7 +242,7 @@ class OffersCreateScreen extends Screen
                 'of_comment' => $request->rwOffer['of_comment'],
             ]);
 
-            Alert::success(__('Данные успешно отредактированы!'));
+            Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
 
         } else {
 
@@ -258,7 +263,7 @@ class OffersCreateScreen extends Screen
                 'of_comment' => $request->rwOffer['of_comment'],
             ]);
 
-            Alert::success(__('Данные успешно добавлены!'));
+            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
 
         }
 

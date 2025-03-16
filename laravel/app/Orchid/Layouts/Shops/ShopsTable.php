@@ -3,6 +3,7 @@
 namespace App\Orchid\Layouts\Shops;
 
 use App\Models\rwShop;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
@@ -35,7 +36,7 @@ class ShopsTable extends Table
                         ->route('platform.shops.edit',$modelName->sh_id);
                 }),
 
-            TD::make('sh_name', 'Название')
+            TD::make('sh_name', CustomTranslator::get('Название'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwShop $modelName) {
@@ -43,7 +44,7 @@ class ShopsTable extends Table
                         ->route('platform.shops.edit',$modelName->sh_id);
                 }),
 
-            TD::make('getOwner.name', 'Владелец')
+            TD::make('getOwner.name', CustomTranslator::get('Владелец'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwShop $modelName) {
@@ -51,13 +52,13 @@ class ShopsTable extends Table
                         ->route('platform.shops.edit',$modelName->sh_id);
                 }),
 
-            TD::make(__('Действия'))
+            TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn (rwShop $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Ред.'))
+                        Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.shops.edit', $modelName->sh_id)
                             ->icon('bs.pencil'),
                     ])),

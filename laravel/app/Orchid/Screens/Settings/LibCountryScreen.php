@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Settings;
 
 use App\Models\rwLibCountry;
 use App\Orchid\Layouts\Settings\LibCountryTable;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 
@@ -33,7 +34,7 @@ class LibCountryScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Список стран');
+        return CustomTranslator::get('Список стран');
     }
 
     /**
@@ -44,7 +45,7 @@ class LibCountryScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(__('Создать новую страну'))
+            Link::make(CustomTranslator::get('Создать новую страну'))
                 ->icon('bs.plus-circle')
                 ->route('platform.settings.countries.create'),
         ];

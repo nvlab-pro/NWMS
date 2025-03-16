@@ -6,6 +6,7 @@ namespace App\Orchid\Screens\User;
 
 use App\Orchid\Layouts\User\ProfilePasswordLayout;
 use App\Orchid\Layouts\User\UserEditLayout;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -38,7 +39,7 @@ class UserProfileScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Мой аккаунт');
+        return CustomTranslator::get('Мой аккаунт');
     }
 
     /**
@@ -46,7 +47,7 @@ class UserProfileScreen extends Screen
      */
     public function description(): ?string
     {
-        return __('Обновите данные своей учетной записи, такие как имя, адрес электронной почты и пароль.');
+        return CustomTranslator::get('Обновите данные своей учетной записи, такие как имя, адрес электронной почты и пароль.');
     }
 
     /**
@@ -57,13 +58,13 @@ class UserProfileScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Button::make(__('Вернуться в мой аккаунт'))
+            Button::make(CustomTranslator::get('Вернуться в мой аккаунт'))
                 ->novalidate()
                 ->canSee(Impersonation::isSwitch())
                 ->icon('bs.people')
                 ->route('platform.switch.logout'),
 
-            Button::make(__('Выйти'))
+            Button::make(CustomTranslator::get('Выйти'))
                 ->novalidate()
                 ->icon('bs.box-arrow-left')
                 ->route('platform.logout'),
@@ -77,20 +78,20 @@ class UserProfileScreen extends Screen
     {
         return [
             Layout::block(UserEditLayout::class)
-                ->title(__('Информация о профиле'))
-                ->description(__("Обновите информацию профиля вашей учетной записи и адрес электронной почты."))
+                ->title(CustomTranslator::get('Информация о профиле'))
+                ->description(CustomTranslator::get("Обновите информацию профиля вашей учетной записи и адрес электронной почты."))
                 ->commands(
-                    Button::make(__('Сохранить'))
+                    Button::make(CustomTranslator::get('Сохранить'))
                         ->type(Color::BASIC())
                         ->icon('bs.check-circle')
                         ->method('save')
                 ),
 
             Layout::block(ProfilePasswordLayout::class)
-                ->title(__('Обновить пароль'))
-                ->description(__('Для обеспечения безопасности убедитесь, что в вашей учетной записи используется длинный случайный пароль.'))
+                ->title(CustomTranslator::get('Обновить пароль'))
+                ->description(CustomTranslator::get('Для обеспечения безопасности убедитесь, что в вашей учетной записи используется длинный случайный пароль.'))
                 ->commands(
-                    Button::make(__('Обновить пароль'))
+                    Button::make(CustomTranslator::get('Обновить пароль'))
                         ->type(Color::BASIC())
                         ->icon('bs.check-circle')
                         ->method('changePassword')
@@ -112,7 +113,7 @@ class UserProfileScreen extends Screen
             ->fill($request->get('user'))
             ->save();
 
-        Toast::info(__('Профиль обновлен'));
+        Toast::info(CustomTranslator::get('Профиль обновлен'));
     }
 
     public function changePassword(Request $request): void
@@ -127,6 +128,6 @@ class UserProfileScreen extends Screen
             $user->password = Hash::make($request->get('password'));
         })->save();
 
-        Toast::info(__('Пароль обновлен'));
+        Toast::info(CustomTranslator::get('Пароль обновлен'));
     }
 }

@@ -10,6 +10,7 @@ use App\Models\rwOrderOffer;
 use App\Models\rwPlace;
 use App\Models\WhcRest;
 use App\Orchid\Services\SOAService;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
@@ -119,7 +120,7 @@ class GetOfferSOAMScreen extends Screen
 
     public function name(): ?string
     {
-        return __('Сборка заказа') . ' ' . $this->orderId;
+        return CustomTranslator::get('Сборка заказа') . ' ' . $this->orderId;
     }
 
     public function commandBar(): iterable

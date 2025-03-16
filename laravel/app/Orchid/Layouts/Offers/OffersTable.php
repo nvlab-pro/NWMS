@@ -7,6 +7,7 @@ use App\Models\rwLibCountry;
 use App\Models\rwLibStatus;
 use App\Models\rwOffer;
 use App\Models\rwShop;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
@@ -32,7 +33,7 @@ class OffersTable extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('of_id', 'ID')
+            TD::make('of_id', CustomTranslator::get('ID'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->align('center')
@@ -41,7 +42,7 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make('Изображение')
+            TD::make(CustomTranslator::get('Изображение'))
                 ->render(function ($model) {
                     if ($model->of_img == '')
                         return "<img src='/img/no_image.png' alt='Image' width='75' height='75'>";
@@ -50,7 +51,7 @@ class OffersTable extends Table
                 })
                 ->width('100px'),
 
-            TD::make('of_status', 'Статус')
+            TD::make('of_status', CustomTranslator::get('Статус'))
                 ->sort()
                 ->align('center')
                 ->filter(
@@ -58,11 +59,11 @@ class OffersTable extends Table
                     rwLibStatus::pluck('ls_name', 'ls_id')->toArray() // Замените 'id' на ключевое поле вашей таблицы
                 )
                 ->render(function (rwOffer $modelName) {
-                    return Link::make($modelName->getStatus->ls_name)
+                    return Link::make(CustomTranslator::get($modelName->getStatus->ls_name))
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make('of_ext_id', 'Внешний ID')
+            TD::make('of_ext_id', CustomTranslator::get('Внешний ID'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOffer $modelName) {
@@ -70,7 +71,7 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make('of_article', 'Артикул')
+            TD::make('of_article', CustomTranslator::get('Артикул'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -79,7 +80,7 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make('of_name', 'Название')
+            TD::make('of_name', CustomTranslator::get('Название'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwOffer $modelName) {
@@ -87,7 +88,7 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make('of_sku', 'SKU')
+            TD::make('of_sku', CustomTranslator::get('SKU'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -96,7 +97,7 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make('of_price', 'Cтоимость')
+            TD::make('of_price', CustomTranslator::get('Cтоимость'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -105,7 +106,7 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make('of_estimated_price', 'Оц.стоимость')
+            TD::make('of_estimated_price', CustomTranslator::get('Оц.стоимость'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
@@ -114,7 +115,7 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make('of_shop_id', 'Магазин')
+            TD::make('of_shop_id', CustomTranslator::get('Магазин'))
                 ->sort()
                 ->align('center')
                 ->filter(
@@ -126,13 +127,13 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
-            TD::make(__('Actions'))
+            TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn(rwOffer $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Edit'))
+                        Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.offers.edit', $modelName->of_id)
                             ->icon('bs.pencil'),
                     ])),

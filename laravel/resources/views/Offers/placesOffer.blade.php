@@ -1,15 +1,16 @@
+@php use App\Services\CustomTranslator; @endphp
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
     <div class="row g-0">
         <div style="margin: 20px 20px 20px 20px;">
 
-            <h2>@lang('Места размещения товара:')</h2>
+            <h2>{{ CustomTranslator::get('Места размещения товара') }}:</h2>
             <br>
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th>Склад</th>
-                    <th style="text-align: center;">Место</th>
-                    <th style="text-align: center;">Остаток</th>
+                    <th>{{ CustomTranslator::get('Склад') }}</th>
+                    <th style="text-align: center;">{{ CustomTranslator::get('Место') }}</th>
+                    <th style="text-align: center;">{{ CustomTranslator::get('Остаток') }}</th>
                 </tr>
                 </thead>
                 @foreach($rests as $rest)

@@ -6,6 +6,7 @@ use App\Models\rwOrder;
 use App\Models\rwSettingsSoa;
 use App\Models\rwWarehouse;
 use App\Orchid\Services\SOAService;
+use App\Services\CustomTranslator;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
 use Orchid\Screen\Screen;
@@ -100,7 +101,7 @@ class FinishSOAMScreen extends Screen
      */
     public function name(): ?string
     {
-        return __('Завершение упаковки заказа') . ' ' . $this->orderId;
+        return CustomTranslator::get('Завершение упаковки заказа') . ' ' . $this->orderId;
     }
 
     /**

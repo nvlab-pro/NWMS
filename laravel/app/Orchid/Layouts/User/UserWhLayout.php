@@ -6,6 +6,7 @@ namespace App\Orchid\Layouts\User;
 
 use App\Models\rwDomain;
 use App\Models\rwWarehouse;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Select;
@@ -44,7 +45,7 @@ class UserWhLayout extends Rows
         return [
             Select::make('user.wh_id')
                 ->options($options)
-                ->title(__('Склад')),
+                ->title(CustomTranslator::get('Склад')),
         ];
     }
 }

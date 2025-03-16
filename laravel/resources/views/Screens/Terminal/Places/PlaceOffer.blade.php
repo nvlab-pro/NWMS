@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     /* Общий стиль для всех экранов */
     body, td {
@@ -184,7 +185,7 @@
             <div class="row g-0 div-info-scan-place">
                 <div style="margin: 10px 0px 10px 10px;">
 
-                    <h4>@lang('Отсканируйте место хранения:')</h4>
+                    <h4>{{ CustomTranslator::get('Отсканируйте место хранения') }}:</h4>
 
                 </div>
             </div>
@@ -203,7 +204,7 @@
                                      border="1" class="photo">
                                 <hr>
                                 <button onclick="skipGoods()"
-                                        class="btn btn-warning btn-block offPut">@lang('ПРОПУСТИТЬ')</button>
+                                        class="btn btn-warning btn-block offPut">{{ CustomTranslator::get('ПРОПУСТИТЬ') }}</button>
 
                                 <script>
                                     function skipGoods() {
@@ -211,7 +212,7 @@
                                     }
 
                                     function offGoods() {
-                                        var result = confirm("@lang('Вы уверены что не нашли этот товар?')");
+                                        var result = confirm("{{ CustomTranslator::get('Вы уверены что не нашли этот товар?') }}");
 
                                         if (result) {
                                             window.location.href = "?offerId={{ $currentOffer['ao_wh_offer_id'] }}&action=skip";
@@ -222,10 +223,10 @@
                             </td>
                             <td style="vertical-align: top; padding-left: 15px;">
                                 <div align="left"
-                                     class="termText">@lang('Артикул: ') {{ $currentOffer['ao_article']  }}</div>
+                                     class="termText">{{ CustomTranslator::get('Артикул') }}: {{ $currentOffer['ao_article']  }}</div>
 
                                 <hr>
-                                <b><span class="termText">@lang('Привязываем:')</span>
+                                <b><span class="termText">{{ CustomTranslator::get('Привязываем') }}:</span>
                                     <br><br>
                                     <div align="center"><h1 class="scanCount">{{ $scanCount }}</h1></div>
                                 </b><br>

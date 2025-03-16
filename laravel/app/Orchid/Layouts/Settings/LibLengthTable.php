@@ -3,12 +3,13 @@
 namespace App\Orchid\Layouts\Settings;
 
 use App\Models\rwLibLength;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 use Orchid\Screen\Actions\Link;
 
-class libLengthTable extends Table
+class LibLengthTable extends Table
 {
     /**
      * Data source.
@@ -35,7 +36,7 @@ class libLengthTable extends Table
                         ->route('platform.settings.length.edit',$modelName->llen_id);
                 }),
 
-            TD::make('llen_name', 'Название')
+            TD::make('llen_name', CustomTranslator::get('Название'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwLibLength $modelName) {
@@ -43,7 +44,7 @@ class libLengthTable extends Table
                         ->route('platform.settings.length.edit',$modelName->llen_id);
                 }),
 
-            TD::make('llen_unit', 'Код')
+            TD::make('llen_unit', CustomTranslator::get('Код'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwLibLength $modelName) {
@@ -52,13 +53,13 @@ class libLengthTable extends Table
                 }),
 
 
-            TD::make(__('Actions'))
+            TD::make(CustomTranslator::get('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn (rwLibLength $modelName) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        Link::make(__('Edit'))
+                        Link::make(CustomTranslator::get('Edit'))
                             ->route('platform.settings.length.edit', $modelName->llen_id)
                             ->icon('bs.pencil'),
                     ])),

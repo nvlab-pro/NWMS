@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\User;
 
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Platform\Models\Role;
 use Orchid\Screen\Field;
@@ -33,7 +34,7 @@ class UserRoleLayout extends Rows
             Select::make('user.roles.')
                 ->fromModel(Role::where('id', '>=', $role_id), 'name')
                 ->multiple()
-                ->title(__('Выбарите роли')),
+                ->title(CustomTranslator::get('Выберите роли')),
         ];
     }
 }

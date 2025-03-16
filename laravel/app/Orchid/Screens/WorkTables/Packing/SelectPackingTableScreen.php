@@ -8,6 +8,7 @@ use App\Models\rwOrderPacking;
 use App\Models\rwPlace;
 use App\Models\rwSettingsProcPacking;
 use App\Orchid\Services\PackingService;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
@@ -39,7 +40,7 @@ class SelectPackingTableScreen extends Screen
                     'o_status_id'  => 100,
                 ]);
 
-            Alert::success(__('Заказ № ') . $request->orderId . __(' упакован!'));
+            Alert::success(CustomTranslator::get('Заказ') . ' № ' . $request->orderId . ' ' . CustomTranslator::get('упакован!'));
 
         }
 
@@ -119,12 +120,12 @@ class SelectPackingTableScreen extends Screen
 
     public function name(): ?string
     {
-        return __('Выбор стола упаковки');
+        return CustomTranslator::get('Выбор стола упаковки');
     }
 
     public function description(): ?string
     {
-        return __('Очередь упаковки') . ': ' . $this->queueName . ' (' . $this->queueId . ')';
+        return CustomTranslator::get('Очередь упаковки') . ': ' . $this->queueName . ' (' . $this->queueId . ')';
     }
 
     public function commandBar(): iterable

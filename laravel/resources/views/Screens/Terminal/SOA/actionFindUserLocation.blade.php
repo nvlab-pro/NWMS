@@ -1,3 +1,4 @@
+@php use App\Services\CustomTranslator; @endphp
 <style>
     .warningDIV {
         font-size: 15px;
@@ -14,7 +15,7 @@
             <input type="submit" value="Scan" id="btn">
             <p id="error-message"
                class="alert alert-danger warningDIV" role="alert" style="display: none;"
-            >@lang("Ошибка: отсканирован неверный штрихкод! Пожалуйста отсканируте ближайшую полку!")</p>
+            >{{ CustomTranslator::get("Ошибка: отсканирован неверный штрихкод! Пожалуйста отсканируте ближайшую полку!") }}</p>
         </div>
     </div>
 </form>
@@ -35,7 +36,7 @@
         let match = barcodeValue.match(regex);
 
         if (!match) {
-            errorMessage.textContent = '@lang("Ошибка: отсканирован неверный штрихкод! Пожалуйста отсканируте ближайшую полку!")';
+            errorMessage.textContent = '{{ CustomTranslator::get("Ошибка: отсканирован неверный штрихкод! Пожалуйста отсканируте ближайшую полку!") }}';
             errorMessage.style.display = "block";
             document.getElementById('barcode').value = '';
             return false; // Отмена отправки формы
@@ -46,7 +47,7 @@
         let expectedZZZ = 102 + yyy; // Вычисляем ожидаемую сумму
 
         if (zzz !== expectedZZZ) {
-            errorMessage.textContent = '@lang('Ошибка: не верная контрольная сумма штрих-кода! Пожалуйста отсканируйте ближайшую полку еще раз!')';
+            errorMessage.textContent = '{{ CustomTranslator::get('Ошибка: не верная контрольная сумма штрих-кода! Пожалуйста отсканируйте ближайшую полку еще раз!') }}';
             errorMessage.style.display = "block";
             document.getElementById('barcode').value = '';
             return false; // Отмена отправки формы
@@ -61,7 +62,7 @@
     <div class="row g-0">
         <div style="margin: 10px 10px 20px 10px; text-align: center;">
 
-            <div style="width: 95%; padding-right: 10px; font-size: 20px; background-color: #e8dcbb; border-radius: 10px;">@lang('Отсканируйте ближайшую к вам полку, чтобы я мог понять, где именно вы находитесь!')</div>
+            <div style="width: 95%; padding-right: 10px; font-size: 20px; background-color: #e8dcbb; border-radius: 10px;">{{ CustomTranslator::get('Отсканируйте ближайшую к вам полку, чтобы я мог понять, где именно вы находитесь!') }}</div>
             <br>
             <img src="/img/selectPlace.jpg" style="border-radius: 10px;">
 
