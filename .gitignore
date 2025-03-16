@@ -1,4 +1,3 @@
 /laravel/config/
 /laravel/lang/
 /laravel/.env
-git rm --cached .env.env

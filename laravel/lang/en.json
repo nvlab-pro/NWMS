@@ -562,5 +562,6 @@
     "Стеллаж": "Shelf",
     "Полка": "Shelf",
     "Для начала упаковки создайте хотя-бы одну очередь!": "To start packaging, create at least one queue!",
-    "Настройка очереди упаковки": "Packing queue setup"
+    "Настройка очереди упаковки": "Packing queue setup",
+    "Ура": "Ooops"
 }

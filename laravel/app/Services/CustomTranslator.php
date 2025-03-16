@@ -82,8 +82,6 @@ class CustomTranslator
 
             if (!$language) return $text;
 
-            dump(self::$openAiApiKey);
-
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . self::$openAiApiKey,
                 'Content-Type'  => 'application/json',
@@ -97,7 +95,6 @@ class CustomTranslator
                 'temperature' => 0.7,
                 'max_tokens' => 60,
             ]);
-            dump($response); 
 
             $result = $response->json();
             return $result['choices'][0]['message']['content'] ?? null;
