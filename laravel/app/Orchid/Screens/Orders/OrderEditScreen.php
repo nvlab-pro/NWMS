@@ -38,23 +38,32 @@ class OrderEditScreen extends Screen
         $arPickingOffersList = [];
         $arPackedOffersList = [];
 
-        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
+        if ($currentUser->hasRole('admin')) {
 
-            $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)
-                ->where('o_id', $orderId)
+            $this->order = rwOrder::where('o_id', $orderId)
                 ->with('getPlace')
                 ->firstOrFail();
 
         } else {
 
-            $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)
-                ->whereHas('getShop', function ($query) use ($currentUser) {
-                    $query->whereIn('o_user_id', [$currentUser->id, $currentUser->parent_id]);
-                })
-                ->where('o_id', $orderId)
-                ->with('getPlace')
-                ->firstOrFail();
+            if ($currentUser->hasRole('warehouse_manager')) {
 
+                $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)
+                    ->where('o_id', $orderId)
+                    ->with('getPlace')
+                    ->firstOrFail();
+
+            } else {
+
+                $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)
+                    ->whereHas('getShop', function ($query) use ($currentUser) {
+                        $query->whereIn('o_user_id', [$currentUser->id, $currentUser->parent_id]);
+                    })
+                    ->where('o_id', $orderId)
+                    ->with('getPlace')
+                    ->firstOrFail();
+
+            }
         }
 
         $dbOrderOffersList = rwOrderOffer::where('oo_order_id', $orderId)
@@ -195,7 +204,7 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            Button::make(' ' .CustomTranslator::get('Откатить'))
+            Button::make(' ' . CustomTranslator::get('Откатить'))
                 ->icon('bs.arrow-return-left')
                 ->style('border: 1px solid #D62222; color: #D62222; border-radius: 10px;')
                 ->method('changeStatusToNew')
@@ -206,7 +215,7 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            Button::make(' ' .CustomTranslator::get('В обработку'))
+            Button::make(' ' . CustomTranslator::get('В обработку'))
                 ->icon('bs.check-circle')
                 ->style('border: 1px solid #dd66ff; color: #dd66ff; border-radius: 10px;')
                 ->method('changeStatusToProcessing')
@@ -217,7 +226,7 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            Button::make(' ' .CustomTranslator::get('В резерв'))
+            Button::make(' ' . CustomTranslator::get('В резерв'))
                 ->icon('bs.piggy-bank')
                 ->style('border: 1px solid #157347; color: #157347; border-radius: 10px;')
                 ->method('changeStatus')
@@ -228,7 +237,7 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            Button::make(' ' .CustomTranslator::get('Зарезервировать вручную'))
+            Button::make(' ' . CustomTranslator::get('Зарезервировать вручную'))
                 ->icon('bs.piggy-bank')
                 ->style('border: 1px solid #9c4edb; color: #9c4edb; border-radius: 10px;')
                 ->method('tryReservOrder')
@@ -239,7 +248,7 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            ModalToggle::make(' ' .CustomTranslator::get('Добавить товар'))
+            ModalToggle::make(' ' . CustomTranslator::get('Добавить товар'))
                 ->icon('bs.plus-circle')
                 ->modal('addOfferModal')
                 ->method('addOffer')
@@ -280,7 +289,10 @@ class OrderEditScreen extends Screen
                             ]),
 
                         Label::make('order.getType.ot_name')
-                            ->title(CustomTranslator::get('Тип заказа')),
+                            ->title(CustomTranslator::get('Тип заказа'))
+                            ->value(function ($model) {
+                                return CustomTranslator::get($model);
+                            })
 
 
                     ]),
@@ -447,7 +459,7 @@ class OrderEditScreen extends Screen
 
             }
 
-            Alert::success(CustomTranslator::get('Заказ') . ' ' . $validatedData['docId'] . ' '. CustomTranslator::get('перерезервирован') . '!');
+            Alert::success(CustomTranslator::get('Заказ') . ' ' . $validatedData['docId'] . ' ' . CustomTranslator::get('перерезервирован') . '!');
 
         } else {
 
@@ -455,6 +467,7 @@ class OrderEditScreen extends Screen
 
         }
     }
+
     public function changeStatusToNew(Request $request)
     {
         $validatedData = $request->validate([
@@ -512,7 +525,7 @@ class OrderEditScreen extends Screen
 
         } else {
 
-            Alert::error(CustomTranslator::get('Заказ') . ' ' . $validatedData['docId'] . ' '. CustomTranslator::get('не может быть отменен!'));
+            Alert::error(CustomTranslator::get('Заказ') . ' ' . $validatedData['docId'] . ' ' . CustomTranslator::get('не может быть отменен!'));
 
         }
     }

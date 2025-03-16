@@ -15,6 +15,7 @@ use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Layouts\Modal;
 use Orchid\Screen\Screen;
 use Orchid\Screen\Fields\Input;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 use Illuminate\Http\Request;
@@ -164,6 +165,6 @@ class PPManagementScreen extends Screen
             'spp_domain_id' => $currentUser->domain_id, // Здесь можно подставить реальный домен, если нужно
         ]);
 
-        Toast::info(CustomTranslator::get('Очередь успешно создана!'));
+        Alert::success(CustomTranslator::get('Очередь успешно создана!'));
     }
 }
