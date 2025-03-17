@@ -12,13 +12,6 @@ use Orchid\Support\Facades\Layout;
 
 class LabelPrintScreen extends Screen
 {
-    /**
-     * Данные экрана.
-     *
-     * @var array
-     */
-    public $name = 'Печать этикеток';
-    public $description = 'Экран для печати этикеток';
 
     /**
      * Данные, которые будут переданы в экран.
@@ -68,6 +61,15 @@ class LabelPrintScreen extends Screen
         ];
     }
 
+    public function name(): ?string
+    {
+        return 'Печать этикеток';
+    }
+
+    public function description(): ?string
+    {
+        return 'Экран для печати этикеток';
+    }
     /**
      * Действия, доступные на экране.
      *

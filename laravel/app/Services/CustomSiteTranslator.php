@@ -48,7 +48,7 @@ class CustomSiteTranslator
     {
 
         self::$locale = $locale;
-        if (self::$locale == 'en') return $key;
+        if (self::$locale == 'en' || $key == '' || $key == ' ') return $key;
 
         $key = self::cleanText($key);
 

@@ -6,7 +6,6 @@ Route::get('/', function () {
     return view('Site/index', ['lang' => 'en']);
 });
 
-Route::get('/new-user-form', [\App\Http\Controllers\FormNewUser::class, 'submit']);
 Route::post('/new-user-form', [\App\Http\Controllers\FormNewUser::class, 'submit']);
 
 

@@ -39,7 +39,7 @@ class CustomTranslator
         if(!$currentUser) return $key;
 
         self::$locale = $currentUser->lang;
-        if (self::$locale == 'rus') return $key;
+        if (self::$locale == 'rus' || $key == '' || $key == ' ') return $key;
 
         self::loadTranslations(); // Загружаем переводы только при первом вызове
 
@@ -87,7 +87,8 @@ class CustomTranslator
                 'Content-Type'  => 'application/json',
             ])->post('https://api.openai.com/v1/chat/completions', [
 //                'model' => 'gpt-4', // Можно использовать gpt-3.5-turbo для экономии
-                'model' => 'gpt-3.5-turbo',
+//                'model' => 'gpt-3.5-turbo',
+                'model' => 'gpt-4-turbo',
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a translation assistant. Translate text to '.$language.'.'],
                     ['role' => 'user', 'content' => $text]
