@@ -1,3 +1,4 @@
+@php use App\Services\CustomSiteTranslator; @endphp
 <div id="sticky-header" class="techo_nav_manu-two">
     <div class="container">
         <div class="row align-items-center">
@@ -14,7 +15,7 @@
             <div class="col-lg-9">
                 <nav class="techo_menu-two">
                     <ul class="nav_scroll">
-                        <li><a href="/">Home</a></li>
+                        <li><a href="/">{{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
                         <!--
                         <li><a href="/">Pricing</a></li>
                         <li><a href="/">Education</a></li>

@@ -98,8 +98,12 @@
 </div>
 <script>
     function changeLanguage(lang) {
-        // Здесь можно реализовать логику смены языка, например, редирект
-        window.location.href = '/' + lang + '/';
+
+        if(lang == 'en') {
+            window.location.href = '/';
+        } else {
+            window.location.href = '/' + lang + '/';
+        }
     }
 </script>
 <!--==================================================-->
