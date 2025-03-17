@@ -1,10 +1,10 @@
 @php use App\Services\CustomSiteTranslator; @endphp
-@include('Site.MainBlocks.header')
+@include('Site.MainBlocks.header', ['lang' => $lang])
 
 <!--==================================================-->
 <!-- Start techo Main Menu  -->
 <!--==================================================-->
-@include('Site.MainBlocks.menu')
+@include('Site.MainBlocks.menu', ['lang' => $lang])
 <!--==================================================-->
 <!-- End techo Main Menu  -->
 <!--==================================================-->
@@ -538,4 +538,4 @@
 <!-- END techo Testimonial Area -->
 <!--==================================================-->
 
-@include('Site.MainBlocks.footer')
+@include('Site.MainBlocks.footer', ['lang' => $lang])
