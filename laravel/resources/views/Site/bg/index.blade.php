@@ -12,7 +12,7 @@
 <!--==================================================-->
 <!-- Начало секции Hero -->
 <!--==================================================-->
-<div class="hero-section d-flex align-items-center" style="height: 480px;">
+<div class="hero-section d-flex align-items-center">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <img src="/img/index_main3.png" alt="hero-thumb" style="width:400px;">
+                <img src="/img/index_main3.png" alt="hero-thumb">
             </div>
         </div>
     </div>

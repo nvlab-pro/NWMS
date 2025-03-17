@@ -1,12 +1,12 @@
-<!DOCTYPE HTML>
+@php use App\Services\CustomSiteTranslator; @endphp<!DOCTYPE HTML>
 <html lang="en-US">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>NWMS - free warehouse automation system</title>
+    <title>{!! CustomSiteTranslator::get('NWMS - free warehouse automation system', $lang) !!}, WMS.</title>
     <meta name="description"
-          content="Completely free, cloud-based warehouse management system (WMS). Receipt of goods, address storage of goods, work with data collection terminals, control of balances.">
+          content="{!! CustomSiteTranslator::get('Completely free, cloud-based warehouse management system (WMS). Receipt of goods, address storage of goods, work with data collection terminals, control of balances', $lang) !!}.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="56x56" href="assets/images/fav-icon/icon.png">
@@ -78,18 +78,18 @@
 
             <div class="col-lg-1 header-top-right-language">
                 <select id="language-selector" onchange="changeLanguage(this.value)">
-                    <option value="bel">🇧🇾 Belarusian</option>
-                    <option value="bg">🇧🇬 Bulgarian</option>
-                    <option value="ch">🇨🇳 Chinese</option>
-                    <option value="de">🇩🇪 German</option>
-                    <option value="en" SELECTED>🇺🇸 English</option>
-                    <option value="fr">🇫🇷 French</option>
-                    <option value="gr">🇬🇪 Georgian</option>
-                    <option value="kz">🇰🇿 Kazakh</option>
-                    <option value="pr">🇵🇹 Portuguese</option>
-                    <option value="rus">🇷🇺 Russian</option>
-                    <option value="sp">🇪🇸 Spanish</option>
-                    <option value="ukr">🇺🇦 Ukrainian</option>
+                    <option value="bel" @if($lang == 'bel') SELECTED @endif>🇧🇾 Belarusian</option>
+                    <option value="bg" @if($lang == 'bg') SELECTED @endif>🇧🇬 Bulgarian</option>
+                    <option value="ch" @if($lang == 'ch') SELECTED @endif>🇨🇳 Chinese</option>
+                    <option value="de" @if($lang == 'de') SELECTED @endif>🇩🇪 German</option>
+                    <option value="en" @if($lang == 'en') SELECTED @endif>🇺🇸 English</option>
+                    <option value="fr" @if($lang == 'fr') SELECTED @endif>🇫🇷 French</option>
+                    <option value="gr" @if($lang == 'gr') SELECTED @endif>🇬🇪 Georgian</option>
+                    <option value="kz" @if($lang == 'kz') SELECTED @endif>🇰🇿 Kazakh</option>
+                    <option value="pr" @if($lang == 'pr') SELECTED @endif>🇵🇹 Portuguese</option>
+                    <option value="rus" @if($lang == 'rus') SELECTED @endif>🇷🇺 Russian</option>
+                    <option value="sp" @if($lang == 'sp') SELECTED @endif>🇪🇸 Spanish</option>
+                    <option value="ukr" @if($lang == 'ukr') SELECTED @endif>🇺🇦 Ukrainian</option>
                 </select>
             </div>
 

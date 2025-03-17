@@ -1,9 +1,13 @@
-@include('Site.rus.MainBlocks.header')
+@php
+    $lang = 'rus';
+@endphp
+
+@include('Site.MainBlocks.header')
 
 <!--==================================================-->
 <!-- Начало главного меню techo -->
 <!--==================================================-->
-@include('Site.rus.MainBlocks.menu')
+@include('Site.MainBlocks.menu')
 <!--==================================================-->
 <!-- Конец главного меню techo -->
 <!--==================================================-->
@@ -11,7 +15,7 @@
 <!--==================================================-->
 <!-- Начало секции Hero -->
 <!--==================================================-->
-<div class="hero-section d-flex align-items-center" style="height: 480px;">
+<div class="hero-section d-flex align-items-center">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
@@ -31,13 +35,13 @@
                     </div>
                     <div class="hero-button">
                         <div class="hero-main-button">
-                            <a href="about.html">Начать проект</a>
+                            <a href="#form">Начать проект</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <img src="/img/index_main3.png" alt="hero-thumb" style="width:400px;">
+                <img src="/img/index_main3.png" alt="hero-thumb">
             </div>
         </div>
     </div>
@@ -430,6 +434,7 @@
 <!--==================================================-->
 <!-- Начало блока "Форма заказа" -->
 <!--==================================================-->
+<a name="form"></a>
 <div class="testimonial-area">
     <div class="container">
         <div class="row">
@@ -484,7 +489,7 @@
                                     <select id="language-select" name="language">
                                         <option value="en" data-flag="🇺🇸">🇺🇸 English</option>
                                         <option value="bg" data-flag="🇧🇬">🇧🇬 Bulgarian</option>
-                                        <option value="rus" data-flag="🇷🇺">🇷🇺 Russian</option>
+                                        <option value="rus" data-flag="🇷🇺" SELECTED>🇷🇺 Russian</option>
                                         <option value="ukr" data-flag="🇺🇦">🇺🇦 Ukrainian</option>
                                         <option value="fr" data-flag="🇫🇷">🇫🇷 French</option>
                                         <option value="de" data-flag="🇩🇪">🇩🇪 German</option>

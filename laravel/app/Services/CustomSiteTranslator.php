@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
-class CustomTranslator
+class CustomSiteTranslator
 {
     protected static array $translations = [];
     protected static string $locale = 'en';
@@ -21,7 +21,7 @@ class CustomTranslator
         }
 
         self::$openAiApiKey = config('app.open_ai_api_key');
-        $path = base_path("lang/" . self::$locale . ".json");
+        $path = base_path("lang/" . self::$locale . ".site.json");
 
         if (File::exists($path)) {
             self::$translations = json_decode(File::get($path), true) ?? [];
@@ -33,13 +33,24 @@ class CustomTranslator
         self::$loaded = true; // Устанавливаем флаг загрузки
     }
 
-    public static function get(string $key, array $replace = []): string
-    {
-        $currentUser = Auth::user();
-        if(!$currentUser) return $key;
+    public static function cleanText($text) {
+        // Удаляем все HTML-теги
+//        $text = strip_tags($text);
 
-        self::$locale = $currentUser->lang;
-        if (self::$locale == 'rus') return $key;
+        // Удаляем лишние пробелы, переносы строк и заменяем их одним пробелом
+        $text = preg_replace('/\s+/', ' ', $text);
+
+        // Обрезаем пробелы в начале и конце строки
+        return trim($text);
+    }
+
+    public static function get(string $key, $locale, array $replace = []): string
+    {
+
+        self::$locale = $locale;
+        if (self::$locale == 'en') return $key;
+
+        $key = self::cleanText($key);
 
         self::loadTranslations(); // Загружаем переводы только при первом вызове
 
@@ -87,13 +98,13 @@ class CustomTranslator
                 'Content-Type'  => 'application/json',
             ])->post('https://api.openai.com/v1/chat/completions', [
 //                'model' => 'gpt-4', // Можно использовать gpt-3.5-turbo для экономии
-                'model' => 'gpt-3.5-turbo',
+                'model' => 'gpt-4-turbo',
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a translation assistant. Translate text to '.$language.'.'],
                     ['role' => 'user', 'content' => $text]
                 ],
                 'temperature' => 0.7,
-                'max_tokens' => 100,
+                'max_tokens' => 1000,
             ]);
 
             $result = $response->json();
@@ -107,7 +118,7 @@ class CustomTranslator
 
     protected static function saveTranslations(): void
     {
-        $path = base_path("lang/" . self::$locale . ".json");
+        $path = base_path("lang/" . self::$locale . ".site.json");
         File::put($path, json_encode(self::$translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 

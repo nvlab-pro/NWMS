@@ -1,3 +1,4 @@
+@php use App\Services\CustomSiteTranslator; @endphp
 @include('Site.MainBlocks.header')
 
 <!--==================================================-->
@@ -12,34 +13,32 @@
 <!--==================================================-->
 <!-- Start techo Hero Section  -->
 <!--==================================================-->
-<div class="hero-section d-flex align-items-center" style="height: 480px;">
+<div class="hero-section d-flex align-items-center">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <div class="hero-content wow fadeInLeft animated">
                     <div class="hero-title">
-                        <h5>Warehouse automation system</h5>
-                        <h1>Completely free WMS</h1>
+                        <h5>{{ CustomSiteTranslator::get('Warehouse automation system', $lang) }}</h5>
+                        <h1>{{ CustomSiteTranslator::get('Completely free WMS', $lang) }}</h1>
                     </div>
                     <div class="hero-text">
-                        <p>The cloud <b>warehouse management system</b> NWMS offers a <b>completely free</b> solution to
-                            automate and
-                            streamline all your warehouse operations. From inventory tracking to order fulfillment and
-                            shipping,
-                            NWMS helps businesses of any size reduce errors, improve efficiency, and gain real-time
+                        <p>{!! CustomSiteTranslator::get('The cloud <b>warehouse management system</b> NWMS offers a <b>completely free</b> solution to
+                            automate and streamline all your warehouse operations. From inventory tracking to order fulfillment and
+                            shipping, NWMS helps businesses of any size reduce errors, improve efficiency, and gain real-time
                             insights into stock movement—all without the cost of traditional WMS solutions.<br>
                             <br>
-                            Start efficient warehouse automation with NWMS today!</p>
+                            Start efficient warehouse automation with NWMS today!', $lang) !!}</p>
                     </div>
                     <div class="hero-button">
                         <div class="hero-main-button">
-                            <a href="about.html">Start A Project</a>
+                            <a href="#form">Start A Project</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <img src="/img/index_main3.png" alt="hero-thumb" style="width:400px;">
+                <img src="/img/index_main3.png" alt="hero-thumb">
             </div>
         </div>
     </div>
@@ -54,7 +53,7 @@
 <!--==================================================-->
 <div class="feature-area">
     <div class="container">
-        <h2>Who needs the program:</h2>
+        <h2>{!! CustomSiteTranslator::get('Who needs the program:', $lang) !!}</h2>
         <br>
         <div class="row">
             <div class="col-lg-3 col-md-6">
@@ -63,11 +62,11 @@
                         <img src="/img/iconFFWMS2.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Fulfilment operators</h2>
+                        <h2>{!! CustomSiteTranslator::get('Fulfilment operators', $lang) !!}</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>WMS is designed to provide a full range of fulfillment services as a supplier of warehouse
-                            services.</p>
+                        <p>{!! CustomSiteTranslator::get('WMS is designed to provide a full range of fulfillment services as a supplier of warehouse
+                            services.', $lang) !!}</p>
                     </div>
                 </div>
             </div>
@@ -77,11 +76,11 @@
                         <img src="/img/iconRetailersWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title" style="padding-top: 10px;">
-                        <h2>Retailers warehouses</h2>
+                        <h2>{!! CustomSiteTranslator::get('Retailers warehouses', $lang) !!}</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>WMS can work as a classic software for automating the work of a regular retailer’s
-                            warehouse.</p>
+                        <p>{!! CustomSiteTranslator::get('WMS can work as a classic software for automating the work of a regular retailer’s
+                            warehouse.', $lang) !!}</p>
                     </div>
                 </div>
             </div>
@@ -91,11 +90,11 @@
                         <img src="/img/iconEShopWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title" style="padding-top: 5px;">
-                        <h2>Online store warehouses</h2>
+                        <h2>{!! CustomSiteTranslator::get('Online store warehouses', $lang) !!}</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>NWMS will completely cover all needs for warehouse processing of your goods in your online
-                            store.</p>
+                        <p>{!! CustomSiteTranslator::get('NWMS will completely cover all needs for warehouse processing of your goods in your online
+                            store.', $lang) !!}</p>
                     </div>
                 </div>
             </div>
@@ -105,10 +104,10 @@
                         <img src="/img/iconWarehousesWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title" style="padding-top: 20px;">
-                        <h2>Any warehouses</h2>
+                        <h2>{!! CustomSiteTranslator::get('Any warehouses', $lang) !!}</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>Actually, NWMS is suitable for automating the work of any warehouse, of almost any size.</p>
+                        <p>{!! CustomSiteTranslator::get('Actually, NWMS is suitable for automating the work of any warehouse, of almost any size.', $lang) !!}</p>
                     </div>
                 </div>
             </div>
@@ -133,21 +132,20 @@
             </div>
             <div class="col-lg-7">
                 <div class="techo-section-title text-left wow fadeInRight animated">
-                    <h5>WHY FREE?</h5>
-                    <h3>Why is the program </h3>
-                    <h2>provided free of charge?</h2>
+                    <h5>{!! CustomSiteTranslator::get('WHY FREE?', $lang) !!}</h5>
+                    <h3>{!! CustomSiteTranslator::get('Why is the program', $lang) !!} </h3>
+                    <h2>{!! CustomSiteTranslator::get('provided free of charge?', $lang) !!}</h2>
                     <div class="bar-main">
                     </div>
                     <p>
-                        Our team has been involved in warehouse logistics for over 15 years and during this time we have
-                        accumulated vast
-                        experience in the processes of developing warehouse automation systems and in managing these
+                        {!! CustomSiteTranslator::get('Our team has been involved in warehouse logistics for over 15 years and during this time we have
+                        accumulated vast experience in the processes of developing warehouse automation systems and in managing these
                         warehouses.<br>
                         <br>
                         We want to offer our developments to as many users as possible simply because we can!<br>
                         <br>
                         We hope to create a community of warehouse logisticians who will help each other, as it happens
-                        in other industries.
+                        in other industries.', $lang) !!}
                     </p>
                 </div>
             </div>
@@ -165,7 +163,7 @@
 <!--==================================================-->
 <div class="feature-area">
     <div class="container">
-        <h2>Main features:</h2>
+        <h2>{!! CustomSiteTranslator::get('Main features:', $lang) !!}</h2>
         <br>
         <div class="row">
             <div class="col-lg-3 col-md-6">
@@ -174,11 +172,11 @@
                         <img src="/img/iconFFWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Full functionality of classic WMS</h2>
+                        <h2>{!! CustomSiteTranslator::get('Full functionality of classic WMS', $lang) !!}</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>First of all, NWMS is a classic WMS with all the capabilities including address storage,
-                            working with a terminal for data collection and control of balances, etc.</p>
+                        <p>{!! CustomSiteTranslator::get('First of all, NWMS is a classic WMS with all the capabilities including address storage,
+                            working with a terminal for data collection and control of balances, etc.', $lang) !!}</p>
                     </div>
                 </div>
             </div>
@@ -188,11 +186,11 @@
                         <img src="/img/iconAPIWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Powerful rest API</h2><br>
+                        <h2>{!! CustomSiteTranslator::get('Powerful rest API', $lang) !!}</h2><br>
                     </div>
                     <div class="feature-box-description">
-                        <p>Powerful rest API allowing you to do any integration of NWMS with your software or third
-                            party services.
+                        <p>{!! CustomSiteTranslator::get('Powerful rest API allowing you to do any integration of NWMS with your software or third
+                            party services.', $lang) !!}
                             <br><br><br>
                         </p>
                     </div>
@@ -204,11 +202,11 @@
                         <img src="/img/iconStatsWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Statistics of all warehouse operations</h2>
+                        <h2>{!! CustomSiteTranslator::get('Statistics of all warehouse operations', $lang) !!}</h2>
                     </div>
                     <div class="feature-box-description">
-                        <p>WMS includes a statistics module that displays data on employee actions in the warehouse,
-                            processed orders, turnover and other key indicators.<br><br></p>
+                        <p>{!! CustomSiteTranslator::get('WMS includes a statistics module that displays data on employee actions in the warehouse,
+                            processed orders, turnover and other key indicators.', $lang) !!}<br><br></p>
                     </div>
                 </div>
             </div>
@@ -218,12 +216,12 @@
                         <img src="/img/iconBillingWMS.png" alt="thumb">
                     </div>
                     <div class="feature-box-title">
-                        <h2>Billing of operations</h2>
+                        <h2>{!! CustomSiteTranslator::get('Billing of operations', $lang) !!}</h2>
                     </div>
                     <div class="feature-box-description">
                         <br>
-                        <p>The billing module allows you to calculate the cost of each operation performed on the
-                            company. This is especially relevant for service companies.</p>
+                        <p>{!! CustomSiteTranslator::get('The billing module allows you to calculate the cost of each operation performed on the
+                            company. This is especially relevant for service companies.', $lang) !!}</p>
                         <br>
                     </div>
                 </div>
@@ -253,7 +251,7 @@
                             <h2>+</h2>
                         </div>
                         <div class="counter-text">
-                            <span>Happy warehouses</span>
+                            <span>{!! CustomSiteTranslator::get('Happy warehouses', $lang) !!}</span>
                         </div>
                     </div>
                 </div>
@@ -269,7 +267,7 @@
                             <h2>+</h2>
                         </div>
                         <div class="counter-text">
-                            <span>Orders Completed</span>
+                            <span>{!! CustomSiteTranslator::get('Orders Completed', $lang) !!}</span>
                         </div>
                     </div>
                 </div>
@@ -284,7 +282,7 @@
                             <h2 class="counter">500</h2>
                         </div>
                         <div class="counter-text">
-                            <span>Goods in system</span>
+                            <span>{!! CustomSiteTranslator::get('Goods in system', $lang) !!}</span>
                         </div>
                     </div>
                 </div>
@@ -300,7 +298,7 @@
                             <h2>k+</h2>
                         </div>
                         <div class="counter-text">
-                            <span>Total items in stock</span>
+                            <span>{!! CustomSiteTranslator::get('Total items in stock', $lang) !!}</span>
                         </div>
                     </div>
                 </div>
@@ -326,12 +324,12 @@
             </div>
             <div class="col-lg-7 wow fadeInRight animated">
                 <div class="techo-section-title text-left">
-                    <h5>DEMO VERSION</h5>
-                    <h3>Check out the system right now</h3>
-                    <h2>On our <span>demo version</span></h2>
+                    <h5>{!! CustomSiteTranslator::get('DEMO VERSION', $lang) !!}</h5>
+                    <h3>{!! CustomSiteTranslator::get('Check out the system right now', $lang) !!}</h3>
+                    <h2>{!! CustomSiteTranslator::get('On our <span>demo version', $lang) !!}</span></h2>
                     <div class="bar-main">
                     </div>
-                    <p>To try our WMS right now, use the following accesses:</p>
+                    <p>{!! CustomSiteTranslator::get('To try our WMS right now, use the following accesses:', $lang) !!}</p>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
@@ -417,13 +415,13 @@
                         <div class="call-to-action_top_text wow fadeInLeft animated">
                             <div class="call-to-action-title">
                                 <span class="subtitlespan"></span>
-                                <h2>A quick tour of our WMS</h2>
+                                <h2>{!! CustomSiteTranslator::get('A quick tour of our WMS', $lang) !!}</h2>
                             </div>
                         </div>
                         <div class="call-to-action-inner wow fadeInRight animated">
                             <div class="call-to-action-desc">
-                                <p>To quickly familiarize yourself with the main features of NWMS, you can watch the
-                                    introductory video on youtube.</p>
+                                <p>{!! CustomSiteTranslator::get('To quickly familiarize yourself with the main features of NWMS, you can watch the
+                                    introductory video on youtube.', $lang) !!}</p>
                             </div>
                         </div>
                     </div>
@@ -440,16 +438,17 @@
 <!--==================================================-->
 <!-- Start techo Testimonial Area -->
 <!--==================================================-->
+<a name="form"></a>
 <div class="testimonial-area">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="techo-section-title text-center">
-                    <h5>START NOW</h5>
-                    <h3>Order form</h3>
+                    <h5>{!! CustomSiteTranslator::get('START NOW', $lang) !!}</h5>
+                    <h3>{!! CustomSiteTranslator::get('Order form', $lang) !!}</h3>
                     <div class="bar-main">
                     </div>
-                    <H4>You can start working immediately after filling out the form below.</H4>
+                    <H4>{!! CustomSiteTranslator::get('You can start working immediately after filling out the form below.', $lang) !!}</H4>
                 </div>
             </div>
             <div class="col-lg-12 wow fadeInRight animated">
@@ -458,12 +457,12 @@
                     <div class="row form">
                         <div class="col-lg-6">
                             <div class="form-box">
-                                <input type="text" name="FName" placeholder="First Name" required="">
+                                <input type="text" name="FName" placeholder="{!! CustomSiteTranslator::get('First Name', $lang) !!}" required="">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-box">
-                                <input type="text" name="LName" placeholder="Last Name" required="">
+                                <input type="text" name="LName" placeholder="{!! CustomSiteTranslator::get('Last Name', $lang) !!}" required="">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -478,19 +477,19 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="form-box">
-                                <input type="text" name="company" placeholder="Company name" required="">
+                                <input type="text" name="company" placeholder="{!! CustomSiteTranslator::get('Company name', $lang) !!}" required="">
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <div class="form-box">
                                 <textarea name="massage" id="massage" cols="30" rows="10"
-                                          placeholder="Comment"></textarea>
+                                          placeholder="{!! CustomSiteTranslator::get('Comment', $lang) !!}"></textarea>
                             </div>
                         </div>
                         <div class="col-lg-12">
                             <div class="form-box">
                                 <div class="language-selector">
-                                    <H5>Select interface language:</H5> &nbsp;
+                                    <H5>{!! CustomSiteTranslator::get('Select interface language:', $lang) !!}</H5> &nbsp;
                                     <select id="language-select" name="language">
                                         <option value="en" data-flag="🇺🇸">🇺🇸 English</option>
                                         <option value="bg" data-flag="🇧🇬">🇧🇬 Bulgarian</option>
@@ -513,7 +512,7 @@
                                 <input type="text" name="mName" value="" style="display:none;">
                                 <input type="hidden" name="fst" value="<?= time(); ?>">
 
-                                <button type="submit">Create account</button>
+                                <button type="submit">{!! CustomSiteTranslator::get('Create account', $lang) !!}</button>
                             </div>
                         </div>
                     </div>
