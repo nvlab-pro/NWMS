@@ -137,12 +137,12 @@ class PlacesScreen extends Screen
                             Input::make('reqRoom')
                                 ->title(CustomTranslator::get('Помещение:'))
                                 ->maxlength(6)
-                                ->popover('Обозначение помещения в котором будет располагаться место. Не более 6 символов.'),
+                                ->popover(CustomTranslator::get('Обозначение помещения в котором будет располагаться место. Не более 6 символов.')),
 
                             Input::make('reqFloor')
                                 ->title(CustomTranslator::get('Этаж:'))
                                 ->maxlength(6)
-                                ->popover('Этаж. Не более 6 символов.'),
+                                ->popover(CustomTranslator::get('Этаж. Не более 6 символов.')),
 
                         ])->fullWidth(),
 
@@ -152,13 +152,13 @@ class PlacesScreen extends Screen
                                 ->title(CustomTranslator::get('Секция от:'))
                                 ->type('number')
                                 ->min(0)
-                                ->popover('Секция (ОТ). Цифровое поле от 1 до бесконечности.'),
+                                ->popover(CustomTranslator::get('Секция (ОТ). Цифровое поле от 1 до бесконечности.')),
 
                             Input::make('reqSectionTo')
                                 ->title(CustomTranslator::get('Секция до:'))
                                 ->type('number')
                                 ->min(0)
-                                ->popover('Секция (ДО). Цифровое поле от 1 до бесконечности.'),
+                                ->popover(CustomTranslator::get('Секция (ДО). Цифровое поле от 1 до бесконечности.')),
 
                         ])->fullWidth(),
 

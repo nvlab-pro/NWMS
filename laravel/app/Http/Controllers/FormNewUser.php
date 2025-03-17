@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class FormNewUser extends Controller
 {
-    public function submit(Request $request)
+    public function submit(Request $request, $lang)
     {
 
         $validatedData = $request->validate([
@@ -151,6 +151,6 @@ class FormNewUser extends Controller
             }
         }
 
-        return view('Site.FormNewUser', compact('result'));
+        return view('Site.FormNewUser', compact('result', 'lang'));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\Warehouses\Places;
 
 use App\Models\rwPlace;
 use App\Orchid\Layouts\Warehouses\Places\PlacesTable;
+use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
@@ -63,12 +64,12 @@ class LabelPrintScreen extends Screen
 
     public function name(): ?string
     {
-        return 'Печать этикеток';
+        return CustomTranslator::get('Печать этикеток');
     }
 
     public function description(): ?string
     {
-        return 'Экран для печати этикеток';
+        return CustomTranslator::get('Экран для печати этикеток');
     }
     /**
      * Действия, доступные на экране.

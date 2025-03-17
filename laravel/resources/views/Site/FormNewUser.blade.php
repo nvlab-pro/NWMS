@@ -1,3 +1,4 @@
+@php use App\Services\CustomSiteTranslator; @endphp
 @include('Site.MainBlocks.header')
 
 <!--==================================================-->
@@ -18,12 +19,12 @@
             <div class="col-lg-12">
                 <div class="breadcumb-content">
                     <div class="breadcumb-title wow fadeInLeft animated">
-                        <h2>Create account</h2>
+                        <h2>{{ CustomSiteTranslator::get('Create account', $lang) }}</h2>
                     </div>
                     <div class="breadcumb-content-menu wow fadeInRight animated">
                         <ul>
-                            <li><a href="/">HOME<i class="fas fa-angle-right"></i></a></li>
-                            <li><span>CREATE ACCOUNT</span></li>
+                            <li><a href="/">{{ CustomSiteTranslator::get('HOME', $lang) }}<i class="fas fa-angle-right"></i></a></li>
+                            <li><span>{{ CustomSiteTranslator::get('CREATE ACCOUNT', $lang) }}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -48,27 +49,27 @@
                     <div class="blog-details-content">
                         @if($result == 'success')
                             <div class="alert alert-success">
-                                Account created successfully!
+                                {{ CustomSiteTranslator::get('Account created successfully!', $lang) }}
                             </div>
                             <br>
-                            <H3>Please follow the link:</H3>
+                            <H3>{{ CustomSiteTranslator::get('Please follow the link:', $lang) }}</H3>
                             <a href="https://nwms.cloud/admin" target="_blank">https://nwms.cloud/admin</a>
                             <br><br>
-                            To log in, use the details you provided.
+                            {{ CustomSiteTranslator::get('To log in, use the details you provided.', $lang) }}
 
                             <div class="bar-main">
                                 <div class="bar bar-big"></div>
                             </div>
 
-                            <H6>If you have any questions about launching or configuring <b>NWMS</b>, you can ask them on our telegram channel:</H6>
+                            <H6>{{ CustomSiteTranslator::get('If you have any questions about launching or configuring', $lang) }} <b>NWMS</b>, you can ask them on our telegram channel:', $lang) }}</H6>
                             <a href="https://t.me/+UJ5If6slQXZjYjMy" target="_blank">https://t.me/+UJ5If6slQXZjYjMy</a>
                         @elseif($result == 'exists')
                             <div class="alert alert-warning">
-                                An account with this email address already exists.
+                                {{ CustomSiteTranslator::get('An account with this email address already exists.', $lang) }}
                             </div>
                         @elseif($result == 'spam')
                             <div class="alert alert-danger">
-                                Your request has been recognized as spam!
+                                {{ CustomSiteTranslator::get('Your request has been recognized as spam!', $lang) }}
                             </div>
                         @endif
 
@@ -76,7 +77,7 @@
                             <div class="alert alert-danger">
                                 <ul>
                                     @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
+                                        <li>{{ CustomSiteTranslator::get($error, $lang) }}</li>
                                     @endforeach
                                 </ul>
                             </div>

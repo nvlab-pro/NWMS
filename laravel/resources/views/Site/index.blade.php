@@ -32,7 +32,7 @@
                     </div>
                     <div class="hero-button">
                         <div class="hero-main-button">
-                            <a href="#form">Start A Project</a>
+                            <a href="#form">{!! CustomSiteTranslator::get('Start A Project', $lang) !!}</a>
                         </div>
                     </div>
                 </div>
@@ -452,7 +452,7 @@
                 </div>
             </div>
             <div class="col-lg-12 wow fadeInRight animated">
-                <form action="/new-user-form" method="POST" id="dreamit-form">
+                <form action="/{{ $lang }}/new-user-form" method="POST" id="dreamit-form">
                     @csrf
                     <div class="row form">
                         <div class="col-lg-6">
