@@ -485,7 +485,7 @@
                                 <textarea name="massage" id="massage" cols="30" rows="10"
                                           placeholder="{!! CustomSiteTranslator::get('Comment', $lang) !!}"></textarea>
                             </div>
-                        </div>
+                        </div> 
                         <div class="col-lg-12">
                             <div class="form-box">
                                 <div class="language-selector">
