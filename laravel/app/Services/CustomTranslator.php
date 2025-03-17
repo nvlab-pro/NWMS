@@ -90,7 +90,7 @@ class CustomTranslator
 //                'model' => 'gpt-3.5-turbo',
                 'model' => 'gpt-4-turbo',
                 'messages' => [
-                    ['role' => 'system', 'content' => 'You are a translation assistant. Translate text to '.$language.'.'],
+                    ['role' => 'system', 'content' => 'You are a translation assistant. We are translating a text for warehouse automation software. Consider this nuance. Translate text to '.$language.'.'],
                     ['role' => 'user', 'content' => $text]
                 ],
                 'temperature' => 0.7,
