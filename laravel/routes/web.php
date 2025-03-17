@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('Site/index');
+    return view('Site/index', ['lang' => 'en']);
 });
 
 Route::get('/new-user-form', [\App\Http\Controllers\FormNewUser::class, 'submit']);
