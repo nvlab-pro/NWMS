@@ -485,24 +485,24 @@
                                 <textarea name="massage" id="massage" cols="30" rows="10"
                                           placeholder="{!! CustomSiteTranslator::get('Comment', $lang) !!}"></textarea>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-lg-12">
                             <div class="form-box">
                                 <div class="language-selector">
                                     <H5>{!! CustomSiteTranslator::get('Select interface language:', $lang) !!}</H5> &nbsp;
                                     <select id="language-select" name="language">
-                                        <option value="en" data-flag="🇺🇸">🇺🇸 English</option>
-                                        <option value="bg" data-flag="🇧🇬">🇧🇬 Bulgarian</option>
-                                        <option value="rus" data-flag="🇷🇺">🇷🇺 Russian</option>
-                                        <option value="ukr" data-flag="🇺🇦">🇺🇦 Ukrainian</option>
-                                        <option value="fr" data-flag="🇫🇷">🇫🇷 French</option>
-                                        <option value="de" data-flag="🇩🇪">🇩🇪 German</option>
-                                        <option value="sp" data-flag="🇪🇸">🇪🇸 Spanish</option>
-                                        <option value="ch" data-flag="🇨🇳">🇨🇳 Chinese</option>
-                                        <option value="pr" data-flag="🇵🇹">🇵🇹 Portuguese</option>
-                                        <option value="kz" data-flag="🇰🇿">🇰🇿 Kazakh</option>
-                                        <option value="bel" data-flag="🇧🇾">🇧🇾 Belarusian</option>
-                                        <option value="gr" data-flag="🇬🇪">🇬🇪 Georgian</option>
+                                        <option value="bg" data-flag="🇧🇬" @if($lang == 'bg') SELECTED @endif>🇧🇬 Bulgarian</option>
+                                        <option value="bel" data-flag="🇧🇾" @if($lang == 'bel') SELECTED @endif>🇧🇾 Belarusian</option>
+                                        <option value="ch" data-flag="🇨🇳" @if($lang == 'ch') SELECTED @endif>🇨🇳 Chinese</option>
+                                        <option value="de" data-flag="🇩🇪" @if($lang == 'de') SELECTED @endif>🇩🇪 German</option>
+                                        <option value="en" data-flag="🇺🇸" @if($lang == 'en') SELECTED @endif>🇺🇸 English</option>
+                                        <option value="fr" data-flag="🇫🇷" @if($lang == 'fr') SELECTED @endif>🇫🇷 French</option>
+                                        <option value="gr" data-flag="🇬🇪" @if($lang == 'gr') SELECTED @endif>🇬🇪 Georgian</option>
+                                        <option value="kz" data-flag="🇰🇿" @if($lang == 'kz') SELECTED @endif>🇰🇿 Kazakh</option>
+                                        <option value="pr" data-flag="🇵🇹" @if($lang == 'pr') SELECTED @endif>🇵🇹 Portuguese</option>
+                                        <option value="rus" data-flag="🇷🇺" @if($lang == 'rus') SELECTED @endif>🇷🇺 Russian</option>
+                                        <option value="sp" data-flag="🇪🇸" @if($lang == 'sp') SELECTED @endif>🇪🇸 Spanish</option>
+                                        <option value="ukr" data-flag="🇺🇦" @if($lang == 'ukr') SELECTED @endif>🇺🇦 Ukrainian</option>
                                     </select>
                                 </div>
                             </div>
