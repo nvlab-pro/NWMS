@@ -30,4 +30,8 @@ Route::get('/{lang}/privacy', function ($lang) {
     return view('Site/privacy', ['lang' => $lang]);
 });
 
+Route::get('/{lang}/pricing', function ($lang) {
+    return view('Site/pricing', ['lang' => $lang]);
+});
+
 Route::post('/{lang}/new-user-form', [\App\Http\Controllers\FormNewUser::class, 'submit']);

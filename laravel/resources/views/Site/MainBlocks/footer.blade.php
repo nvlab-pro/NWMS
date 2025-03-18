@@ -21,7 +21,13 @@
 {{--                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>--}}
 {{--                            <li><a href="#"><i class="bi bi-youtube"></i></a></li>--}}
                             <li><a href="https://t.me/+UJ5If6slQXZjYjMy"><i class="fab fa-telegram"></i></a></li>
-                            <li><a href="https://www.youtube.com/@nwms_en" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                            @if($lang == 'rus')
+                                <li><a href="https://www.youtube.com/@nwms_ru" target="_blank"><i
+                                                class="fab fa-youtube"></i></a></li>
+                            @else
+                                <li><a href="https://www.youtube.com/@nwms_en" target="_blank"><i
+                                                class="fab fa-youtube"></i></a></li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -37,8 +43,8 @@
                 <div class="footer-bottom-right wow fadeInRight animated">
                     <div class="footer-right-content">
                         <ul>
-                            <li><a href="/{{ $lang }}/terms">{{ CustomSiteTranslator::get('Terms of Service', $lang) }}</a></li>
-                            <li><a href="/{{ $lang }}/privacy">{{ CustomSiteTranslator::get('Privacy Policy', $lang) }}</a></li>
+                            <li><a href="/terms" target="_blank">Terms of Service</a></li>
+                            <li><a href="/privacy" target="_blank">Privacy Policy</a></li>
                             <li><a href="/">Support</a></li>
                         </ul>
                     </div>
