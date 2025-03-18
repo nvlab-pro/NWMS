@@ -1,4 +1,4 @@
-
+@php use App\Services\CustomSiteTranslator; @endphp
 <!--==================================================-->
 <!-- Start techo Footer Area -->
 <!--==================================================-->
@@ -37,11 +37,31 @@
                 <div class="footer-bottom-right wow fadeInRight animated">
                     <div class="footer-right-content">
                         <ul>
-                            <li><a href="/">Terms</a></li>
-                            <li><a href="/">Privacy</a></li>
+                            <li><a href="/{{ $lang }}/terms">{{ CustomSiteTranslator::get('Terms of Service', $lang) }}</a></li>
+                            <li><a href="/{{ $lang }}/privacy">{{ CustomSiteTranslator::get('Privacy Policy', $lang) }}</a></li>
                             <li><a href="/">Support</a></li>
                         </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="row footer-bottom" style="padding-top: 10px; margin-top: 0px;">
+            <div class="col-lg-12 col-md-12">
+                <div class="footer-bottom-right wow fadeInRight animated" style="text-align: center;">
+                    <div class="footer-right-content">
+                    <a href="/bg/">🇧🇬</a>
+                    <a href="/bel/">🇧🇾</a>
+                    <a href="/ch/">🇨🇳</a>
+                    <a href="/de/">🇩🇪</a>
+                    <a href="/en/">🇺🇸</a>
+                    <a href="/fr/">🇫🇷</a>
+                    <a href="/gr/">🇬🇪</a>
+                    <a href="/kz/">🇰🇿</a>
+                    <a href="/pr/">🇵🇹</a>
+                    <a href="/rus/">🇷🇺</a>
+                    <a href="/sp/">🇪🇸</a>
+                    <a href="/ukr/">🇺🇦</a>
+                </div>
                 </div>
             </div>
         </div>
