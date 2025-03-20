@@ -157,7 +157,7 @@ class AcceptancesOffersTable extends Table
                 ->width('100px')
                 ->render(fn(rwAcceptanceOffer $modelName) =>
                 (($modelName->ao_placed === null || $modelName->ao_placed == 0) && $modelName->oa_status == 1)
-                    ? Button::make('')
+                    ? Button::make(' Удалить')
                     ->icon('bs.trash')
                     ->method('deleteItem')
                     ->parameters([
@@ -167,7 +167,7 @@ class AcceptancesOffersTable extends Table
                         '_token' => csrf_token(), // Добавляем CSRF-токен вручную
                     ])
                     ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить этот товар из накладной?'))
-                    ->class('btn btn-link text-danger p-0') // Делаем кнопку "плоской" без фона
+                    ->style('color: red;')
                     : null
                 ),
 

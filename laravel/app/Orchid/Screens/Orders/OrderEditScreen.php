@@ -69,6 +69,7 @@ class OrderEditScreen extends Screen
         $dbOrderOffersList = rwOrderOffer::where('oo_order_id', $orderId)
             ->with('getOffer')
             ->with('getPackingOffer')
+            ->orderBy('oo_id', 'DESC')
             ->get();
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
@@ -248,12 +249,6 @@ class OrderEditScreen extends Screen
                     'status' => $this->order->o_status_id,
                 ]),
 
-            ModalToggle::make(' ' . CustomTranslator::get('Добавить товар'))
-                ->icon('bs.plus-circle')
-                ->modal('addOfferModal')
-                ->method('addOffer')
-                ->canSee($this->order->o_status_id == 10 ? true : false),
-
             Button::make(CustomTranslator::get($dbStatus->os_name))
                 ->style('background-color: ' . $dbStatus->os_bgcolor . ';' . 'color: ' . $dbStatus->os_color . ';')
                 ->disabled(true),
@@ -330,6 +325,40 @@ class OrderEditScreen extends Screen
                 ]),
             ],
             CustomTranslator::get('Товары') => [
+
+                Layout::rows([
+                    Group::make([
+
+                        Select::make('oo_offer_id')
+                            ->title(CustomTranslator::get('Выберите добавляемый товар:'))
+                            ->width('100px')
+                            ->options(
+                                rwOffer::where('of_shop_id', $this->order->o_shop_id)
+                                    ->whereNotIn('of_id', function ($query) {
+                                        $query->select('oo_offer_id')
+                                            ->from('rw_order_offers')
+                                            ->where('oo_order_id', $this->order->o_id); // Условие для конкретной накладной
+                                    })
+                                    ->get()
+                                    ->mapWithKeys(function ($offer) {
+                                        return [$offer->of_id => $offer->of_name . ' (' . $offer->of_article . ')'];
+                                    })->toArray()
+                            )
+                            ->horizontal()
+                            ->empty('', 0),
+
+                        Button::make(CustomTranslator::get('Добавить товар'))
+                            ->method('addOffer')
+                            ->class('btn btn-outline-success btn-sm')
+                            ->parameters([
+                                'oo_order_id' => $this->order->o_id,
+                                'o_wh_id' => $this->order->o_wh_id,
+                                'docDate' => $this->order->o_date,
+                            ]),
+
+                    ])->fullWidth(),
+                ])->canSee($this->order->o_status_id == 10),
+
                 OrderOffersTable::class,
 
                 Layout::rows([
@@ -362,42 +391,7 @@ class OrderEditScreen extends Screen
         return [
             Layout::tabs($tabs),
 
-            Layout::modal('addOfferModal', [
-                Layout::rows([
-                    Input::make('offer.oo_order_id')
-                        ->value($this->order->o_id)
-                        ->type('hidden'),
-
-                    Select::make('offer.oo_offer_id')
-                        ->title(CustomTranslator::get('Выберите добавляемый товар:'))
-                        ->width('100px')
-                        ->options(
-                            rwOffer::where('of_shop_id', $this->order->o_shop_id)
-                                ->whereNotIn('of_id', function ($query) {
-                                    $query->select('oo_offer_id')
-                                        ->from('rw_order_offers')
-                                        ->where('oo_order_id', $this->order->o_id); // Условие для конкретной накладной
-                                })
-                                ->get()
-                                ->mapWithKeys(function ($offer) {
-                                    return [$offer->of_id => $offer->of_name . ' (' . $offer->of_article . ')'];
-                                })->toArray()
-                        )
-                        ->empty('', 0),
-
-                    Input::make('offer.o_wh_id')
-                        ->value($this->order->o_wh_id)
-                        ->type('hidden'),
-
-                    Input::make('offer.docDate')
-                        ->value($this->order->o_date)
-                        ->type('hidden'),
-
-                ]),
-            ])
-                ->size('xl')
-                ->method('addOffer')
-                ->title(CustomTranslator::get('Добавление нового товара'))->applyButton(CustomTranslator::get('Добавить'))->closeButton(CustomTranslator::get('Закрыть')),
+//                  ->title(CustomTranslator::get('Добавление нового товара'))->applyButton(CustomTranslator::get('Добавить'))->closeButton(CustomTranslator::get('Закрыть')),
 
 
             // Определение модальных окон
@@ -674,35 +668,35 @@ class OrderEditScreen extends Screen
     public function addOffer(Request $request)
     {
         $validated = $request->validate([
-            'offer.oo_order_id' => 'required|integer|min:1',
-            'offer.o_wh_id' => 'required|integer|min:1',
-            'offer.oo_offer_id' => 'required|integer|min:1',
-            'offer.docDate' => 'nullable|date', // Каждая дата должна быть обязательной и формата даты
+            'oo_order_id' => 'required|integer|min:1',
+            'o_wh_id' => 'required|integer|min:1',
+            'oo_offer_id' => 'required|integer|min:1',
+            'docDate' => 'nullable|date', // Каждая дата должна быть обязательной и формата даты
         ]);
 
-        $dbOffer = rwOrderOffer::where('oo_order_id', $validated['offer']['oo_order_id'])
-            ->where('oo_offer_id', $validated['offer']['oo_offer_id'])
+        $dbOffer = rwOrderOffer::where('oo_order_id', $validated['oo_order_id'])
+            ->where('oo_offer_id', $validated['oo_offer_id'])
             ->first();
 
         if (!isset($dbOffer->oo_id)) {
 
             $dbOffer = rwOrderOffer::create([
-                'oo_order_id' => $validated['offer']['oo_order_id'],
-                'oo_offer_id' => $validated['offer']['oo_offer_id'],
+                'oo_order_id' => $validated['oo_order_id'],
+                'oo_offer_id' => $validated['oo_offer_id'],
             ]);
 
             Alert::success(CustomTranslator::get('Товар добавлен в заказ!'));
 
-            $currentWarehouse = new WhCore($validated['offer']['o_wh_id']);
+            $currentWarehouse = new WhCore($validated['o_wh_id']);
 
             $barcode = '';
 
             $currentWarehouse->saveOffers(
-                $validated['offer']['oo_order_id'],
-                $validated['offer']['docDate'],
+                $validated['oo_order_id'],
+                $validated['docDate'],
                 2,                       // Приемка (таблица rw_lib_type_doc)
                 $dbOffer->oo_id,                                // ID офера в документе
-                $validated['offer']['oo_offer_id'],                                // оригинальный ID товара
+                $validated['oo_offer_id'],                                // оригинальный ID товара
                 0,
                 0,
                 $barcode,

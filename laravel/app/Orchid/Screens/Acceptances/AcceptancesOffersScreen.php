@@ -222,7 +222,7 @@ class AcceptancesOffersScreen extends Screen
                         ]),
 
                 ])->fullWidth(),
-            ]),
+            ])->canSee($this->docStatus < 4),
 
             AcceptancesOffersTable::class,
 
@@ -236,7 +236,7 @@ class AcceptancesOffersScreen extends Screen
                         'whId' => $this->whId,
                         'docDate' => $this->docDate,
                     ]),
-            ]),
+            ])->canSee($this->docStatus < 4),
 
         ];
     }

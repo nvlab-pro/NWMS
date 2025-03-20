@@ -279,7 +279,8 @@ class WhCore
     {
         return DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_doc_id', $docId)
-            ->where('whci_doc_type', $docType);
+            ->where('whci_doc_type', $docType)
+            ->orderBy('whci_doc_offer_id', 'DESC');
     }
 
     // *******************************************************
