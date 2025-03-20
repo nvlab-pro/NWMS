@@ -44,6 +44,7 @@
     <div class="mobile-menu">
         <nav class="techo_menu">
             <ul class="nav_scroll">
+                <li><a href="/admin">WMS</a></li>
                 <li><a href="/">Home</a></li>
                 <!--
                 <li><a href="/">Pricing</a></li>

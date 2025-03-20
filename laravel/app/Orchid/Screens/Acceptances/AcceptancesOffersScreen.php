@@ -10,6 +10,7 @@ use App\Orchid\Layouts\Acceptances\AcceptancesOffersTable;
 use App\Orchid\Services\DocumentService;
 use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Screen;
@@ -25,6 +26,12 @@ class AcceptancesOffersScreen extends Screen
 {
 
     protected $acceptId, $shopId, $whId, $whName, $docStatus, $docDate;
+
+//    public function screenBaseView(): string
+//    {
+//        return 'loyouts.base';
+//
+//    }
 
     public function query($acceptId): iterable
     {
@@ -48,11 +55,15 @@ class AcceptancesOffersScreen extends Screen
         $currentDocument = new DocumentService($this->acceptId);
         $collection = $currentDocument->getAcceptanceList();
 
+        $route = route('platform.acceptances.offers', $acceptId);
+
         return [
             'acceptId'              => $this->acceptId,
             'whId'                  => $this->whId,
             'shopId'                => $this->shopId,
+            'docDate'                => $this->docDate,
             'dbAcceptOffersList'    => $collection,
+            'route'                => $route,
         ];
     }
 
@@ -100,14 +111,6 @@ class AcceptancesOffersScreen extends Screen
 
 
             }
-
-            $arLinksList = [
-                ModalToggle::make(CustomTranslator::get(' Добавить товар'))
-                    ->icon('bs.plus-circle')
-                    ->modal('addOfferModal') // Имя модального окна
-                    ->method('addOffer'), // Класс для стилизации (по желанию)
-
-            ];
 
             $arLinksList3 = [
                 Button::make('NEW')
@@ -168,47 +171,6 @@ class AcceptancesOffersScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::modal('addOfferModal', [
-                Layout::rows([
-                    Input::make('offer.acceptId')
-                        ->value($this->acceptId)
-                        ->type('hidden'),
-
-                    Input::make('offer.whId')
-                        ->value($this->whId)
-                        ->type('hidden'),
-
-                    Input::make('offer.shopId')
-                        ->value($this->shopId)
-                        ->type('hidden'),
-
-                    Input::make('offer.docDate')
-                        ->value($this->docDate)
-                        ->type('text'),
-
-                    Select::make('offer.of_id')
-                        ->title(CustomTranslator::get('Выберите добавляемый товар:'))
-                        ->width('100px')
-                        ->options(
-                            rwOffer::where('of_shop_id', $this->shopId)
-                                ->whereNotIn('of_id', function ($query) {
-                                    $query->select('ao_offer_id')
-                                        ->from('rw_acceptance_offers')
-                                        ->where('ao_acceptance_id', $this->acceptId); // Условие для конкретной накладной
-                                })
-                                ->get()
-                                ->mapWithKeys(function ($offer) {
-                                    return [$offer->of_id => $offer->of_name . ' (' . $offer->of_article . ')'];
-                                })->toArray()
-                        )
-                        ->empty('', 0),
-
-                ]),
-            ])
-                ->size('xl')
-                ->method('addOffer')
-                ->title(CustomTranslator::get('Добавление нового товара'))->applyButton(CustomTranslator::get('Добавить'))->closeButton(CustomTranslator::get('Закрыть')),
-
             Layout::modal('editDimensions', [
                 Layout::rows([
                     Input::make('offer.dimension_x')
@@ -229,35 +191,53 @@ class AcceptancesOffersScreen extends Screen
                 ]),
             ])->async('asyncGetOfferDimensions'), // Метод для загрузки данных
 
+            Layout::rows([
+                Group::make([
+
+                    Select::make('of_id')
+                    ->title(CustomTranslator::get('Выберите добавляемый товар:'))
+                    ->width('100px')
+                    ->options(
+                        rwOffer::where('of_shop_id', $this->shopId)
+                            ->whereNotIn('of_id', function ($query) {
+                                $query->select('ao_offer_id')
+                                    ->from('rw_acceptance_offers')
+                                    ->where('ao_acceptance_id', $this->acceptId); // Условие для конкретной накладной
+                            })
+                            ->get()
+                            ->mapWithKeys(function ($offer) {
+                                return [$offer->of_id => $offer->of_name . ' (' . $offer->of_article . ')'];
+                            })->toArray()
+                    )
+                    ->horizontal()
+                    ->empty('', 0),
+
+                Button::make(CustomTranslator::get('Добавить товар'))
+                    ->method('addOffer')
+                    ->class('btn btn-outline-success btn-sm')
+                    ->parameters([
+                        'acceptId' => $this->acceptId,
+                        'whId' => $this->whId,
+                        'docDate' => $this->docDate,
+                        ]),
+
+                ])->fullWidth(),
+            ]),
+
             AcceptancesOffersTable::class,
 
             Layout::rows([
-                Input::make('acceptId')
-                    ->type('hidden')
-                    ->value($this->acceptId),
-
-                Input::make('whId')
-                    ->type('hidden')
-                    ->value($this->whId),
-
-                Input::make('shopId')
-                    ->type('hidden')
-                    ->value($this->shopId),
-
-                Input::make('docDate')
-                    ->value($this->docDate)
-                    ->type('hidden'),
-
-                // Ваша форма и таблицы
                 Button::make(CustomTranslator::get('Сохранить изменения'))
-                    ->canSee($this->docStatus < 4 ? true : false)
+                    ->method('saveChanges')
                     ->class('btn btn-primary d-block mx-auto')
-                    ->method('saveChanges') // Указывает метод экрана для вызова
                     ->parameters([
-                        '_token' => csrf_token(), // Добавляем CSRF-токен вручную
+                        'acceptId' => $this->acceptId,
+                        'shopId' => $this->shopId,
+                        'whId' => $this->whId,
+                        'docDate' => $this->docDate,
                     ]),
             ]),
-            Layout::view('Acceptances.AcceptanceOffersFormFooter'),
+
         ];
     }
 
@@ -358,12 +338,17 @@ class AcceptancesOffersScreen extends Screen
     public function asyncGetOfferDimensions(int $offerId): array
     {
         $offer = rwAcceptanceOffer::find($offerId);
+
+        if (!$offer || !$offer->getOffers) {
+            return ['error' => 'Offer not found or missing related data'];
+        }
+
         return [
             'offer' => [
-                'dimension_x' => $offer->getOffers->of_dimension_x,
-                'dimension_y' => $offer->getOffers->of_dimension_y,
-                'dimension_z' => $offer->getOffers->of_dimension_z,
-                'weight' => $offer->getOffers->of_weight,
+                'dimension_x' => $offer->getOffers->of_dimension_x ?? 0,
+                'dimension_y' => $offer->getOffers->of_dimension_y ?? 0,
+                'dimension_z' => $offer->getOffers->of_dimension_z ?? 0,
+                'weight' => $offer->getOffers->of_weight ?? 0,
             ],
         ];
     }
@@ -414,35 +399,35 @@ class AcceptancesOffersScreen extends Screen
     public function addOffer(Request $request)
     {
         $validated = $request->validate([
-            'offer.of_id' => 'required|integer|min:1',
-            'offer.acceptId' => 'required|integer|min:1',
-            'offer.whId' => 'required|integer|min:1',
-            'offer.docDate' => 'nullable|date_format:Y-m-d H:i:s', // Каждая дата должна быть обязательной и формата даты
+            'of_id' => 'required|integer|min:1',
+            'acceptId' => 'required|integer|min:1',
+            'whId' => 'required|integer|min:1',
+            'docDate' => 'nullable|date_format:Y-m-d H:i:s', // Каждая дата должна быть обязательной и формата даты
         ]);
 
-        $dbOffersList = rwAcceptanceOffer::where('ao_acceptance_id', $validated['offer']['acceptId'])
-            ->where('ao_offer_id', $validated['offer']['of_id'])
+        $dbOffersList = rwAcceptanceOffer::where('ao_acceptance_id', $validated['acceptId'])
+            ->where('ao_offer_id', $validated['of_id'])
             ->first();
 
         if (!isset($dbOffersList->ao_id)) {
 
             $dbAccptence = rwAcceptanceOffer::create([
-                'ao_acceptance_id' => $validated['offer']['acceptId'],
-                'ao_offer_id' => $validated['offer']['of_id'],
+                'ao_acceptance_id' => $validated['acceptId'],
+                'ao_offer_id' => $validated['of_id'],
             ]);
 
             Alert::success(CustomTranslator::get('Товар добавлен в накладную'));
 
-            $currentWarehouse = new WhCore($validated['offer']['whId']);
+            $currentWarehouse = new WhCore($validated['whId']);
 
             $barcode = '';
 
             $currentWarehouse->saveOffers(
-                $validated['offer']['acceptId'],
-                $validated['offer']['docDate'],
+                $validated['acceptId'],
+                $validated['docDate'],
                 1,                       // Приемка (таблица rw_lib_type_doc)
                 $dbAccptence->ao_id,                                // ID офера в документе
-                $validated['offer']['of_id'],                                // оригинальный ID товара
+                $validated['of_id'],                                // оригинальный ID товара
                 0,
                 0,
                 $barcode,
@@ -470,6 +455,22 @@ class AcceptancesOffersScreen extends Screen
             ]);
 
         Alert::info(CustomTranslator::get('Накладная закрыта!'));
+
+    }
+
+    public function deleteItem($acceptId, $offerId)
+    {
+
+        $whId = rwAcceptance::where('acc_id', $acceptId)->first()->acc_wh_id;
+
+        $currentWarehouse = new WhCore($whId);
+        $currentWarehouse->deleteItemFromDocument($offerId, $acceptId, 1);
+
+        rwAcceptanceOffer::where('ao_id', $offerId)
+            ->where('ao_acceptance_id', $acceptId)
+            ->forceDelete();
+
+        Alert::error(CustomTranslator::get('Товар удален!'));
 
     }
 

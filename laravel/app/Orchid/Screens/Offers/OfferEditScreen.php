@@ -128,14 +128,14 @@ class OfferEditScreen extends Screen
         $currentUser = Auth::user();
         $dbShopsList = rwShop::where('sh_domain_id', $currentUser->domain_id);
 
-        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
-
-
-        } else {
-
-            $dbShopsList = $dbShopsList->where('sh_user_id', $currentUser->id);
-
-        }
+//        if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
+//
+//
+//        } else {
+//
+//            $dbShopsList = $dbShopsList->where('sh_user_id', $currentUser->id);
+//
+//        }
         $statuses = rwLibStatus::all()->pluck('ls_name', 'ls_id')->toArray();
 
         foreach ($statuses as $id => $name) {

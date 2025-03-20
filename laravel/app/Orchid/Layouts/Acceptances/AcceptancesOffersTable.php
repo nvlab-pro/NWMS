@@ -29,7 +29,7 @@ class AcceptancesOffersTable extends Table
     {
         return [
 
-            TD::make('ao_id', CustomTranslator::get('ID'))
+            TD::make('ao_id', 'ID')
                 ->sort()
                 ->align('center'),
 
@@ -111,7 +111,7 @@ class AcceptancesOffersTable extends Table
                     $bgColor = '';
                     if ($modelName->ao_barcode == '') $bgColor = 'style="background-color: #ffbdbf;"';
                     $readonly = '';
-                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) $readonly = 'readonly';
                     return '<input type="text" name="docOfferBarcode[' . $modelName->ao_id . ']" value="' . e($modelName->ao_barcode) . '" class="form-control" size=15 placeHolder="'.CustomTranslator::get('Штрих-код').'" ' . $bgColor . ' ' . $readonly . '>';
                 }),
 
@@ -148,28 +148,27 @@ class AcceptancesOffersTable extends Table
                 ->sort()
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $readonly = '';
-                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) $readonly = 'readonly';
                     return '<input type="text" name="docOfferPrice[' . $modelName->ao_id . ']" value="' . e($modelName->ao_price) . '" class="form-control" size=6 placeHolder="'.CustomTranslator::get('Цена').'" ' . $readonly . '>';
                 }),
 
             TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
-                ->render(fn(rwAcceptanceOffer $modelName) => DropDown::make()
-                    ->icon('bs.three-dots-vertical')
-                    ->list(array_filter([
-                        ($modelName->ao_placed === null && $modelName->oa_status == 1)
-                            ? Button::make(CustomTranslator::get('Удалить'))
-                            ->icon('bs.trash')
-                            ->method('deleteItem')
-                            ->parameters([
-                                'offerId' => $modelName->ao_id,
-                                'docType' => 1,
-                                '_token' => csrf_token(), // Добавляем CSRF-токен вручную
-                            ])
-                            ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить этот товар из накладной?'))
-                            : null, // Кнопка не добавляется, если условие не выполнено
-                    ]))
+                ->render(fn(rwAcceptanceOffer $modelName) =>
+                (($modelName->ao_placed === null || $modelName->ao_placed == 0) && $modelName->oa_status == 1)
+                    ? Button::make('')
+                    ->icon('bs.trash')
+                    ->method('deleteItem')
+                    ->parameters([
+                        'acceptId' => $modelName->ao_acceptance_id,
+                        'offerId' => $modelName->ao_id,
+                        'docType' => 1,
+                        '_token' => csrf_token(), // Добавляем CSRF-токен вручную
+                    ])
+                    ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить этот товар из накладной?'))
+                    ->class('btn btn-link text-danger p-0') // Делаем кнопку "плоской" без фона
+                    : null
                 ),
 
         ];

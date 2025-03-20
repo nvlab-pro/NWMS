@@ -109,6 +109,18 @@ class CustomTranslator
     protected static function saveTranslations(): void
     {
         $path = base_path("lang/" . self::$locale . ".json");
+
+        // Проверяем, существует ли папка "lang", если нет — создаем
+        if (!File::exists(base_path("lang"))) {
+            File::makeDirectory(base_path("lang"), 0755, true);
+        }
+
+        // Проверяем, существует ли файл, если нет — создаем пустой JSON
+        if (!File::exists($path)) {
+            File::put($path, json_encode([], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+
+        // Записываем переводы в файл
         File::put($path, json_encode(self::$translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 

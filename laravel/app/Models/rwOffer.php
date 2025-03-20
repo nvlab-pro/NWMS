@@ -42,12 +42,81 @@ class rwOffer extends Model implements AuditableContract
         'of_estimated_price'    => Where::class,
     ];
 
+    protected $importDescriptions = [
+        'of_id'             => [
+            'name'              => 'of_id',
+            'description'       => 'ID товара в системе. Необязательное, но если указано, будет использоваться для обновления товара.',
+            'type'              => 'ключ, приоритет 1',
+            'defaultValue'      => '-',
+
+        ],
+        'of_sku'            => [
+            'name'        => 'of_sku',
+            'description' => 'SKU товара. Необязательное. Может использоваться для обновления товара, если товар с таким SKU уже существует и не задано поле of_id.',
+            'type'        => 'ключ, приоритет 2',
+            'defaultValue'      => '-',
+        ],
+        'of_article'        => [
+            'name'        => 'of_article',
+            'description' => 'Артикул товара. Необязательное. Может использоваться для обновления товара, если товар с таким артикулом уже существует и не заданы поля of_id или of_sku.',
+            'type'        => 'ключ, приоритет 3',
+            'defaultValue'      => '-',
+        ],
+        'of_name'           => [
+            'name'        => 'of_name',
+            'description' => 'Название товара.',
+            'type'        => 'поле обязательно',
+            'defaultValue'      => '-',
+        ],
+        'of_status'         => [
+            'name'        => 'of_status',
+            'description' => 'Статус товара. 1 - активный, 2 - отключен, 3 - удален.',
+            'type'        => 'необязательно (активный по умолчанию)',
+            'defaultValue'      => '1',
+        ],
+        'of_price'          => [
+            'name'        => 'of_price',
+            'description' => 'Стоимость товара.',
+            'type'        => 'необязательно',
+            'defaultValue'      => '0',
+        ],
+        'of_estimated_price' => [
+            'name'        => 'of_estimated_price',
+            'description' => 'Оценочная стоимость товара.',
+            'type'        => 'необязательно',
+            'defaultValue'      => '0',
+        ],
+        'of_datamarix'      => [
+            'name'        => 'of_datamarix',
+            'description' => 'Использование Datamatrix. 1 - да, 0 - нет.',
+            'type'        => 'необязательно. 0 по умолчанию.',
+            'defaultValue'      => '0',
+        ],
+        'of_img'            => [
+            'name'        => 'of_img',
+            'description' => 'URL изображения товара.',
+            'type'        => 'необязательно',
+            'defaultValue'      => '0',
+        ],
+        'of_comment'        => [
+            'name'        => 'of_comment',
+            'description' => 'Комментарий к товару.',
+            'type'        => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+    ];
+
     /**
      * @var array
      */
     protected $allowedSorts = [
         'id',
     ];
+
+    public static function getImportDescriptions(): array
+    {
+        return (new self())->importDescriptions;
+    }
 
     public static function perPage(): int
     {

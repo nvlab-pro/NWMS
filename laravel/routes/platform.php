@@ -268,6 +268,12 @@ Route::screen('offers/{whId}/{offerId}/turnover', \App\Orchid\Screens\Offers\Tur
         ->parent('platform.offers.index')
         ->push(CustomTranslator::get('Движение товара'), route('platform.offers.turnover', ['whId' => $whId, 'offerId' => $offerId])));
 
+Route::screen('offers/import', \App\Orchid\Screens\Offers\OffersImportScreen::class)
+    ->name('platform.offers.import')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.offers.index')
+        ->push(CustomTranslator::get('Импорт товаров'), route('platform.offers.import')));
+
 
 
 // ******************************************************
