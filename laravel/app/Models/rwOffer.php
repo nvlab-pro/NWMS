@@ -24,10 +24,21 @@ class rwOffer extends Model implements AuditableContract
 
     // Другие разрешённые для массового присвоения атрибуты
     protected $fillable = [
+        'of_domain_id',
+        'of_shop_id',
+        'of_status',
+        'of_name',
+        'of_article',
+        'of_sku',
+        'of_price',
+        'of_estimated_price',
+        'of_datamarix',
+        'of_img',
         'of_dimension_x',
         'of_dimension_y',
         'of_dimension_z',
         'of_weight',
+        'of_comment',
     ];
 
     protected $allowedFilters = [

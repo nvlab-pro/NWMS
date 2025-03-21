@@ -129,6 +129,12 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/spatie/flare-client-php" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/spatie/ignition" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/spatie/laravel-ignition" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/ezyang/htmlpurifier" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/maatwebsite/excel" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/maennchen/zipstream-php" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/markbaker/complex" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/markbaker/matrix" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/phpoffice/phpspreadsheet" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -3,32 +3,34 @@
 namespace App\Imports;
 
 use App\Models\rwOffer;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Orchid\Support\Facades\Alert;
 
 class OffersImport implements ToModel, WithHeadingRow
 {
+    protected int $shopId;
+
+    public function __construct(int $shopId)
+    {
+        $this->shopId = $shopId;
+    }
+
     public function model(array $row)
     {
-        // Определяем, по какому полю будем искать запись
-        $offerQuery = rwOffer::query();
+        $currentUser = Auth::user();
+        $shopId = $this->shopId;
 
-        if (!empty($row['of_id'])) {
-            $offerQuery->where('of_id', $row['of_id']);
-        } elseif (!empty($row['of_sku'])) {
-            $offerQuery->where('of_sku', $row['of_sku']);
-        } elseif (!empty($row['of_article'])) {
-            $offerQuery->where('of_article', $row['of_article']);
-        }
+// Сначала ищем товар только в рамках текущего магазина
+        $offer = rwOffer::query()
+            ->where('of_shop_id', $shopId)
+            ->when(!empty($row['of_id']), fn($q) => $q->where('of_id', $row['of_id']))
+            ->when(empty($row['of_id']) && !empty($row['of_sku']), fn($q) => $q->where('of_sku', $row['of_sku']))
+            ->when(empty($row['of_id']) && empty($row['of_sku']) && !empty($row['of_article']), fn($q) => $q->where('of_article', $row['of_article']))
+            ->first();
 
-        // Ищем существующую запись
-        $offer = $offerQuery->first();
-
-        // Подготовка данных для обновления (только заполненные поля)
-        $updateData = array_filter([
-            'of_domain_id' => $row['of_domain_id'] ?? null,
-            'of_shop_id' => $row['of_shop_id'] ?? null,
-            'of_status' => $row['of_status'] ?? null,
+        $payloadFields = [
             'of_name' => $row['of_name'] ?? null,
             'of_article' => $row['of_article'] ?? null,
             'of_sku' => $row['of_sku'] ?? null,
@@ -41,16 +43,31 @@ class OffersImport implements ToModel, WithHeadingRow
             'of_dimension_z' => $row['of_dimension_z'] ?? null,
             'of_weight' => $row['of_weight'] ?? null,
             'of_comment' => $row['of_comment'] ?? null,
-        ], fn($value) => !is_null($value) && $value !== ''); // Очищаем пустые значения
+        ];
+
+        // если все поля пустые — пропускаем строку
+        if (collect($payloadFields)->filter(fn($v) => !is_null($v) && $v !== '')->isEmpty()) {
+            return null;
+        }
+
+        $updateData = array_filter([
+            'of_domain_id' => $currentUser->domain_id,
+            'of_shop_id' => $this->shopId,
+            'of_status' => $row['of_status'] ?? 1,
+            ...$payloadFields
+        ], fn($value) => !is_null($value) && $value !== '');
 
         // Если запись найдена, обновляем её
-        if ($offer) {
-            if (!empty($updateData)) {
+        if (!empty($payloadFields)) {
+            if ($offer) {
+
                 $offer->update($updateData);
+
+            } else {
+                // Если не найдено, создаем новую запись
+                return new rwOffer($updateData);
+
             }
-        } else {
-            // Если не найдено, создаем новую запись
-            return new rwOffer($updateData);
         }
     }
 }

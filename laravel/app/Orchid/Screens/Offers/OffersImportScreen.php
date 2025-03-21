@@ -10,6 +10,7 @@ use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Orchid\Attachment\Models\Attachment;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Label;
@@ -17,9 +18,11 @@ use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\Upload;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 use Orchid\Screen\TD;
+use Illuminate\Support\Facades\Storage;
 
 class OffersImportScreen extends Screen
 {
@@ -28,7 +31,7 @@ class OffersImportScreen extends Screen
      */
     public function name(): string
     {
-        return __('Импорт товаров');
+        return CustomTranslator::get('Импорт товаров');
     }
 
     /**
@@ -64,7 +67,7 @@ class OffersImportScreen extends Screen
         return [
             Layout::rows([
                 Upload::make('offer_file')
-                    ->title(__('Загрузите файл с товарами'))
+                    ->title(CustomTranslator::get('Загрузите файл с товарами'))
                     ->acceptedFiles('.xlsx, .xls, .csv')
                     ->maxFiles(1),
 
@@ -79,50 +82,78 @@ class OffersImportScreen extends Screen
                         'sh_id'
                     ),
 
-                Button::make(__('Начать импорт'))
+                Select::make('import_type')
+                    ->options([
+                        '0'   => CustomTranslator::get('Немедленно'),
+                        '1' => CustomTranslator::get('С задержкой'),
+                    ])
+                    ->title(CustomTranslator::get('Выберите способ загрузки'))
+                    ->help('Небольшие файлы могут быть загружены немедленно. Для загрузки файлов с большим количеством записей используйте загрузку с задержкой.'),
+
+                Button::make(CustomTranslator::get('Начать импорт'))
                     ->method('importOffers')
+                    ->class('btn btn-outline-primary')
                     ->icon('upload'),
             ]),
 
             Layout::view('Offers.OffersImportInstructions'),
 
-
-//            Layout::table('recentOffers', [
-//                TD::make('of_id', __('ID')),
-//                TD::make('of_name', __('Название')),
-//                TD::make('of_sku', __('SKU')),
-//                TD::make('of_price', __('Цена')),
-//                TD::make('of_status', __('Статус'))->render(fn($offer) => $offer->getStatus->ls_name ?? '-'),
-//            ])->title(__('Последние загруженные товары')),
         ];
     }
 
     /**
      * Обработчик импорта товаров.
      */
+
     public function importOffers(Request $request)
     {
-        $file = $request->file('offer_file');
+        $currentUser = Auth::user();
+        $id = $request->get('offer_file')[0] ?? null;
 
-        if (!$file) {
-            Toast::error(__('Пожалуйста, загрузите файл перед импортом.'));
-            return;
+        if (!$id) {
+            Alert::error(CustomTranslator::get('Пожалуйста, загрузите файл перед импортом.'));
         }
 
-        // Сохраняем файл в хранилище
-        $filePath = $file->store('uploads');
-        $fullPath = storage_path('app/' . $filePath);
+        $attachment = Attachment::find($id);
 
-        if (!file_exists($fullPath)) {
-            Toast::error(__('Файл не найден.'));
-            return;
+        $attachment->domain_id = $currentUser->domain_id;
+        $attachment->status = 0; // 0 - загружено, 1 - обрабатывается, 2 - импорт окончен, 3 - ошибка
+        $attachment->type = 'import';
+        $attachment->group = 'offers';
+        $attachment->import_type = $request->get('import_type'); // 0 - немедленно, 1 - отложено
+        $attachment->save();
+
+        if (!$attachment || !$attachment->path) {
+            Alert::error(CustomTranslator::get('Файл не найден.'));
         }
 
-        try {
-            Excel::import(new OffersImport, $fullPath);
-            Toast::success(__('Товары успешно загружены!'));
-        } catch (\Exception $e) {
-            Toast::error(__('Ошибка при импорте: ') . $e->getMessage());
+        if ($request->get('import_type') == 0) {
+
+            $fullPath = base_path().'/storage/app/'.$attachment->disk.'/'.$attachment->physicalPath();
+
+            if (!file_exists($fullPath)) {
+                Alert::error(CustomTranslator::get('Физически файл не найден: ') . $fullPath);
+            }
+
+            try {
+
+                Excel::import(new OffersImport($request->get('of_shop_id')), $fullPath);
+                Alert::success(CustomTranslator::get('Товары успешно загружены!'));
+                $attachment->status = 2;
+                $attachment->save();
+
+                return redirect()->route('platform.offers.index');
+
+            } catch (\Exception $e) {
+                Alert::error(CustomTranslator::get('Ошибка при импорте: ') . $e->getMessage());
+
+            }
+
+        } else {
+
+            Alert::success(CustomTranslator::get('Файл успешно загружен и будет обработан в ближайшее время!'));
+
+            return redirect()->route('platform.offers.index');
         }
     }
 }

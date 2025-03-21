@@ -67,6 +67,10 @@ class OffersScreen extends Screen
             Link::make(CustomTranslator::get('Добавить новый товар'))
                 ->icon('bs.plus-circle')
                 ->route('platform.offers.create'),
+
+            Link::make(CustomTranslator::get('Импорт товаров'))
+                ->icon('bs.upload')
+                ->route('platform.offers.import'),
         ];
     }
 
