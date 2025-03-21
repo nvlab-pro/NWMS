@@ -137,7 +137,7 @@ class OffersImportScreen extends Screen
 
             try {
 
-                Excel::import(new OffersImport($request->get('of_shop_id')), $fullPath);
+                Excel::import(new OffersImport($request->get('of_shop_id'), $id), $fullPath);
                 Alert::success(CustomTranslator::get('Товары успешно загружены!'));
                 $attachment->status = 2;
                 $attachment->save();

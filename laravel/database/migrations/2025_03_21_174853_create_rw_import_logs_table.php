@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id('il_id');
             $table->integer('il_import_id')->index();
             $table->dateTime('il_date')->index();
+            $table->tinyInteger('il_operation')->index();
             $table->string('il_name');
             $table->json('il_fields');
             $table->timestamps(); // created_at and updated_at

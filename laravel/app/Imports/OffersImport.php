@@ -2,7 +2,9 @@
 
 namespace App\Imports;
 
+use App\Models\rwImportLog;
 use App\Models\rwOffer;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -10,11 +12,12 @@ use Orchid\Support\Facades\Alert;
 
 class OffersImport implements ToModel, WithHeadingRow
 {
-    protected int $shopId;
+    protected int $shopId, $importId;
 
-    public function __construct(int $shopId)
+    public function __construct(int $shopId, int $importId)
     {
         $this->shopId = $shopId;
+        $this->importId = $importId;
     }
 
     public function model(array $row)
@@ -61,9 +64,28 @@ class OffersImport implements ToModel, WithHeadingRow
         if (!empty($payloadFields)) {
             if ($offer) {
 
+                // Обновление
+                rwImportLog::create([
+                    'il_import_id' => $this->importId,
+                    'il_date' => now(),
+                    'il_operation' => 2,
+                    'il_name' => CustomTranslator::get('Обновление товара') . ': ' . $row['of_name'],
+                    'il_fields' => json_encode($updateData),
+                ]);
+
                 $offer->update($updateData);
 
             } else {
+
+                // Создание
+                rwImportLog::create([
+                    'il_import_id' => $this->importId,
+                    'il_date' => date('Y-m-d H:i:s'),
+                    'il_operation' => 1,
+                    'il_name' => CustomTranslator::get('Создание нового товара') . ': ' . $row['of_name'],
+                    'il_fields' => json_encode($updateData),
+                ]);
+
                 // Если не найдено, создаем новую запись
                 return new rwOffer($updateData);
 

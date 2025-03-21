@@ -15,7 +15,7 @@
                 </tr>
             @foreach($importDescriptions as $desc)
                 <tr>
-                    <td style="padding-left: 30px;"><b>{{ CustomTranslator::get($desc['name']) }}</b></td>
+                    <td style="padding-left: 30px;"><b>{{ $desc['name'] }}</b></td>
                     <td style="padding-left: 10px; text-align: center;">{{ CustomTranslator::get($desc['type']) }}</td>
                     <td style="padding-left: 10px; text-align: center;">{{ CustomTranslator::get($desc['defaultValue']) }}</td>
                     <td style="padding-left: 10px;">{{ CustomTranslator::get($desc['description']) }}</td>
