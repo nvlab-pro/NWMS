@@ -14,7 +14,10 @@ Route::get('/privacy', function () {
     return view('Site/privacy', ['lang' => 'en']);
 });
 
-$availableLanguages = ['en', 'bg', 'rus', 'ukr', 'fr', 'de', 'sp', 'ch', 'pr', 'kz', 'bel', 'gr'];
+$availableLanguages = [
+    'bel', 'bg', 'ch', 'de', 'en', 'fr', 'gr',
+    'it', 'jp', 'kl', 'kz', 'pr', 'ro', 'rus', 'sp', 'tr', 'ukr'
+];
 
 foreach ($availableLanguages as $lang) {
     Route::get('/' . $lang, function () use ($lang) { // добавили use ($lang)

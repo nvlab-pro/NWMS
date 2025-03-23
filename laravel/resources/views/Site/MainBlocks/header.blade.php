@@ -86,14 +86,18 @@
                     <option value="bg" @if($lang == 'bg') SELECTED @endif>🇧🇬 Bulgarian</option>
                     <option value="ch" @if($lang == 'ch') SELECTED @endif>🇨🇳 Chinese</option>
                     <option value="de" @if($lang == 'de') SELECTED @endif>🇩🇪 German</option>
-                    <option value="en" @if($lang == 'en') SELECTED @endif>🇺🇸 English</option>
-                    <option value="fr" @if($lang == 'fr') SELECTED @endif>🇫🇷 French</option>
                     <option value="gr" @if($lang == 'gr') SELECTED @endif>🇬🇪 Georgian</option>
+                    <option value="it" @if($lang == 'it') SELECTED @endif>🇮🇹 Italian</option>
+                    <option value="jp" @if($lang == 'jp') SELECTED @endif>🇯🇵 Japanese</option>
                     <option value="kz" @if($lang == 'kz') SELECTED @endif>🇰🇿 Kazakh</option>
+                    <option value="kl" @if($lang == 'kl') SELECTED @endif>🛸 Klingon</option>
                     <option value="pr" @if($lang == 'pr') SELECTED @endif>🇵🇹 Portuguese</option>
+                    <option value="ro" @if($lang == 'ro') SELECTED @endif>🇷🇴 Romanian</option>
                     <option value="rus" @if($lang == 'rus') SELECTED @endif>🇷🇺 Russian</option>
                     <option value="sp" @if($lang == 'sp') SELECTED @endif>🇪🇸 Spanish</option>
+                    <option value="tr" @if($lang == 'tr') SELECTED @endif>🇹🇷 Turkish</option>
                     <option value="ukr" @if($lang == 'ukr') SELECTED @endif>🇺🇦 Ukrainian</option>
+                    <option value="en" @if($lang == 'en') SELECTED @endif>🇺🇸 English</option>
                 </select>
             </div>
 
