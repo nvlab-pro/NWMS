@@ -118,8 +118,8 @@ class OffersImportScreen extends Screen
 
         $attachment->domain_id = $currentUser->domain_id;
         $attachment->status = 0; // 0 - загружено, 1 - обрабатывается, 2 - импорт окончен, 3 - ошибка
-        $attachment->type = 'import';
-        $attachment->group = 'offers';
+        $attachment->type = 'импорт';
+        $attachment->group = 'товары';
         $attachment->import_type = $request->get('import_type'); // 0 - немедленно, 1 - отложено
         $attachment->save();
 

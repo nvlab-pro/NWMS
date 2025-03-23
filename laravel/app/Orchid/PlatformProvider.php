@@ -97,7 +97,6 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(CustomTranslator::get('Управление складом'))
                 ->icon('bs.display')
-                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
                     Menu::make(CustomTranslator::get('Волновая сборка'))
@@ -114,6 +113,10 @@ class PlatformProvider extends OrchidServiceProvider
                         ->icon('bs.dropbox')
                         ->route('platform.whmanagement.packing-process-settings.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+
+                    Menu::make(CustomTranslator::get('Управление импортами'))
+                        ->icon('bs.upload')
+                        ->route('platform.whmanagement.imports.index'),
 
                 ]),
 

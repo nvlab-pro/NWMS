@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Offers;
 
+use App\Exports\OffersExport;
 use App\Models\rwOffer;
 use App\Orchid\Layouts\Offers\OffersTable;
 use App\Services\CustomTranslator;
@@ -11,11 +12,9 @@ use Orchid\Screen\Screen;
 
 class OffersScreen extends Screen
 {
-    /**
-     * Fetch data to be displayed on the screen.
-     *
-     * @return array
-     */
+
+    private $currentOffers;
+
     public function query(): iterable
     {
         $currentUser = Auth::user();
@@ -40,6 +39,8 @@ class OffersScreen extends Screen
             }
 
         }
+
+        $this->currentOffers = $dbOffers->filters();
 
         return [
             'offersList' => $dbOffers->filters()->paginate(50),
@@ -71,6 +72,11 @@ class OffersScreen extends Screen
             Link::make(CustomTranslator::get('Импорт товаров'))
                 ->icon('bs.upload')
                 ->route('platform.offers.import'),
+
+            Link::make(CustomTranslator::get('Экспорт в Excel'))
+                ->route('platform.offers.export', request()->all()) // 🔥 передаём фильтры из текущего запроса
+                ->icon('bs.download'),
+
         ];
     }
 
@@ -84,5 +90,11 @@ class OffersScreen extends Screen
         return [
             OffersTable::class,
         ];
+    }
+
+    public function export()
+    {
+        return (new OffersExport($this->currentOffers->get()))
+            ->download('offers.xlsx');
     }
 }

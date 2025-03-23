@@ -214,7 +214,7 @@ class OffersCreateScreen extends Screen
             'rwOffer.of_img' => 'nullable|string|max:255',
             'rwOffer.of_shop_id' => 'nullable|integer',
             'rwOffer.of_status' => 'required|integer',
-            'rwOffer.of_article' => 'required|string|max:25',
+            'rwOffer.of_article' => 'nullable|string|max:25',
             'rwOffer.of_sku' => 'nullable|string|max:25',
             'rwOffer.of_weight' => 'nullable|integer',
             'rwOffer.of_dimension_x' => 'nullable|numeric',
@@ -226,27 +226,30 @@ class OffersCreateScreen extends Screen
         ]);
 
         if (isset($request->rwOffer['of_id']) && $request->rwOffer['of_id'] > 0) {
+            // Обновление через Eloquent
+            $offer = rwOffer::find($request->rwOffer['of_id']);
 
-            rwOffer::where('of_id', $request->rwOffer['of_id'])->update([
-                'of_name' => $request->rwOffer['of_name'],
-                'of_img' => $request->rwOffer['of_img'],
-                'of_status' => $request->rwOffer['of_status'],
-                'of_article' => $request->rwOffer['of_article'],
-                'of_sku' => $request->rwOffer['of_sku'],
-                'of_weight' => $request->rwOffer['of_weight'],
-                'of_dimension_x' => $request->rwOffer['of_dimension_x'],
-                'of_dimension_y' => $request->rwOffer['of_dimension_y'],
-                'of_dimension_z' => $request->rwOffer['of_dimension_z'],
-                'of_price' => $request->rwOffer['of_price'],
-                'of_estimated_price' => $request->rwOffer['of_estimated_price'],
-                'of_comment' => $request->rwOffer['of_comment'],
-            ]);
+            if ($offer) {
+                $offer->fill([
+                    'of_name' => $request->rwOffer['of_name'],
+                    'of_img' => $request->rwOffer['of_img'],
+                    'of_status' => $request->rwOffer['of_status'],
+                    'of_article' => $request->rwOffer['of_article'],
+                    'of_sku' => $request->rwOffer['of_sku'],
+                    'of_weight' => $request->rwOffer['of_weight'],
+                    'of_dimension_x' => $request->rwOffer['of_dimension_x'],
+                    'of_dimension_y' => $request->rwOffer['of_dimension_y'],
+                    'of_dimension_z' => $request->rwOffer['of_dimension_z'],
+                    'of_price' => $request->rwOffer['of_price'],
+                    'of_estimated_price' => $request->rwOffer['of_estimated_price'],
+                    'of_comment' => $request->rwOffer['of_comment'],
+                ])->save();
 
-            Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
-
+                Alert::success(CustomTranslator::get('Данные успешно отредактированы!'));
+            }
         } else {
-
-            rwOffer::insert([
+            // Создание через Eloquent
+            $offer = new rwOffer([
                 'of_name' => $request->rwOffer['of_name'],
                 'of_img' => $request->rwOffer['of_img'],
                 'of_shop_id' => $request->rwOffer['of_shop_id'],
@@ -263,9 +266,11 @@ class OffersCreateScreen extends Screen
                 'of_comment' => $request->rwOffer['of_comment'],
             ]);
 
-            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
+            $offer->save();
 
+            Alert::success(CustomTranslator::get('Данные успешно добавлены!'));
         }
+
 
 
         return redirect()->route('platform.offers.index');

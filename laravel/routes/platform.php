@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Exports\OffersExport;
+use App\Models\rwOffer;
 use App\Orchid\Screens\Examples\ExampleActionsScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -33,6 +35,8 @@ use App\Orchid\Screens\User\UserProfileScreen;
 use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
+use Illuminate\Support\Facades\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -244,6 +248,12 @@ Route::prefix('tables')
 // *** Platform > offers
 // ******************************************************
 
+
+Route::get('offers/export', function () {
+    $filters = Request::get('filter', []);
+    return (new \App\Exports\OffersExport($filters))->download('offers.xlsx');
+})->name('platform.offers.export');
+
 Route::screen('offers', \App\Orchid\Screens\Offers\OffersScreen::class)
     ->name('platform.offers.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
@@ -273,7 +283,6 @@ Route::screen('offers/import', \App\Orchid\Screens\Offers\OffersImportScreen::cl
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.offers.index')
         ->push(CustomTranslator::get('Импорт товаров'), route('platform.offers.import')));
-
 
 
 // ******************************************************
@@ -324,7 +333,7 @@ Route::screen('shops/{shopId}/edit', \App\Orchid\Screens\Shops\ShopsCreateScreen
 
 // ******************************************************
 // *** Список складов
-// *** Platform > warehouses
+// *** Platform > whwarehouses
 // ******************************************************
 
 Route::screen('whmanagement/wave-assembly', \App\Orchid\Screens\WhManagement\WaveAssembly\WAManagementScreen::class)
@@ -359,6 +368,17 @@ Route::screen('whmanagement/packing-process-settings/{ppId}/edit', \App\Orchid\S
         ->parent('platform.whmanagement.packing-process-settings.index')
         ->push(CustomTranslator::get('Редактирование настроек упаковки'), route('platform.whmanagement.packing-process-settings.edit', $ppId)));
 
+Route::screen('whmanagement/imports', \App\Orchid\Screens\ImportsList\ImportsListScreen::class)
+    ->name('platform.whmanagement.imports.index')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(CustomTranslator::get('Список импортов'), route('platform.whmanagement.imports.index')));
+
+Route::screen('whmanagement/imports/{importId}/details', \App\Orchid\Screens\ImportsList\ImportDetailsScreen::class)
+    ->name('platform.whmanagement.import.details')
+    ->breadcrumbs(fn(Trail $trail, $importId) => $trail
+        ->parent('platform.whmanagement.imports.index')
+        ->push(CustomTranslator::get('Данные импорта'), route('platform.whmanagement.import.details', $importId)));
 
 // ******************************************************
 // *** Список складов

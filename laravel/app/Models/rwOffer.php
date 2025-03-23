@@ -22,6 +22,20 @@ class rwOffer extends Model implements AuditableContract
 
     use AsSource, Filterable, Attachable, HasFactory, SoftDeletes, Auditable;
 
+    protected static $recordEvents = [
+        'created', // включаем создание в аудит
+        'updated',
+        'deleted',
+    ];
+
+    // Добавляем кастомные поля в аудит
+    public function transformAudit(array $data): array
+    {
+        $data['object_id'] = $this->getKey(); // или $this->of_id если нужно явно
+
+        return $data;
+    }
+
     // Другие разрешённые для массового присвоения атрибуты
     protected $fillable = [
         'of_domain_id',

@@ -23,4 +23,7 @@ class rwImportLog extends Model
         'il_fields',
     ];
 
+    protected $casts = [
+        'il_fields' => 'array',
+    ];
 }
