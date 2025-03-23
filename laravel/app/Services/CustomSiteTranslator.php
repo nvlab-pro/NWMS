@@ -124,7 +124,7 @@ class CustomSiteTranslator
 
     protected static function saveTranslations(): void
     {
-        $path = base_path("lang/" . self::$locale . ".json");
+        $path = base_path("lang/" . self::$locale . ".site.json");
 
         // Проверяем, существует ли папка "lang", если нет — создаем
         if (!File::exists(base_path("lang"))) {
