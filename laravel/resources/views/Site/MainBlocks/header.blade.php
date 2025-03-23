@@ -85,6 +85,7 @@
                     <option value="bel" @if($lang == 'bel') SELECTED @endif>🇧🇾 Belarusian</option>
                     <option value="bg" @if($lang == 'bg') SELECTED @endif>🇧🇬 Bulgarian</option>
                     <option value="ch" @if($lang == 'ch') SELECTED @endif>🇨🇳 Chinese</option>
+                    <option value="en" @if($lang == 'en') SELECTED @endif>🇺🇸 English</option>
                     <option value="de" @if($lang == 'de') SELECTED @endif>🇩🇪 German</option>
                     <option value="gr" @if($lang == 'gr') SELECTED @endif>🇬🇪 Georgian</option>
                     <option value="it" @if($lang == 'it') SELECTED @endif>🇮🇹 Italian</option>
@@ -97,7 +98,6 @@
                     <option value="sp" @if($lang == 'sp') SELECTED @endif>🇪🇸 Spanish</option>
                     <option value="tr" @if($lang == 'tr') SELECTED @endif>🇹🇷 Turkish</option>
                     <option value="ukr" @if($lang == 'ukr') SELECTED @endif>🇺🇦 Ukrainian</option>
-                    <option value="en" @if($lang == 'en') SELECTED @endif>🇺🇸 English</option>
                 </select>
             </div>
 

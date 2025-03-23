@@ -55,23 +55,23 @@
             <div class="col-lg-12 col-md-12">
                 <div class="footer-bottom-right wow fadeInRight animated" style="text-align: center;">
                     <div class="footer-right-content">
-                        <a href="/bel/" title="Belarusian"><img src="" alt="Belarusian">🇧🇾</a>
-                        <a href="/bg/" title="Bulgarian"><img src="" alt="Bulgarian">🇧🇬</a>
-                        <a href="/ch/" title="Chinese"><img src="" alt="Chinese">🇨🇳</a>
-                        <a href="/de/" title="German"><img src="" alt="German">🇩🇪</a>
-                        <a href="/en/" title="English"><img src="" alt="English">🇺🇸</a>
-                        <a href="/fr/" title="French"><img src="" alt="French">🇫🇷</a>
-                        <a href="/gr/" title="Georgian"><img src="" alt="Georgian">🇬🇪</a>
-                        <a href="/it/" title="Italian"><img src="" alt="Italian">🇮🇹</a>
-                        <a href="/jp/" title="Japanese"><img src="" alt="Japanese">🇯🇵</a>
-                        <a href="/kl/" title="Klingon"><img src="" alt="Klingon">🛸</a>
-                        <a href="/kz/" title="Kazakh"><img src="" alt="Kazakh">🇰🇿</a>
-                        <a href="/pr/" title="Portuguese"><img src="" alt="Portuguese">🇵🇹</a>
-                        <a href="/ro/" title="Romanian"><img src="" alt="Romanian">🇷🇴</a>
-                        <a href="/rus/" title="Russian"><img src="" alt="Russian">🇷🇺</a>
-                        <a href="/sp/" title="Spanish"><img src="" alt="Spanish">🇪🇸</a>
-                        <a href="/tr/" title="Turkish"><img src="" alt="Turkish">🇹🇷</a>
-                        <a href="/ukr/" title="Ukrainian"><img src="" alt="Ukrainian">🇺🇦</a>
+                        <a href="/bel/" title="Belarusian">🇧🇾</a>
+                        <a href="/bg/" title="Bulgarian">🇧🇬</a>
+                        <a href="/ch/" title="Chinese">🇨🇳</a>
+                        <a href="/de/" title="German">🇩🇪</a>
+                        <a href="/en/" title="English">🇺🇸</a>
+                        <a href="/fr/" title="French">🇫🇷</a>
+                        <a href="/gr/" title="Georgian">🇬🇪</a>
+                        <a href="/it/" title="Italian">🇮🇹</a>
+                        <a href="/jp/" title="Japanese">🇯🇵</a>
+                        <a href="/kl/" title="Klingon">🛸</a>
+                        <a href="/kz/" title="Kazakh">🇰🇿</a>
+                        <a href="/pr/" title="Portuguese">🇵🇹</a>
+                        <a href="/ro/" title="Romanian">🇷🇴</a>
+                        <a href="/rus/" title="Russian">🇷🇺</a>
+                        <a href="/sp/" title="Spanish">🇪🇸</a>
+                        <a href="/tr/" title="Turkish">🇹🇷</a>
+                        <a href="/ukr/" title="Ukrainian">🇺🇦</a>
                     </div>
                 </div>
             </div>
