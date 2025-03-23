@@ -39,7 +39,13 @@ class CustomTranslator
         if(!$currentUser) return $key;
 
         self::$locale = $currentUser->lang;
-        if (self::$locale == 'rus' || $key == '' || $key == ' ' || $key == '-' || $key == ':' || $key == ': ' || $key == ' : ') return $key;
+
+        if (
+            self::$locale == 'rus' ||
+            !preg_match('/\p{L}/u', $key) // если НЕТ букв
+        ) {
+            return $key;
+        }
 
         self::loadTranslations(); // Загружаем переводы только при первом вызове
 
