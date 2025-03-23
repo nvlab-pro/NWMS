@@ -50,7 +50,7 @@ class CustomSiteTranslator
         self::$locale = $locale;
 
         if (
-            self::$locale == 'rus' ||
+            self::$locale == 'en' || self::$locale == '' ||
             !preg_match('/\p{L}/u', $key) // если НЕТ букв
         ) {
             return $key;
