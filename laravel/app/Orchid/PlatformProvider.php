@@ -152,6 +152,12 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make(CustomTranslator::get('Магазины'))
                         ->icon('bs.shop')
                         ->route('platform.shops.index'),
+
+                    Menu::make(CustomTranslator::get('Переводы'))
+                        ->icon('bs.translate')
+                        ->route('platform.settings.lang.editor')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
+
                 ]),
 
             // ************************

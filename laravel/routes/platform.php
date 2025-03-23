@@ -576,6 +576,13 @@ Route::prefix('settings')
                 ->parent('platform.settings.length.index')
                 ->push(CustomTranslator::get('Редактирование единицы измерения'), route('platform.settings.length.edit', $lenId)));
 
+        Route::screen('lang/editor', \App\Orchid\Screens\LangEditor\LangEditorScreen::class)
+            ->name('.lang.editor')
+            ->breadcrumbs(fn(Trail $trail) => $trail
+                ->parent('platform.settings.index')
+                ->push(CustomTranslator::get('Переводы'), route('platform.settings.lang.editor')));
+
+
     });
 
 Route::prefix('delivery-services')
