@@ -48,7 +48,13 @@ class CustomSiteTranslator
     {
 
         self::$locale = $locale;
-        if (self::$locale == 'en' || $key == '' || $key == ' ') return $key;
+
+        if (
+            self::$locale == 'rus' ||
+            !preg_match('/\p{L}/u', $key) // если НЕТ букв
+        ) {
+            return $key;
+        }
 
         $key = self::cleanText($key);
 
