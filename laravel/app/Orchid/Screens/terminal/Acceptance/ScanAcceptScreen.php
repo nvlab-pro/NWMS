@@ -147,7 +147,6 @@ class ScanAcceptScreen extends Screen
 
                     $currentDocument->addItemCount($validatedData['offerWhId'], $docDate, $validatedData['scanCount'], $currentTime, $scanExpDate, $scanBatch);
                     Alert::success(CustomTranslator::get('Товар добавлен в накладную!'));
-                    $validatedData['offerWhId'] = 0;
 
                     // Меняем статус у накладной с new на "принимается"
                     rwAcceptance::where('acc_id', $this->docId)
@@ -160,7 +159,10 @@ class ScanAcceptScreen extends Screen
                     $currentDocument->updateRest(1);
 
                     // Пересчитываем остатки
+                    $currentWarehouse = new WhCore($validatedData['offerWhId']);
                     $currentWarehouse->calcRestOffer($validatedData['offerId']);
+
+                    $validatedData['offerWhId'] = 0;
 
                 } else {
 
