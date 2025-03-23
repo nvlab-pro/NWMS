@@ -407,8 +407,13 @@
                 <div class="call-to-action style-one">
                     <div class="bd-video wow fadeInLeft animated">
                         <div class="video-icon">
-                            <a class="video-vemo-icon venobox vbox-item" data-vbtype="youtube" data-autoplay="true"
-                               href="https://youtu.be/BS4TUd7FJSg"><i class="fa fa-play"></i></a>
+                            @if($lang == 'rus')
+                                <a class="video-vemo-icon venobox vbox-item" data-vbtype="youtube" data-autoplay="true"
+                                   href="https://www.youtube.com/watch?v=hGlpHIaFV-0"><i class="fa fa-play"></i></a>
+                            @else
+                                <a class="video-vemo-icon venobox vbox-item" data-vbtype="youtube" data-autoplay="true"
+                                   href="https://youtu.be/Pjh8H9mR3Ok"><i class="fa fa-play"></i></a>
+                            @endif
                         </div>
                     </div>
                     <div class="single_call-to-action_text">
