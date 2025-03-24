@@ -69,11 +69,14 @@
 {{--                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>--}}
 {{--                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>--}}
 {{--                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>--}}
-                        <li><a href="https://t.me/+UJ5If6slQXZjYjMy"><i class="fab fa-telegram"></i></a></li>
                         @if($lang == 'rus')
-                            <li><a href="https://www.youtube.com/@nwms_ru" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                            <li><a href="https://t.me/+xKtGpy-evygyNzQ6"><i class="fab fa-telegram"></i></a></li>
+                            <li><a href="https://www.youtube.com/@nwms_ru" target="_blank"><i
+                                            class="fab fa-youtube"></i></a></li>
                         @else
-                            <li><a href="https://www.youtube.com/@nwms_en" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                            <li><a href="https://t.me/+UJ5If6slQXZjYjMy"><i class="fab fa-telegram"></i></a></li>
+                            <li><a href="https://www.youtube.com/@nwms_en" target="_blank"><i
+                                            class="fab fa-youtube"></i></a></li>
                         @endif
                     </ul>
                 </div>
