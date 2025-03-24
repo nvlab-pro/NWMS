@@ -47,13 +47,37 @@
             <div class="col-lg-12 col-md-12">
                 <div class="single-blog-details-box wow fadeInLeft animated">
                     <div class="blog-details-content">
-
-                        <H3>Прежде всего, программа предоставляется бесплатно!</H3>
+                        <H3>{{ CustomSiteTranslator::get('First and foremost, the program is provided', $lang) }} <span style="color: red;">{{ CustomSiteTranslator::get('free of charge', $lang) }}</span>!</H3>
                         <br>
-                        <p>Вы можете использовать её как в личных, так и в коммерческих целях совершенно бесплатно.
-                            Причем это касается как обычных продавцов, оперирующих своим товаром на складе, так и сервисных компаний, предоставляющих услуги фулфилмента и складского хранения.</p>
+                        <p>{!! CustomSiteTranslator::get('You can use it for both personal and commercial purposes <b>completely free of charge</b>.', $lang) !!}<br>
+                            {!! CustomSiteTranslator::get('This applies to both regular sellers managing their own stock in a warehouse, as well as service companies providing fulfillment and storage services.', $lang) !!}</>
                         <div style="border-top: 1px solid #AAAAAA; padding-top: 20px; margin-top: 20px;">
-                            <H3>Что стоит денег и сколько?</H3>
+                            <H3>{{ CustomSiteTranslator::get('What costs money and how much?', $lang) }}</H3>
+                            <br>
+                            <h4>{{ CustomSiteTranslator::get('The following services are provided for a fee:', $lang) }}</h4>
+                            <p>
+                            <ul style="padding-left: 40px;">
+                                <li style="padding-bottom: 20px;"><b>Onboarding</b> – {{ CustomSiteTranslator::get('that is, assistance with system setup.', $lang) }} <br>
+                                    <br>
+                                    {{ CustomSiteTranslator::get('During the launch period (usually from 1 week to 1 month), a dedicated manager will be assigned to you who will guide your warehouse step by step through all stages. They will consult and assist you throughout the process.', $lang) }}</li>
+
+                                <li style="padding-bottom: 20px;"><b>{{ CustomSiteTranslator::get('Priority Support', $lang) }}</b><br>
+                                    <br>
+                                    {{ CustomSiteTranslator::get('WMS support is provided via our Telegram channel on a general basis. If you would like to have a dedicated manager who will assist you with any WMS-related questions on a priority basis, contact us and we will discuss the terms.', $lang) }}</li>
+
+                                <li style="padding-bottom: 20px;"><b>{{ CustomSiteTranslator::get('Custom Functionality', $lang) }}</b> <br>
+                                    <br>
+                                    {{ CustomSiteTranslator::get('If the current WMS functionality does not meet your needs, we can develop the necessary modules for you, or prioritize their development if such functionality is already in our roadmap.', $lang) }}</li>
+
+                                <li style="padding-bottom: 20px;"><b>{{ CustomSiteTranslator::get('Dedicated Version', $lang) }}</b> <br>
+                                    <br>
+                                    {{ CustomSiteTranslator::get('If you require significant customization of the project (interface or functionality), we can either deploy a separate instance in our cloud or sell you the source code for independent development and support.', $lang) }}</li>
+                            </ul>
+
+                            {{ CustomSiteTranslator::get('We are also open to discussing any other questions related to our project.', $lang) }} <br>
+                            {{ CustomSiteTranslator::get('Just send your question in our Telegram channel and we’ll get back to you!', $lang) }}
+                            </p>
+
                         </div>
                     </div>
                 </div>

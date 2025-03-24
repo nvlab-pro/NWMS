@@ -14,6 +14,14 @@ Route::get('/privacy', function () {
     return view('Site/privacy', ['lang' => 'en']);
 });
 
+Route::get('/pricing', function () {
+    return view('Site/pricing', ['lang' => 'en']);
+});
+
+Route::get('/support', function () {
+    return view('Site/support', ['lang' => 'en']);
+});
+
 $availableLanguages = [
     'bel', 'bg', 'ch', 'de', 'en', 'fr', 'gr',
     'it', 'jp', 'kl', 'kz', 'pr', 'ro', 'rus', 'sp', 'tr', 'ukr'
@@ -35,6 +43,10 @@ Route::get('/{lang}/privacy', function ($lang) {
 
 Route::get('/{lang}/pricing', function ($lang) {
     return view('Site/pricing', ['lang' => $lang]);
+});
+
+Route::get('/{lang}/support', function ($lang) {
+    return view('Site/support', ['lang' => $lang]);
 });
 
 Route::post('/{lang}/new-user-form', [\App\Http\Controllers\FormNewUser::class, 'submit']);

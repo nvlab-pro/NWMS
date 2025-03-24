@@ -16,8 +16,9 @@
                 <nav class="techo_menu-two">
                     <ul class="nav_scroll">
                         <li><a href="/">{{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
-                        <!--
                         <li><a href="/{{ $lang }}/pricing">{{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
+                        <li><a href="/{{ $lang }}/support">{{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
+                        <!--
                         <li><a href="/">Pricing</a></li>
                         <li><a href="/">Education</a></li>
                         <li><a href="/">Support</a></li>
