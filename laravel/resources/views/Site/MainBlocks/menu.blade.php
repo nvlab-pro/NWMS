@@ -15,9 +15,13 @@
             <div class="col-lg-9">
                 <nav class="techo_menu-two">
                     <ul class="nav_scroll">
-                        <li><a href="/">{{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
-                        <li><a href="/{{ $lang }}/pricing">{{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
-                        <li><a href="/{{ $lang }}/support">{{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
+                        @php
+                          $lang_str = '/' . $lang;
+                          if ($lang == 'en') $lang_str = '';
+                        @endphp
+                        <li><a href="{{ $lang_str }}/">{{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
+                        <li><a href="{{ $lang_str }}/pricing">{{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
+                        <li><a href="{{ $lang_str }}/support">{{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
                         <!--
                         <li><a href="/">Pricing</a></li>
                         <li><a href="/">Education</a></li>
