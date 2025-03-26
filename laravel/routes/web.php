@@ -6,6 +6,10 @@ Route::get('/', function () {
     return view('Site/index', ['lang' => 'en']);
 });
 
+Route::get('/about_wms', function () {
+    return view('Site/about_wms', ['lang' => 'en']);
+});
+
 Route::get('/terms', function () {
     return view('Site/terms', ['lang' => 'en']);
 });
@@ -32,6 +36,10 @@ foreach ($availableLanguages as $lang) {
         return view('Site/index', ['lang' => $lang]);
     });
 }
+
+Route::get('/{lang}/about_wms', function ($lang) {
+    return view('Site/about_wms', ['lang' => $lang]);
+});
 
 Route::get('/{lang}/terms', function ($lang) {
     return view('Site/terms', ['lang' => $lang]);

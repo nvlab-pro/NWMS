@@ -49,8 +49,8 @@
                     <div class="blog-details-content">
                         <H3>{{ CustomSiteTranslator::get('First and foremost, the program is provided', $lang) }} <span style="color: red;">{{ CustomSiteTranslator::get('free of charge', $lang) }}</span>!</H3>
                         <br>
-                        <p>{!! CustomSiteTranslator::get('You can use it for both personal and commercial purposes <b>completely free of charge</b>.', $lang) !!}<br>
-                            {!! CustomSiteTranslator::get('This applies to both regular sellers managing their own stock in a warehouse, as well as service companies providing fulfillment and storage services.', $lang) !!}</>
+                        {!! CustomSiteTranslator::get('You can use it for both personal and commercial purposes <b>completely free of charge</b>.', $lang) !!}<br>
+                            {!! CustomSiteTranslator::get('This applies to both regular sellers managing their own stock in a warehouse, as well as service companies providing fulfillment and storage services.', $lang) !!}
                         <div style="border-top: 1px solid #AAAAAA; padding-top: 20px; margin-top: 20px;">
                             <H3>{{ CustomSiteTranslator::get('What costs money and how much?', $lang) }}</H3>
                             <br>
@@ -76,7 +76,6 @@
 
                             {{ CustomSiteTranslator::get('We are also open to discussing any other questions related to our project.', $lang) }} <br>
                             {{ CustomSiteTranslator::get('Just send your question in our Telegram channel and we’ll get back to you!', $lang) }}
-                            </p>
 
                         </div>
                     </div>

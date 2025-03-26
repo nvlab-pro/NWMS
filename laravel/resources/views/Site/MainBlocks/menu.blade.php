@@ -4,10 +4,14 @@
         <div class="row align-items-center">
             <div class="col-lg-3">
                 <div class="logo">
-                    <a class="logo_img" href="/" title="techo">
+                    @php
+                        $lang_str = '/' . $lang;
+                        if ($lang == 'en') $lang_str = '';
+                    @endphp
+                    <a class="logo_img" href="{{ $lang_str }}/" title="techo">
                         <img src="/img/cm_logo.png" alt="logo" style="width:130px">
                     </a>
-                    <a class="main_sticky" href="/" title="techo">
+                    <a class="main_sticky" href="{{ $lang_str }}/" title="techo">
                         <img src="/img/cm_logo.png" alt="logo" style="width:130px">
                     </a>
                 </div>
@@ -15,11 +19,8 @@
             <div class="col-lg-9">
                 <nav class="techo_menu-two">
                     <ul class="nav_scroll">
-                        @php
-                          $lang_str = '/' . $lang;
-                          if ($lang == 'en') $lang_str = '';
-                        @endphp
                         <li><a href="{{ $lang_str }}/">{{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
+                        <li><a href="{{ $lang_str }}/about_wms">{{ CustomSiteTranslator::get('About WMS', $lang) }}</a></li>
                         <li><a href="{{ $lang_str }}/pricing">{{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
                         <li><a href="{{ $lang_str }}/support">{{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
                         <!--
