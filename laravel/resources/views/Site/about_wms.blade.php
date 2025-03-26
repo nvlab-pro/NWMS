@@ -147,7 +147,7 @@
                                     </li>
 
                                     <li style="padding-bottom: 10px;">
-                                        <b>{{ CustomSiteTranslator::get('Smartphones or an affordable barcode scanner (or handheld terminal).', $lang) }}</b><br>
+                                        <b>{{ CustomSiteTranslator::get('Smartphones and affordable barcode scanner (or handheld terminal).', $lang) }}</b><br>
                                     {{ CustomSiteTranslator::get('Even an ordinary smartphone will do just fine when you’re starting out.', $lang) }}
                                     </li>
 
