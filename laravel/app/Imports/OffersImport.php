@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\rwBarcode;
 use App\Models\rwImportLog;
 use App\Models\rwOffer;
 use App\Services\CustomTranslator;
@@ -25,7 +26,7 @@ class OffersImport implements ToModel, WithHeadingRow
         $currentUser = Auth::user();
         $shopId = $this->shopId;
 
-// Сначала ищем товар только в рамках текущего магазина
+        // Сначала ищем товар только в рамках текущего магазина
         $offer = rwOffer::query()
             ->where('of_shop_id', $shopId)
             ->when(!empty($row['of_id']), fn($q) => $q->where('of_id', $row['of_id']))
@@ -73,6 +74,8 @@ class OffersImport implements ToModel, WithHeadingRow
                     'il_fields' => json_encode($updateData),
                 ]);
 
+                $offerId = $offer->of_id;
+
                 $offer->update($updateData);
 
             } else {
@@ -87,9 +90,34 @@ class OffersImport implements ToModel, WithHeadingRow
                 ]);
 
                 // Если не найдено, создаем новую запись
-                return new rwOffer($updateData);
+                $offer = rwOffer::create($updateData);
+
+                $offerId = $offer->of_id;
 
             }
+
+            // Обновляем баркода, если они есть
+            if ($row['of_barcode'] != '') {
+
+                $arBarcode = explode(',', preg_replace('/[\s]+/', '', $row['of_barcode']));
+
+                foreach ($arBarcode as $barcode) {
+
+                    rwBarcode::updateOrCreate(
+                        [
+                            'br_offer_id' => $offerId, // или любое другое поле, которое нужно обновить
+                            'br_barcode' => $barcode,
+                            'br_shop_id' => $shopId,
+                        ],
+                        [
+                            'br_barcode' => $barcode,
+                        ]
+                    );
+
+                }
+
+            }
+
         }
     }
 }

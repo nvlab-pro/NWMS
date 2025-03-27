@@ -99,6 +99,12 @@ class rwOffer extends Model implements AuditableContract
             'type'        => 'необязательно (активный по умолчанию)',
             'defaultValue'      => '1',
         ],
+        'of_barcode'          => [
+            'name'        => 'of_barcode',
+            'description' => 'Штрих-код товара. Если штрих-кодов несколько, то укажите их через запятую.',
+            'type'        => 'необязательно',
+            'defaultValue'      => '-',
+        ],
         'of_price'          => [
             'name'        => 'of_price',
             'description' => 'Стоимость товара.',

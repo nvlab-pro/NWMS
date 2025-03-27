@@ -110,8 +110,9 @@ class OffersImportScreen extends Screen
         $currentUser = Auth::user();
         $id = $request->get('offer_file')[0] ?? null;
 
-        if (!$id) {
+        if (!$id || $id == null) {
             Alert::error(CustomTranslator::get('Пожалуйста, загрузите файл перед импортом.'));
+            return redirect()->route('platform.offers.import');
         }
 
         $attachment = Attachment::find($id);
