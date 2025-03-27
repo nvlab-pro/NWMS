@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Exports\OffersExport;
 use App\Models\rwOffer;
+use App\Orchid\Screens\Domains\DomainsCreateScreen;
+use App\Orchid\Screens\Domains\DomainsScreen;
 use App\Orchid\Screens\Examples\ExampleActionsScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -461,6 +463,11 @@ Route::screen('settings', SettingScreen::class)
 Route::prefix('settings')
     ->name('platform.settings')
     ->group(function () {
+
+        // Домены (компании)
+        Route::screen('domains', DomainsScreen::class)->name('.domains');
+        Route::screen('domains/{domainId}/edit', DomainsCreateScreen::class)->name('.domains.edit');
+        Route::screen('domains/create', DomainsCreateScreen::class)->name('.domains.create');
 
         // Страны
         Route::screen('countries', LibCountryScreen::class)

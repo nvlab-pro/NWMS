@@ -74,6 +74,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->canSee(RoleMiddleware::checkUserPermission('admin'))
                 ->icon('bs.list-check')
                 ->list([
+                    Menu::make(CustomTranslator::get('Компании'))
+                        ->icon('bs.globe-central-south-asia')
+                        ->route('platform.settings.domains')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
+
                     Menu::make(CustomTranslator::get('Страны'))
                         ->icon('bs.globe-central-south-asia')
                         ->route('platform.settings.countries.index'),
