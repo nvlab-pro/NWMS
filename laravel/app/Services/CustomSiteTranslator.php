@@ -110,7 +110,7 @@ class CustomSiteTranslator
                     ['role' => 'user', 'content' => $text]
                 ],
                 'temperature' => 0.7,
-                'max_tokens' => 1000,
+                'max_tokens' => 3000,
             ]);
 
             $result = $response->json();
