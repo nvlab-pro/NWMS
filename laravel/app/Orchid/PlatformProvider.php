@@ -74,26 +74,35 @@ class PlatformProvider extends OrchidServiceProvider
                 ->canSee(RoleMiddleware::checkUserPermission('admin'))
                 ->icon('bs.list-check')
                 ->list([
-                    Menu::make(CustomTranslator::get('Компании'))
-                        ->icon('bs.globe-central-south-asia')
+                    Menu::make(CustomTranslator::get('Честный знак'))
+                        ->icon('bs.qr-code-scan')
+                        ->route('platform.lib.datamatrix.index')
+                        ->canSee(RoleMiddleware::checkUserCountry('1')),
+
+                    Menu::make(CustomTranslator::get('Домены'))
+                        ->icon('bs.yin-yang')
                         ->route('platform.settings.domains')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
+                        ->canSee(RoleMiddleware::checkUserCountry('1') && RoleMiddleware::checkUserPermission('admin')),
 
                     Menu::make(CustomTranslator::get('Страны'))
                         ->icon('bs.globe-central-south-asia')
-                        ->route('platform.settings.countries.index'),
+                        ->route('platform.settings.countries.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
 
                     Menu::make(CustomTranslator::get('Города'))
                         ->icon('bs.map')
-                        ->route('platform.settings.cities.index'),
+                        ->route('platform.settings.cities.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
 
                     Menu::make(CustomTranslator::get('Валюты'))
                         ->icon('bs.currency-exchange')
-                        ->route('platform.settings.currencies.index'),
+                        ->route('platform.settings.currencies.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
 
                     Menu::make(CustomTranslator::get('Языки'))
                         ->icon('bs.translate')
-                        ->route('platform.settings.languages.index'),
+                        ->route('platform.settings.languages.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
                 ]),
 
             // *******************************
@@ -120,7 +129,7 @@ class PlatformProvider extends OrchidServiceProvider
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
 
                     Menu::make(CustomTranslator::get('Управление импортами'))
-                        ->icon('bs.upload')
+                        ->icon('bs.cloud-upload')
                         ->route('platform.whmanagement.imports.index'),
 
                 ]),

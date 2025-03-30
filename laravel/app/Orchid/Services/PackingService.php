@@ -81,14 +81,14 @@ class PackingService
 
             // Находим заказы удовлетворяющие параметрам очереди
             $dbOrdersList = rwOrder::where('o_domain_id', $currentUser->domain_id)
-                ->whereIn('o_status_id', [60, 80])
+                ->whereIn('o_status_id', [40, 60, 80])
                 ->where('o_wh_id', $queueWhId)
                 ->with('getPlace')
                 ->get();
 
             foreach ($dbOrdersList as $currentOrder) {
                 // Если способ подбора совпадает с типом очереди
-                if ($currentOrder->getPlace->pl_type == $queueStartPlaceType) {
+                if ($currentOrder->getPlace->pl_type != null && $currentOrder->getPlace->pl_type == $queueStartPlaceType) {
 
                     if ($currentOrder->getPlace->pl_type == 105) {
                         if ($currentOrder->o_order_place == $tableId) {

@@ -6,6 +6,7 @@ use App\Models\rwAcceptance;
 use App\Models\rwDomain;
 use App\Models\rwDomain2;
 use App\Orchid\Layouts\Domains\DomainsTable;
+use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
@@ -25,18 +26,18 @@ class DomainsScreen extends Screen
 
     public function name(): ?string
     {
-        return 'Domains';
+        return CustomTranslator::get('Домены');
     }
 
     public function description(): ?string
     {
-        return 'List of domains';
+        return CustomTranslator::get('Список доменов');
     }
 
     public function commandBar(): iterable
     {
         return [
-            Link::make('Create Domain')
+            Link::make(CustomTranslator::get('Создать домен'))
                 ->icon('plus')
                 ->route('platform.settings.domains.create'),
         ];

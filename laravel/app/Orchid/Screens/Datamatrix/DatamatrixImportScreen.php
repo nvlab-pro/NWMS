@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Orchid\Screens\Offers;
+namespace App\Orchid\Screens\Datamatrix;
 
-use App\Http\Middleware\Offers\OffersMiddleware;
+use App\Imports\DatamatrixImport;
 use App\Imports\OffersImport;
-use App\Models\rwOffer;
 use App\Models\rwShop;
 use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
@@ -12,61 +11,57 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Orchid\Attachment\Models\Attachment;
 use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Actions\ModalToggle;
-use Orchid\Screen\Fields\Label;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\Upload;
-use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
-use Orchid\Support\Facades\Toast;
-use Orchid\Screen\TD;
-use Illuminate\Support\Facades\Storage;
 
-class OffersImportScreen extends Screen
+class DatamatrixImportScreen extends Screen
 {
     /**
-     * Название экрана.
+     * Fetch data to be displayed on the screen.
+     *
+     * @return array
      */
-    public function name(): string
+    public function query(): iterable
     {
-        return CustomTranslator::get('Импорт товаров');
+        return [];
     }
 
     /**
-     * Доступные запросы.
+     * The name of the screen displayed in the header.
+     *
+     * @return string|null
      */
-    public function query(): array
+    public function name(): ?string
     {
-
-        return [
-            'importDescriptions' => rwOffer::getImportDescriptions(),
-            'recentOffers' => rwOffer::latest()->limit(10)->get(),
-        ];
+        return CustomTranslator::get('Импорт кодов DataMatrix');
     }
 
     /**
-     * Кнопки действий.
+     * The screen's action buttons.
+     *
+     * @return \Orchid\Screen\Action[]
      */
-    public function commandBar(): array
+    public function commandBar(): iterable
     {
-        return [
-        ];
+        return [];
     }
 
     /**
-     * Макеты отображения.
+     * The screen's layout elements.
+     *
+     * @return \Orchid\Screen\Layout[]|string[]
      */
-    public function layout(): array
+    public function layout(): iterable
     {
         $currentUser = Auth::user();
         $dbShopsList = rwShop::where('sh_domain_id', $currentUser->domain_id);
 
-
         return [
             Layout::rows([
-                Upload::make('offer_file')
+                Upload::make('datamatrix_file')
                     ->title(CustomTranslator::get('Загрузите файл с товарами'))
                     ->acceptedFiles('.xlsx, .xls, .csv')
                     ->maxFiles(1),
@@ -91,28 +86,23 @@ class OffersImportScreen extends Screen
                     ->help('Небольшие файлы могут быть загружены немедленно. Для загрузки файлов с большим количеством записей используйте загрузку с задержкой.'),
 
                 Button::make(CustomTranslator::get('Начать импорт'))
-                    ->method('importOffers')
+                    ->method('importDatamatrix')
                     ->class('btn btn-outline-primary')
                     ->icon('cloud-upload'),
             ]),
 
-            Layout::view('Offers.OffersImportInstructions'),
-
+            Layout::view('Screens.Datamatrix.DatamatrixImportInstructions'),
         ];
     }
 
-    /**
-     * Обработчик импорта товаров.
-     */
-
-    public function importOffers(Request $request)
+    public function importDatamatrix(Request $request)
     {
         $currentUser = Auth::user();
-        $id = $request->get('offer_file')[0] ?? null;
+        $id = $request->get('datamatrix_file')[0] ?? null;
 
         if (!$id || $id == null) {
             Alert::error(CustomTranslator::get('Пожалуйста, загрузите файл перед импортом.'));
-            return redirect()->route('platform.offers.import');
+            return redirect()->route('platform.lib.datamatrix.import');
         }
 
         $attachment = Attachment::find($id);
@@ -120,7 +110,7 @@ class OffersImportScreen extends Screen
         $attachment->domain_id = $currentUser->domain_id;
         $attachment->status = 0; // 0 - загружено, 1 - обрабатывается, 2 - импорт окончен, 3 - ошибка
         $attachment->type = 'импорт';
-        $attachment->group = 'товары';
+        $attachment->group = 'datamatrix';
         $attachment->import_type = $request->get('import_type'); // 0 - немедленно, 1 - отложено
         $attachment->save();
 
@@ -138,12 +128,14 @@ class OffersImportScreen extends Screen
 
             try {
 
-                Excel::import(new OffersImport($request->get('of_shop_id'), $id), $fullPath);
-                Alert::success(CustomTranslator::get('Товары успешно загружены!'));
+                $currentImport = new  DatamatrixImport($request->get('of_shop_id'), $id);
+
+                Excel::import($currentImport, $fullPath);
+                Alert::success(CustomTranslator::get('Файл успешно обработан! Добавлено: ') . $currentImport->getSuccessCount() . ', ' . CustomTranslator::get('в ошибке: ') . $currentImport->getErrorCount() . '. ' . CustomTranslator::get('Подробнее смотрите в разделе управления импорта!'));
                 $attachment->status = 2;
                 $attachment->save();
 
-                return redirect()->route('platform.offers.index');
+                return redirect()->route('platform.lib.datamatrix.import');
 
             } catch (\Exception $e) {
                 Alert::error(CustomTranslator::get('Ошибка при импорте: ') . $e->getMessage());
@@ -154,7 +146,7 @@ class OffersImportScreen extends Screen
 
             Alert::success(CustomTranslator::get('Файл успешно загружен и будет обработан в ближайшее время!'));
 
-            return redirect()->route('platform.offers.index');
+            return redirect()->route('platform.lib.datamatrix.import');
         }
     }
 }

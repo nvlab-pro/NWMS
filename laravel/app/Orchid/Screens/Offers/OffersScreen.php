@@ -70,12 +70,12 @@ class OffersScreen extends Screen
                 ->route('platform.offers.create'),
 
             Link::make(CustomTranslator::get('Импорт товаров'))
-                ->icon('bs.upload')
+                ->icon('bs.cloud-upload')
                 ->route('platform.offers.import'),
 
             Link::make(CustomTranslator::get('Экспорт в Excel'))
                 ->route('platform.offers.export', request()->all()) // 🔥 передаём фильтры из текущего запроса
-                ->icon('bs.download'),
+                ->icon('bs.cloud-download'),
 
         ];
     }

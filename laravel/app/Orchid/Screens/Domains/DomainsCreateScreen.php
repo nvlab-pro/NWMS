@@ -42,16 +42,16 @@ class DomainsCreateScreen extends Screen
         return [
             Layout::rows([
                 Input::make('rwDomain.dm_name')
-                    ->title('Domain Name')
+                    ->title(CustomTranslator::get('Домен'))
                     ->required()
                     ->maxlength(20),
 
                 Select::make('rwDomain.dm_country_id')
-                    ->title('Country')
+                    ->title(CustomTranslator::get('Страна'))
                     ->fromModel(rwLibCountry::class, 'lco_name') // замените 'name' на поле с названием страны
                     ->required(),
 
-                Button::make('Сохранить')
+                Button::make(CustomTranslator::get('Сохранить'))
                     ->icon('check')
                     ->method('save'),
 

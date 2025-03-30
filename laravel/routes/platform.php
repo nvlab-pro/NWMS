@@ -460,6 +460,25 @@ Route::screen('settings', SettingScreen::class)
         ->parent('platform.index')
         ->push(CustomTranslator::get('Настройки'), route('platform.settings.index')));
 
+Route::prefix('lib')
+    ->name('platform.lib')
+    ->group(function () {
+
+        Route::screen('datamatrix/import', \App\Orchid\Screens\Datamatrix\DatamatrixImportScreen::class)
+            ->name('.datamatrix.import')
+            ->breadcrumbs(fn(Trail $trail) => $trail
+                ->parent('platform.lib.datamatrix.index')
+                ->push(CustomTranslator::get('Честный знак'), route('platform.lib.datamatrix.import')));
+
+         Route::screen('datamatrix', \App\Orchid\Screens\Datamatrix\DatamatrixScreen::class)
+            ->name('.datamatrix.index')
+            ->breadcrumbs(fn(Trail $trail) => $trail
+                ->parent('platform.index')
+                ->push(CustomTranslator::get('Честный знак'), route('platform.lib.datamatrix.index')));
+
+
+    });
+
 Route::prefix('settings')
     ->name('platform.settings')
     ->group(function () {

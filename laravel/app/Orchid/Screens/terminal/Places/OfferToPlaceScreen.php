@@ -186,7 +186,7 @@ class OfferToPlaceScreen extends Screen
 
     public function name(): ?string
     {
-        return CustomTranslator::get('Размещение товаров для приемки № ' . $this->docId);
+        return CustomTranslator::get('Размещение товаров для приемки') . ' № ' . $this->docId;
     }
 
     public function description(): ?string
