@@ -77,8 +77,8 @@
                                 <p>A picker took goods from a shelf for an order? The goods are now linked to the picker.</p>
                                 <p>Canceled the order during packing? The goods must be linked to a special buffer zone for redistribution.</p>
                                 <p>Started packing the order? The goods are linked to the packing table.</p>
-                                <p>And so on...</p>
-                                <p>At any moment, for any unit of goods, you must be able to see exactly where it is located. Whether it’s on a shelf, in an employee’s hands, or inside a not-yet-shipped or already shipped order.</p>
+                                <p>And so on...</p>", $lang) !!}
+                            {!! CustomSiteTranslator::get("<p>At any moment, for any unit of goods, you must be able to see exactly where it is located. Whether it’s on a shelf, in an employee’s hands, or inside a not-yet-shipped or already shipped order.</p>
                                 <p><strong>This is the foundation! Only this approach can ensure accurate stock levels!</strong></p>
                                 <p>In any other case, chaos begins. Someone takes an item off a shelf to pack it, gets a call, is asked to help unload a delivery, gets distracted, puts the item on the wrong shelf — and that's it! The item is still physically in the warehouse, but no one knows where exactly.</p>
                                 <p>And that’s just one example of how goods get 'lost' in the warehouse — not even talking about actual theft.</p>
