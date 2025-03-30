@@ -88,7 +88,7 @@ class PackingService
 
             foreach ($dbOrdersList as $currentOrder) {
                 // Если способ подбора совпадает с типом очереди
-                if ($currentOrder->getPlace->pl_type != null && $currentOrder->getPlace->pl_type == $queueStartPlaceType) {
+                if ($currentOrder->getPlace && $currentOrder->getPlace->pl_type && $currentOrder->getPlace->pl_type == $queueStartPlaceType) {
 
                     if ($currentOrder->getPlace->pl_type == 105) {
                         if ($currentOrder->o_order_place == $tableId) {
