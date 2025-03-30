@@ -80,7 +80,8 @@
                                     <li><b>Labeling</b> — if the order needs to be prepared for a delivery service (weighing, measuring, applying a shipping label, etc.), this step is added.</li>
                                     <li><b>Shipping</b> — finally, we ship the prepared orders to the client, delivery service, or transport company.</li>
                                 </ol>
-                                <p>In short, this is exactly how it looks.</p>
+                            ", $lang) !!}
+                            {!! CustomSiteTranslator::get("<p>In short, this is exactly how it looks.</p>
                                 <p>And here it’s important to understand that all of these are modular processes. You can build a workflow that’s ideal for your specific warehouse. Not every warehouse, scenario, or business needs all of them.</p>
                                 <p>For example, if you have a small warehouse, ship in bulk, and have just a few suppliers — you might not need sorting, packing, or labeling. Only picking and shipping may be enough.</p>
                                 <p>I won’t go over every possible scenario here — there are simply too many — but hopefully the idea is clear. Now let’s move on to each process block individually and figure out when you need them — and when you don’t.</p>
