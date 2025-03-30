@@ -94,7 +94,7 @@ class SelectPackingTableScreen extends Screen
                                 'o_operation_user_id' => $currentUser->id,
                             ]);
 
-                        rwOrderOffer::where('o_order_id', $currentOrder)
+                        rwOrderOffer::where('oo_order_id', $currentOrder)
                             ->update([
                                 'oo_operation_user_id'  => 0,
                             ]);
