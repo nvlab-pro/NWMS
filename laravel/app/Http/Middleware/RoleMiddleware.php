@@ -40,14 +40,18 @@ class RoleMiddleware
 
     public static function checkUserCountry($currentCountries)
     {
+        if (empty($currentCountries)) {
+            return false;
+        }
 
-        $arCountries = explode(',', $currentCountries);
+        $arCountries = array_map('trim', explode(',', $currentCountries));
 
-        $arCountry = explode(',', $currentCountries);
-        $currentCountry = Auth::user()->getDomain->getCountry->first()->lco_id;
+        $currentCountry = Auth::user()?->getDomain?->getCountry?->first()?->lco_id;
 
-        if (in_array($currentCountry, $arCountries)) return true;;
+        if (!$currentCountry) {
+            return false;
+        }
 
-        return false;
+        return in_array($currentCountry, $arCountries);
     }
 }
