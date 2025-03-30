@@ -60,23 +60,23 @@
                     <div class="blog-details-content">
                         <div class="blog-details-meta">
                             <div class="techo-blog-meta-left">
-                                <span>theory</span>
+                                <span>{{ CustomSiteTranslator::get('theory', $lang) }}</span>
                                 30.03.2025
                             </div>
                         </div>
                         <div class="blog-details-content-text">
-                            <h2>{{ CustomSiteTranslator::get("What's next?", $lang) }}</h2>
-                            <br>
-                            <p>{{ CustomSiteTranslator::get("So, we've already prepared the warehouse for its 'inhabitants' — the goods — and then successfully received and placed them! Our WMS now knows exactly what products are in the warehouse, how many units we have, and where each unit is stored.", $lang) }}</p>
+                            {!! CustomSiteTranslator::get("
+                                <h2>What's next?</h2>
+                                <br>
+                                <p>So, we've already prepared the warehouse for its 'inhabitants' — the goods — and then successfully received and placed them! Our WMS now knows exactly what products are in the warehouse, how many units we have, and where each unit is stored.</p>
+                                <p>We’ve completed the first phase of our grand plan. The foundation is ready. Not that complicated after all, right? 😉</p>
+                                <p>Now it's time to unlock the potential we’ve just set up!</p>
+                                <p>And here’s where things get nuanced, because there are many possible paths to take.</p>
+                                <p>But let’s go through them step by step.</p>
+                                <p>And we’ll start with picking goods.</p>
+                            ", $lang) !!}
                         </div>
 
-                        <div class="blog-details-content-text-inner">
-                            <p>{{ CustomSiteTranslator::get("We’ve completed the first phase of our grand plan. The foundation is ready. Not that complicated after all, right? 😉", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Now it's time to unlock the potential we’ve just set up!", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("And here’s where things get nuanced, because there are many possible paths to take.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("But let’s go through them step by step.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("And we’ll start with picking goods.", $lang) }}</p>
-                        </div>
 
                         <div class="d-flex justify-content-between" style="border-top: 1px dotted #000000; margin-top: 10px; padding-top: 10px;">
                             <button type="button" class="btn btn-outline-primary"

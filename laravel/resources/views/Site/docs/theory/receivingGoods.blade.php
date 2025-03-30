@@ -60,33 +60,32 @@
                     <div class="blog-details-content">
                         <div class="blog-details-meta">
                             <div class="techo-blog-meta-left">
-                                <span>theory</span>
+                                <span>{{ CustomSiteTranslator::get('theory', $lang) }}</span>
                                 30.03.2025
                             </div>
                         </div>
                         <div class="blog-details-content-text">
-                            <h2>{{ CustomSiteTranslator::get("Receiving goods", $lang) }}</h2>
-                            <br>
-                            <p>{{ CustomSiteTranslator::get("When a new shipment arrives at the warehouse, you receive the goods by scanning their barcodes.", $lang) }}</p>
-                        </div>
+                            {!! CustomSiteTranslator::get("
+                                <h2>Receiving goods</h2>
+                                <br>
+                                <p>When a new shipment arrives at the warehouse, you receive the goods by scanning their barcodes.</p>
+                                <p>You can scan the barcode of each individual unit entering the warehouse. Or you can scan a single unit of a SKU and then enter the total quantity received. But the core idea is:</p>
+                                <div class='alert alert-warning' role='alert'>There must not be a SINGLE unit in the warehouse without a barcode!</div>
+                                <p>This is the first axiom we must remember.</p>
+                                <p>What if a product arrives without a barcode? Print your own! Generate barcodes in the WMS and label every item.</p>
+                                <p>Though in today's world, this situation happens less and less often.</p>
+                                <p>To learn how this process works specifically in NWMS, visit:</p>
+                            ", $lang) !!}
 
-                        <div class="blog-details-content-text-inner">
-                            <p>{{ CustomSiteTranslator::get("You can scan the barcode of each individual unit entering the warehouse. Or you can scan a single unit of a SKU and then enter the total quantity received. But the core idea is:", $lang) }}</p>
-                            <div class="alert alert-warning" role="alert">{{ CustomSiteTranslator::get("There must not be a SINGLE unit in the warehouse without a barcode!", $lang) }}</div>
-                            <p>{{ CustomSiteTranslator::get("This is the first axiom we must remember.", $lang) }}</p>
-                        </div>
-
-                        <div class="blog-details-content-text-inner">
-                            <p>{{ CustomSiteTranslator::get("What if a product arrives without a barcode? Print your own! Generate barcodes in the WMS and label every item.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Though in today's world, this situation happens less and less often.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("To learn how this process works specifically in NWMS, visit:", $lang) }}</p>
                             <button type="button" class="btn btn-outline-dark" onClick="window.location.href='{{ $lang_str }}/docs/receiving'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
                                     <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
                                     <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
                                 </svg>
-                                {{ CustomSiteTranslator::get("Receiving in WMS", $lang) }}</button>
-                            <br>
+                                {{ CustomSiteTranslator::get("Receiving in WMS", $lang) }}
+                            </button>
+                        </div>
+                        <div class="blog-details-content-text-inner">
                             <br>
                             <div class="d-flex justify-content-between" style="border-top: 1px dotted #000000; margin-top: 10px; padding-top: 10px;">
                                 <button type="button" class="btn btn-outline-primary"

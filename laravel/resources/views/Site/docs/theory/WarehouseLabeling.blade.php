@@ -60,36 +60,36 @@
                     <div class="blog-details-content">
                         <div class="blog-details-meta">
                             <div class="techo-blog-meta-left">
-                                <span>theory</span>
+                                <span>{{ CustomSiteTranslator::get('theory', $lang) }}</span>
                                 30.03.2025
                             </div>
                         </div>
                         <div class="blog-details-content-text">
-                            <h2>{{ CustomSiteTranslator::get("Warehouse labeling", $lang) }}</h2>
-                            <br>
-                            <p>{{ CustomSiteTranslator::get("To be able to link a product to a shelf, each shelf in the warehouse must be labeled with a corresponding tag.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("This label indicates (both in plain text and encoded in a barcode) the exact location of the shelf (or bin) in the warehouse.", $lang) }}</p>
-                        </div>
+                            {!! CustomSiteTranslator::get("
+                                <h2>Warehouse labeling</h2>
+                                <br>
+                                <p>To be able to link a product to a shelf, each shelf in the warehouse must be labeled with a corresponding tag.</p>
+                                <p>This label indicates (both in plain text and encoded in a barcode) the exact location of the shelf (or bin) in the warehouse.</p>
+                                <p>Typically, the location includes:</p>
+                                <ul style='padding-left: 40px; padding-bottom: 20px;'>
+                                    <li>Zone or Room</li>
+                                    <li>Floor</li>
+                                    <li>Aisle</li>
+                                    <li>Rack</li>
+                                    <li>Shelf</li>
+                                </ul>
+                                <p>The number and type of fields may vary. For example, you only need the floor number if your warehouse spans multiple levels (though in that case, it might be simpler to treat each level as a separate zone). Or if you’re using a mezzanine with multiple tiers.</p>
+                                <p>A label would typically look something like this:</p>
+                            ", $lang) !!}
 
-                        <div class="blog-details-content-text-inner">
-                            <p>{{ CustomSiteTranslator::get("Typically, the location includes:", $lang) }}</p>
-                            <ul style="padding-left: 40px; padding-bottom: 20px;">
-                                <li>{{ CustomSiteTranslator::get("Zone or Room", $lang) }}</li>
-                                <li>{{ CustomSiteTranslator::get("Floor", $lang) }}</li>
-                                <li>{{ CustomSiteTranslator::get("Aisle", $lang) }}</li>
-                                <li>{{ CustomSiteTranslator::get("Rack", $lang) }}</li>
-                                <li>{{ CustomSiteTranslator::get("Shelf", $lang) }}</li>
-                            </ul>
-                            <p>{{ CustomSiteTranslator::get("The number and type of fields may vary. For example, you only need the floor number if your warehouse spans multiple levels (though in that case, it might be simpler to treat each level as a separate zone). Or if you’re using a mezzanine with multiple tiers.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("A label would typically look something like this:", $lang) }}</p>
-                            <div style="text-align: center;"><img src="/img/docs/place_lable.png"></div>
+                            <div style="text-align: center;"><img src="/img/docs/place_lable.png" alt="Example warehouse shelf label"></div>
                             <br>
-                        </div>
 
-                        <div class="blog-details-content-text-inner">
-                            <p>{{ CustomSiteTranslator::get("You simply create these storage locations in the WMS, print out the labels, and stick them onto EVERY storage location in your warehouse — whether it's a pallet space or a shelf bin.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Well, it is what it is — you can’t cut words from a good story!", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("To learn how this process works specifically in NWMS, visit:", $lang) }}</p>
+                            {!! CustomSiteTranslator::get("
+                                <p>You simply create these storage locations in the WMS, print out the labels, and stick them onto EVERY storage location in your warehouse — whether it's a pallet space or a shelf bin.</p>
+                                <p>Well, it is what it is — you can’t cut words from a good story!</p>
+                                <p>To learn how this process works specifically in NWMS, visit:</p>
+                            ", $lang) !!}
 
                             <button type="button" class="btn btn-outline-dark" onClick="window.location.href='{{ $lang_str }}/docs/location_labeling'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
@@ -99,6 +99,7 @@
                                 {{ CustomSiteTranslator::get("Labeling storage locations in the warehouse", $lang) }}
                             </button>
                         </div>
+
                         <br>
                         <div class="d-flex justify-content-between" style="border-top: 1px dotted #000000; margin-top: 10px; padding-top: 10px;">
                             <button type="button" class="btn btn-outline-primary"

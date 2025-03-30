@@ -60,40 +60,36 @@
                     <div class="blog-details-content">
                         <div class="blog-details-meta">
                             <div class="techo-blog-meta-left">
-                                <span>theory</span>
+                                <span>{{ CustomSiteTranslator::get('theory', $lang) }}</span>
                                 30.03.2025
                             </div>
                         </div>
                         <div class="blog-details-content-text">
-                            <h2>{{ CustomSiteTranslator::get("Let's start with the theory", $lang) }}</h2>
-                            <br>
-                            <p>{{ CustomSiteTranslator::get("So, as I already mentioned in the", $lang) }} <a href="{{ $lang_str }}/about_wms">{{ CustomSiteTranslator::get("About WMS", $lang) }}</a>, {{ CustomSiteTranslator::get("warehouse automation is not as scary or complicated as it might seem. All warehouse processes remain the same as they were before automation began.", $lang) }}</p>
-                        </div>
-
-                        <div class="blog-details-content-text-inner">
-                            <p>{{ CustomSiteTranslator::get("You still:", $lang) }}</p>
-                            <ol>
-                                <li>{{ CustomSiteTranslator::get("Receive goods into the warehouse", $lang) }}</li>
-                                <li>{{ CustomSiteTranslator::get("Place them on shelves", $lang) }}</li>
-                                <li>{{ CustomSiteTranslator::get("Pick items for orders", $lang) }}</li>
-                                <li>{{ CustomSiteTranslator::get("Ship them to partners, clients, and even your beloved grandma", $lang) }}</li>
-                            </ol>
-                        </div>
-
-                        <div class="blog-details-content-text-inner">
-                            <p>{{ CustomSiteTranslator::get("Maybe you’re already using some kind of inventory software for this!", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Only one key thing changes: you start using barcodes at EVERY stage of working with goods.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("That's it! Period! You could say I’ve just revealed the whole essence! ;)", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("If we look at the process in more detail, then:", $lang) }}</p>
+                            {!! CustomSiteTranslator::get("
+                                <h2>Let's start with the theory</h2>
+                                <br>
+                                <p>So, as I already mentioned in the <a href='{$lang_str}/about_wms'><u>About WMS</u></a>, warehouse automation is not as scary or complicated as it might seem. All warehouse processes remain the same as they were before automation began.</p>
+                                <p>You still:</p>
+                                <ol>
+                                    <li>Receive goods into the warehouse</li>
+                                    <li>Place them on shelves</li>
+                                    <li>Pick items for orders</li>
+                                    <li>Ship them to partners, clients, and even your beloved grandma</li>
+                                </ol>
+                                <p>Maybe you’re already using some kind of inventory software for this!</p>
+                                <p>Only one key thing changes: you start using barcodes at EVERY stage of working with goods.</p>
+                                <p>That's it! Period! You could say I’ve just revealed the whole essence! ;)</p>
+                                <p>If we look at the process in more detail, then:</p>
+                            ", $lang) !!}
 
                             <div class="d-flex justify-content-between" style="border-top: 1px dotted #000000; margin-top: 10px; padding-top: 10px;">
-                                <br>
-                                <button type="button" class="btn btn-outline-primary" onClick="window.location.href='{{ $lang_str }}/docs/theory/receiving_goods'">
-                                    {{ CustomSiteTranslator::get("Start with receiving goods", $lang) }}
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-                                    </svg>
-                                </button>
+                            <br>
+                            <button type="button" class="btn btn-outline-primary" onClick="window.location.href='{{ $lang_str }}/docs/theory/receiving_goods'">
+                                {{ CustomSiteTranslator::get("Start with receiving goods", $lang) }}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                                </svg>
+                            </button>
                             </div>
                         </div>
                     </div>

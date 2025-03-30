@@ -60,37 +60,33 @@
                     <div class="blog-details-content">
                         <div class="blog-details-meta">
                             <div class="techo-blog-meta-left">
-                                <span>theory</span>
+                                <span>{{ CustomSiteTranslator::get('theory', $lang) }}</span>
                                 30.03.2025
                             </div>
                         </div>
                         <div class="blog-details-content-text">
-                            <h2>{{ CustomSiteTranslator::get("Putaway of goods on shelves", $lang) }}</h2>
-                            <br>
-                            <p>{{ CustomSiteTranslator::get("After your goods have been received, they must be placed on the warehouse shelves. At this stage, it's no longer you or your employees, but your WMS that must precisely track which shelf holds what quantity of which product.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("This is one of the core foundations of warehouse automation!", $lang) }}</p>
-                            <p><strong>{{ CustomSiteTranslator::get("And here we come to the second axiom:", $lang) }}</strong></p>
-                        </div>
-
-                        <div class="blog-details-content-text-inner">
-                            <div class="alert alert-warning" role="alert">{{ CustomSiteTranslator::get("There must NEVER be unbound goods in the warehouse!", $lang) }}</div>
-                            <p>{{ CustomSiteTranslator::get("In other words: once the product enters the warehouse (is received), it must ALWAYS be linked to something or someone!", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Received goods? Link them to a shelf.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("A picker took goods from a shelf for an order? The goods are now linked to the picker.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Canceled the order during packing? The goods must be linked to a special buffer zone for redistribution.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Started packing the order? The goods are linked to the packing table.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("And so on...", $lang) }}</p>
-                        </div>
-
-                        <div class="blog-details-content-text-inner">
-                            <p>{{ CustomSiteTranslator::get("At any moment, for any unit of goods, you must be able to see exactly where it is located. Whether it’s on a shelf, in an employee’s hands, or inside a not-yet-shipped or already shipped order.", $lang) }}</p>
-                            <p><strong>{{ CustomSiteTranslator::get("This is the foundation! Only this approach can ensure accurate stock levels!", $lang) }}</strong></p>
-                            <p>{{ CustomSiteTranslator::get("In any other case, chaos begins. Someone takes an item off a shelf to pack it, gets a call, is asked to help unload a delivery, gets distracted, puts the item on the wrong shelf — and that's it! The item is still physically in the warehouse, but no one knows where exactly.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("And that’s just one example of how goods get 'lost' in the warehouse — not even talking about actual theft.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("There’s a brutally simple theory: if something can be stolen — it eventually will be.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Knowing exactly what you have, where it is at this very moment, and how many units there are won’t completely solve the problem (people will still get distracted or steal), but it will significantly (even SIGNIFICANTLY) reduce it. And most importantly — it gives you tools to solve the issues that arise.", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("Convinced? No?", $lang) }}<br>{{ CustomSiteTranslator::get("It's your warehouse — you decide...", $lang) }}</p>
-                            <p>{{ CustomSiteTranslator::get("To learn how this process works specifically in NWMS, visit:", $lang) }}</p>
+                            {!! CustomSiteTranslator::get("
+                                <h2>Putaway of goods on shelves</h2>
+                                <br>
+                                <p>After your goods have been received, they must be placed on the warehouse shelves. At this stage, it's no longer you or your employees, but your WMS that must precisely track which shelf holds what quantity of which product.</p>
+                                <p>This is one of the core foundations of warehouse automation!</p>
+                                <p><strong>And here we come to the second axiom:</strong></p>
+                                <div class='alert alert-warning' role='alert'>There must NEVER be unbound goods in the warehouse!</div>
+                                <p>In other words: once the product enters the warehouse (is received), it must ALWAYS be linked to something or someone!</p>
+                                <p>Received goods? Link them to a shelf.</p>
+                                <p>A picker took goods from a shelf for an order? The goods are now linked to the picker.</p>
+                                <p>Canceled the order during packing? The goods must be linked to a special buffer zone for redistribution.</p>
+                                <p>Started packing the order? The goods are linked to the packing table.</p>
+                                <p>And so on...</p>
+                                <p>At any moment, for any unit of goods, you must be able to see exactly where it is located. Whether it’s on a shelf, in an employee’s hands, or inside a not-yet-shipped or already shipped order.</p>
+                                <p><strong>This is the foundation! Only this approach can ensure accurate stock levels!</strong></p>
+                                <p>In any other case, chaos begins. Someone takes an item off a shelf to pack it, gets a call, is asked to help unload a delivery, gets distracted, puts the item on the wrong shelf — and that's it! The item is still physically in the warehouse, but no one knows where exactly.</p>
+                                <p>And that’s just one example of how goods get 'lost' in the warehouse — not even talking about actual theft.</p>
+                                <p>There’s a brutally simple theory: if something can be stolen — it eventually will be.</p>
+                                <p>Knowing exactly what you have, where it is at this very moment, and how many units there are won’t completely solve the problem (people will still get distracted or steal), but it will significantly (even SIGNIFICANTLY) reduce it. And most importantly — it gives you tools to solve the issues that arise.</p>
+                                <p>Convinced? No?<br>It's your warehouse — you decide...</p>
+                                <p>To learn how this process works specifically in NWMS, visit:</p>
+                            ", $lang) !!}
 
                             <button type="button" class="btn btn-outline-dark" onClick="window.location.href='{{ $lang_str }}/docs/putaway_of_goods'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
