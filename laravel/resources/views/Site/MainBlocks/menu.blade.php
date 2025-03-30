@@ -23,6 +23,7 @@
                         <li><a href="{{ $lang_str }}/about_wms">{{ CustomSiteTranslator::get('About WMS', $lang) }}</a></li>
                         <li><a href="{{ $lang_str }}/pricing">{{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
                         <li><a href="{{ $lang_str }}/support">{{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
+                        <li><a href="{{ $lang_str }}/docs/theory">{{ CustomSiteTranslator::get('Docs', $lang) }}</a></li>
                         <!--
                         <li><a href="/">Pricing</a></li>
                         <li><a href="/">Education</a></li>

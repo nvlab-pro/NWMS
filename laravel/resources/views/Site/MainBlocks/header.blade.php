@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{!! CustomSiteTranslator::get('NWMS - free warehouse automation system', $lang) !!}, WMS.</title>
+    <title>@if (isset($header)){{ $header }}@endif, NWMS - {{ CustomSiteTranslator::get('free warehouse automation system', $lang) }}, WMS.</title>
     <meta name="description"
           content="{!! CustomSiteTranslator::get('Completely free, cloud-based warehouse management system (WMS). Receipt of goods, address storage of goods, work with data collection terminals, control of balances', $lang) !!}.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
