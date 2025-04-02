@@ -47,16 +47,36 @@
 </div>
 
 <!-- techo Mobile Menu  -->
-<div class="mobile-menu-area sticky d-sm-block d-md-block d-lg-none ">
+<div class="mobile-menu-area sticky d-sm-block d-md-block d-lg-none">
     <div class="mobile-menu">
         <nav class="techo_menu">
             <ul class="nav_scroll">
-                <li><a href="/admin">WMS</a></li>
-                <li><a href="{{ $lang_str }}/">{{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
-                <li><a href="{{ $lang_str }}/about_wms">{{ CustomSiteTranslator::get('About WMS', $lang) }}</a></li>
-                <li><a href="{{ $lang_str }}/pricing">{{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
-                <li><a href="{{ $lang_str }}/support">{{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
-                <li><a href="{{ $lang_str }}/docs/theory">{{ CustomSiteTranslator::get('Docs', $lang) }}</a></li>
+                <li><a href="#">{{ CustomSiteTranslator::get('Change language', $lang) }}</a>
+                    <ul class="sub-menu">
+                        <li><a href="/bg">🇧🇬 Bulgarian</a></li>
+                        <li><a href="/ch">🇨🇳 Chinese</a></li>
+                        <li><a href="/en">🇺🇸 English</a></li>
+                        <li><a href="/de">🇩🇪 German</a></li>
+                        <li><a href="/gr">🇬🇪 Georgian</a></li>
+                        <li><a href="/it">🇮🇹 Italian</a></li>
+                        <li><a href="/jp">🇯🇵 Japanese</a></li>
+                        <li><a href="/kz">🇰🇿 Kazakh</a></li>
+                        <li><a href="/kl">🛸 Klingon</a></li>
+                        <li><a href="/pr">🇵🇹 Portuguese</a></li>
+                        <li><a href="/ro">🇷🇴 Romanian</a></li>
+                        <li><a href="/rus">🇷🇺 Russian</a></li>
+                        <li><a href="/sp">🇪🇸 Spanish</a></li>
+                        <li><a href="/tr">🇹🇷 Turkish</a></li>
+                        <li><a href="/ukr">🇺🇦 Ukrainian</a></li>
+                        <li><a href="/bel">🇧🇾 Belarusian</a></li>
+                    </ul>
+                </li>
+                <li><a href="{{ $lang_str }}/">{!! CustomSiteTranslator::get('Start', $lang) !!}</a></li>
+                <li><a href="{{ $lang_str }}/about_wms">{!! CustomSiteTranslator::get('About WMS', $lang) !!}</a></li>
+                <li><a href="{{ $lang_str }}/pricing">{!! CustomSiteTranslator::get('Pricing', $lang) !!}</a></li>
+                <li><a href="{{ $lang_str }}/support">{!! CustomSiteTranslator::get('Support', $lang) !!}</a></li>
+                <li><a href="{{ $lang_str }}/docs/theory">{!! CustomSiteTranslator::get('Docs', $lang) !!}</a></li>
+                <li><a href="/admin">Log in</a></li>
                 <!--
                 <li><a href="/">Pricing</a></li>
                 <li><a href="/">Education</a></li>

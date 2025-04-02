@@ -383,6 +383,13 @@ ul.sub-menu li:hover a span{
     height: 625px;
 }
 
+
+@media (max-width: 767px) {
+    .hero-section {
+        margin-top: 60px;
+    }
+}
+
 .hero-title h5 {
     display: inline-block;
     color: #FFFFFF;
@@ -2687,6 +2694,12 @@ li.current_menu_item {
     background-position: center;
     background-size: cover;
     height: 265px;
+}
+
+@media (max-width: 767px) {
+    .breadcumb-area {
+        margin-top: 60px;
+    }
 }
 
 .breadcumb-content {

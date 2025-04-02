@@ -106,7 +106,7 @@ class CustomSiteTranslator
 //                'model' => 'gpt-4', // Можно использовать gpt-3.5-turbo для экономии
                 'model' => 'gpt-4-turbo',
                 'messages' => [
-                    ['role' => 'system', 'content' => 'You are a translation assistant. Translate text to '.$language.'.'],
+                    ['role' => 'system', 'content' => 'Translate a text for site about warehouse automation software. Consider this nuance and keeping the html formatting. Translate text to '.$language.'.'],
                     ['role' => 'user', 'content' => $text]
                 ],
                 'temperature' => 0.7,

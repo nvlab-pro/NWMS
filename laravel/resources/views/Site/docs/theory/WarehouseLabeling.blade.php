@@ -55,7 +55,7 @@
             <div class="col-lg-8 col-md-12">
                 <div class="single-blog-details-box wow fadeInLeft animated">
                     <div class="details-thumb">
-                        <img src="/img/docs/warehouse_labeling.jpg" alt="">
+                        <img src="/img/docs/warehouse_labeling_mult.jpg" alt="">
                     </div>
                     <div class="blog-details-content">
                         <div class="blog-details-meta">

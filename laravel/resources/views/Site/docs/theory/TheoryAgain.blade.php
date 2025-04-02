@@ -55,7 +55,7 @@
             <div class="col-lg-8 col-md-12">
                 <div class="single-blog-details-box wow fadeInLeft animated">
                     <div class="details-thumb">
-                        <img src="/img/docs/sheme_eng2.jpg" alt="">
+                        <img src="/img/docs/sheme_eng3.jpg" alt="">
                     </div>
                     <div class="blog-details-content">
                         <div class="blog-details-meta">
@@ -98,9 +98,9 @@
                                 {{ CustomSiteTranslator::get("What's next?", $lang) }}
                             </button>
 
-                            <button type="button" class="btn btn-outline-dark"
-                                    >
-                                {{ CustomSiteTranslator::get("In development...", $lang) }}
+                            <button type="button" class="btn btn-outline-primary"
+                                    onClick="window.location.href='{{ $lang_str }}/docs/theory/assembling_the_order'">
+                                {{ CustomSiteTranslator::get("Assembling the order", $lang) }}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
                                 </svg>

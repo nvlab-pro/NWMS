@@ -54,24 +54,24 @@ Route::get('/docs/theory/theory_again', function () {
     return view('Site/docs/theory/TheoryAgain', ['lang' => 'en']);
 });
 
-Route::get('/docs/receiving', function () {
+Route::get('/docs/theory/receiving', function () {
     return view('Site/docs/theory/InDevelopment', ['lang' => 'en']);
 });
 
-Route::get('/docs/putaway_of_goods', function () {
-    return view('Site/docs/theory/InDevelopment', ['lang' => 'en']);
+//Route::get('/docs/theory/receiving', function () {
+//    return view('Site/docs/theory/InDevelopment', ['lang' => 'en']);
+//});
+
+Route::get('/docs/theory/assembling_the_order', function () {
+    return view('Site/docs/theory/AssemblingTheOrder', ['lang' => 'en']);
 });
 
-Route::get('/docs/location_labeling', function () {
-    return view('Site/docs/theory/InDevelopment', ['lang' => 'en']);
+Route::get('/docs/theory/sorting_goods', function () {
+    return view('Site/docs/theory/SortingGoods', ['lang' => 'en']);
 });
 
-Route::get('/docs/orders', function () {
-    return view('Site/docs/theory/InDevelopment', ['lang' => 'en']);
-});
-
-Route::get('/docs/receiving', function () {
-    return view('Site/docs/theory/InDevelopment', ['lang' => 'en']);
+Route::get('/docs/theory/continuity_processes', function () {
+    return view('Site/docs/theory/ContinuityProcesses', ['lang' => 'en']);
 });
 
 $availableLanguages = [
@@ -134,24 +134,16 @@ Route::get('/{lang}/docs/theory/theory_again', function ($lang) {
     return view('Site/docs/theory/TheoryAgain', ['lang' => $lang]);
 });
 
-Route::get('/{lang}/docs/receiving', function ($lang) {
-    return view('Site/docs/theory/InDevelopment', ['lang' => $lang]);
+Route::get('/{lang}/docs/theory/assembling_the_order', function ($lang) {
+    return view('Site/docs/theory/AssemblingTheOrder', ['lang' => $lang]);
 });
 
-Route::get('/{lang}/docs/putaway_of_goods', function ($lang) {
-    return view('Site/docs/theory/InDevelopment', ['lang' => $lang]);
+Route::get('/{lang}/docs/theory/sorting_goods', function ($lang) {
+    return view('Site/docs/theory/SortingGoods', ['lang' => $lang]);
 });
 
-Route::get('/{lang}/docs/location_labeling', function ($lang) {
-    return view('Site/docs/theory/InDevelopment', ['lang' => $lang]);
-});
-
-Route::get('/{lang}/docs/orders', function ($lang) {
-    return view('Site/docs/theory/InDevelopment', ['lang' => $lang]);
-});
-
-Route::get('/{lang}/docs/receiving', function ($lang) {
-    return view('Site/docs/theory/InDevelopment', ['lang' => $lang]);
+Route::get('/{lang}/docs/theory/continuity_processes', function ($lang) {
+    return view('Site/docs/theory/ContinuityProcesses', ['lang' => $lang]);
 });
 
 Route::post('/{lang}/new-user-form', [\App\Http\Controllers\FormNewUser::class, 'submit']);
