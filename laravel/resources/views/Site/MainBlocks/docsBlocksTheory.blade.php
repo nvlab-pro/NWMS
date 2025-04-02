@@ -77,7 +77,7 @@
     <!-- widget recent post -->
     <div class="widget-recent-post">
         <div class="rpost-thumb">
-            <a href="{!! $lang_str !!}/docs/theory/theory_again"><img src="/img/docs/sheme_eng3.jpg" alt="{!! CustomSiteTranslator::get('A bit of theory again', $lang) !!}" style="width: 75px;"></a>
+            <a href="{!! $lang_str !!}/docs/theory/theory_again"><img src="/img/docs/sheme_eng4.jpg" alt="{!! CustomSiteTranslator::get('A bit of theory again', $lang) !!}" style="width: 75px;"></a>
         </div>
         <div class="rpost-content">
             <div class="rpost-title">
