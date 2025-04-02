@@ -99,6 +99,8 @@
         No more Excel sheets, notebooks, or yelling “Where’s that box?!”<br>
         The system shows you real-time inventory — for every item, in every location. You’ll always know what you have, where it is, and how much is left.
     </li>
+                        ", $lang) !!}
+                        {!! CustomSiteTranslator::get("
 
     <li style='padding-bottom: 10px;'>
         <b>Fewer mistakes</b><br>
@@ -126,7 +128,8 @@
 <p>Good news — the list is pretty short.</p>
 <p>You don’t need to buy expensive equipment or hire a team of IT specialists — it’s much simpler than that:</p>
 <br>
-
+                        ", $lang) !!}
+                        {!! CustomSiteTranslator::get("
 <ol>
     <li style='padding-bottom: 10px;'>
         <b>Basic Equipment</b>
@@ -147,6 +150,8 @@
             </li>
         </ul>
     </li>
+                        ", $lang) !!}
+                        {!! CustomSiteTranslator::get("
 
     <li style='padding-bottom: 10px;'>
         <b>A WMS System</b>
