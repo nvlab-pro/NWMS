@@ -1,4 +1,11 @@
 @php use App\Services\CustomSiteTranslator; @endphp
+<style>
+    .nav_scroll a.active {
+        font-weight: bold;
+        text-decoration: underline;
+        color: #0D5ADB;
+    }
+</style>
 <div id="sticky-header" class="techo_nav_manu-two">
     <div class="container">
         <div class="row align-items-center">
@@ -18,21 +25,26 @@
             </div>
             <div class="col-lg-9">
                 <nav class="techo_menu-two">
+                    @php
+                        $currentPath = '/' . Request::path(); // например: 'en/pricing'
+                    @endphp
+
                     <ul class="nav_scroll">
-                        <li><a href="{{ $lang_str }}/">{{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
-                        <li><a href="{{ $lang_str }}/about_wms">{{ CustomSiteTranslator::get('About WMS', $lang) }}</a></li>
-                        <li><a href="{{ $lang_str }}/pricing">{{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
-                        <li><a href="{{ $lang_str }}/support">{{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
-                        <li><a href="{{ $lang_str }}/docs/theory">{{ CustomSiteTranslator::get('Docs', $lang) }}</a></li>
-                        <!--
-                        <li><a href="/">Pricing</a></li>
-                        <li><a href="/">Education</a></li>
-                        <li><a href="/">Support</a></li>
-                        <li><a href="/">Privacy Policy</a></li>
-                        <li><a href="/">Contact</a></li>
-                        -->
-                    </ul>
-                    <!-- header button -->
+                        <li><a href="{{ $lang_str }}/" class="{{ $currentPath === $lang_str || $currentPath === $lang_str.'/' ? 'active' : '' }}">
+                                {{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
+
+                        <li><a href="{{ $lang_str }}/about_wms" class="{{ str_starts_with($currentPath, $lang_str.'/about_wms') ? 'active' : '' }}">
+                                {{ CustomSiteTranslator::get('About WMS', $lang) }}</a></li>
+
+                        <li><a href="{{ $lang_str }}/pricing" class="{{ str_starts_with($currentPath, $lang_str.'/pricing') ? 'active' : '' }}">
+                                {{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
+
+                        <li><a href="{{ $lang_str }}/support" class="{{ str_starts_with($currentPath, $lang_str.'/support') ? 'active' : '' }}">
+                                {{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
+
+                        <li><a href="{{ $lang_str }}/docs/theory" class="{{ str_starts_with($currentPath, $lang_str.'/docs/theory') ? 'active' : '' }}">
+                                {{ CustomSiteTranslator::get('Education', $lang) }}</a></li>
+                    </ul>                 <!-- header button -->
                     <div class="header-src-btn">
                         <a href="/admin" target="_blank">
                             <div class="search-box-btn search-box-outer">
@@ -75,7 +87,7 @@
                 <li><a href="{{ $lang_str }}/about_wms">{!! CustomSiteTranslator::get('About WMS', $lang) !!}</a></li>
                 <li><a href="{{ $lang_str }}/pricing">{!! CustomSiteTranslator::get('Pricing', $lang) !!}</a></li>
                 <li><a href="{{ $lang_str }}/support">{!! CustomSiteTranslator::get('Support', $lang) !!}</a></li>
-                <li><a href="{{ $lang_str }}/docs/theory">{!! CustomSiteTranslator::get('Docs', $lang) !!}</a></li>
+                <li><a href="{{ $lang_str }}/docs/theory">{!! CustomSiteTranslator::get('Education', $lang) !!}</a></li>
                 <li><a href="/admin">Log in</a></li>
                 <!--
                 <li><a href="/">Pricing</a></li>

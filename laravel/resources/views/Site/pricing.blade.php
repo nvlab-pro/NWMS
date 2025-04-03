@@ -9,6 +9,10 @@
 <!-- End techo Main Menu  -->
 <!--==================================================-->
 
+@php
+    $lang_str = '/' . $lang;
+    if ($lang == 'en') $lang_str = '';
+@endphp
 
 <!--==================================================-->
 <!-- Start techo Breadcumb Area -->
@@ -50,14 +54,32 @@
                         <H3>{{ CustomSiteTranslator::get('First and foremost, the program is provided', $lang) }} <span style="color: red;">{{ CustomSiteTranslator::get('free of charge', $lang) }}</span>!</H3>
                         <br>
                         {!! CustomSiteTranslator::get('You can use it for both personal and commercial purposes <b>completely free of charge</b>.', $lang) !!}<br>
-                            {!! CustomSiteTranslator::get('This applies to both regular sellers managing their own stock in a warehouse, as well as service companies providing fulfillment and storage services.', $lang) !!}
+                        <br>
+                        {!! CustomSiteTranslator::get('This applies to both regular sellers managing their own stock in a warehouse, as well as service companies providing fulfillment and storage services.', $lang) !!}
                         <div style="border-top: 1px solid #AAAAAA; padding-top: 20px; margin-top: 20px;">
+                            {!! CustomSiteTranslator::get('We also offer free assistance to help you get started and set up the software!
+You’ll find <a href="'.$lang_str.'/support" style="text-decoration: underline;">training materials, video tutorials, and our Telegram channel</a> where you can get answers to your questions and connect with other WMS users.<br>
+<br>
+However, if you need more personalized support, tighter deadlines, or a higher level of service — you can always opt for our paid services:
+', $lang) !!}
+                            <br>
                             <H3>{{ CustomSiteTranslator::get('What costs money and how much?', $lang) }}</H3>
                             <br>
                             <h4>{{ CustomSiteTranslator::get('The following services are provided for a fee:', $lang) }}</h4>
                             <p>
                             <ul style="padding-left: 40px;">
+                                <li style="padding-bottom: 20px;"><b>{{ CustomSiteTranslator::get('Demonstration of the system', $lang) }}</b><br>
+                                    <br>
+                                    {!! CustomSiteTranslator::get("You can explore the program at any time using our <a href='".$lang_str."/#demo' style='text-decoration: underline;'>demo version</a> or <a href='".$lang_str."/#form' style='text-decoration: underline;'>request a personal account for full access</a>.
+However, sometimes that's not enough.<br>
+<br>
+In this case, we can offer you a personalized product presentation — typically a Google Meet session lasting about an hour.
+We’ll walk you through the features, share our roadmap, and answer all your questions.<br>
+<br>
+This presentation is paid. Please check the current price in our Telegram group.", $lang) !!}</li>
+
                                 <li style="padding-bottom: 20px;"><b>Onboarding</b> – {{ CustomSiteTranslator::get('that is, assistance with system setup.', $lang) }} <br>
+
                                     <br>
                                     {{ CustomSiteTranslator::get('During the launch period (usually from 1 week to 1 month), a dedicated manager will be assigned to you who will guide your warehouse step by step through all stages. They will consult and assist you throughout the process.', $lang) }}</li>
 
