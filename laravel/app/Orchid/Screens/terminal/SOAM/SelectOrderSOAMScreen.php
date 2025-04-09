@@ -41,6 +41,7 @@ class SelectOrderSOAMScreen extends Screen
             'cash'   => 'nullable|string',
             'currentPlace'   => 'nullable|string',
             'orderOfferId'   => 'nullable|string',
+            'offerId'   => 'nullable|string',
         ]);
 
         $currentUser = Auth::user();
@@ -54,6 +55,7 @@ class SelectOrderSOAMScreen extends Screen
         isset($validatedData['cash']) ? $cash = $validatedData['cash'] : $cash = 0;
         isset($validatedData['currentPlace']) ? $currentPlace = $validatedData['currentPlace'] : $currentPlace = 0;
         isset($validatedData['orderOfferId']) ? $orderOfferId = $validatedData['orderOfferId'] : $orderOfferId = 0;
+        isset($validatedData['offerId']) ? $offerId = $validatedData['offerId'] : $offerId = 0;
 
         // Получаем заказ для сборки
         if ($orderId == 0) {
@@ -83,7 +85,7 @@ class SelectOrderSOAMScreen extends Screen
             if ($action == 'saveOffer' && $count > 0) {
 
                 $dbOrderAssembly = rwOrderAssembly::where('oa_order_id', $dbOrder->o_id)
-                    ->where('oa_user_id', $currentUser->id)
+                    ->where('oa_offer_id', $offerId)
                     ->where('oa_place_id', $currentPlace)
                     ->where('oa_qty', '>', 0)
                     ->first();
@@ -91,6 +93,8 @@ class SelectOrderSOAMScreen extends Screen
                 if ($dbOrderAssembly) {
 
                     if ($dbOrderAssembly->oa_cash != $cash) {
+
+                        dump($dbOrderAssembly->oa_id);
 
                         $dbOrderAssembly = rwOrderAssembly::find($dbOrderAssembly->oa_id);
                         $dbOrderAssembly->oa_qty += $count;
@@ -221,13 +225,14 @@ class SelectOrderSOAMScreen extends Screen
                 }
 
                 // Нашел товар, сохраняю его
-                if ($tmpShowOffer == 1) {
+                if ($tmpShowOffer == 1 && isset($arOffersList[$dbOrderOffer->oo_id])) {
 
                     $currentOffer = $arOffersList[$dbOrderOffer->oo_id];
                     $arBarcodes = rwBarcode::where('br_offer_id', $dbOrderOffer->oo_offer_id)
                         ->pluck('br_barcode')
                         ->toArray();
 
+//                    break;
                 }
 
             }

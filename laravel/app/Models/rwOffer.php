@@ -52,6 +52,7 @@ class rwOffer extends Model implements AuditableContract
         'of_dimension_y',
         'of_dimension_z',
         'of_weight',
+        'of_datamatrix',
         'of_comment',
     ];
 
@@ -117,10 +118,10 @@ class rwOffer extends Model implements AuditableContract
             'type'        => 'необязательно',
             'defaultValue'      => '0',
         ],
-        'of_datamarix'      => [
-            'name'        => 'of_datamarix',
+        'of_datamatrix'      => [
+            'name'        => 'of_datamatrix',
             'description' => 'Использование Datamatrix. 1 - да, 0 - нет.',
-            'type'        => 'необязательно. 0 по умолчанию.',
+            'type'        => 'необязательно',
             'defaultValue'      => '0',
         ],
         'of_img'            => [

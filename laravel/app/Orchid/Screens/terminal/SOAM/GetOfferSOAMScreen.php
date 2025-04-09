@@ -1,4 +1,5 @@
 <?php
+// Сам процесс подбора
 
 namespace App\Orchid\Screens\terminal\SOAM;
 

@@ -1,14 +1,20 @@
 <?php
+// Выводим информацию о том, что заказ собран.
+// Завершаем заказ.
+
 
 namespace App\Orchid\Screens\terminal\SOAM;
 
 use App\Models\rwOrder;
+use App\Models\rwOrderAssembly;
+use App\Models\rwOrderSorting;
 use App\Models\rwSettingsSoa;
 use App\Models\rwWarehouse;
 use App\Orchid\Services\SOAService;
 use App\Services\CustomTranslator;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 
@@ -27,6 +33,8 @@ class FinishSOAMScreen extends Screen
         $validatedData = $request->validate([
             'barcode' => 'nullable|string',
         ]);
+
+        $currentUser = Auth::user();
 
         isset($validatedData['barcode']) ? $barcode = $validatedData['barcode'] : $barcode = '';
 
@@ -66,6 +74,26 @@ class FinishSOAMScreen extends Screen
                     $dbOrder->o_order_place = $currentPlace->getPlaceId();
                     $dbOrder->save();
 
+                    // Сохраняю место завершения заказа в таблице сортировки
+                    rwOrderSorting::where('os_order_id', $orderId)->delete();
+
+                    $dbOrderOffers = rwOrderAssembly::where('oa_order_id', $orderId)->get();
+
+                    foreach ($dbOrderOffers as $dbOrderOffer) {
+
+                        rwOrderSorting::create([
+                            'os_user_id'    => $currentUser->id,
+                            'os_order_id'   => $orderId,
+                            'os_offer_id'   => $dbOrderOffer->oa_offer_id,
+                            'os_place_id'   => $currentPlace->getPlaceId(),
+                            'os_qty'        => $dbOrderOffer->oa_qty,
+                            'os_barcode'    => $dbOrderOffer->oa_barcode,
+                            'os_data'       => date('Y-m-d H:i:s', time()),
+                            'os_cash'       => time(),
+                        ]);
+
+                    }
+
                     $action = 'finishOrder';
 
                 }
@@ -101,7 +129,7 @@ class FinishSOAMScreen extends Screen
      */
     public function name(): ?string
     {
-        return CustomTranslator::get('Завершение упаковки заказа') . ' ' . $this->orderId;
+        return CustomTranslator::get('Завершение упаковки заказа') . ' №: ' . $this->orderId;
     }
 
     /**

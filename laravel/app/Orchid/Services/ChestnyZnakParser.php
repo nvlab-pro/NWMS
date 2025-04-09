@@ -25,6 +25,15 @@ class ChestnyZnakParser
         }
     }
 
+
+    /**
+     * Полный код
+     */
+    public function getFullCode(): ?string
+    {
+        return $this->raw;
+    }
+
     /**
      * Проверка, что код является валидным кодом Честного знака
      */

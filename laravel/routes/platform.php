@@ -243,6 +243,15 @@ Route::prefix('tables')
                     ->push(CustomTranslator::get('Упаковка заказов'), route('platform.tables.packing.scan', [$queueId, $tableId, $orderId]));
             });
 
+        // Териминал -> Приемка товара (выбор товара)
+        Route::screen('packing/assembling/print/{queueId}/{tableId}/{orderId}/{action}', \App\Orchid\Screens\WorkTables\Packing\PrintAssemblingList::class)
+            ->name('.packing.assembling.print')
+            ->breadcrumbs(function (Trail $trail, $queueId, $tableId, $orderId, $action) {
+                return $trail
+                    ->parent('platform.tables.packing.select', $queueId)
+                    ->push(CustomTranslator::get('Печать листа подбора'), route('platform.tables.packing.assembling.print', [$queueId, $tableId, $orderId, $action]));
+            });
+
     });
 
 // ******************************************************

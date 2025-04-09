@@ -2,8 +2,11 @@
 
 namespace App\WhCore;
 
+use App\Models\rwAcceptanceOffer;
 use App\Models\rwLibTypeDoc;
 use App\Models\rwOrder;
+use App\Models\rwOrderAssembly;
+use App\Models\rwOrderOffer;
 use App\Models\rwStatsRest;
 use App\Models\WhcRest;
 use App\Models\whcWhItem;
@@ -398,6 +401,61 @@ class WhCore
             ->where('whci_doc_type', $docType)
             ->where('whci_place_id', $placeId)
             ->delete();
+
+    }
+
+    // Сохраняем весь заказ из таблицы комплектации
+    public function reservAssembledOrder($orderId)
+    {
+        $docType = 2;
+
+        $dbOrder = rwOrder::where('o_id', $orderId)->first();
+
+        DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $orderId)
+            ->where('whci_doc_type', $docType)
+            ->update([
+                'whci_cash' => 0,
+            ]);
+
+        $dbAssembledOffers = rwOrderAssembly::where('oa_order_id', $orderId)->get();
+
+        foreach ($dbAssembledOffers as $dbAssembledOffer) {
+
+            $price = 0;
+
+            $dbOrderOffer = rwOrderOffer::where('oo_order_id', $orderId)
+                ->where('oo_offer_id', $dbAssembledOffer->oa_offer_id)
+                ->first();
+
+            if (isset($dbOrderOffer->oo_oc_price) && $dbOrderOffer->oo_oc_price > 0) $price = $dbOrderOffer->oo_oc_price;
+            if (isset($dbOrderOffer->oo_price) && $dbOrderOffer->oo_price > 0) $price = $dbOrderOffer->oo_price;
+
+            $this->saveOffers(
+                $orderId,
+                $dbAssembledOffer->oa_data,
+                $docType,
+                $dbAssembledOffer->oa_id,
+                $dbAssembledOffer->oa_offer_id,
+                1,
+                $dbAssembledOffer->oa_qty,
+                $dbAssembledOffer->oa_barcode,
+                $price,
+                $expDate = NULL,
+                $batch = NULL,
+                $timeCash = 1,
+                $placeId = $dbAssembledOffer->oa_place_id
+            );
+
+        }
+
+        DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $orderId)
+            ->where('whci_doc_type', $docType)
+            ->where('whci_cash', 0)
+            ->delete();
+
+
 
     }
 

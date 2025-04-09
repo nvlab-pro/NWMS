@@ -9,6 +9,7 @@ use App\Models\rwOrderAssembly;
 use App\Models\rwOrderOffer;
 use App\Models\rwOrderPacking;
 use App\Models\rwOrderStatus;
+use App\Models\WhcRest;
 use App\Orchid\Layouts\Orders\OrderOffersTable;
 use App\Orchid\Services\OrderService;
 use App\Services\CustomTranslator;
@@ -259,6 +260,14 @@ class OrderEditScreen extends Screen
     {
         $currentUser = Auth::user();
 
+        $warehouseId = $this->order->o_wh_id;
+
+        // Выгружаем все остатки по складу, сгруппированные по товару
+        $stockMap = whcRest::where('whcr_wh_id', $warehouseId)
+            ->selectRaw('whcr_offer_id, SUM(whcr_count) as total')
+            ->groupBy('whcr_offer_id')
+            ->pluck('total', 'whcr_offer_id'); // [offer_id => total]
+
         $tabs = [
             CustomTranslator::get('Основная') => [
                 Layout::rows([
@@ -340,9 +349,13 @@ class OrderEditScreen extends Screen
                                             ->where('oo_order_id', $this->order->o_id); // Условие для конкретной накладной
                                     })
                                     ->get()
-                                    ->mapWithKeys(function ($offer) {
-                                        return [$offer->of_id => $offer->of_name . ' (' . $offer->of_article . ')'];
-                                    })->toArray()
+                                    ->mapWithKeys(function ($offer) use ($stockMap) {
+                                        $stock = $stockMap[$offer->of_id] ?? 0;
+
+                                        return [
+                                            $offer->of_id => $offer->of_name . ' (' . $offer->of_article . ') — остаток: ' . $stock,
+                                        ];
+                                    })
                             )
                             ->horizontal()
                             ->empty('', 0),
@@ -600,68 +613,76 @@ class OrderEditScreen extends Screen
             'docDate' => 'nullable|date', // Каждая дата должна быть обязательной и формата даты
         ]);
 
-        $currentWarehouse = new WhCore($validatedData['whId']);
-        $count = $sum = 0;
-        $dbOrder = rwOrder::where('o_id', $validatedData['docId'])->first();
+        if (isset($validatedData['orderOfferId'])) {
 
-        foreach ($validatedData['orderOfferId'] as $id => $offerId) {
+            $currentWarehouse = new WhCore($validatedData['whId']);
+            $count = $sum = 0;
+            $dbOrder = rwOrder::where('o_id', $validatedData['docId'])->first();
 
-            $offer = rwOrderOffer::find($id);
+            foreach ($validatedData['orderOfferId'] as $id => $offerId) {
 
-            if ($offer) {
+                $offer = rwOrderOffer::find($id);
 
-                $offer->oo_order_id = $validatedData['docId'] ?? 0;
-                $offer->oo_offer_id = $validatedData['orderOfferId'][$id] ?? 0;
-                $offer->oo_qty = $validatedData['orderOfferQty'][$id] ?? 0;
-                $offer->oo_oc_price = $validatedData['orderOfferOcPrice'][$id] ?? 0;
-                $offer->oo_price = $validatedData['orderOfferPrice'][$id] ?? 0;
-                $offer->save();
+                if ($offer) {
 
-                $status = 0;
-                $count = $validatedData['orderOfferQty'][$id];
-                if ($dbOrder->o_status_id <= 10) $count = 0; // Если статус документа "новый", товар не резервируем
+                    $offer->oo_order_id = $validatedData['docId'] ?? 0;
+                    $offer->oo_offer_id = $validatedData['orderOfferId'][$id] ?? 0;
+                    $offer->oo_qty = $validatedData['orderOfferQty'][$id] ?? 0;
+                    $offer->oo_oc_price = $validatedData['orderOfferOcPrice'][$id] ?? 0;
+                    $offer->oo_price = $validatedData['orderOfferPrice'][$id] ?? 0;
+                    $offer->save();
 
-                if ($count > 0) {
-                    // Сохраняем товар
-                    $currentWarehouse->saveOffers(
-                        $validatedData['docId'],
-                        $validatedData['docDate'],
-                        2,                                  // Приемка (таблица rw_lib_type_doc)
-                        $id,                                        // ID офера в документе
-                        $validatedData['orderOfferId'][$id],          // оригинальный ID товара
-                        $status,
-                        $count,
-                        NULL,
-                        $validatedData['orderOfferOcPrice'][$id],
-                        NULL,
-                        NULL,
-                        time()
-                    );
-                } else {
-                    // Удаляем товар
-                    $currentWarehouse->deleteItemFromDocument($id, $validatedData['docId'], 2);
+                    $status = 0;
+                    $count = $validatedData['orderOfferQty'][$id];
+                    if ($dbOrder->o_status_id <= 10) $count = 0; // Если статус документа "новый", товар не резервируем
+
+                    if ($count > 0) {
+                        // Сохраняем товар
+                        $currentWarehouse->saveOffers(
+                            $validatedData['docId'],
+                            $validatedData['docDate'],
+                            2,                                  // Приемка (таблица rw_lib_type_doc)
+                            $id,                                        // ID офера в документе
+                            $validatedData['orderOfferId'][$id],          // оригинальный ID товара
+                            $status,
+                            $count,
+                            NULL,
+                            $validatedData['orderOfferOcPrice'][$id],
+                            NULL,
+                            NULL,
+                            time()
+                        );
+                    } else {
+                        // Удаляем товар
+                        $currentWarehouse->deleteItemFromDocument($id, $validatedData['docId'], 2);
+                    }
+
+                    $count += $offer->oo_qty;
+                    $sum += $offer->oo_oc_price * $offer->oo_qty;
+
+                    // Резервируем товары в заказе
+                    $currentWarehouse->calcRestOffer($validatedData['orderOfferId'][$id]);
+
                 }
 
-                $count += $offer->oo_qty;
-                $sum += $offer->oo_oc_price * $offer->oo_qty;
-
-                // Резервируем товары в заказе
-                $currentWarehouse->calcRestOffer($validatedData['orderOfferId'][$id]);
 
             }
 
+            // Перерезервируем товары в заказе
+            $currentWarehouse->reservOffers($validatedData['orderOfferId'][$id]);
+
+            $dbOrder = rwOrder::find($validatedData['docId']);
+            $dbOrder->o_count = $count;
+            $dbOrder->o_sum = $sum;
+            $dbOrder->save();
+
+            Alert::success(CustomTranslator::get('Данные о товаре сохранены!'));
+
+        } else {
+
+            Alert::error(CustomTranslator::get('Сохранять пока нечего! В начале добавьте товары в заказ!'));
 
         }
-
-        // Перерезервируем товары в заказе
-        $currentWarehouse->reservOffers($validatedData['orderOfferId'][$id]);
-
-        $dbOrder = rwOrder::find($validatedData['docId']);
-        $dbOrder->o_count = $count;
-        $dbOrder->o_sum = $sum;
-        $dbOrder->save();
-
-        Alert::success(CustomTranslator::get('Данные о товаре сохранены!'));
 
     }
 

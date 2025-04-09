@@ -13,6 +13,7 @@ use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
@@ -239,6 +240,10 @@ class OfferEditScreen extends Screen
                                 ->width(50)
                                 ->title(CustomTranslator::get('Комментарий')),
 
+                            CheckBox::make('rwOffer.of_datamatrix')
+                                ->sendTrueOrFalse() // Orchid будет отправлять 1 или 0
+                                ->title(CustomTranslator::get('Честный знак')),
+
                         ]),
 
                         Button::make(CustomTranslator::get('Сохранить'))
@@ -282,6 +287,7 @@ class OfferEditScreen extends Screen
             'rwOffer.of_dimension_z' => 'nullable|numeric',
             'rwOffer.of_price' => 'nullable|numeric',
             'rwOffer.of_estimated_price' => 'nullable|numeric',
+            'rwOffer.of_datamatrix' => 'nullable|numeric',
             'rwOffer.of_comment' => 'nullable|string|max:255',
         ]);
 
@@ -303,6 +309,7 @@ class OfferEditScreen extends Screen
                     'of_dimension_z' => $request->rwOffer['of_dimension_z'],
                     'of_price' => $request->rwOffer['of_price'],
                     'of_estimated_price' => $request->rwOffer['of_estimated_price'],
+                    'of_datamatrix' => $request->rwOffer['of_datamatrix'],
                     'of_comment' => $request->rwOffer['of_comment'],
                 ])->save();
 
@@ -325,6 +332,7 @@ class OfferEditScreen extends Screen
                 'of_price' => $request->rwOffer['of_price'],
                 'of_estimated_price' => $request->rwOffer['of_estimated_price'],
                 'of_domain_id' => $currentUser->domain_id,
+                'of_datamatrix' => $currentUser->of_datamatrix,
                 'of_comment' => $request->rwOffer['of_comment'],
             ]);
 
@@ -334,7 +342,7 @@ class OfferEditScreen extends Screen
         }
 
 
-        return redirect()->route('platform.offers.index');
+        return redirect()->route('platform.offers.edit', $offer->of_id);
     }
 
 }

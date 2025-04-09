@@ -27,6 +27,7 @@ class rwOrderOffer extends Model implements AuditableContract
         'oo_expiration_date',
         'oo_batch',
         'oo_operation_user_id',
+        'oo_cash',
     ];
 
     public function getOffer() {

@@ -1,4 +1,5 @@
 <?php
+// Получаем следующий заказ на сборку если такой имеется
 
 namespace App\Orchid\Screens\terminal\SOAM;
 
