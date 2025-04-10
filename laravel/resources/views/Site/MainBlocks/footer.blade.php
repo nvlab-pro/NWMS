@@ -59,6 +59,7 @@
                         <a href="/bel/" title="Belarusian">🇧🇾</a>
                         <a href="/bg/" title="Bulgarian">🇧🇬</a>
                         <a href="/ch/" title="Chinese">🇨🇳</a>
+                        <a href="/fr/" title="French">🇫🇷</a>
                         <a href="/de/" title="German">🇩🇪</a>
                         <a href="/en/" title="English">🇺🇸</a>
                         <a href="/fr/" title="French">🇫🇷</a>
