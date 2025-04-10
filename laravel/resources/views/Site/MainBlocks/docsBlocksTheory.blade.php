@@ -158,4 +158,28 @@
             </div>
         </div>
     </div>
+    <!-- widget recent post -->
+    <div class="widget-recent-post {{ $currentPath === $lang_str.'/docs/theory/dispatch_of_orders' ? 'active' : '' }}">
+        <div class="rpost-thumb">
+            <a href="{!! $lang_str !!}/docs/theory/dispatch_of_orders"><img src="/img/docs/DispatchOfOrders_mult.jpg" alt="{!! CustomSiteTranslator::get('Order Shipment', $lang) !!}" style="width: 75px;"></a>
+        </div>
+        <div class="rpost-content">
+            <div class="rpost-title">
+                <h4><a href="{!! $lang_str !!}/docs/theory/dispatch_of_orders">{!! CustomSiteTranslator::get("Order Shipment", $lang) !!}</a></h4>
+                <span>10.04.2025</span>
+            </div>
+        </div>
+    </div>
+    <!-- widget recent post -->
+    <div class="widget-recent-post {{ $currentPath === $lang_str.'/docs/theory/queue_management' ? 'active' : '' }}">
+        <div class="rpost-thumb">
+            <a href="{!! $lang_str !!}/docs/theory/queue_management"><img src="/img/docs/QueueManagement_mult.jpg" alt="{!! CustomSiteTranslator::get('Queue management', $lang) !!}" style="width: 75px;"></a>
+        </div>
+        <div class="rpost-content">
+            <div class="rpost-title">
+                <h4><a href="{!! $lang_str !!}/docs/theory/queue_management">{!! CustomSiteTranslator::get("Queue management", $lang) !!}</a></h4>
+                <span>10.04.2025</span>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,6 +1,6 @@
 @php
     use App\Services\CustomSiteTranslator;
-    $header = CustomSiteTranslator::get("Order Labeling", $lang);
+    $header = CustomSiteTranslator::get("Dispatch of orders", $lang);
 @endphp
 @include('Site.MainBlocks.header')
 
@@ -55,66 +55,60 @@
             <div class="col-lg-8 col-md-12">
                 <div class="single-blog-details-box wow fadeInLeft animated">
                     <div class="details-thumb">
-                        <img src="/img/docs/order_labeling_mult.jpg" alt="">
+                        <img src="/img/docs/DispatchOfOrders_mult.jpg" alt="">
                     </div>
                     <div class="blog-details-content">
                         <div class="blog-details-meta">
                             <div class="techo-blog-meta-left">
                                 <span>{{ CustomSiteTranslator::get('theory', $lang) }}</span>
-                                03.04.2025
+                                10.04.2025
                             </div>
                         </div>
                         <div class="blog-details-content-text">
                             {!! CustomSiteTranslator::get("
-<h2>Order Labeling</h2>
+<h2>Order Shipment</h2>
 <br>
-<p>This process is also optional and is only required if the order needs to be labeled with a unique tag from a delivery service or marketplace.</p>
-<p>The labeling can be combined with the packaging process — instead of printing a WMS-specific label with the order ID, you immediately get the label from the required delivery service.
-And in fact, that seems more logical: why have an extra step, a separate table, or an additional employee if it can all be done right during packaging?</p>
-                            ", $lang) !!}
-                            {!! CustomSiteTranslator::get("
-<p>Labeling as a separate process may be necessary in the following cases:</p>
+<p>A dedicated mechanism in the WMS that allows you to:</p>
 <ol>
-    <li>Each order needs to be measured and weighed (although this can often be integrated into the packaging process — plus, it makes sense to standardize box sizes, which can eliminate the need for measuring most orders).</li>
-
-    <li>The size and format of labels vary between different delivery services, which may require frequent changes of printer rolls and adjustments to printer settings.
-    However, this can also be solved by organizing multiple packing stations with different settings and distributing order flows across them using queue configurations
-    (we’ll talk more about queues a bit later).</li>
-
-    <li>If WMS interacts with the delivery service’s API in real time during the labeling process, the labeling speed can drop significantly if the delivery service’s server is slow —
-    or even halt entirely if the server goes down.
-    This is a more serious argument in favor of separating labeling into its own process, since it allows packaging to continue smoothly regardless of third-party server availability,
-    while buffering the orders for later labeling.</li>
+    <li>
+        Manage loading/unloading queues. <br><br>
+        Essentially, it functions like an electronic queue system—similar to what you might have seen in banks or government institutions. In the context of a warehouse, it typically works as follows:<br>
+        <ol>
+            <li>Each driver must register in the system upon entering the premises.</li>
+            <li>After registration, the driver waits for their turn in the queue.</li>
+            <li>When a gate becomes available, the driver receives the gate number via SMS or sees it displayed on a screen.</li>
+        </ol><br>
+    </li>
+    <li>
+        On the warehouse side, the WMS manages the release of gates and assigns the next driver in the queue. It also ensures that only the specific goods or orders associated with that particular operation are shipped or received.
+    </li>
 </ol>
-
+</p>
                             ", $lang) !!}
                             {!! CustomSiteTranslator::get("
-<p>In any case, labeling is required as a concept — and whether it should be a separate process or integrated into packaging depends on the specific needs of your warehouse.
-The WMS should provide the flexibility to support as many scenarios as possible.</p>
-
-<p>That’s it for now — let’s move on to the shipping process for orders that have already been picked, packed, and labeled.</p>
+<p>
+    Naturally, such a system is only necessary for large warehouses with high throughput. If you have just one gate and a couple of shipments per day, you can easily manage without this system.
+</p>
                             ", $lang) !!}
-
                         </div>
 
                         <br>
                         <div class="d-flex justify-content-between" style="border-top: 1px dotted #000000; margin-top: 10px; padding-top: 10px;">
                             <button type="button" class="btn btn-outline-primary"
-                                    onClick="window.location.href='{{ $lang_str }}/docs/theory/packing_orders'">
+                                    onClick="window.location.href='{{ $lang_str }}/docs/theory/order_labeling'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
                                 </svg>
-                                {{ CustomSiteTranslator::get("Packing orders", $lang) }}
+                                {{ CustomSiteTranslator::get("Order Labeling", $lang) }}
                             </button>
 
                             <button type="button" class="btn btn-outline-primary"
-                                    onClick="window.location.href='{{ $lang_str }}/docs/theory/dispatch_of_orders'">
-                                {{ CustomSiteTranslator::get("Order Shipment", $lang) }}
+                                    onClick="window.location.href='{{ $lang_str }}/docs/theory/queue_management'">
+                                {{ CustomSiteTranslator::get("Queue management", $lang) }}
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
                                 </svg>
                             </button>
-
                         </div>
                     </div>
                 </div>

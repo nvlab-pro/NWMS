@@ -78,6 +78,14 @@ Route::get('/docs/theory/order_labeling', function () {
     return view('Site/docs/theory/OrderLabeling', ['lang' => 'en']);
 });
 
+Route::get('/docs/theory/dispatch_of_orders', function () {
+    return view('Site/docs/theory/DispatchOfOrders', ['lang' => 'en']);
+});
+
+Route::get('/docs/theory/queue_management', function () {
+    return view('Site/docs/theory/QueueManagement', ['lang' => 'en']);
+});
+
 
 
 
@@ -171,6 +179,14 @@ Route::get('/{lang}/docs/theory/packing_orders', function ($lang) {
 
 Route::get('/{lang}/docs/theory/order_labeling', function ($lang) {
     return view('Site/docs/theory/OrderLabeling', ['lang' => $lang]);
+});
+
+Route::get('/{lang}/docs/theory/dispatch_of_orders', function ($lang) {
+    return view('Site/docs/theory/DispatchOfOrders', ['lang' => $lang]);
+});
+
+Route::get('/{lang}/docs/theory/queue_management', function ($lang) {
+    return view('Site/docs/theory/QueueManagement', ['lang' => $lang]);
 });
 
 
