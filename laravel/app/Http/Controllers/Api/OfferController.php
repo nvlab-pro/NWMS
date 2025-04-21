@@ -102,7 +102,50 @@ class OfferController extends Controller
      */
     public function insert(Request $request)
     {
-        // ...
+        $offersData = $request->validate([
+            '*.of_ext_id' => 'nullable|string|max:25',
+            '*.of_shop_id' => 'required|integer',
+            '*.of_name' => 'required|string|max:150',
+            '*.of_article' => 'nullable|string|max:25',
+            '*.of_sku' => 'nullable|string|max:25',
+            '*.of_price' => 'nullable|numeric',
+            '*.of_estimated_price' => 'nullable|numeric',
+            '*.of_img' => 'nullable|string|max:255',
+            '*.of_dimension_x' => 'nullable|numeric',
+            '*.of_dimension_y' => 'nullable|numeric',
+            '*.of_dimension_z' => 'nullable|numeric',
+            '*.of_weight' => 'nullable|integer',
+            '*.of_datamatrix' => 'nullable|integer',
+            '*.of_comment' => 'nullable|string|max:255',
+        ]);
+
+        $user = $request->user();
+        $createdOffers = [];
+
+        foreach ($offersData as $data) {
+            $data['of_domain_id'] = $user->domain_id;
+            $data['of_status'] = 1;
+
+            $hasAccess = match (true) {
+                $user->hasRole('admin') => true,
+                $user->hasRole('warehouse_manager') => rwShop::where('sh_domain_id', $user->domain_id)
+                    ->where('sh_id', $data['of_shop_id'])->exists(),
+                default => rwShop::where('sh_domain_id', $user->domain_id)
+                    ->whereIn('sh_user_id', [$user->id, $user->parent_id])
+                    ->where('sh_id', $data['of_shop_id'])->exists(),
+            };
+
+            if (!$hasAccess) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "You do not have sufficient rights to create a product in shop ID {$data['of_shop_id']}"
+                ], 401);
+            }
+
+            $createdOffers[] = new OfferResource(rwOffer::create($data));
+        }
+
+        return response()->json($createdOffers, 201);
     }
 
     /**
@@ -118,7 +161,12 @@ class OfferController extends Controller
      */
     public function show($id, Request $request)
     {
-        // ...
+        $offer = rwOffer::where('of_id', $id)
+            ->where('of_domain_id', $request->user()->domain_id)
+            ->where('of_shop_id', $request->user()->shop_id)
+            ->firstOrFail();
+
+        return new OfferResource($offer);
     }
 
     /**
@@ -134,7 +182,14 @@ class OfferController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // ...
+        $offer = rwOffer::where('of_id', $id)
+            ->where('of_domain_id', $request->user()->domain_id)
+            ->where('of_shop_id', $request->user()->shop_id)
+            ->firstOrFail();
+
+        $offer->update($request->all());
+
+        return new OfferResource($offer);
     }
 
     /**
@@ -150,6 +205,14 @@ class OfferController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        // ...
+        $offer = rwOffer::where('of_id', $id)
+            ->where('of_domain_id', $request->user()->domain_id)
+            ->where('of_shop_id', $request->user()->shop_id)
+            ->firstOrFail();
+
+        $offer->delete();
+
+        return response()->json(['message' => 'Deleted']);
     }
 }
+
