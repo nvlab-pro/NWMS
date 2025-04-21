@@ -38,11 +38,13 @@ class OrdersScreen extends Screen
                     ->pluck('wh_id')
                     ->toArray();
 
-                $dbOrders = rwOrder::whereIn('o_wh_id', $arWhList);
+                $dbOrders = $dbOrders->whereIn('o_wh_id', $arWhList);
 
             } else {
 
-                $dbOrders = rwOrder::whereIn('o_user_id', [$currentUser->id, $currentUser->parent_id]);
+                $dbOrders = $dbOrders->whereHas('getShop', function ($query) use ($currentUser) {
+                    $query->whereIn('sh_user_id', [$currentUser->id, $currentUser->parent_id]);
+                });
 
             }
 

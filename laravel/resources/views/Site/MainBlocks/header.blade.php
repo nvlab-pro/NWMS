@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>@if (isset($header)){{ $header }}@endif, NWMS - {{ CustomSiteTranslator::get('free warehouse automation system', $lang) }}, WMS.</title>
+    <title>@if (isset($header)){{ $header }}, @endif NWMS - {{ CustomSiteTranslator::get('free warehouse automation system, WMS, free WMS software, cloud WMS free  small business WMS, warehouse management solution, warehouse picking and packing', $lang) }}.</title>
     <meta name="description"
           content="{!! CustomSiteTranslator::get('Completely free, cloud-based warehouse management system (WMS). Receipt of goods, address storage of goods, work with data collection terminals, control of balances', $lang) !!}.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="56x56" href="/assets/images/fav-icon/icon.png">
+    <link rel="icon" type="image/png" sizes="56x56" href="/img/cm_logo.png">
     <!-- bootstrap CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" type="text/css" media="all">
     <!-- carousel CSS -->

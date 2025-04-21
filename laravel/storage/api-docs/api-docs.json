@@ -1,0 +1,873 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "NWMS API",
+        "description": "This API uses Bearer Token authentication.\n *     To authorize, use the 'Authorize' button above and enter a token in the format:\n *     Bearer {your_token}",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get list of products",
+                "operationId": "78ce1bd22726e99d8f30c6c8fa329168",
+                "parameters": [
+                    {
+                        "name": "sku",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_dir",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of products"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create a new product",
+                "operationId": "1e5b76a5975af81b35765edfe66f34ec",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "of_name",
+                                    "of_status",
+                                    "of_shop_id"
+                                ],
+                                "properties": {
+                                    "of_ext_id": {
+                                        "type": "string",
+                                        "maxLength": 25
+                                    },
+                                    "of_status": {
+                                        "type": "integer"
+                                    },
+                                    "of_shop_id": {
+                                        "type": "integer"
+                                    },
+                                    "of_name": {
+                                        "type": "string",
+                                        "maxLength": 150
+                                    },
+                                    "of_article": {
+                                        "type": "string",
+                                        "maxLength": 25
+                                    },
+                                    "of_sku": {
+                                        "type": "string",
+                                        "maxLength": 25
+                                    },
+                                    "of_price": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "of_estimated_price": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "of_img": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "of_dimension_x": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "of_dimension_y": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "of_dimension_z": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "of_weight": {
+                                        "type": "integer"
+                                    },
+                                    "of_datamatrix": {
+                                        "type": "integer"
+                                    },
+                                    "of_comment": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get product by ID",
+                "operationId": "f4e69191da6baa0f13eb46ff6dd761ca",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product found"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update an existing product",
+                "operationId": "6f191ad01c85b6853580d01bd9c285cf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/Product"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete a product",
+                "operationId": "b883dde0dd648a32e73f7b73699a2a85",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get list of orders",
+                "operationId": "955bb77a45ae173a485fadb8befed93f",
+                "responses": {
+                    "200": {
+                        "description": "List of orders"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create a new order",
+                "operationId": "61f0ce377b9ca021577dd300752ec6b8",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Order"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get order by ID",
+                "operationId": "88d27387b1e409e075c18609d4a0c300",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order found"
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Update an order",
+                "operationId": "38a1b85e8294795a1b0dc438a36e319f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Order"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Delete an order",
+                "operationId": "bab875a1ed962fb33565ab9b48c0d494",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{id}/offers": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Add offers to an order",
+                "operationId": "54cba00977a8c0431504e25c15fdecf5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/OrderOffer"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Offers added to order"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{order_id}/offers/{offer_id}": {
+            "put": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Update an offer in order",
+                "operationId": "35845a5f7aaba22410c40bda6a691d23",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offer_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderOffer"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Offer updated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Delete an offer from an order",
+                "operationId": "c4e8eee91c87c6638966e050118c4625",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offer_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Offer removed from order"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Product": {
+                "required": [
+                    "of_name",
+                    "of_status",
+                    "of_shop_id"
+                ],
+                "properties": {
+                    "of_ext_id": {
+                        "description": "External product ID from an external system",
+                        "type": "string",
+                        "maxLength": 25
+                    },
+                    "of_status": {
+                        "description": "Product status (e.g., 1 - active, 0 - disabled)",
+                        "type": "integer"
+                    },
+                    "of_shop_id": {
+                        "description": "ID of the shop this product belongs to",
+                        "type": "integer"
+                    },
+                    "of_name": {
+                        "description": "Product name",
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "of_article": {
+                        "description": "Product article number",
+                        "type": "string",
+                        "maxLength": 25
+                    },
+                    "of_sku": {
+                        "description": "Stock Keeping Unit (SKU)",
+                        "type": "string",
+                        "maxLength": 25
+                    },
+                    "of_price": {
+                        "description": "Product price",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "of_estimated_price": {
+                        "description": "Estimated price (for reference)",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "of_img": {
+                        "description": "Product image URL",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "of_dimension_x": {
+                        "description": "Product length in cm",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "of_dimension_y": {
+                        "description": "Product width in cm",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "of_dimension_z": {
+                        "description": "Product height in cm",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "of_weight": {
+                        "description": "Product weight in grams",
+                        "type": "integer"
+                    },
+                    "of_datamatrix": {
+                        "description": "Whether the product requires a DataMatrix code (0 or 1)",
+                        "type": "integer"
+                    },
+                    "of_comment": {
+                        "description": "Additional comment or note about the product",
+                        "type": "string",
+                        "maxLength": 255
+                    }
+                },
+                "type": "object"
+            },
+            "Order": {
+                "required": [
+                    "o_status_id",
+                    "o_type_id",
+                    "o_user_id",
+                    "o_shop_id",
+                    "o_wh_id",
+                    "o_date",
+                    "o_count",
+                    "o_sum"
+                ],
+                "properties": {
+                    "o_status_id": {
+                        "type": "integer"
+                    },
+                    "o_type_id": {
+                        "type": "integer"
+                    },
+                    "o_user_id": {
+                        "type": "integer"
+                    },
+                    "o_ext_id": {
+                        "type": "string",
+                        "maxLength": 30
+                    },
+                    "o_shop_id": {
+                        "type": "integer"
+                    },
+                    "o_wh_id": {
+                        "type": "integer"
+                    },
+                    "o_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "o_date_send": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "o_source_id": {
+                        "type": "integer"
+                    },
+                    "o_count": {
+                        "type": "number"
+                    },
+                    "o_sum": {
+                        "type": "number"
+                    },
+                    "o_operation_user_id": {
+                        "type": "integer"
+                    },
+                    "o_order_place": {
+                        "type": "integer"
+                    },
+                    "o_current_pallet": {
+                        "type": "integer"
+                    },
+                    "o_current_box": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "OrderOffer": {
+                "required": [
+                    "oo_order_id",
+                    "oo_offer_id",
+                    "oo_qty",
+                    "oo_price"
+                ],
+                "properties": {
+                    "oo_id": {
+                        "description": "Primary key",
+                        "type": "integer"
+                    },
+                    "oo_order_id": {
+                        "description": "Order ID",
+                        "type": "integer"
+                    },
+                    "oo_offer_id": {
+                        "description": "Offer ID",
+                        "type": "integer"
+                    },
+                    "oo_qty": {
+                        "description": "Quantity of the offer in the order",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "oo_oc_price": {
+                        "description": "Original cost price of the offer",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "oo_price": {
+                        "description": "Price at which the offer is sold",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "oo_expiration_date": {
+                        "description": "Expiration date of the product, if applicable",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "oo_batch": {
+                        "description": "Batch number of the product",
+                        "type": "string",
+                        "maxLength": 15
+                    },
+                    "oo_operation_user_id": {
+                        "description": "User ID of the operator who handled this offer",
+                        "type": "integer"
+                    },
+                    "offer": {
+                        "properties": {
+                            "of_id": {
+                                "description": "Product ID",
+                                "type": "integer"
+                            },
+                            "of_name": {
+                                "description": "Product name",
+                                "type": "string"
+                            },
+                            "of_article": {
+                                "description": "Product article number",
+                                "type": "string"
+                            },
+                            "of_sku": {
+                                "description": "SKU code",
+                                "type": "string"
+                            },
+                            "of_price": {
+                                "description": "Base price of the product",
+                                "type": "number",
+                                "format": "float"
+                            },
+                            "of_img": {
+                                "description": "URL of product image",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "OrderWithOffers": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Order"
+                    },
+                    {
+                        "properties": {
+                            "offers": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/OrderOffer"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            }
+        },
+        "requestBodies": {
+            "Product": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "of_name",
+                                "of_status",
+                                "of_shop_id"
+                            ],
+                            "properties": {
+                                "of_ext_id": {
+                                    "type": "string",
+                                    "maxLength": 25
+                                },
+                                "of_status": {
+                                    "type": "integer"
+                                },
+                                "of_shop_id": {
+                                    "type": "integer"
+                                },
+                                "of_name": {
+                                    "type": "string",
+                                    "maxLength": 150
+                                },
+                                "of_article": {
+                                    "type": "string",
+                                    "maxLength": 25
+                                },
+                                "of_sku": {
+                                    "type": "string",
+                                    "maxLength": 25
+                                },
+                                "of_price": {
+                                    "type": "number",
+                                    "format": "float"
+                                },
+                                "of_estimated_price": {
+                                    "type": "number",
+                                    "format": "float"
+                                },
+                                "of_img": {
+                                    "type": "string",
+                                    "maxLength": 255
+                                },
+                                "of_dimension_x": {
+                                    "type": "number",
+                                    "format": "float"
+                                },
+                                "of_dimension_y": {
+                                    "type": "number",
+                                    "format": "float"
+                                },
+                                "of_dimension_z": {
+                                    "type": "number",
+                                    "format": "float"
+                                },
+                                "of_weight": {
+                                    "type": "integer"
+                                },
+                                "of_datamatrix": {
+                                    "type": "integer"
+                                },
+                                "of_comment": {
+                                    "type": "string",
+                                    "maxLength": 255
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Orders",
+            "description": "Order management endpoints"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ],
+    "externalDocs": {
+        "description": "The authorization principle is described in detail here",
+        "url": "https://nwms.cloud/docs/api"
+    }
+}

@@ -42,5 +42,8 @@ class rwOrderOffer extends Model implements AuditableContract
     {
         return $this->hasMany(whcRest::class, 'whcr_offer_id', 'oo_offer_id');
     }
-
+    public function offer()
+    {
+        return $this->belongsTo(rwOffer::class, 'oo_offer_id', 'of_id');
+    }
 }

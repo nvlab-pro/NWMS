@@ -88,6 +88,19 @@ Route::get('/docs/theory/queue_management', function () {
 
 
 
+Route::get('/docs/api/authentification', function () {
+    return view('Site/docs/api/Authentification', ['lang' => 'en']);
+});
+
+Route::get('/docs/api/php_library', function () {
+    return view('Site/docs/api/PHPLibrary', ['lang' => 'en']);
+});
+
+Route::get('/docs/api/products', function () {
+    return view('Site/docs/api/Products', ['lang' => 'en']);
+});
+
+
 
 Route::get('/docs/receiving', function () {
     return view('Site/docs/theory/InDevelopment', ['lang' => 'en']);

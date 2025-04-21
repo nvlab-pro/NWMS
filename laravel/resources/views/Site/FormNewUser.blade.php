@@ -61,7 +61,7 @@
                                 <div class="bar bar-big"></div>
                             </div>
 
-                            <H6>{{ CustomSiteTranslator::get('If you have any questions about launching or configuring', $lang) }} <b>NWMS</b>, you can ask them on our telegram channel:', $lang) }}</H6>
+                            <H6>{{ CustomSiteTranslator::get('If you have any questions about launching or configuring <b>NWMS</b>, you can ask them on our telegram channel:', $lang) }}</H6>
                             <a href="https://t.me/+UJ5If6slQXZjYjMy" target="_blank">https://t.me/+UJ5If6slQXZjYjMy</a>
                         @elseif($result == 'exists')
                             <div class="alert alert-warning">

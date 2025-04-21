@@ -77,4 +77,8 @@ class rwOrder extends Model implements AuditableContract
     public function getPlace() {
         return $this->hasOne(rwPlace::class, 'pl_id', 'o_order_place');
     }
+    public function offers()
+    {
+        return $this->hasMany(rwOrderOffer::class, 'oo_order_id', 'o_id');
+    }
 }

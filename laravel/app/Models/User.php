@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Orchid\Presenters\UserPresenter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Orchid\Access\UserAccess;
 use Orchid\Attachment\Attachable;
 use Orchid\Filters\Filterable;
@@ -17,7 +18,7 @@ use Orchid\Screen\AsSource;
 
 class User extends Authenticatable
 {
-    use AsSource, Chartable, Filterable, Attachable, HasFactory, Notifiable, UserAccess, Chartable;
+    use AsSource, Chartable, Filterable, Attachable, HasFactory, Notifiable, UserAccess, Chartable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.

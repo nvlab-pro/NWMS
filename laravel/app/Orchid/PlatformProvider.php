@@ -71,7 +71,6 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.orders.index'),
 
             Menu::make(CustomTranslator::get('Библиотеки'))
-                ->canSee(RoleMiddleware::checkUserPermission('admin'))
                 ->icon('bs.list-check')
                 ->list([
                     Menu::make(CustomTranslator::get('Честный знак'))
