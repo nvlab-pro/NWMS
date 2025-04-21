@@ -86,84 +86,14 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "Create a new product",
+                "summary": "Create new products",
                 "operationId": "1e5b76a5975af81b35765edfe66f34ec",
                 "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "of_name",
-                                    "of_status",
-                                    "of_shop_id"
-                                ],
-                                "properties": {
-                                    "of_ext_id": {
-                                        "type": "string",
-                                        "maxLength": 25
-                                    },
-                                    "of_status": {
-                                        "type": "integer"
-                                    },
-                                    "of_shop_id": {
-                                        "type": "integer"
-                                    },
-                                    "of_name": {
-                                        "type": "string",
-                                        "maxLength": 150
-                                    },
-                                    "of_article": {
-                                        "type": "string",
-                                        "maxLength": 25
-                                    },
-                                    "of_sku": {
-                                        "type": "string",
-                                        "maxLength": 25
-                                    },
-                                    "of_price": {
-                                        "type": "number",
-                                        "format": "float"
-                                    },
-                                    "of_estimated_price": {
-                                        "type": "number",
-                                        "format": "float"
-                                    },
-                                    "of_img": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "of_dimension_x": {
-                                        "type": "number",
-                                        "format": "float"
-                                    },
-                                    "of_dimension_y": {
-                                        "type": "number",
-                                        "format": "float"
-                                    },
-                                    "of_dimension_z": {
-                                        "type": "number",
-                                        "format": "float"
-                                    },
-                                    "of_weight": {
-                                        "type": "integer"
-                                    },
-                                    "of_datamatrix": {
-                                        "type": "integer"
-                                    },
-                                    "of_comment": {
-                                        "type": "string",
-                                        "maxLength": 255
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
+                    "$ref": "#/components/requestBodies/Product"
                 },
                 "responses": {
                     "201": {
-                        "description": "Product created successfully"
+                        "description": "Products created successfully"
                     }
                 },
                 "security": [
@@ -208,7 +138,7 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "Update an existing product",
+                "summary": "Update a product",
                 "operationId": "6f191ad01c85b6853580d01bd9c285cf",
                 "parameters": [
                     {
@@ -252,7 +182,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Product deleted"
+                        "description": "Product deleted successfully"
+                    },
+                    "404": {
+                        "description": "Product not found"
                     }
                 },
                 "security": [
@@ -531,21 +464,16 @@
             "Product": {
                 "required": [
                     "of_name",
-                    "of_status",
                     "of_shop_id"
                 ],
                 "properties": {
                     "of_ext_id": {
-                        "description": "External product ID from an external system",
+                        "description": "External product ID from external system",
                         "type": "string",
                         "maxLength": 25
                     },
-                    "of_status": {
-                        "description": "Product status (e.g., 1 - active, 0 - disabled)",
-                        "type": "integer"
-                    },
                     "of_shop_id": {
-                        "description": "ID of the shop this product belongs to",
+                        "description": "Shop ID",
                         "type": "integer"
                     },
                     "of_name": {
@@ -559,50 +487,50 @@
                         "maxLength": 25
                     },
                     "of_sku": {
-                        "description": "Stock Keeping Unit (SKU)",
+                        "description": "SKU code",
                         "type": "string",
                         "maxLength": 25
                     },
                     "of_price": {
-                        "description": "Product price",
+                        "description": "Product base price",
                         "type": "number",
                         "format": "float"
                     },
                     "of_estimated_price": {
-                        "description": "Estimated price (for reference)",
+                        "description": "Estimated product price",
                         "type": "number",
                         "format": "float"
                     },
                     "of_img": {
-                        "description": "Product image URL",
+                        "description": "Image URL",
                         "type": "string",
                         "maxLength": 255
                     },
                     "of_dimension_x": {
-                        "description": "Product length in cm",
+                        "description": "Length (cm)",
                         "type": "number",
                         "format": "float"
                     },
                     "of_dimension_y": {
-                        "description": "Product width in cm",
+                        "description": "Width (cm)",
                         "type": "number",
                         "format": "float"
                     },
                     "of_dimension_z": {
-                        "description": "Product height in cm",
+                        "description": "Height (cm)",
                         "type": "number",
                         "format": "float"
                     },
                     "of_weight": {
-                        "description": "Product weight in grams",
+                        "description": "Weight (grams)",
                         "type": "integer"
                     },
                     "of_datamatrix": {
-                        "description": "Whether the product requires a DataMatrix code (0 or 1)",
+                        "description": "Requires DataMatrix (0 or 1)",
                         "type": "integer"
                     },
                     "of_comment": {
-                        "description": "Additional comment or note about the product",
+                        "description": "Comment or note",
                         "type": "string",
                         "maxLength": 255
                     }
@@ -779,70 +707,10 @@
                 "content": {
                     "application/json": {
                         "schema": {
-                            "required": [
-                                "of_name",
-                                "of_status",
-                                "of_shop_id"
-                            ],
-                            "properties": {
-                                "of_ext_id": {
-                                    "type": "string",
-                                    "maxLength": 25
-                                },
-                                "of_status": {
-                                    "type": "integer"
-                                },
-                                "of_shop_id": {
-                                    "type": "integer"
-                                },
-                                "of_name": {
-                                    "type": "string",
-                                    "maxLength": 150
-                                },
-                                "of_article": {
-                                    "type": "string",
-                                    "maxLength": 25
-                                },
-                                "of_sku": {
-                                    "type": "string",
-                                    "maxLength": 25
-                                },
-                                "of_price": {
-                                    "type": "number",
-                                    "format": "float"
-                                },
-                                "of_estimated_price": {
-                                    "type": "number",
-                                    "format": "float"
-                                },
-                                "of_img": {
-                                    "type": "string",
-                                    "maxLength": 255
-                                },
-                                "of_dimension_x": {
-                                    "type": "number",
-                                    "format": "float"
-                                },
-                                "of_dimension_y": {
-                                    "type": "number",
-                                    "format": "float"
-                                },
-                                "of_dimension_z": {
-                                    "type": "number",
-                                    "format": "float"
-                                },
-                                "of_weight": {
-                                    "type": "integer"
-                                },
-                                "of_datamatrix": {
-                                    "type": "integer"
-                                },
-                                "of_comment": {
-                                    "type": "string",
-                                    "maxLength": 255
-                                }
-                            },
-                            "type": "object"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/Product"
+                            }
                         }
                     }
                 }
@@ -858,12 +726,12 @@
     },
     "tags": [
         {
-            "name": "Orders",
-            "description": "Order management endpoints"
+            "name": "Products",
+            "description": "Product management endpoints"
         },
         {
-            "name": "Products",
-            "description": "Products"
+            "name": "Orders",
+            "description": "Order management endpoints"
         }
     ],
     "externalDocs": {
