@@ -20,6 +20,7 @@ class rwBarcode extends Model
         'br_offer_id',
         'br_barcode',
         'br_shop_id',
+        'br_main',
     ];
 
 }

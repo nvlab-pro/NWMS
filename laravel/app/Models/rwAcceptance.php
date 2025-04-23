@@ -70,5 +70,8 @@ class rwAcceptance extends Model implements AuditableContract
     public function getUser() {
         return $this->hasOne(User::class, 'id', 'acc_user_id');
     }
-
+    public function offers()
+    {
+        return $this->hasMany(rwAcceptanceOffer::class, 'ao_acceptance_id', 'acc_id');
+    }
 }

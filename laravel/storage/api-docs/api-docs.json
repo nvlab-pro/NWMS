@@ -6,6 +6,261 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/acceptances": {
+            "get": {
+                "tags": [
+                    "Acceptances"
+                ],
+                "summary": "Get list of acceptances",
+                "operationId": "8c248943c80dc486e20bf5c48e7429fc",
+                "responses": {
+                    "200": {
+                        "description": "List of acceptances"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Acceptances"
+                ],
+                "summary": "Create a new acceptance",
+                "operationId": "82e6ba0810aff8ac151e5e778a5dc788",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Acceptance"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Acceptance created"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/acceptances/{id}": {
+            "get": {
+                "tags": [
+                    "Acceptances"
+                ],
+                "summary": "Get acceptance by ID",
+                "operationId": "0ec69dce95755d01aa385ca16c1d741a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Acceptance found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Acceptances"
+                ],
+                "summary": "Update acceptance",
+                "operationId": "5748612e57bf9b0d00b215ce8196d5cc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/schemas/Acceptance"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Acceptances"
+                ],
+                "summary": "Delete acceptance",
+                "operationId": "106ec3316623eb4e10b532fd72c1959e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/acceptances/{id}/offers": {
+            "post": {
+                "tags": [
+                    "Acceptances"
+                ],
+                "summary": "Add offers to an acceptance",
+                "operationId": "1471c7e08213c19ff93448a726bef609",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/AcceptanceOfferInput"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Offers added successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/acceptances/{acc_id}/offers/{ao_id}": {
+            "put": {
+                "tags": [
+                    "Acceptances"
+                ],
+                "summary": "Update an offer in an acceptance",
+                "operationId": "b74c419694cda7653245600c619e8ab7",
+                "parameters": [
+                    {
+                        "name": "acc_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ao_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AcceptanceOfferInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Offer updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Acceptances"
+                ],
+                "summary": "Delete an offer from an acceptance",
+                "operationId": "554710da0159ad8ac605d572e5ca24a5",
+                "parameters": [
+                    {
+                        "name": "acc_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ao_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Offer deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -600,6 +855,173 @@
                 },
                 "type": "object"
             },
+            "AcceptanceOffer": {
+                "required": [
+                    "ao_acceptance_id",
+                    "ao_offer_id",
+                    "ao_expected"
+                ],
+                "properties": {
+                    "ao_id": {
+                        "description": "Primary key",
+                        "type": "integer"
+                    },
+                    "ao_acceptance_id": {
+                        "description": "Acceptance ID",
+                        "type": "integer"
+                    },
+                    "ao_offer_id": {
+                        "description": "Offer ID",
+                        "type": "integer"
+                    },
+                    "ao_expected": {
+                        "description": "Expected quantity",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "ao_accepted": {
+                        "description": "Accepted quantity",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "ao_placed": {
+                        "description": "Placed quantity",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "ao_price": {
+                        "description": "Purchase price",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "ao_batch": {
+                        "description": "Batch number",
+                        "type": "string"
+                    },
+                    "ao_expiration_date": {
+                        "description": "Expiration date",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "ao_barcode": {
+                        "description": "Barcode",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AcceptanceOfferInput": {
+                "required": [
+                    "ao_offer_id",
+                    "ao_expected"
+                ],
+                "properties": {
+                    "ao_offer_id": {
+                        "description": "ID of the offer",
+                        "type": "integer"
+                    },
+                    "ao_expected": {
+                        "description": "Expected quantity",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "ao_price": {
+                        "description": "Purchase price",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "ao_batch": {
+                        "description": "Batch number",
+                        "type": "string",
+                        "maxLength": 30
+                    },
+                    "ao_expiration_date": {
+                        "description": "Expiration date",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "ao_barcode": {
+                        "description": "Barcode",
+                        "type": "string",
+                        "maxLength": 64
+                    }
+                },
+                "type": "object"
+            },
+            "Acceptance": {
+                "required": [
+                    "acc_wh_id",
+                    "acc_shop_id",
+                    "acc_user_id",
+                    "acc_type",
+                    "acc_status"
+                ],
+                "properties": {
+                    "acc_id": {
+                        "description": "Primary key",
+                        "type": "integer"
+                    },
+                    "acc_domain_id": {
+                        "description": "Domain ID",
+                        "type": "integer"
+                    },
+                    "acc_status": {
+                        "description": "Status ID",
+                        "type": "integer"
+                    },
+                    "acc_ext_id": {
+                        "description": "External ID",
+                        "type": "integer"
+                    },
+                    "acc_user_id": {
+                        "description": "User ID",
+                        "type": "integer"
+                    },
+                    "acc_wh_id": {
+                        "description": "Warehouse ID",
+                        "type": "integer"
+                    },
+                    "acc_shop_id": {
+                        "description": "Shop ID",
+                        "type": "integer"
+                    },
+                    "acc_type": {
+                        "description": "Acceptance type",
+                        "type": "integer"
+                    },
+                    "acc_comment": {
+                        "description": "Comment",
+                        "type": "string"
+                    },
+                    "acc_count_expected": {
+                        "description": "Total expected quantity",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "acc_count_accepted": {
+                        "description": "Total accepted quantity",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "acc_count_placed": {
+                        "description": "Total placed quantity",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "acc_date": {
+                        "description": "Acceptance creation date",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "offers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AcceptanceOffer"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "OrderOffer": {
                 "required": [
                     "oo_order_id",
@@ -732,6 +1154,10 @@
         {
             "name": "Orders",
             "description": "Order management endpoints"
+        },
+        {
+            "name": "Acceptances",
+            "description": "Acceptances"
         }
     ],
     "externalDocs": {

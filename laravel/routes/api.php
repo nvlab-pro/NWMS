@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\AcceptanceController;
+use App\Http\Controllers\Api\AcceptanceOfferController;
 use App\Http\Controllers\Api\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +69,21 @@ Route::middleware([ForceJsonResponse::class])->group(function () {
         Route::put('/{order_id}/offers/{offer_id}', [OrderController::class, 'updateOffer']);
         Route::delete('/{order_id}/offers/{offer_id}', [OrderController::class, 'deleteOffer']);
 
+    });
+
+    Route::middleware('auth:sanctum')->prefix('acceptances')->group(function () {
+
+        // Приемки
+        Route::get('/', [AcceptanceController::class, 'index']);
+        Route::post('/', [AcceptanceController::class, 'store']);
+        Route::get('/{id}', [AcceptanceController::class, 'show']);
+        Route::put('/{id}', [AcceptanceController::class, 'update']);
+        Route::delete('/{id}', [AcceptanceController::class, 'destroy']);
+
+        // Товары в приемке
+        Route::post('/{id}/offers', [AcceptanceOfferController::class, 'add']);
+        Route::put('/{acceptance_id}/offers/{offer_id}', [AcceptanceOfferController::class, 'update']);
+        Route::delete('/{acceptance_id}/offers/{offer_id}', [AcceptanceOfferController::class, 'delete']);
     });
 
 });

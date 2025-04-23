@@ -32,7 +32,7 @@ class OfferEditScreen extends Screen
      *
      * @return array
      */
-    public function query($offerId = 0): iterable
+    public function query(Request $request, $offerId = 0): iterable
     {
         $currentUser = Auth::user();
 
@@ -46,6 +46,29 @@ class OfferEditScreen extends Screen
         if ($offerId == 0) {
             return [];
         } else {
+
+            // Удаляем штрих-код
+            if (isset($request->action) && $request->action == 'delete') {
+
+                rwBarcode::where('br_id', $request->barcodeId)->where('br_offer_id', $offerId)->delete();
+                Alert::error(CustomTranslator::get('Штрих-код был удален!'));
+
+            }
+
+            // Проставляем основной штрих-код
+            if (isset($request->action) && $request->action == 'selectMainBarcode') {
+
+                rwBarcode::where('br_offer_id', $offerId)
+                    ->update([
+                    'br_main'   => 0,
+                ]);
+                rwBarcode::where('br_id', $request->barcodeId)
+                    ->where('br_offer_id', $offerId)
+                    ->update([
+                    'br_main'   => 1,
+                ]);
+
+            }
 
             $this->offerName = $dbOffer->of_name;
             $this->shopName = $dbOffer->getShop->sh_name;
@@ -71,22 +94,22 @@ class OfferEditScreen extends Screen
                 }
 
                 $arRests[] = [
-                    'whName'    => $dbWh->wh_name,
-                    'whId'      => $rest->whcr_wh_id,
-                    'placeId'   => $rest->whcr_place_id,
+                    'whName' => $dbWh->wh_name,
+                    'whId' => $rest->whcr_wh_id,
+                    'placeId' => $rest->whcr_place_id,
                     'placeName' => $placeStr,
-                    'count'     => $rest->whcr_count,
+                    'count' => $rest->whcr_count,
                 ];
 
                 if (isset($arWhRests[$rest->whcr_wh_id])) {
                     $arWhRests[$rest->whcr_wh_id] = [
-                        'whName'    => $dbWh->wh_name,
-                        'count'     => $arWhRests[$rest->whcr_wh_id]['count'] + $rest->whcr_count,
+                        'whName' => $dbWh->wh_name,
+                        'count' => $arWhRests[$rest->whcr_wh_id]['count'] + $rest->whcr_count,
                     ];
                 } else {
                     $arWhRests[$rest->whcr_wh_id] = [
-                        'whName'    => $dbWh->wh_name,
-                        'count'     => $rest->whcr_count,
+                        'whName' => $dbWh->wh_name,
+                        'count' => $rest->whcr_count,
                     ];
                 }
             }
@@ -94,11 +117,11 @@ class OfferEditScreen extends Screen
             $dbBarcodes = rwBarcode::where('br_offer_id', $offerId)->get();
 
             return [
-                'rwOffer'       => $dbOffer,
-                'rests'         => $arRests,
-                'whRests'         => $arWhRests,
-                'offerId'       => $offerId,
-                'barcodesList'  => $dbBarcodes,
+                'rwOffer' => $dbOffer,
+                'rests' => $arRests,
+                'whRests' => $arWhRests,
+                'offerId' => $offerId,
+                'barcodesList' => $dbBarcodes,
             ];
 
         }
@@ -345,4 +368,42 @@ class OfferEditScreen extends Screen
         return redirect()->route('platform.offers.edit', $offer->of_id);
     }
 
+    function saveBarcode(Request $request)
+    {
+        $validatedData = $request->validate([
+            'br_id' => 'required|numeric',
+            'offerId' => 'required|numeric',
+            'br_barcode' => 'required|string',
+        ]);
+
+        rwBarcode::where('br_id', $validatedData['br_id'])
+            ->where('br_offer_id', $validatedData['offerId'])
+            ->update([
+                'br_barcode' => $validatedData['br_barcode'],
+            ]);
+
+        Alert::success(CustomTranslator::get('Штрих-код обновлен!'));
+
+    }
+
+    function addBarcode(Request $request)
+    {
+        $validatedData = $request->validate([
+            'offerId' => 'required|numeric',
+            'barcode' => 'required|string',
+        ]);
+
+        $dbOffer = rwOffer::where('of_id', $validatedData['offerId'])->first();
+
+        $barcode = new rwBarcode([
+            'br_offer_id' => $validatedData['offerId'],
+            'br_shop_id' => $dbOffer->of_shop_id,
+            'br_barcode' => $validatedData['barcode'],
+        ]);
+
+        $barcode->save(); // создаёт и вызывает аудит
+
+        Alert::success(CustomTranslator::get('Штрих-код добавлен!'));
+
+    }
 }

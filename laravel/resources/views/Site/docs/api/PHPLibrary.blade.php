@@ -87,7 +87,13 @@ require 'NWMSApi.php';
 
                                 <pre><code class="language-php">&lt;?php
 $api = new NWMSApi('your_email@example.com', 'your_password', 'https://nwms.cloud/api');
-
+</code></pre>
+<br>
+                                Then you can make requests to the API.<br>
+                                <br>
+                                For example:<br>
+                                <br>
+                                <pre><code class="language-php">&lt;?php
 $api-&gt;setRequest([
     'sku' =&gt; 'TEST-001',
     'name' =&gt; 'Sample Product',
@@ -201,7 +207,7 @@ class NWMSApi
                                 <br>
                                 <h4>Need help?</h4>
                                 <br>
-                                <p>If you encounter any issues using the NWMS API client, please contact our support team or refer to the full API documentation.</p>
+                                <p>If you encounter any issues using the NWMS API client, please contact <a href="{{ $lang_str }}/support" style="text-decoration: underline;">our support team</a> or refer to the full <a href="/api/documentation" style="text-decoration: underline;">API documentation</a>.</p>
                             </section>
 
                         </div>

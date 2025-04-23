@@ -52,10 +52,10 @@ class OfferController extends Controller
      *     summary="Get list of products",
      *     tags={"Products"},
      *     security={{"sanctum":{}}},
-     *     @OA\Parameter(name="sku", in="query", required=false, @OA\Schema(type="string")),
-     *     @OA\Parameter(name="id", in="query", required=false, @OA\Schema(type="integer")),
-     *     @OA\Parameter(name="name", in="query", required=false, @OA\Schema(type="string")),
-     *     @OA\Parameter(name="status", in="query", required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="of_sku", in="query", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="of_id", in="query", required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="of_name", in="query", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="of_status", in="query", required=false, @OA\Schema(type="integer")),
      *     @OA\Parameter(name="sort_by", in="query", required=false, @OA\Schema(type="string")),
      *     @OA\Parameter(name="sort_dir", in="query", required=false, @OA\Schema(type="string")),
      *     @OA\Parameter(name="per_page", in="query", required=false, @OA\Schema(type="integer")),
@@ -66,10 +66,10 @@ class OfferController extends Controller
     {
         $query = rwOffer::query();
 
-        $query->when($request->filled('sku'), fn($q) => $q->where('of_sku', $request->sku))
-            ->when($request->filled('id'), fn($q) => $q->where('of_id', $request->id))
-            ->when($request->filled('name'), fn($q) => $q->where('of_name', 'like', "%{$request->name}%"))
-            ->when($request->filled('status'), fn($q) => $q->where('of_status', $request->status));
+        $query->when($request->filled('of_sku'), fn($q) => $q->where('of_sku', $request->sku))
+            ->when($request->filled('of_id'), fn($q) => $q->where('of_id', $request->id))
+            ->when($request->filled('of_name'), fn($q) => $q->where('of_name', 'like', "%{$request->name}%"))
+            ->when($request->filled('of_status'), fn($q) => $q->where('of_status', $request->status));
 
         $currentUser = $request->user();
 

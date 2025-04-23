@@ -100,6 +100,10 @@ Route::get('/docs/api/products', function () {
     return view('Site/docs/api/Products', ['lang' => 'en']);
 });
 
+Route::get('/docs/api/acceptances', function () {
+    return view('Site/docs/api/Acceptances', ['lang' => 'en']);
+});
+
 
 
 Route::get('/docs/receiving', function () {

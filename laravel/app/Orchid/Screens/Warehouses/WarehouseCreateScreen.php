@@ -108,14 +108,6 @@ class WarehouseCreateScreen extends Screen
                 )
                 ->title(CustomTranslator::get('Выберите владельца'));
 
-            $arAddFields[] = Select::make('whList.wh_type')
-                ->options(
-                    rwLibWhType::all()
-                        ->pluck('lwt_name', 'lwt_id')
-                        ->map(fn($name) => CustomTranslator::get($name)) // Переводим названия
-                )
-                ->title(CustomTranslator::get('Выберите тип склада'));
-
             $arAddFields[] = Select::make('whList.wh_parent_id')
 //                ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
                 ->options(
@@ -128,20 +120,47 @@ class WarehouseCreateScreen extends Screen
                 ->empty(CustomTranslator::get('Не задан'))
                 ->title(CustomTranslator::get('Выберите склад ФФ'));
 
+            $arAddFields[] = Select::make('whList.wh_type')
+                ->options(
+                    rwLibWhType::all()
+                        ->pluck('lwt_name', 'lwt_id')
+                        ->map(fn($name) => CustomTranslator::get($name)) // Переводим названия
+                )
+                ->title(CustomTranslator::get('Выберите тип склада'));
+
         } else {
 
-            $arAddFields[] = Select::make('whList.wh_parent_id')
-                ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
-                ->title(CustomTranslator::get('Выберите склад ФФ'));
+            if ($currentUser->hasRole('warehouse_manager')) {
 
-            $arAddFields[] = Select::make('whList.wh_user_id')
-                ->fromModel(User::where('domain_id', $currentUser->domain_id), 'name', 'id')
-                ->title(CustomTranslator::get('Выберите владельца'));
+                $arAddFields[] = Select::make('whList.wh_user_id')
+                    ->fromModel(
+                        User::where('domain_id', $currentUser->domain_id),
+                        'name', 'id')
+                    ->title(CustomTranslator::get('Выберите владельца'));
 
-            $arAddFields[] = Input::make('whList.wh_type')
-                ->type('hidden')
-                ->value(2);
+                $arAddFields[] = Select::make('whList.wh_parent_id')
+                    ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
+                    ->title(CustomTranslator::get('Выберите склад ФФ'));
 
+                $arAddFields[] = Input::make('whList.wh_type')
+                    ->type('hidden')
+                    ->value(2);
+
+            } else {
+
+                $arAddFields[] = Select::make('whList.wh_parent_id')
+                    ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
+                    ->title(CustomTranslator::get('Выберите склад ФФ'));
+
+                $arAddFields[] = Input::make('whList.wh_user_id')
+                    ->type('hidden')
+                    ->value($currentUser->id);
+
+                $arAddFields[] = Input::make('whList.wh_type')
+                    ->type('hidden')
+                    ->value(2);
+
+            }
         }
 
         return [

@@ -119,6 +119,7 @@ Authorization: Bearer 1|your_generated_token</code></pre>
                                 <br>
                                 <ol>
                                     <li>Tokens are tied to the authenticated user.</li>
+                                    <li>Stored in <code>personal_access_tokens</code> table.</li>
                                     <li>Revocable and secure per-session tokens.</li>
                                     <li>Access to data is restricted by user role and domain/shop scope.</li>
                                 </ol>
