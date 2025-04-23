@@ -421,6 +421,21 @@ class AcceptancesOffersScreen extends Screen
             $currentWarehouse = new WhCore($validated['whId']);
 
             $barcode = '';
+            $dbBarcode = rwBarcode::where('br_offer_id', $validated['of_id'])
+                ->where('br_main', 1)
+                ->first();
+
+            if ($dbBarcode) {
+                $barcode = $dbBarcode->br_barcode;
+            } else {
+
+                $dbBarcode = rwBarcode::where('br_offer_id', $validated['of_id'])
+                    ->orderBy('br_id', 'DESC')
+                    ->first();
+
+                if ($dbBarcode) $barcode = $dbBarcode->br_barcode;
+
+            }
 
             $currentWarehouse->saveOffers(
                 $validated['acceptId'],
