@@ -26,7 +26,7 @@
 </style>
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
     <div class="row g-0">
-        <div style="margin: 20px 20px 20px 20px;">
+        <div style="padding: 20px 20px 20px 20px;">
 
             <table class="table table-hover table-striped-columns">
                 <thead>

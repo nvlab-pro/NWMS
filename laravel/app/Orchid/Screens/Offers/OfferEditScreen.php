@@ -27,11 +27,6 @@ class OfferEditScreen extends Screen
 {
     public $offerId = 0, $offerName = '', $shopName = '';
 
-    /**
-     * Fetch data to be displayed on the screen.
-     *
-     * @return array
-     */
     public function query(Request $request, $offerId = 0): iterable
     {
         $currentUser = Auth::user();

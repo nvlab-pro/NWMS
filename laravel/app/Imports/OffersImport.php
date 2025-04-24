@@ -30,8 +30,9 @@ class OffersImport implements ToModel, WithHeadingRow
         $offer = rwOffer::query()
             ->where('of_shop_id', $shopId)
             ->when(!empty($row['of_id']), fn($q) => $q->where('of_id', $row['of_id']))
-            ->when(empty($row['of_id']) && !empty($row['of_sku']), fn($q) => $q->where('of_sku', $row['of_sku']))
-            ->when(empty($row['of_id']) && empty($row['of_sku']) && !empty($row['of_article']), fn($q) => $q->where('of_article', $row['of_article']))
+            ->when(empty($row['of_id']) && !empty($row['of_ext_id']), fn($q) => $q->where('of_ext_id', $row['of_ext_id']))
+            ->when(empty($row['of_id']) && empty($row['of_ext_id']) && !empty($row['of_sku']), fn($q) => $q->where('of_sku', $row['of_sku']))
+            ->when(empty($row['of_id']) && empty($row['of_ext_id']) && empty($row['of_sku']) && !empty($row['of_article']), fn($q) => $q->where('of_article', $row['of_article']))
             ->first();
 
         $payloadFields = [
@@ -80,7 +81,7 @@ class OffersImport implements ToModel, WithHeadingRow
 
             } else {
 
-                // Создание
+                // Создание лога
                 rwImportLog::create([
                     'il_import_id' => $this->importId,
                     'il_date' => date('Y-m-d H:i:s'),

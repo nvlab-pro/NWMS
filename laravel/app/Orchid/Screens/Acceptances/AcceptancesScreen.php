@@ -72,6 +72,11 @@ class AcceptancesScreen extends Screen
             Link::make(CustomTranslator::get('Создать новую накладную'))
                 ->icon('bs.plus-circle')
                 ->route('platform.acceptances.create'),
+
+            Link::make(CustomTranslator::get('Импорт документа'))
+                ->icon('bs.cloud-upload')
+                ->route('platform.acceptances.import'),
+
         ];
     }
 

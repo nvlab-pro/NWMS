@@ -10,6 +10,7 @@ use App\Orchid\Layouts\Acceptances\AcceptancesOffersTable;
 use App\Orchid\Services\DocumentService;
 use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
@@ -67,11 +68,6 @@ class AcceptancesOffersScreen extends Screen
         ];
     }
 
-    /**
-     * The name of the screen displayed in the header.
-     *
-     * @return string|null
-     */
     public function name(): ?string
     {
         return CustomTranslator::get('Приемка № ') . $this->acceptId . ' (' . $this->whName . ')';
@@ -113,6 +109,11 @@ class AcceptancesOffersScreen extends Screen
             }
 
             $arLinksList3 = [
+
+                Link::make(CustomTranslator::get('Импорт документа'))
+                    ->icon('bs.cloud-upload')
+                    ->route('platform.acceptance.import', $this->acceptId),
+
                 Button::make('NEW')
                     ->class('btn btn-danger')
                     ->disabled(true),

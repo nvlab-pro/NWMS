@@ -455,6 +455,18 @@ Route::screen('acceptances/{acceptId}/offers', \App\Orchid\Screens\Acceptances\A
         ->parent('platform.acceptances.index')
         ->push(CustomTranslator::get('Список накладных'), route('platform.acceptances.offers', $acceptId)));
 
+Route::screen('acceptances/import', \App\Orchid\Screens\Acceptances\AcceptancesImportScreen::class)
+    ->name('platform.acceptances.import')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.acceptances.index')
+        ->push(CustomTranslator::get('Импорт приходных накладных'), route('platform.acceptances.import')));
+
+Route::screen('acceptances/{acceptId}/import', \App\Orchid\Screens\Acceptances\AcceptancesImportScreen::class)
+    ->name('platform.acceptance.import')
+    ->breadcrumbs(fn(Trail $trail, $acceptId) => $trail
+        ->parent('platform.acceptances.index')
+        ->push(CustomTranslator::get('Импорт приходных накладных'), route('platform.acceptance.import', $acceptId)));
+
 // Route::post('acceptances/{acceptId}/offers/save', [\App\Orchid\Screens\Acceptances\AcceptancesOffersScreen::class, 'save'])
 //    ->name('platform.acceptances.offers.save');
 
