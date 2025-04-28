@@ -133,6 +133,10 @@ class rwAcceptance extends Model implements AuditableContract
         return $this->hasOne(rwWarehouse::class, 'wh_id', 'acc_wh_id');
     }
 
+    public function getShop() {
+        return $this->hasOne(rwShop::class, 'sh_id', 'acc_shop_id');
+    }
+
     public function getUser() {
         return $this->hasOne(User::class, 'id', 'acc_user_id');
     }

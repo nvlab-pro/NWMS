@@ -45,6 +45,8 @@ class AcceptancesScreen extends Screen
         return [
             'acceptList' => $dbAcceptList
                 ->with('getUser')
+                ->with('getWarehouse')
+                ->with('getShop')
                 ->filters()
                 ->defaultSort('acc_id', 'desc')
                 ->paginate(50),

@@ -112,6 +112,14 @@ class AcceptancesTable extends Table
                         ->route('platform.acceptances.offers', $modelName->acc_id);
                 }),
 
+            TD::make('acc_shop_id', CustomTranslator::get('Магазин'))
+                ->sort()
+                ->filter(TD::FILTER_TEXT)
+                ->render(function (rwAcceptance $modelName) {
+                    return Link::make($modelName->getShop->sh_name)
+                        ->route('platform.acceptances.offers', $modelName->acc_id);
+                }),
+
             TD::make('acc_count_expected', CustomTranslator::get('Ожидается'))
                 ->sort()
                 ->filter(TD::FILTER_TEXT),
