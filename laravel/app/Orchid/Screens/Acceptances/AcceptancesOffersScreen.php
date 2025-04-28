@@ -171,7 +171,6 @@ class AcceptancesOffersScreen extends Screen
      */
     public function layout(): iterable
     {
-        dump($this->shopId);
 
         return [
             Layout::modal('editDimensions', [
@@ -202,11 +201,11 @@ class AcceptancesOffersScreen extends Screen
                     ->width('100px')
                     ->options(
                         rwOffer::where('of_shop_id', $this->shopId)
-                            ->whereNotIn('of_id', function ($query) {
-                                $query->select('ao_offer_id')
-                                    ->from('rw_acceptance_offers')
-                                    ->where('ao_acceptance_id', $this->acceptId); // Условие для конкретной накладной
-                            })
+//                            ->whereNotIn('of_id', function ($query) {
+//                                $query->select('ao_offer_id')
+//                                    ->from('rw_acceptance_offers')
+//                                    ->where('ao_acceptance_id', $this->acceptId); // Условие для конкретной накладной
+//                            })
                             ->get()
                             ->mapWithKeys(function ($offer) {
                                 return [$offer->of_id => $offer->of_name . ' (' . $offer->of_article . ')'];
