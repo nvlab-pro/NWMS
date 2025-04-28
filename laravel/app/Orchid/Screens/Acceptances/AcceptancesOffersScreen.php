@@ -171,6 +171,8 @@ class AcceptancesOffersScreen extends Screen
      */
     public function layout(): iterable
     {
+        dump($this->shopId);
+
         return [
             Layout::modal('editDimensions', [
                 Layout::rows([
