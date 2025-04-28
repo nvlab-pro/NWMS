@@ -58,12 +58,11 @@ class OrderEditScreen extends Screen
 
                 $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)
                     ->whereHas('getShop', function ($query) use ($currentUser) {
-                        $query->whereIn('o_user_id', [$currentUser->id, $currentUser->parent_id]);
+                        $query->whereIn('sh_user_id', [$currentUser->id, $currentUser->parent_id]);
                     })
                     ->where('o_id', $orderId)
                     ->with('getPlace')
                     ->firstOrFail();
-
             }
         }
 
@@ -616,7 +615,7 @@ class OrderEditScreen extends Screen
         if (isset($validatedData['orderOfferId'])) {
 
             $currentWarehouse = new WhCore($validatedData['whId']);
-            $count = $sum = 0;
+            $sumCount = $sumPrice = 0;
             $dbOrder = rwOrder::where('o_id', $validatedData['docId'])->first();
 
             foreach ($validatedData['orderOfferId'] as $id => $offerId) {
@@ -657,8 +656,8 @@ class OrderEditScreen extends Screen
                         $currentWarehouse->deleteItemFromDocument($id, $validatedData['docId'], 2);
                     }
 
-                    $count += $offer->oo_qty;
-                    $sum += $offer->oo_oc_price * $offer->oo_qty;
+                    $sumCount += $offer->oo_qty;
+                    $sumPrice += $offer->oo_oc_price * $offer->oo_qty;
 
                     // Резервируем товары в заказе
                     $currentWarehouse->calcRestOffer($validatedData['orderOfferId'][$id]);
@@ -672,11 +671,12 @@ class OrderEditScreen extends Screen
             $currentWarehouse->reservOffers($validatedData['orderOfferId'][$id]);
 
             $dbOrder = rwOrder::find($validatedData['docId']);
-            $dbOrder->o_count = $count;
-            $dbOrder->o_sum = $sum;
+            $dbOrder->o_count = $sumCount;
+            $dbOrder->o_sum = $sumPrice;
             $dbOrder->save();
 
             Alert::success(CustomTranslator::get('Данные о товаре сохранены!'));
+
 
         } else {
 

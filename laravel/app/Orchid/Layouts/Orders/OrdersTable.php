@@ -12,6 +12,8 @@ use App\Models\rwWarehouse;
 use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\DropDown;
+use Orchid\Screen\Fields\DateRange;
+use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\TD;
@@ -75,6 +77,7 @@ class OrdersTable extends Table
             TD::make('o_ext_id', CustomTranslator::get('Внешний ID'))
                 ->sort()
                 ->align('center')
+                ->filter(TD::FILTER_TEXT)
                 ->render(function (rwOrder $order) {
                     return $order->o_ext_id ? Link::make($order->o_ext_id)
                         ->route('platform.orders.edit', $order->o_id)
@@ -112,6 +115,7 @@ class OrdersTable extends Table
             TD::make('o_date', CustomTranslator::get('Дата заказа'))
                 ->sort()
                 ->align('center')
+                ->filter(DateRange::make())
                 ->render(function (rwOrder $order) {
                     return $order->o_date ? Link::make($order->o_date)
                         ->route('platform.orders.edit', $order->o_id)
@@ -122,6 +126,7 @@ class OrdersTable extends Table
             TD::make('o_date_send', CustomTranslator::get('Дата отправки'))
                 ->sort()
                 ->align('center')
+                ->filter(DateRange::make())
                 ->render(function (rwOrder $order) {
                     return $order->o_date_send ? Link::make($order->o_date_send)
                         ->route('platform.orders.edit', $order->o_id)

@@ -9,6 +9,8 @@ use Orchid\Attachment\Attachable;
 use Orchid\Filters\Filterable;
 use Orchid\Filters\Types\Like;
 use Orchid\Filters\Types\Where;
+use Orchid\Filters\Types\WhereBetween;
+use Orchid\Filters\Types\WhereIn;
 use Orchid\Screen\AsSource;
 use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
@@ -47,8 +49,8 @@ class rwOrder extends Model implements AuditableContract
         'o_ext_id'          => Where::class,
         'o_shop_id'         => Where::class,
         'o_wh_id'           => Where::class,
-        'o_date'            => Where::class,
-        'o_date_send'       => Where::class,
+        'o_date'            => WhereBetween::class,
+        'o_date_send'       => WhereBetween::class,
     ];
 
     /**
