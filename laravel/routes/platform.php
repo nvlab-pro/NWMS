@@ -656,6 +656,26 @@ Route::prefix('delivery-services')
                 ->parent('platform.delivery-services.list')
                 ->push(CustomTranslator::get('Редактирование службы доставки'), route('platform.delivery-services.edit', $dsId)));
 
+        Route::screen('integrations', \App\Orchid\Screens\Integrations\IntegrationListScreen::class)
+            ->name('.integrations.list')
+            ->breadcrumbs(fn(Trail $trail) => $trail
+                ->parent('platform.delivery-services.list')
+                ->push(CustomTranslator::get('Интеграции')),
+            );
+
+        Route::screen('integrations/create', \App\Orchid\Screens\Integrations\IntegrationCreateScreen::class)
+            ->name('.integrations.create')
+            ->breadcrumbs(fn(Trail $trail) => $trail
+                ->parent('platform.delivery-services.integrations.list')
+                ->push(CustomTranslator::get('Редактировать интеграцию')),
+            );
+
+        Route::screen('integrations/{integration}/edit', \App\Orchid\Screens\Integrations\IntegrationEditScreen::class)
+            ->name('.integrations.edit')
+            ->breadcrumbs(fn(Trail $trail) => $trail
+                ->parent('platform.delivery-services.integrations.list')
+                ->push(CustomTranslator::get('Редактировать интеграцию')),
+            );
     });
 
 // Platform > Profile

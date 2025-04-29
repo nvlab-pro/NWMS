@@ -43,6 +43,13 @@ class PlacesTable extends Table
                         ->route('platform.warehouses.places.index', $place->pl_id);
                 }),
 
+            TD::make('pl_id', CustomTranslator::get('Штрих-код'))
+                ->sort()
+                ->align(TD::ALIGN_CENTER)
+                ->render(function (rwPlace $place) {
+                    return $place->pl_type . '*' . $place->pl_id . '*' . ($place->pl_type + $place->pl_id);
+                }),
+
             TD::make('pl_wh_id', CustomTranslator::get('Склад'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)

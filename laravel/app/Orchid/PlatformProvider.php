@@ -179,6 +179,10 @@ class PlatformProvider extends OrchidServiceProvider
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
+                    Menu::make(CustomTranslator::get('Интеграции'))
+                        ->icon('bs.truck')
+                        ->route('platform.delivery-services.integrations.list'),
+
                     Menu::make(CustomTranslator::get('Службы доставки'))
                         ->icon('bs.truck')
                         ->route('platform.delivery-services.list'),
