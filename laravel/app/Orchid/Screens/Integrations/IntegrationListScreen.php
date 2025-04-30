@@ -44,21 +44,26 @@ class IntegrationListScreen extends Screen
         return [
             Layout::table('integrations', [
                 TD::make('int_id', 'ID')->sort(),
+
                 TD::make('int_name', CustomTranslator::get('Название'))
                     ->render(fn(rwIntegration $integration) => Link::make($integration->int_name)
                         ->route('platform.delivery-services.integrations.edit', $integration->int_id)),
 
-                TD::make('int_url', CustomTranslator::get('URL'))->width('250px'),
+                TD::make('int_url', CustomTranslator::get('URL'))->width('250px')
+                    ->render(fn(rwIntegration $integration) => Link::make($integration->int_url)
+                        ->route('platform.delivery-services.integrations.edit', $integration->int_id)),
+
                 TD::make('int_ds_id', CustomTranslator::get('Служба доставки'))
                     ->align(TD::ALIGN_CENTER)
                     ->render(function ($modelName) {
                         if ($modelName->getDS) {
                             return Link::make($modelName->getDS->ds_name)
-                                ->route('platform.delivery-services.integrations.edit',$modelName->int_id);
+                                ->route('platform.delivery-services.integrations.edit', $modelName->int_id);
                         } else {
                             return '-';
                         }
                     }),
+
                 TD::make('updated_at', CustomTranslator::get('Изменено'))->sort(),
             ]),
         ];

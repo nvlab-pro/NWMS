@@ -10,7 +10,7 @@ class YandexDeliveryService
     protected string $baseUrl;
     protected string $token;
 
-    public function __construct()
+    public function __construct($integrationId)
     {
         $this->baseUrl = config('yandex_delivery.base_url');
         $this->token = config('yandex_delivery.oauth_token');

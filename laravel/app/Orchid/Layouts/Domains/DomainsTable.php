@@ -19,6 +19,7 @@ class DomainsTable extends Table
             TD::make('dm_id', 'ID'),
             TD::make('dm_name', CustomTranslator::get('Домен'))->filter()->sort(),
             TD::make('getCountry.lco_name', CustomTranslator::get('Страна'))->sort(),
+            TD::make('dm_timezone', CustomTranslator::get('Временная зона')),
 
             TD::make('')
                 ->alignRight()

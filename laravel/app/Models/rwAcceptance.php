@@ -87,7 +87,7 @@ class rwAcceptance extends Model implements AuditableContract
         'ao_barcode'           => [
             'name'        => 'ao_barcode',
             'description' => 'Штрих-код товара. Если поле будет пустым или его не будет, то программа возьмет штрих-код из товара, если таковой имеется.',
-            'type'        => 'поле обязательно',
+            'type'        => 'необязательно',
             'defaultValue'      => '-',
         ],
         'ao_price'         => [

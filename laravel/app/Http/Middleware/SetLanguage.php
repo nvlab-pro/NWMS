@@ -25,12 +25,12 @@ class SetLanguage
         else
             App::setLocale('en');
 
-//        if (isset($currentUser->id)) {
-//            User::where('id', $currentUser->id)->update([
-//                'login_count' => $currentUser->login_count + 1,
-//                'last_login_date' => date('Y-m-d H:i:s'),
-//            ]);
-//        }
+        if (isset($currentUser->id)) {
+            User::where('id', $currentUser->id)->update([
+                'login_count' => $currentUser->login_count + 1,
+                'last_login_date' => date('Y-m-d H:i:s'),
+            ]);
+        }
 
         return $next($request);
     }

@@ -24,7 +24,7 @@
             </table>
             <hr>
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-info" onClick="window.location.href='/downloads/import_offers_tmp.xlsx'">
+                <button type="button" class="btn btn-info" onClick="window.location.href='/downloads/import_acceptance_tmp.xlsx'">
                     {{ CustomTranslator::get('Скачать шаблон') }}
                 </button>
             </div>

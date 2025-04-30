@@ -2,6 +2,7 @@
 
 namespace Illuminate\Support\Facades;
 
+use App\Models\rwDomain;
 use Laravel\Ui\UiServiceProvider;
 use RuntimeException;
 

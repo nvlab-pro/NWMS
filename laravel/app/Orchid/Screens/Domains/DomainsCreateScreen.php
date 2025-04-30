@@ -8,7 +8,6 @@ use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
-use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Alert;
@@ -29,7 +28,7 @@ class DomainsCreateScreen extends Screen
 
     public function name(): ?string
     {
-        return $this->domainId ? 'Edit Domain' : 'Create Domain';
+        return $this->domainId ? CustomTranslator::get('Редактировать домен') : CustomTranslator::get('Создать домен');
     }
 
     public function commandBar(): iterable
@@ -48,14 +47,18 @@ class DomainsCreateScreen extends Screen
 
                 Select::make('rwDomain.dm_country_id')
                     ->title(CustomTranslator::get('Страна'))
-                    ->fromModel(rwLibCountry::class, 'lco_name') // замените 'name' на поле с названием страны
+                    ->fromModel(rwLibCountry::class, 'lco_name')
                     ->required(),
+
+                Select::make('rwDomain.dm_timezone')
+                    ->title(CustomTranslator::get('Часовой пояс'))
+                    ->options($this->getTimezoneOptions())
+                    ->empty(CustomTranslator::get('Не выбрано')),
 
                 Button::make(CustomTranslator::get('Сохранить'))
                     ->icon('check')
                     ->method('save'),
-
-                ]),
+            ]),
         ];
     }
 
@@ -64,11 +67,12 @@ class DomainsCreateScreen extends Screen
         $validated = $request->validate([
             'rwDomain.dm_name' => 'required|max:20',
             'rwDomain.dm_country_id' => 'required|integer',
+            'rwDomain.dm_timezone' => 'nullable|string|max:64',
         ]);
 
         $data = $request->get('rwDomain');
 
-        $domain = rwDomain::updateOrCreate(
+        rwDomain::updateOrCreate(
             ['dm_id' => $this->domainId],
             $data
         );
@@ -76,5 +80,12 @@ class DomainsCreateScreen extends Screen
         Alert::success(CustomTranslator::get('Сохранено'));
 
         return redirect()->route('platform.settings.domains');
+    }
+
+    private function getTimezoneOptions(): array
+    {
+        return collect(\DateTimeZone::listIdentifiers())
+            ->mapWithKeys(fn($tz) => [$tz => $tz])
+            ->toArray();
     }
 }

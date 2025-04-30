@@ -23,6 +23,7 @@ class rwDomain extends Model implements AuditableContract
     protected $fillable = [
         'dm_name',
         'dm_country_id',
+        'dm_timezone',
     ];
 
     protected $allowedFilters = [
