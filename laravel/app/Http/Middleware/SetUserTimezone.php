@@ -12,7 +12,10 @@ class SetUserTimezone
     public function handle($request, Closure $next): mixed
     {
         $currentUser = Auth::user();
-        $currentUser->load('getDomain');
+
+        if ($currentUser && $currentUser->relationLoaded('getDomain') === false) {
+            $currentUser->load('getDomain');
+        }
 
         if (isset($currentUser->getDomain->dm_timezone)) {
             $timezone = $currentUser->getDomain->dm_timezone ?? config('app.timezone');
