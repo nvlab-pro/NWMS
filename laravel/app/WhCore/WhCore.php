@@ -72,6 +72,7 @@ class WhCore
                     $table->tinyInteger('whci_doc_type')->unsigned()->index();
                     $table->double('whci_count')->unsigned();
                     $table->tinyInteger('whci_sign');
+                    $table->date('whci_production_date')->nullable()->index();
                     $table->date('whci_expiration_date')->nullable()->index();
                     $table->string('whci_batch', 15)->nullable()->index();
                     $table->string('whci_barcode', 30)->nullable()->index();
@@ -85,6 +86,27 @@ class WhCore
                     'whc_id' => $warehouseId,
                     'whc_ver' => $this->version,
                 ]);
+
+            } else {
+
+                // Таблица существует. Проверяем ее версию
+
+                $whcWarehouse = WhcWarehouse::find($this->warehouseId);
+                $version = $whcWarehouse->whc_ver;
+
+                // Если версия 1, нужно добавить новое поле whci_production_date
+                if ($version == 1) {
+
+                    Schema::table($this->itemTableName, function (Blueprint $table) {
+                        $table->date('whci_production_date')->nullable()->index()->after('whci_sign');
+                    });
+
+                    $whcWarehouse->whc_ver = 2;
+                    $whcWarehouse->save();
+
+
+
+                }
 
             }
 
@@ -516,7 +538,7 @@ class WhCore
 
     }
 
-    public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $timeCash = 0, $placeId = NULL)
+    public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $prodDate = NULL, $timeCash = 0, $placeId = NULL)
     {
 
         $validator = Validator::make([
@@ -543,6 +565,7 @@ class WhCore
             'barcode' => 'nullable|string',
             'price' => 'required|numeric',
             'expDate' => 'nullable|date_format:d.m.Y,Y-m-d', // Допускаем оба формата
+            'prodDate' => 'nullable|date_format:d.m.Y,Y-m-d', // Допускаем оба формата
             'batch' => 'nullable|string',
             'placeId' => 'nullable|numeric',
         ]);
@@ -561,13 +584,20 @@ class WhCore
             }
         }
 
+        // 2. Преобразование формата даты expDate
+        if ($prodDate) {
+            // Проверяем, в каком формате пришла дата
+            if (strpos($prodDate, '.') !== false) {
+                // Если дата в формате DD.MM.YYYY, преобразуем в YYYY-MM-DD
+                $prodDate = \DateTime::createFromFormat('d.m.Y', $prodDate)->format('Y-m-d');
+            }
+        }
+
         $dbCurrentOffer = DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_doc_id', $docId)
             ->where('whci_doc_type', $docType)
             ->where('whci_doc_offer_id', $docOfferId)
             ->where('whci_place_id', $placeId)
-            ->where('whci_expiration_date', $expDate)
-            ->where('whci_batch', $batch)
             ->first();
 
         if (isset($dbCurrentOffer->whci_id)) {
@@ -575,6 +605,7 @@ class WhCore
             DB::table('whc_wh' . $this->warehouseId . '_items')->where('whci_id', $dbCurrentOffer->whci_id)->update([
                 'whci_date' => $docDate,
                 'whci_count' => $count,
+                'whci_production_date' => $prodDate,
                 'whci_expiration_date' => $expDate,
                 'whci_batch' => $batch,
                 'whci_barcode' => $barcode,
@@ -597,6 +628,7 @@ class WhCore
                 'whci_doc_type' => $docType,
                 'whci_count' => $count,
                 'whci_sign' => $sign,
+                'whci_production_date' => $prodDate,
                 'whci_expiration_date' => $expDate,
                 'whci_batch' => $batch,
                 'whci_barcode' => $barcode,

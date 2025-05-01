@@ -25,6 +25,9 @@ class rwWarehouse extends Model implements AuditableContract
         'wh_parent_id',
         'wh_name',
         'wh_domain_id',
+        'wh_set_expiration_date',
+        'wh_set_production_date',
+        'wh_set_batch',
     ];
 
     public static function perPage(): int

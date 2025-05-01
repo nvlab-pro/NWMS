@@ -10,6 +10,7 @@ use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Screen;
@@ -163,6 +164,24 @@ class WarehouseCreateScreen extends Screen
             }
         }
 
+        $arAddFields2[] = CheckBox::make('whList.wh_set_production_date')
+            ->title(CustomTranslator::get('Использовать срок производства товара'))
+            ->horizontal()
+            ->sendTrueOrFalse()
+            ->value($currentUser->wh_set_production_date);
+
+        $arAddFields2[] = CheckBox::make('whList.wh_set_expiration_date')
+            ->title(CustomTranslator::get('Использовать срок годности товара'))
+            ->horizontal()
+            ->sendTrueOrFalse()
+            ->value($currentUser->wh_set_expiration_date);
+
+        $arAddFields2[] = CheckBox::make('whList.wh_set_batch')
+            ->title(CustomTranslator::get('Использовать поле батч'))
+            ->horizontal()
+            ->sendTrueOrFalse()
+            ->value($currentUser->wh_set_batch);
+
         return [
 
             Layout::rows(
@@ -181,14 +200,14 @@ class WarehouseCreateScreen extends Screen
                         Button::make(CustomTranslator::get('Сохранить'))
                             ->type(Color::DARK)
                             ->style('margin-bottom: 20px;')
-                            ->method('saveShop'),
+                            ->method('saveWh'),
 
                     ])
             ),
         ];
     }
 
-    function saveShop(Request $request)
+    function saveWh(Request $request)
     {
         $currentUser = Auth::user();
 
@@ -199,12 +218,19 @@ class WarehouseCreateScreen extends Screen
             'whList.wh_type' => 'required|integer',
             'whList.wh_parent_id' => 'nullable|integer',
             'whList.wh_domain_id' => 'nullable|integer',
+            'whList.wh_set_production_date' => 'nullable|integer',
+            'whList.wh_set_expiration_date' => 'nullable|integer',
+            'whList.wh_set_batch' => 'nullable|integer',
         ]);
 
         // Если тип склада равен 1, то родительский ID не требуется
         if ($data['whList']['wh_type'] == 1) {
             $data['whList']['wh_parent_id'] = null;
         }
+
+        if (!isset($data['whList']['wh_set_production_date'])) $data['whList']['wh_set_production_date'] = 0;
+        if (!isset($data['whList']['wh_set_expiration_date'])) $data['whList']['wh_set_expiration_date'] = 0;
+        if (!isset($data['whList']['wh_set_batch'])) $data['whList']['wh_set_batch'] = 0;
 
         if (isset($data['whList']['wh_id']) && $data['whList']['wh_id'] > 0) {
 
@@ -215,6 +241,9 @@ class WarehouseCreateScreen extends Screen
                 'wh_type' => $data['whList']['wh_type'],
                 'wh_parent_id' => $data['whList']['wh_parent_id'],
                 'wh_domain_id' => $data['whList']['wh_domain_id'],
+                'wh_set_production_date' => $data['whList']['wh_set_production_date'],
+                'wh_set_expiration_date' => $data['whList']['wh_set_expiration_date'],
+                'wh_set_batch' => $data['whList']['wh_set_batch'],
             ]);
 
             Alert::success(CustomTranslator::get('Склад успешно отредактирован!'));
@@ -227,6 +256,9 @@ class WarehouseCreateScreen extends Screen
                 'wh_type' => $data['whList']['wh_type'],
                 'wh_parent_id' => $data['whList']['wh_parent_id'],
                 'wh_domain_id' => $data['whList']['wh_domain_id'],
+                'wh_set_production_date' => $data['whList']['wh_set_production_date'],
+                'wh_set_expiration_date' => $data['whList']['wh_set_expiration_date'],
+                'wh_set_batch' => $data['whList']['wh_set_batch'],
             ]);
 
             Alert::success(CustomTranslator::get('Склад успешно создан!'));

@@ -21,6 +21,7 @@ class rwIntegration extends Model
         'int_name',
         'int_url',
         'int_token',
+        'int_pickup_point',
     ];
 
     public function getDS() {

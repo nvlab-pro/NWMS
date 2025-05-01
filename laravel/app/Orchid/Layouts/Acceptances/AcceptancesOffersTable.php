@@ -25,13 +25,21 @@ class AcceptancesOffersTable extends Table
      */
     protected $target = 'dbAcceptOffersList';
 
-    protected function columns(): iterable
+    protected function columns(array $params = []): iterable
     {
+        $isProductionDate = $this->query->get('isProductionDate');
+        $isExpirationDate = $this->query->get('isExpirationDate');
+        $isBatch = $this->query->get('isBatch');
+
         return [
 
             TD::make('ao_id', 'ID')
                 ->sort()
-                ->align('center'),
+                ->align('center')
+                ->render(function (rwAcceptanceOffer $modelName) {
+                    return $modelName->ao_id . '<input type="hidden" name="docOfferId[' . $modelName->ao_id . ']" value="' . e($modelName->ao_offer_id) . '" >
+                    <input type="hidden" name="docOfferPlaced[' . $modelName->ao_id . ']" value="' . e($modelName->ao_placed) . '" >';
+                }),
 
             TD::make(CustomTranslator::get('Изображение'))
                 ->align('center')
@@ -73,16 +81,41 @@ class AcceptancesOffersTable extends Table
 
             TD::make('ao_batch', CustomTranslator::get('Батч'))
                 ->sort()
+                ->canSee($isBatch)
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $readonly = '';
-                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
-                    return '<input type="hidden" name="docOfferId[' . $modelName->ao_id . ']" value="' . e($modelName->ao_offer_id) . '" >
-                    <input type="hidden" name="docOfferPlaced[' . $modelName->ao_id . ']" value="' . e($modelName->ao_placed) . '" >
-                    <input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="'.CustomTranslator::get('Батч').'" ' . $readonly . '>';
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) $readonly = 'readonly';
+                    return '<input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="'.CustomTranslator::get('Батч').'" ' . $readonly . '>';
+                }),
+
+            TD::make('ao_production_date', CustomTranslator::get('Срок производства'))
+                ->sort()
+                ->canSee($isProductionDate)
+                ->render(function (rwAcceptanceOffer $modelName) {
+
+                    $readonly = '';
+                    if ($modelName->ao_placed > 0) $readonly = 'readonly';
+
+                    $input = Input::make('docOfferProdDate[' . $modelName->ao_id . ']')
+                        ->type('text')
+                        ->value($modelName->ao_production_date)
+                        ->mask([
+                            'alias' => 'datetime',
+                            'inputFormat' => 'dd.mm.yyyy',
+                            'placeholder' => CustomTranslator::get('дд.мм.гггг'),
+                        ])
+                        ->class('form-control');
+
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) {
+                        $input->readonly(); // Применяем readonly только если $readonly === true
+                    }
+
+                    return $input;
                 }),
 
             TD::make('ao_expiration_date', CustomTranslator::get('Срок годности'))
                 ->sort()
+                ->canSee($isExpirationDate)
                 ->render(function (rwAcceptanceOffer $modelName) {
 
                     $readonly = '';
@@ -98,7 +131,7 @@ class AcceptancesOffersTable extends Table
                         ])
                         ->class('form-control');
 
-                    if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) {
+                    if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) {
                         $input->readonly(); // Применяем readonly только если $readonly === true
                     }
 

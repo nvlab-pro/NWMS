@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Integrations;
 
+use App\Models\rwDeliveryService;
 use App\Models\rwIntegration;
 use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,7 @@ use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Screen;
+use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Illuminate\Http\Request;
 
@@ -26,23 +28,12 @@ class IntegrationEditScreen extends Screen
 
     public function name(): ?string
     {
-        return $this->integration->exists
-            ? CustomTranslator::get('Редактировать интеграцию')
-            : CustomTranslator::get('Создать интеграцию');
+        return CustomTranslator::get('Редактировать интеграцию');
     }
 
     public function commandBar(): iterable
     {
-        return [
-            Button::make(CustomTranslator::get('Сохранить'))
-                ->icon('check')
-                ->method('save'),
-
-            Button::make(CustomTranslator::get('Удалить'))
-                ->icon('trash')
-                ->method('remove')
-                ->canSee($this->integration->exists),
-        ];
+        return [];
     }
 
     public function layout(): iterable
@@ -61,14 +52,14 @@ class IntegrationEditScreen extends Screen
                     ->title(CustomTranslator::get('Токен'))
                     ->required(),
 
-                Select::make('integration.int_type')
-                    ->title(CustomTranslator::get('Тип интеграции'))
-                    ->options([
-                        1 => 'Тип 1',
-                        2 => 'Тип 2',
-                        3 => 'Тип 3',
-                    ])
-                    ->required(),
+                Input::make('integration.int_pickup_point')
+                    ->title(CustomTranslator::get('Точка забора')),
+
+                Button::make(CustomTranslator::get('Создать'))
+                    ->type(Color::DARK)
+                    ->style('margin-bottom: 20px;')
+                    ->icon('plus')
+                    ->method('save'),
             ]),
         ];
     }

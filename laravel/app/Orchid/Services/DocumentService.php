@@ -142,6 +142,7 @@ class DocumentService
             $acceptPrice = $currentItem->whci_price;
             $batch = $currentItem->whci_batch;
             $expirationDate = $currentItem->whci_expiration_date;
+            $productionDate = $currentItem->whci_production_date;
             $barcode = $currentItem->whci_barcode;
             $placed = $currentItem->whci_place_id;
             $status = $this->docStatus;
@@ -156,6 +157,15 @@ class DocumentService
                 if (strpos($expirationDate, '-') !== false) {
                     // Если дата в формате DD.MM.YYYY, преобразуем в YYYY-MM-DD
                     $expirationDate = \DateTime::createFromFormat('Y-m-d', $expirationDate)->format('d.m.Y');
+                }
+            }
+
+            // 2. Преобразование формата даты expDate
+            if ($productionDate) {
+                // Проверяем, в каком формате пришла дата
+                if (strpos($productionDate, '-') !== false) {
+                    // Если дата в формате DD.MM.YYYY, преобразуем в YYYY-MM-DD
+                    $productionDate = \DateTime::createFromFormat('Y-m-d', $productionDate)->format('d.m.Y');
                 }
             }
 
@@ -185,6 +195,7 @@ class DocumentService
                     $docOffer->getOffers->of_weight . 'гр.',
                 'ao_batch' => $batch,
                 'ao_expiration_date' => $expirationDate,
+                'ao_production_date' => $productionDate,
                 'ao_barcode' => $barcode,
                 'ao_expected' => $docOffer->ao_expected,
                 'ao_accepted' => $acceptCount,

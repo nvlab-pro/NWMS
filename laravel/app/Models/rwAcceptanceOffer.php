@@ -24,6 +24,7 @@ class rwAcceptanceOffer extends Model implements AuditableContract
         'ao_acceptance_id',
         'ao_offer_id',
         'ao_batch',
+        'ao_production_date',
         'ao_expiration_date',
         'ao_barcode',
         'ao_expected',

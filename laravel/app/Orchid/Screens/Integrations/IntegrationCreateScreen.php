@@ -53,6 +53,9 @@ class IntegrationCreateScreen extends Screen
                     ->title(CustomTranslator::get('Токен'))
                     ->required(),
 
+                Input::make('integration.int_pickup_point')
+                    ->title(CustomTranslator::get('Точка забора')),
+
                 Select::make('integration.int_ds_id')
                     ->title(CustomTranslator::get('Служба доставки'))
                     ->fromModel(rwDeliveryService::query()->get(), 'ds_name', 'ds_id')

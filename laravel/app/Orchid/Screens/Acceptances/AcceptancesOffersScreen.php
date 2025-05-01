@@ -27,6 +27,7 @@ class AcceptancesOffersScreen extends Screen
 {
 
     protected $acceptId, $shopId, $whId, $whName, $docStatus, $docDate;
+    protected $isExpirationDate, $isBatch, $isProductionDate;
 
 //    public function screenBaseView(): string
 //    {
@@ -51,6 +52,10 @@ class AcceptancesOffersScreen extends Screen
             $this->whName = $dbCurrentAcceptance->getWarehouse->wh_name;
             $this->docStatus = $dbCurrentAcceptance->acc_status;
             $this->docDate = $dbCurrentAcceptance->acc_date;
+
+            $this->isExpirationDate = $dbCurrentAcceptance->getWarehouse->wh_set_expiration_date;
+            $this->isBatch = $dbCurrentAcceptance->getWarehouse->wh_set_batch;
+            $this->isProductionDate = $dbCurrentAcceptance->getWarehouse->wh_set_production_date;
         }
 
         $currentDocument = new DocumentService($this->acceptId);
@@ -65,7 +70,10 @@ class AcceptancesOffersScreen extends Screen
             'docDate'                => $this->docDate,
             'dbAcceptOffersList'    => $collection,
             'route'                => $route,
-        ];
+
+            'isExpirationDate'      => $this->isExpirationDate,
+            'isBatch'               => $this->isBatch,
+            'isProductionDate'      => $this->isProductionDate,        ];
     }
 
     public function name(): ?string
@@ -247,9 +255,10 @@ class AcceptancesOffersScreen extends Screen
     {
 
         $validatedData = $request->validate([
+            'docOfferProdDate.*' => 'nullable|date', // Каждая дата должна быть обязательной и формата даты
             'docOfferExpDate.*' => 'nullable|date', // Каждая дата должна быть обязательной и формата даты
-            'docOfferBarcode.*' => 'nullable|string|max:30', // Штрих-код может быть пустым, но если указан, то это строка
             'docOfferBatch.*' => 'nullable|string|max:15',
+            'docOfferBarcode.*' => 'nullable|string|max:30', // Штрих-код может быть пустым, но если указан, то это строка
             'docOfferExept.*' => 'nullable|numeric|min:0', // Ожидаемое количество должно быть числом >= 0
             'docOfferAccept.*' => 'nullable|numeric|min:0', // Принятое количество должно быть числом >= 0
             'docOfferPrice.*' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
@@ -265,7 +274,7 @@ class AcceptancesOffersScreen extends Screen
 
         $countExpected = $countAccepted = $countPlaced = 0;
 
-        foreach ($validatedData['docOfferExpDate'] as $id => $expirationDate) {
+        foreach ($validatedData['docOfferId'] as $id => $expirationDate) {
 
             $offer = rwAcceptanceOffer::find($id);
 
@@ -286,8 +295,9 @@ class AcceptancesOffersScreen extends Screen
                     $validatedData['docOfferAccept'][$id],
                     $validatedData['docOfferBarcode'][$id],
                     $validatedData['docOfferPrice'][$id],
-                    $expirationDate,
-                    $validatedData['docOfferBatch'][$id]
+                    $validatedData['docOfferExpDate'][$id] ?? null,
+                    $validatedData['docOfferBatch'][$id] ?? null,
+                    $validatedData['docOfferProdDate'][$id] ?? null
                 );
 
                 $countExpected += $offer->ao_expected;
