@@ -65,6 +65,10 @@ class OrdersScreen extends Screen
             Link::make(CustomTranslator::get('Создать новый заказ'))
                 ->icon('bs.plus-circle')
                 ->route('platform.orders.create.index'),
+
+            Link::make(CustomTranslator::get('Импорт заказа'))
+                ->icon('bs.cloud-upload')
+                ->route('platform.orders.import', 0),
         ];
     }
 

@@ -37,6 +37,15 @@
                     <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Тип') }}</th>
                     <th class="table-secondary turnoverTD">{{ CustomTranslator::get('№ документа') }}</th>
                     <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Статус') }}</th>
+                    @if($dbWh->wh_set_production_date == 1)
+                        <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Дата производства') }}</th>
+                    @endif
+                    @if($dbWh->wh_set_expiration_date == 1)
+                        <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Срок годности') }}</th>
+                    @endif
+                    @if($dbWh->wh_set_batch == 1)
+                        <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Батч') }}</th>
+                    @endif
                     <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Место') }}</th>
                     <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Количество') }}</th>
                     <th class="table-secondary turnoverTD">{{ CustomTranslator::get('Итого') }}</th>
@@ -90,6 +99,21 @@
                         <td class="{{ $className }} turnoverTD">
                             {!! $docStatus[$item->whci_id] !!}
                         </td>
+                        @if($dbWh->wh_set_production_date == 1)
+                            <td class="{{ $className }} turnoverTD">
+                                {{ $item->whci_production_date }}
+                            </td>
+                        @endif
+                        @if($dbWh->wh_set_expiration_date == 1)
+                            <td class="{{ $className }} turnoverTD">
+                                {{ $item->whci_expiration_date }}
+                            </td>
+                        @endif
+                        @if($dbWh->wh_set_batch == 1)
+                            <td class="{{ $className }} turnoverTD">
+                                {{ $item->whci_batch }}
+                            </td>
+                        @endif
                         <td class="{{ $className }} turnoverTD">
                             <div class="place-container">
                                 @if($docPlace[$item->whci_id] == '')

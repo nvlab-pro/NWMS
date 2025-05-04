@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Exports\OffersExport;
+use App\Exports\OfferTurnoverExport;
 use App\Models\rwOffer;
 use App\Orchid\Screens\Domains\DomainsCreateScreen;
 use App\Orchid\Screens\Domains\DomainsScreen;
@@ -265,6 +266,10 @@ Route::get('offers/export', function () {
     return (new \App\Exports\OffersExport($filters))->download('offers.xlsx');
 })->name('platform.offers.export');
 
+Route::get('offers/turnover/export/{whId}/{offerId}', function ($whId, $offerId) {
+    return Excel::download(new OfferTurnoverExport($whId, $offerId), 'offers_turnover.xlsx');
+})->name('platform.offers.turnover.export');
+
 Route::screen('offers', \App\Orchid\Screens\Offers\OffersScreen::class)
     ->name('platform.offers.index')
     ->breadcrumbs(fn(Trail $trail) => $trail
@@ -318,6 +323,12 @@ Route::screen('orders/{orderId}/edit', \App\Orchid\Screens\Orders\OrderEditScree
     ->breadcrumbs(fn(Trail $trail, $orderId) => $trail
         ->parent('platform.orders.index')
         ->push(CustomTranslator::get('Создание нового заказа'), route('platform.orders.edit', $orderId)));
+
+Route::screen('orders/{orderId}/import', \App\Orchid\Screens\Orders\OrdersImportScreen::class)
+    ->name('platform.orders.import')
+    ->breadcrumbs(fn(Trail $trail, $orderId) => $trail
+        ->parent('platform.orders.index')
+        ->push(CustomTranslator::get('Импорт приходных накладных'), route('platform.orders.import', $orderId)));
 
 // ******************************************************
 // *** Список магазинов

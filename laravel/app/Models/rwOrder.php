@@ -60,6 +60,69 @@ class rwOrder extends Model implements AuditableContract
         'o_status_id',
     ];
 
+    protected $importDescriptions = [
+        'of_id'             => [
+            'name'              => 'of_id',
+            'description'       => 'ID товара в системе. Необязательное, но если указано, будет использоваться для поиска товара в первую очередь.',
+            'type'              => 'ключ, приоритет 1',
+            'defaultValue'      => '-',
+
+        ],
+        'of_ext_id'            => [
+            'name'        => 'of_ext_id',
+            'description' => 'Внешний ID товара (ID товара в системе клиента). Необязательное. Может использоваться для добавления в документ товара, если товар с таким внешним ID уже существует и не задано поле of_id.',
+            'type'        => 'ключ, приоритет 2',
+            'defaultValue'      => '-',
+        ],
+        'of_sku'            => [
+            'name'        => 'of_sku',
+            'description' => 'SKU товара. Необязательное. Может использоваться для обновления товара, если товар с таким SKU уже существует и не задано поле of_id или of_ext_id.',
+            'type'        => 'ключ, приоритет 3',
+            'defaultValue'      => '-',
+        ],
+        'of_article'        => [
+            'name'        => 'of_article',
+            'description' => 'Артикул товара. Необязательное. Может использоваться для обновления товара, если товар с таким артикулом уже существует и не заданы поля of_id, of_ext_id или of_sku.',
+            'type'        => 'ключ, приоритет 4',
+            'defaultValue'      => '-',
+        ],
+        'oo_qty'           => [
+            'name'        => 'oo_qty',
+            'description' => 'Количество отгружаемого товара',
+            'type'        => 'поле обязательно',
+            'defaultValue'      => '-',
+        ],
+        'oo_oc_price'           => [
+            'name'        => 'oo_oc_price',
+            'description' => 'Оценочная стоимость товара',
+            'type'        => 'необязательно',
+            'defaultValue'      => '0',
+        ],
+        'oo_price'           => [
+            'name'        => 'oo_price',
+            'description' => 'Стоимость товара',
+            'type'        => 'необязательно',
+            'defaultValue'      => '0',
+        ],
+//        'oo_expiration_date' => [
+//            'name'        => 'oo_expiration_date',
+//            'description' => 'Срок годности товара в формате (YYYY-MM-DD).',
+//            'type'        => 'необязательно',
+//            'defaultValue'      => '-',
+//        ],
+//        'oo_batch'           => [
+//            'name'        => 'oo_batch',
+//            'description' => 'Батч или партия - это группа товаров, произведённых или поступивших одновременно и имеющих одинаковые характеристики (дата производства, срок годности, поставщик и т.п.).',
+//            'type'        => 'необязательно',
+//            'defaultValue'      => '-',
+//        ],
+    ];
+
+    public static function getImportDescriptions(): array
+    {
+        return (new self())->importDescriptions;
+    }
+
     public function getShop() {
         return $this->hasOne(rwShop::class, 'sh_id', 'o_shop_id');
     }

@@ -17,6 +17,7 @@ use App\WhCore\WhCore;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Fields\Label;
 use Orchid\Screen\Screen;
@@ -248,6 +249,11 @@ class OrderEditScreen extends Screen
                     'docId' => $this->order->o_id,
                     'status' => $this->order->o_status_id,
                 ]),
+
+            Link::make(CustomTranslator::get('Импорт заказа'))
+                ->icon('bs.cloud-upload')
+                ->canSee(in_array($this->order->o_status_id, [10]))
+                ->route('platform.orders.import', $this->order->o_id),
 
             Button::make(CustomTranslator::get($dbStatus->os_name))
                 ->style('background-color: ' . $dbStatus->os_bgcolor . ';' . 'color: ' . $dbStatus->os_color . ';')

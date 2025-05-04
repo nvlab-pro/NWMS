@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\Offers;
 namespace App\Exports;
 
 use App\Models\rwOffer;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
@@ -98,8 +99,18 @@ class OffersExport implements FromCollection, WithHeadings, WithColumnWidths
     public function headings(): array
     {
         return [
-            'ID', 'Название', 'Артикул', 'SKU', 'Цена', 'Оценочная цена',
-            'Вес', 'Длина', 'Ширина', 'Высота', 'Статус', 'Комментарий',
+            'ID',
+            CustomTranslator::get('Название'),
+            CustomTranslator::get('Артикул'),
+            CustomTranslator::get('SKU'),
+            CustomTranslator::get('Цена'),
+            CustomTranslator::get('Оценочная цена'),
+            CustomTranslator::get('Вес'),
+            CustomTranslator::get('Длина'),
+            CustomTranslator::get('Ширина'),
+            CustomTranslator::get('Высота'),
+            CustomTranslator::get('Статус'),
+            CustomTranslator::get('Комментарий'),
         ];
     }
 

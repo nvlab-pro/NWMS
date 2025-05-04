@@ -9,13 +9,14 @@ use App\Models\rwOrderOffer;
 use App\Models\rwPlace;
 use App\Models\rwWarehouse;
 use App\Services\CustomTranslator;
+use Orchid\Screen\Actions\Link;
 use Orchid\Support\Facades\Layout;
 use App\WhCore\WhCore;
 use Orchid\Screen\Screen;
 
 class TurnoverScreen extends Screen
 {
-    private $whName, $offerName;
+    private $whName, $offerName, $whId, $offerId;
 
     public function query($whId, $offerId): iterable
     {
@@ -28,6 +29,9 @@ class TurnoverScreen extends Screen
 
         $this->whName = $dbWh->wh_name;
         $this->offerName = $dbOffer->of_name;
+
+        $this->whId = $whId;
+        $this->offerId = $offerId;
 
         $docStatus = [];
         $docPlace = [];
@@ -119,6 +123,7 @@ class TurnoverScreen extends Screen
             'docStatus' => $docStatus,
             'docPlace' => $docPlace,
             'docPlace2' => $docPlace2,
+            'dbWh' => $dbWh,
         ];
     }
 
@@ -134,7 +139,13 @@ class TurnoverScreen extends Screen
 
     public function commandBar(): iterable
     {
-        return [];
+        return [
+
+            Link::make(CustomTranslator::get('Экспорт в Excel'))
+                ->route('platform.offers.turnover.export', [$this->whId, $this->offerId]) // 🔥 передаём фильтры из текущего запроса
+                ->icon('bs.cloud-download'),
+
+        ];
     }
 
     /**
