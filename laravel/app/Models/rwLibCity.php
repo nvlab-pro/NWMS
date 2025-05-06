@@ -15,6 +15,13 @@ class rwLibCity extends Model
 
     use AsSource, Filterable, Attachable, HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'lcit_country_id',
+        'lcit_name',
+        'lcit_coord_latitude',
+        'lcit_coord_longitude',
+    ];
+
     public static function perPage(): int
     {
         return 50;

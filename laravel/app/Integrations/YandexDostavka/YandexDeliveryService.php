@@ -63,13 +63,13 @@ class YandexDeliveryService
     public function getPickupPoints(array $filters = []): array
     {
         $payload = [
-            'latitude' => $filters['latitude'] ?? ['from' => 55.751310, 'to' => 55.886191],
-            'longitude' => $filters['longitude'] ?? ['from' => 37.584622, 'to' => 37.588269],
+            'latitude' => $filters['latitude'] ?? ['from' => 30.751310, 'to' => 70.886191],
+            'longitude' => $filters['longitude'] ?? ['from' => 25.000000, 'to' => 26.000000],
             'page' => $filters['page'] ?? 1,
             'page_size' => $filters['page_size'] ?? 100
         ];
 
-        return $this->request('post', '/b2b/platform/pickup-points/list', $payload);
+        return $this->request('post', '/b2b/platform/pickup-points/list', $filters);
     }
     /**
      * Получение списка городов на основе ПВЗ
