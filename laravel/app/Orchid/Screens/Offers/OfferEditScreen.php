@@ -267,6 +267,9 @@ class OfferEditScreen extends Screen
                         Button::make(CustomTranslator::get('Сохранить'))
                             ->type(Color::DARK)
                             ->style('margin-bottom: 20px;')
+                            ->parameters([
+                                '_token' => csrf_token(),
+                            ])
                             ->method('saveOffer'),
                     ]),
 

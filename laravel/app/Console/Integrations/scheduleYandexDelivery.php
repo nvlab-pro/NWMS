@@ -21,7 +21,6 @@ class scheduleYandexDelivery
 
 
             $long = 25;
-            $tmp = 0;
             $iteration = 0;
             $service = new YandexDeliveryService(
                 $integration->int_url,
@@ -29,7 +28,7 @@ class scheduleYandexDelivery
                 $integration->int_pickup_point
             );
 
-            while($iteration < 100) {
+            while($iteration < 300) {
 
                 $pickUps = $service->getPickupPoints([
                     'latitude' => ['from' => 30.00000, 'to' => 71.00000],
@@ -37,6 +36,8 @@ class scheduleYandexDelivery
                 ]);
 
                 dump($long . ' ' . '('.$iteration.')');
+
+                $tmp = 0;
 
                 foreach ($pickUps['points'] as $pickUp) {
                     $address = $pickUp['address'] ?? [];
