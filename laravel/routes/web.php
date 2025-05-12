@@ -1,9 +1,16 @@
 <?php
 
+use App\Console\Json\ShowPVZ;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return view('Site/index', ['lang' => 'en']);
+});
+
+Route::get('/calc/yandex_pickup_points', function (Request $request) {
+    $jsonPP = new ShowPVZ();
+    return $jsonPP->showYDPvz($request);
 });
 
 Route::get('/about_wms', function () {

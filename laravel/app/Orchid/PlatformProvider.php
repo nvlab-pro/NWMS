@@ -56,6 +56,11 @@ class PlatformProvider extends OrchidServiceProvider
                         ->route('platform.tables.queue.select')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker')),
 
+                    Menu::make(CustomTranslator::get('Столы маркировки'))
+                        ->icon('bs.envelope')
+                        ->route('platform.tables.marking.queue.select')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker')),
+
                 ]),
 
             Menu::make(CustomTranslator::get('Приемка товара'))
@@ -125,6 +130,11 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make(CustomTranslator::get('Настройка упаковки'))
                         ->icon('bs.dropbox')
                         ->route('platform.whmanagement.packing-process-settings.index')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+
+                    Menu::make(CustomTranslator::get('Настройка маркировки'))
+                        ->icon('bs.envelope')
+                        ->route('platform.whmanagement.marking-settings.index')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
 
                     Menu::make(CustomTranslator::get('Управление импортами'))

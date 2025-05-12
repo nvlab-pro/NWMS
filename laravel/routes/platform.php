@@ -210,14 +210,14 @@ Route::prefix('terminal')
     });
 
 // **************************************************
-// *** Терминал
+// *** Столы
 // **************************************************
 
 Route::prefix('tables')
     ->name('platform.tables')
     ->group(function () {
 
-        // Териминал -> Приемка товара (выбор товара)
+        // Стол упаковки -> Выбор очереди
         Route::screen('packing/queue', \App\Orchid\Screens\WorkTables\Packing\SelectPackingQueueScreen::class)
             ->name('.queue.select')
             ->breadcrumbs(function (Trail $trail) {
@@ -226,7 +226,7 @@ Route::prefix('tables')
                     ->push(CustomTranslator::get('Выбор очереди упаковки'), route('platform.tables.queue.select'));
             });
 
-        // Териминал -> Приемка товара (выбор товара)
+        // Стол упаковки -> Выбор стола
         Route::screen('packing/select/{queueId}', \App\Orchid\Screens\WorkTables\Packing\SelectPackingTableScreen::class)
             ->name('.packing.select')
             ->breadcrumbs(function (Trail $trail, $queueId) {
@@ -235,7 +235,7 @@ Route::prefix('tables')
                     ->push(CustomTranslator::get('Выбор стола упаковки'), route('platform.tables.packing.select', $queueId));
             });
 
-        // Териминал -> Приемка товара (выбор товара)
+        // Стол упаковки -> Сама упаковка
         Route::screen('packing/scan/{queueId}/{tableId}/{orderId}', \App\Orchid\Screens\WorkTables\Packing\PackingScreen::class)
             ->name('.packing.scan')
             ->breadcrumbs(function (Trail $trail, $queueId, $tableId, $orderId) {
@@ -244,7 +244,7 @@ Route::prefix('tables')
                     ->push(CustomTranslator::get('Упаковка заказов'), route('platform.tables.packing.scan', [$queueId, $tableId, $orderId]));
             });
 
-        // Териминал -> Приемка товара (выбор товара)
+        // Стол упаковки -> Печать упаковочного листа
         Route::screen('packing/assembling/print/{queueId}/{tableId}/{orderId}/{action}', \App\Orchid\Screens\WorkTables\Packing\PrintAssemblingList::class)
             ->name('.packing.assembling.print')
             ->breadcrumbs(function (Trail $trail, $queueId, $tableId, $orderId, $action) {
@@ -252,6 +252,26 @@ Route::prefix('tables')
                     ->parent('platform.tables.packing.select', $queueId)
                     ->push(CustomTranslator::get('Печать листа подбора'), route('platform.tables.packing.assembling.print', [$queueId, $tableId, $orderId, $action]));
             });
+
+        // Стол маркировки -> Выбор очереди
+        Route::screen('marking/queue', \App\Orchid\Screens\WorkTables\Marking\SelectMarkingQueueScreen::class)
+            ->name('.marking.queue.select')
+            ->breadcrumbs(function (Trail $trail) {
+                return $trail
+                    ->parent('platform.index')
+                    ->push(CustomTranslator::get('Выбор очереди упаковки'), route('platform.tables.marking.queue.select'));
+            });
+
+        // Стол маркировки -> Выбор стола
+        Route::screen('marking/{queueId}/scan', \App\Orchid\Screens\WorkTables\Marking\MarkingScreen::class)
+            ->name('.marking.scan')
+            ->breadcrumbs(function (Trail $trail, $queueId) {
+                return $trail
+                    ->parent('platform.index')
+                    ->push(CustomTranslator::get('Выбор стола упаковки'), route('platform.tables.marking.scan', $queueId));
+            });
+
+
 
     });
 
@@ -401,6 +421,19 @@ Route::screen('whmanagement/imports/{importId}/details', \App\Orchid\Screens\Imp
     ->breadcrumbs(fn(Trail $trail, $importId) => $trail
         ->parent('platform.whmanagement.imports.index')
         ->push(CustomTranslator::get('Данные импорта'), route('platform.whmanagement.import.details', $importId)));
+
+// Настройки маркировки
+Route::screen('whmanagement/marking-settings', \App\Orchid\Screens\WhManagement\MarkingSettings\MarkingSettingsScreen::class)
+    ->name('platform.whmanagement.marking-settings.index')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(CustomTranslator::get('Настройка маркировки'), route('platform.whmanagement.marking-settings.index')));
+
+Route::screen('whmanagement/marking-settings/{mId}/edit', \App\Orchid\Screens\WhManagement\MarkingSettings\MarkingSettingsEditScreen::class)
+    ->name('platform.whmanagement.marking-settings.edit')
+    ->breadcrumbs(fn(Trail $trail, $mId) => $trail
+        ->parent('platform.whmanagement.packing-process-settings.index')
+        ->push(CustomTranslator::get('Редактирование настроек упаковки'), route('platform.whmanagement.marking-settings.edit', $mId)));
 
 // ******************************************************
 // *** Список складов
