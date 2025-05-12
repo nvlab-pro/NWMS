@@ -53,11 +53,12 @@ class ShowPVZ
 
                 }
 
-                return response(
-                    implode(",\n", array_map(fn($i) => json_encode($i, JSON_UNESCAPED_UNICODE), $arPPList)),
-                    200,
-                    ['Content-Type' => 'application/json']
-                );
+                return response()->json($arPPList, 200);
+//                return response(
+//                    implode(",\n", array_map(fn($i) => json_encode($i, JSON_UNESCAPED_UNICODE), $arPPList)),
+//                    200,
+//                    ['Content-Type' => 'application/json']
+//                );
 
             } else {
 //                return response()->json(['error' => 'City not found'], 404);
