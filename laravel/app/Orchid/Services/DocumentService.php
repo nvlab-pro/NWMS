@@ -118,6 +118,7 @@ class DocumentService
                 'ua_shop_id'     => $this->shopId,      // ID магазина, если применимо
                 'ua_place_id'    => $placeId,     // ID ячейки склада
                 'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                'ua_doc_id'      => $dbOffer->whci_doc_id,     // ID выбранного товара
                 'ua_entity_id'   => $dbOffer->whci_offer_id,     // ID выбранного товара
                 'ua_quantity'    => $scanCount,          // Количество товара
             ]);

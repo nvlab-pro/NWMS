@@ -16,7 +16,7 @@ class WarehouseUserActionService
 
         // 2. Валидация обязательных полей
         $requiredFields = ['ua_user_id','ua_lat_id','ua_domain_id',
-            'ua_wh_id','ua_entity_type','ua_entity_id',
+            'ua_wh_id','ua_entity_type','ua_doc_id','ua_entity_id',
             'ua_quantity','ua_time_start'];
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {

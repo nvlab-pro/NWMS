@@ -22,6 +22,7 @@ class rwUserAction extends Model
         'ua_shop_id',
         'ua_place_id',
         'ua_entity_type',
+        'ua_doc_id',
         'ua_entity_id',
         'ua_quantity',
         'ua_time_start',
