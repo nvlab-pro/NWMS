@@ -10,6 +10,8 @@ use App\Models\rwOrderOffer;
 use App\Models\rwStatsRest;
 use App\Models\WhcRest;
 use App\Models\whcWhItem;
+use App\Orchid\Services\WarehouseUserActionService;
+use Auth;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -97,14 +99,12 @@ class WhCore
                 // Если версия 1, нужно добавить новое поле whci_production_date
                 if ($version == 1) {
 
-                    Schema::table($this->itemTableName, function (Blueprint $table) {
-                        $table->date('whci_production_date')->nullable()->index()->after('whci_sign');
-                    });
-
                     $whcWarehouse->whc_ver = 2;
                     $whcWarehouse->save();
 
-
+                    Schema::table($this->itemTableName, function (Blueprint $table) {
+                        $table->date('whci_production_date')->nullable()->index()->after('whci_sign');
+                    });
 
                 }
 
@@ -507,7 +507,6 @@ class WhCore
                     ->where('whci_expiration_date', $exeptDate)
                     ->where('whci_batch', $batch)
                     ->first();
-
             }
         }
 
@@ -526,6 +525,26 @@ class WhCore
                         'whci_count' => $lastCount,
                         'whci_cash' => $currentTime,
                     ]);
+
+                $currentUser = Auth::user();
+
+                $actionType = 4;
+                if ($itemId->whci_sign > 0) $actionType = 1;
+
+                // Сохраняем данные в статистике
+                WarehouseUserActionService::logAction([
+                    'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                    'ua_lat_id'      => $actionType,            // ID типа действия (например, 1 — "подбор товара")
+                    'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                    'ua_wh_id'       => $this->warehouseId, // ID склада
+                    'ua_shop_id'     => null,      // ID магазина, если применимо
+                    'ua_place_id'    => NULL,     // ID ячейки склада
+                    'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                    'ua_entity_id'   => $itemId->whci_offer_id,     // ID выбранного товара
+                    'ua_quantity'    => $count,          // Количество товара
+                ]);
+
+
             }
 
             return true;
@@ -570,6 +589,8 @@ class WhCore
             'placeId' => 'nullable|numeric',
         ]);
 
+        $currentUser = Auth::user();
+
         if ($validator->fails()) {
             // Обработка ошибок валидации, например, выброс исключения
             throw new \Exception('Validation Error: ' . $validator->errors()->first());
@@ -602,6 +623,23 @@ class WhCore
 
         if (isset($dbCurrentOffer->whci_id)) {
 
+            $actionType = 4;
+            if ($dbCurrentOffer->whci_sign > 0) $actionType = 1;
+
+            // Сохраняем данные в статистике
+            WarehouseUserActionService::logAction([
+                'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                'ua_lat_id'      => $actionType,            // ID типа действия (например, 1 — "подбор товара")
+                'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                'ua_wh_id'       => $this->warehouseId, // ID склада
+                'ua_shop_id'     => null,      // ID магазина, если применимо
+                'ua_place_id'    => $placeId,     // ID ячейки склада
+                'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                'ua_entity_id'   => $offerId,     // ID выбранного товара
+                'ua_quantity'    => $count,          // Количество товара
+            ]);
+
+            // Сохраняем данные в базе
             DB::table('whc_wh' . $this->warehouseId . '_items')->where('whci_id', $dbCurrentOffer->whci_id)->update([
                 'whci_date' => $docDate,
                 'whci_count' => $count,
@@ -618,6 +656,23 @@ class WhCore
 
             $sign = rwLibTypeDoc::where('td_id', $docType)->first()->td_sign;
 
+            $actionType = 4;
+            if ($sign > 0) $actionType = 1;
+
+            // Сохраняем данные в статистике
+            WarehouseUserActionService::logAction([
+                'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                'ua_lat_id'      => $actionType,            // ID типа действия (например, 1 — "подбор товара")
+                'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                'ua_wh_id'       => $this->warehouseId, // ID склада
+                'ua_shop_id'     => null,      // ID магазина, если применимо
+                'ua_place_id'    => $placeId,     // ID ячейки склада
+                'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                'ua_entity_id'   => $offerId,     // ID выбранного товара
+                'ua_quantity'    => $count,          // Количество товара
+            ]);
+
+            // Сохраняем данные в базе
             DB::table('whc_wh' . $this->warehouseId . '_items')->insert([
                 'whci_date' => $docDate,
                 'whci_status' => $status,

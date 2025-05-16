@@ -107,7 +107,20 @@ class DocumentService
             }
 
             // Сохраняем данные в лог
-            WhActionLog::saveActionLog($this->whId, 2, date('Y-m-d H:i:s', time()), $currentUser->id, $whOfferId, $scanCount);
+//            WhActionLog::saveActionLog($this->whId, 2, date('Y-m-d H:i:s', time()), $currentUser->id, $whOfferId, $scanCount);
+
+            // Сохраняем данные в статистике
+            WarehouseUserActionService::logAction([
+                'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                'ua_lat_id'      => 2,            // ID типа действия (например, 2 — "привязка товара")
+                'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                'ua_wh_id'       => $this->whId, // ID склада
+                'ua_shop_id'     => $this->shopId,      // ID магазина, если применимо
+                'ua_place_id'    => $placeId,     // ID ячейки склада
+                'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                'ua_entity_id'   => $dbOffer->whci_offer_id,     // ID выбранного товара
+                'ua_quantity'    => $scanCount,          // Количество товара
+            ]);
 
             $this->updateRest(1);
 

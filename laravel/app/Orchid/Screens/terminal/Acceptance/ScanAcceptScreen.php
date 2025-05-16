@@ -159,7 +159,7 @@ class ScanAcceptScreen extends Screen
                     $currentDocument->updateRest(1);
 
                     // Пересчитываем остатки
-                    $currentWarehouse = new WhCore($validatedData['offerWhId']);
+                    $currentWarehouse = new WhCore($this->whId);
                     $currentWarehouse->calcRestOffer($validatedData['offerId']);
 
                     $validatedData['offerWhId'] = 0;

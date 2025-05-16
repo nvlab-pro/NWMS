@@ -68,9 +68,10 @@ class DatamatrixScreen extends Screen
                 TD::make('dmt_id', CustomTranslator::get('ID'))->sort()->align('center'),
 
                 TD::make('dmt_status', CustomTranslator::get('Статус'))->render(function (rwDatamatrix $code) {
-                    return $code->dmt_status
-                        ? CustomTranslator::get('❌')
-                        : CustomTranslator::get('✅');
+
+                    if ($code->dmt_status == 0) return '-';
+                    if ($code->dmt_status == 1) return '❌';
+                    if ($code->dmt_status == 2) return '✅';
                 })->align('center'),
 
                 TD::make('dmt_barcode', CustomTranslator::get('Штрихкод'))->filter()->align('center'),
@@ -78,6 +79,9 @@ class DatamatrixScreen extends Screen
                 TD::make('dmt_short_code', CustomTranslator::get('Короткий код'))->filter()->align('center'),
 
                 TD::make('dmt_datamatrix', CustomTranslator::get('Код DataMatrix'))->filter()->align('center'),
+
+                TD::make('dmt_acceptance_id', CustomTranslator::get('Документ приемки'))->filter()->align('center'),
+                TD::make('dmt_order_id', CustomTranslator::get('Документ отгрузки'))->filter()->align('center'),
 
                 TD::make(CustomTranslator::get('Действия'))->render(function (rwDatamatrix $code) {
                     if ($code->dmt_status) {
@@ -101,7 +105,7 @@ class DatamatrixScreen extends Screen
         $code = rwDatamatrix::find($request->get('id'));
 
         if ($code) {
-            $code->dmt_status = 1;
+            $code->dmt_status = 2;
             $code->save();
 
             Alert::success(CustomTranslator::get('Код успешно погашен!'));
