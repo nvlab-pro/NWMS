@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class WarehouseUserActionService
 {
-    public static function logAction(array $data): rwUserAction
+    public static function logAction(array $data): rwUserAction|bool
     {
         // 1. Автозаполнение времени начала, если не указано
         if (!isset($data['ua_time_start'])) {

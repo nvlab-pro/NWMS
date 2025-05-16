@@ -22,7 +22,7 @@ use App\Models\WhcWarehouse;
 class WhCore
 {
     private $warehouseId, $itemTableName;
-    private $version = 1;
+    private $version = 2;
 
     /*
      *  whci_status:
