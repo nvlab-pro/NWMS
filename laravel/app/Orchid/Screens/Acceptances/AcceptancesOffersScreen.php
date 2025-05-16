@@ -349,18 +349,26 @@ class AcceptancesOffersScreen extends Screen
 
     public function asyncGetOfferDimensions(int $offerId): array
     {
-        $offer = rwAcceptanceOffer::find($offerId);
-
-        if (!$offer || !$offer->getOffers) {
-            return ['error' => 'Offer not found or missing related data'];
-        }
-
+//        $offer = rwAcceptanceOffer::find($offerId);
+//
+//        if (!$offer || !$offer->getOffers) {
+//            return ['error' => 'Offer not found or missing related data'];
+//        }
+//
+//        return [
+//            'offer' => [
+//                'dimension_x' => $offer->getOffers->of_dimension_x ?? 0,
+//                'dimension_y' => $offer->getOffers->of_dimension_y ?? 0,
+//                'dimension_z' => $offer->getOffers->of_dimension_z ?? 0,
+//                'weight' => $offer->getOffers->of_weight ?? 0,
+//            ],
+//        ];
         return [
             'offer' => [
-                'dimension_x' => $offer->getOffers->of_dimension_x ?? 0,
-                'dimension_y' => $offer->getOffers->of_dimension_y ?? 0,
-                'dimension_z' => $offer->getOffers->of_dimension_z ?? 0,
-                'weight' => $offer->getOffers->of_weight ?? 0,
+                'dimension_x' => 1,
+                'dimension_y' => 2,
+                'dimension_z' => 3,
+                'weight' => 4,
             ],
         ];
     }

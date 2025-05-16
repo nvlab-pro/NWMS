@@ -13,6 +13,7 @@ use App\Models\WhcRest;
 use App\Models\whcWhItem;
 use App\Orchid\Services\WarehouseUserActionService;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -613,6 +614,9 @@ class WhCore
             if (strpos($prodDate, '.') !== false) {
                 // Если дата в формате DD.MM.YYYY, преобразуем в YYYY-MM-DD
                 $prodDate = \DateTime::createFromFormat('d.m.Y', $prodDate)->format('Y-m-d');
+            }
+            if (is_numeric($prodDate)) {
+                $prodDate = Carbon::createFromTimestamp($prodDate)->toDateString();
             }
         }
 
