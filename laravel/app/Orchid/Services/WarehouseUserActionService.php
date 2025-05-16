@@ -20,7 +20,7 @@ class WarehouseUserActionService
             'ua_quantity','ua_time_start'];
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
-                throw new \InvalidArgumentException("Field {$field} is required.");
+                return false;
             }
         }
 
