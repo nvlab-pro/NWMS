@@ -88,6 +88,10 @@ class UserListLayout extends Table
                     ->icon('bs.three-dots-vertical')
                     ->list([
 
+                        Link::make(__('Badge'))
+                            ->route('platform.systems.users.badge', $user->id)
+                            ->icon('bs.qr-code-scan'),
+
                         Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.systems.users.edit', $user->id)
                             ->icon('bs.pencil'),

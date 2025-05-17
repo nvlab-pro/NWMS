@@ -309,7 +309,7 @@ class AcceptancesOffersScreen extends Screen
                         'ua_lat_id'      => 1,            // ID типа действия (например, 1 — "подбор товара")
                         'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
                         'ua_wh_id'       => $validatedData['whId'], // ID склада
-                        'ua_shop_id'     => $this->shopId,      // ID магазина, если применимо
+                        'ua_shop_id'     => $validatedData['shopId'],      // ID магазина, если применимо
                         'ua_place_id'    => NULL,     // ID ячейки склада
                         'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                         'ua_doc_id'      => $validatedData['acceptId'],     // ID документа

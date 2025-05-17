@@ -722,12 +722,70 @@ Route::prefix('delivery-services')
             );
     });
 
+// *********************
+// *** Фиксация входа
+// *********************
+
+Route::prefix('ea')->name('platform.ea')->group(function () {
+
+    // Форма заказа складов
+    Route::screen('main', \App\Orchid\Screens\EmployeesAttendance\EAScreen::class)
+        ->name('.main')
+        ->breadcrumbs(fn(Trail $trail) => $trail
+            ->parent('platform.index')
+            ->push(CustomTranslator::get('Фиксация входа/выхода')));
+
+    // Форма заказа складов
+    Route::screen('users', \App\Orchid\Screens\EmployeesAttendance\UsersListScreen::class)
+        ->name('.users')
+        ->breadcrumbs(fn(Trail $trail) => $trail
+            ->parent('platform.index')
+            ->push(CustomTranslator::get('Статистика')));
+
+    // Форма заказа складов
+    Route::screen('attendance', \App\Orchid\Screens\EmployeesAttendance\UserAttendanceScreen::class)
+        ->name('.attendance')
+        ->breadcrumbs(fn(Trail $trail) => $trail
+            ->parent('platform.index')
+            ->push(CustomTranslator::get('Посещаемость')));
+
+    // Форма заказа складов
+    Route::screen('rests', \App\Orchid\Screens\EmployeesAttendance\UsersRestScreen::class)
+        ->name('.rests')
+        ->breadcrumbs(fn(Trail $trail) => $trail
+            ->parent('platform.index')
+            ->push(CustomTranslator::get('Посещаемость')));
+
+    // Форма заказа складов
+    Route::screen('rests/add', \App\Orchid\Screens\EmployeesAttendance\UsersRestEditScreen::class)
+        ->name('.rests.add')
+        ->breadcrumbs(fn(Trail $trail) => $trail
+            ->parent('platform.index')
+            ->push(CustomTranslator::get('Посещаемость')));
+
+    // Форма заказа складов
+    Route::screen('rests/edit/{restId}', \App\Orchid\Screens\EmployeesAttendance\UsersRestEditScreen::class)
+        ->name('.rests.edit')
+        ->breadcrumbs(function (Trail $trail, $restId) {
+            $trail->parent('platform.index')
+                ->push(CustomTranslator::get('Посещаемость'), route('platform.ea.rests.edit', $restId));
+        });
+
+});
+
 // Platform > Profile
 Route::screen('profile', UserProfileScreen::class)
     ->name('platform.profile')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
         ->push(CustomTranslator::get('Профиль'), route('platform.profile')));
+
+// Platform > System > Users > User
+Route::screen('users/{user}/badge', \App\Orchid\Screens\User\BadgeScreen::class)
+    ->name('platform.systems.users.badge')
+    ->breadcrumbs(fn(Trail $trail, $user) => $trail
+        ->parent('platform.systems.users')
+        ->push($user->name, route('platform.systems.users.badge', $user)));
 
 // Platform > System > Users > User
 Route::screen('users/{user}/edit', UserEditScreen::class)

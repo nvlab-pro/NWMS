@@ -176,7 +176,7 @@ class ScanAcceptScreen extends Screen
                         'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                         'ua_doc_id'      => $this->docId,     // ID выбранного товара
                         'ua_entity_id'   => $validatedData['offerId'],     // ID выбранного товара
-                        'ua_quantity'    => $count,          // Количество товара
+                        'ua_quantity'    => $validatedData['scanCount'],          // Количество товара
                     ]);
 
                 } else {
@@ -263,8 +263,6 @@ class ScanAcceptScreen extends Screen
                 if ($validatedData['offerWhId'] > 0) {
                     $currentOffer = $currentDocument->getAcceptanceOffer($validatedData['offerWhId']);
                 }
-
-//                dump($currentOffer);
 
             }
 

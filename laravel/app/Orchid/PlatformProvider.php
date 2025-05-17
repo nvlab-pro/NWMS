@@ -200,6 +200,36 @@ class PlatformProvider extends OrchidServiceProvider
                 ]),
 
             // ************************
+            // *    Фиксация входа      *
+            // ************************
+
+            Menu::make(CustomTranslator::get('Посещаемость'))
+                ->icon('bs.file-person-fill')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                ->list([
+                    Menu::make(CustomTranslator::get('Фиксация входа'))
+                        ->icon('bs.file-person')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                        ->route('platform.ea.main'),
+
+                    Menu::make(CustomTranslator::get('Статистика'))
+                        ->icon('bs.reception-3')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                        ->route('platform.ea.users'),
+
+                    Menu::make(CustomTranslator::get('Посещаемость'))
+                        ->icon('bs.person-walking')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                        ->route('platform.ea.attendance'),
+
+                    Menu::make(CustomTranslator::get('Пропуски'))
+                        ->icon('bs.person-arms-up')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                        ->route('platform.ea.rests'),
+
+                ]),
+
+            // ************************
             // *     Пользователи      *
             // ************************
 

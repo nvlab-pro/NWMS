@@ -95,8 +95,6 @@ class SelectOrderSOAMScreen extends Screen
 
                     if ($dbOrderAssembly->oa_cash != $cash) {
 
-                        dump($dbOrderAssembly->oa_id);
-
                         // Сохраняем данные в статистике
                         WarehouseUserActionService::logAction([
                             'ua_user_id'     => $currentUser->id, // ID текущего кладовщика

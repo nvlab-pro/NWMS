@@ -18,8 +18,3 @@ Artisan::command('updateYDPickUps', function () {
     $current = new scheduleYandexDelivery();
     $current->getPickUpsList();
 })->everyTwoHours();
-
-Artisan::command('checkCron', function () {
-    \Log::info('[Laravel schedule is alive] ' . now());
-})->everyMinute();
-
