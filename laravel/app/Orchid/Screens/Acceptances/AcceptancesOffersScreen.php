@@ -6,8 +6,10 @@ use App\Models\rwAcceptance;
 use App\Models\rwAcceptanceOffer;
 use App\Models\rwBarcode;
 use App\Models\rwOffer;
+use App\Models\rwUserAction;
 use App\Orchid\Layouts\Acceptances\AcceptancesOffersTable;
 use App\Orchid\Services\DocumentService;
+use App\Orchid\Services\WarehouseUserActionService;
 use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
@@ -270,6 +272,8 @@ class AcceptancesOffersScreen extends Screen
             'docDate' => 'nullable|date_format:Y-m-d H:i:s', // Каждая дата должна быть обязательной и формата даты
         ]);
 
+        $currentUser = Auth::user();
+
         $currentWarehouse = new WhCore($validatedData['whId']);
 
         $countExpected = $countAccepted = $countPlaced = 0;
@@ -284,6 +288,35 @@ class AcceptancesOffersScreen extends Screen
                 $offer->save();
 
                 $status = 0;
+
+                $tmpCount = $validatedData['docOfferAccept'][$id];
+
+                $sumCount = rwUserAction::where('ua_doc_id', $validatedData['acceptId'])
+                    ->where('ua_entity_id', $validatedData['docOfferId'][$id])
+                    ->where('ua_wh_id', $validatedData['whId'])
+                    ->where('ua_lat_id', 1)
+                    ->where('ua_entity_type', 'offer')
+                    ->sum('ua_quantity');
+
+                if ($sumCount > 0) {
+                    $tmpCount = $validatedData['docOfferAccept'][$id] - $sumCount;
+                }
+
+                if ($tmpCount > 0) {
+                    // Сохраняем данные в статистике
+                    WarehouseUserActionService::logAction([
+                        'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                        'ua_lat_id'      => 1,            // ID типа действия (например, 1 — "подбор товара")
+                        'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                        'ua_wh_id'       => $validatedData['whId'], // ID склада
+                        'ua_shop_id'     => $this->shopId,      // ID магазина, если применимо
+                        'ua_place_id'    => NULL,     // ID ячейки склада
+                        'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                        'ua_doc_id'      => $validatedData['acceptId'],     // ID документа
+                        'ua_entity_id'   => $validatedData['docOfferId'][$id],     // ID выбранного товара
+                        'ua_quantity'    => $tmpCount,          // Количество товара
+                    ]);
+                }
 
                 $currentWarehouse->saveOffers(
                     $validatedData['acceptId'],
@@ -349,26 +382,18 @@ class AcceptancesOffersScreen extends Screen
 
     public function asyncGetOfferDimensions(int $offerId): array
     {
-//        $offer = rwAcceptanceOffer::find($offerId);
-//
-//        if (!$offer || !$offer->getOffers) {
-//            return ['error' => 'Offer not found or missing related data'];
-//        }
-//
-//        return [
-//            'offer' => [
-//                'dimension_x' => $offer->getOffers->of_dimension_x ?? 0,
-//                'dimension_y' => $offer->getOffers->of_dimension_y ?? 0,
-//                'dimension_z' => $offer->getOffers->of_dimension_z ?? 0,
-//                'weight' => $offer->getOffers->of_weight ?? 0,
-//            ],
-//        ];
+        $offer = rwAcceptanceOffer::find($offerId);
+
+        if (!$offer || !$offer->getOffers) {
+            return ['error' => 'Offer not found or missing related data'];
+        }
+
         return [
             'offer' => [
-                'dimension_x' => 1,
-                'dimension_y' => 2,
-                'dimension_z' => 3,
-                'weight' => 4,
+                'dimension_x' => $offer->getOffers->of_dimension_x ?? 0,
+                'dimension_y' => $offer->getOffers->of_dimension_y ?? 0,
+                'dimension_z' => $offer->getOffers->of_dimension_z ?? 0,
+                'weight' => $offer->getOffers->of_weight ?? 0,
             ],
         ];
     }

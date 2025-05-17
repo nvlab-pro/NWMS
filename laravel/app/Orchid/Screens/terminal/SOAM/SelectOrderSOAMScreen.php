@@ -13,6 +13,7 @@ use App\Models\rwWarehouse;
 use App\Models\WhcRest;
 use App\Orchid\Services\OrderService;
 use App\Orchid\Services\SOAService;
+use App\Orchid\Services\WarehouseUserActionService;
 use App\Services\CustomTranslator;
 use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
-// Определяем текущее положение человека на складе
+// Сохраняем подобранный товар
 class SelectOrderSOAMScreen extends Screen
 {
     private $orderId;
@@ -96,6 +97,21 @@ class SelectOrderSOAMScreen extends Screen
 
                         dump($dbOrderAssembly->oa_id);
 
+                        // Сохраняем данные в статистике
+                        WarehouseUserActionService::logAction([
+                            'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                            'ua_lat_id'      => 3,            // ID типа действия (например, 1 — "подбор товара")
+                            'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                            'ua_wh_id'       => $dbOrder->o_wh_id, // ID склада
+                            'ua_shop_id'     => $dbOrder->o_shop_id,      // ID магазина, если применимо
+                            'ua_place_id'    => $currentPlace,     // ID ячейки склада
+                            'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                            'ua_doc_id'      => $dbOrder->o_id,     // ID документа
+                            'ua_entity_id'   => $orderOfferId,     // ID выбранного товара
+                            'ua_quantity'    => $count,          // Количество товара
+                        ]);
+
+                        // Сохраняем данные о подобранном товаре
                         $dbOrderAssembly = rwOrderAssembly::find($dbOrderAssembly->oa_id);
                         $dbOrderAssembly->oa_qty += $count;
                         $dbOrderAssembly->save();
@@ -110,6 +126,21 @@ class SelectOrderSOAMScreen extends Screen
 
                 } else {
 
+                    // Сохраняем данные в статистике
+                    WarehouseUserActionService::logAction([
+                        'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                        'ua_lat_id'      => 3,            // ID типа действия (например, 1 — "подбор товара")
+                        'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                        'ua_wh_id'       => $dbOrder->o_wh_id, // ID склада
+                        'ua_shop_id'     => $dbOrder->o_shop_id,      // ID магазина, если применимо
+                        'ua_place_id'    => $currentPlace,     // ID ячейки склада
+                        'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                        'ua_doc_id'      => $dbOrder->o_id,     // ID документа
+                        'ua_entity_id'   => $orderOfferId,     // ID выбранного товара
+                        'ua_quantity'    => $count,          // Количество товара
+                    ]);
+
+                    // Сохраняем данные о подобранном товаре
                     rwOrderAssembly::create([
                         'oa_order_id' => $dbOrder->o_id,
                         'oa_user_id'  => $currentUser->id,

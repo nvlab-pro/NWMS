@@ -527,27 +527,6 @@ class WhCore
                         'whci_count' => $lastCount,
                         'whci_cash' => $currentTime,
                     ]);
-
-                $currentUser = Auth::user();
-
-                $actionType = 4;
-                if ($itemId->whci_sign > 0) $actionType = 1;
-
-                // Сохраняем данные в статистике
-                WarehouseUserActionService::logAction([
-                    'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
-                    'ua_lat_id'      => $actionType,            // ID типа действия (например, 1 — "подбор товара")
-                    'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
-                    'ua_wh_id'       => $this->warehouseId, // ID склада
-                    'ua_shop_id'     => null,      // ID магазина, если применимо
-                    'ua_place_id'    => NULL,     // ID ячейки склада
-                    'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
-                    'ua_doc_id'      => $itemId->whci_doc_id,     // ID выбранного товара
-                    'ua_entity_id'   => $itemId->whci_offer_id,     // ID выбранного товара
-                    'ua_quantity'    => $count,          // Количество товара
-                ]);
-
-
             }
 
             return true;
@@ -629,41 +608,6 @@ class WhCore
 
         if (isset($dbCurrentOffer->whci_id)) {
 
-            $actionType = 4;
-            if ($dbCurrentOffer->whci_sign > 0) $actionType = 1;
-
-            if ($count > 0) {
-
-                $tmpCount = $count;
-
-                $sumCount = rwUserAction::where('ua_doc_id', $docId)
-                    ->where('ua_entity_id', $offerId)
-                    ->where('ua_wh_id', $this->warehouseId)
-                    ->where('ua_lat_id', $actionType)
-                    ->where('ua_entity_type', 'offer')
-                    ->sum('ua_quantity');
-
-                if ($sumCount > 0) {
-                    $tmpCount = $count - $sumCount;
-                }
-
-                if ($tmpCount > 0) {
-                    // Сохраняем данные в статистике
-                    WarehouseUserActionService::logAction([
-                        'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
-                        'ua_lat_id'      => $actionType,            // ID типа действия (например, 1 — "подбор товара")
-                        'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
-                        'ua_wh_id'       => $this->warehouseId, // ID склада
-                        'ua_shop_id'     => null,      // ID магазина, если применимо
-                        'ua_place_id'    => $placeId,     // ID ячейки склада
-                        'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
-                        'ua_doc_id'      => $docId,     // ID документа
-                        'ua_entity_id'   => $offerId,     // ID выбранного товара
-                        'ua_quantity'    => $tmpCount,          // Количество товара
-                    ]);
-                }
-            }
-
             // Сохраняем данные в базе
             DB::table('whc_wh' . $this->warehouseId . '_items')->where('whci_id', $dbCurrentOffer->whci_id)->update([
                 'whci_date' => $docDate,
@@ -680,23 +624,6 @@ class WhCore
         } else {
 
             $sign = rwLibTypeDoc::where('td_id', $docType)->first()->td_sign;
-
-            $actionType = 4;
-            if ($sign > 0) $actionType = 1;
-
-            // Сохраняем данные в статистике
-            WarehouseUserActionService::logAction([
-                'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
-                'ua_lat_id'      => $actionType,            // ID типа действия (например, 1 — "подбор товара")
-                'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
-                'ua_wh_id'       => $this->warehouseId, // ID склада
-                'ua_shop_id'     => null,      // ID магазина, если применимо
-                'ua_place_id'    => $placeId,     // ID ячейки склада
-                'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
-                'ua_doc_id'      => $docId,     // ID документа
-                'ua_entity_id'   => $offerId,     // ID выбранного товара
-                'ua_quantity'    => $count,          // Количество товара
-            ]);
 
             // Сохраняем данные в базе
             DB::table('whc_wh' . $this->warehouseId . '_items')->insert([

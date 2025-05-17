@@ -8,6 +8,7 @@ use App\Models\rwBarcode;
 use App\Models\rwOffer;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Services\DocumentService;
+use App\Orchid\Services\WarehouseUserActionService;
 use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
 use Illuminate\Http\Request;
@@ -164,6 +165,20 @@ class ScanAcceptScreen extends Screen
 
                     $validatedData['offerWhId'] = 0;
 
+                    // Сохраняем данные в статистике
+                    WarehouseUserActionService::logAction([
+                        'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                        'ua_lat_id'      => 1,            // ID типа действия (например, 1 — "подбор товара")
+                        'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                        'ua_wh_id'       => $this->whId, // ID склада
+                        'ua_shop_id'     => $this->shopId,      // ID магазина, если применимо
+                        'ua_place_id'    => NULL,     // ID ячейки склада
+                        'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                        'ua_doc_id'      => $this->docId,     // ID выбранного товара
+                        'ua_entity_id'   => $validatedData['offerId'],     // ID выбранного товара
+                        'ua_quantity'    => $count,          // Количество товара
+                    ]);
+
                 } else {
 
                     // Если товара нет в накладной добавляем новый товар в накладную
@@ -208,6 +223,20 @@ class ScanAcceptScreen extends Screen
                                 $batch,
                                 $currentTime,
                             );
+
+                            // Сохраняем данные в статистике
+                            WarehouseUserActionService::logAction([
+                                'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
+                                'ua_lat_id'      => 1,            // ID типа действия (например, 1 — "подбор товара")
+                                'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
+                                'ua_wh_id'       => $this->whId, // ID склада
+                                'ua_shop_id'     => $this->shopId,      // ID магазина, если применимо
+                                'ua_place_id'    => NULL,     // ID ячейки склада
+                                'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                                'ua_doc_id'      => $this->docId,     // ID выбранного товара
+                                'ua_entity_id'   => $validatedData['offerId'],     // ID выбранного товара
+                                'ua_quantity'    => $count,          // Количество товара
+                            ]);
 
                             $skip = true;
 

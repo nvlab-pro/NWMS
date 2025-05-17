@@ -27,9 +27,9 @@ class AcceptancesOffersTable extends Table
 
     protected function columns(array $params = []): iterable
     {
-        $isProductionDate = $this->query->get('isProductionDate');
-        $isExpirationDate = $this->query->get('isExpirationDate');
-        $isBatch = $this->query->get('isBatch');
+        $isProductionDate = (bool) $this->query->get('isProductionDate');
+        $isExpirationDate = (bool) $this->query->get('isExpirationDate');
+        $isBatch = (bool) $this->query->get('isBatch');
 
         return [
 
