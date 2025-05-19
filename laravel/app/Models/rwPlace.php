@@ -27,6 +27,8 @@ class rwPlace extends Model
         'pl_row',
         'pl_rack',
         'pl_shelf',
+        'pl_cell',
+        'pl_place_weight',
     ];
 
     protected $allowedFilters = [

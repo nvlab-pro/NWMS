@@ -228,3 +228,5 @@ Route::get('/{lang}/docs/location_labeling', function ($lang) {
 });
 
 Route::post('/{lang}/new-user-form', [\App\Http\Controllers\FormNewUser::class, 'submit']);
+
+Route::get('/barcode/print_offer_lable', [\App\Http\Controllers\BarcodeController::class, 'print'])->name('barcode.printOfferLable');

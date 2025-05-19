@@ -86,7 +86,7 @@ class PlatformProvider extends OrchidServiceProvider
                     Menu::make(CustomTranslator::get('Домены'))
                         ->icon('bs.yin-yang')
                         ->route('platform.settings.domains')
-                        ->canSee(RoleMiddleware::checkUserCountry('1') && RoleMiddleware::checkUserPermission('admin')),
+                        ->canSee(RoleMiddleware::checkUserPermission('admin')),
 
                     Menu::make(CustomTranslator::get('Страны'))
                         ->icon('bs.globe-central-south-asia')

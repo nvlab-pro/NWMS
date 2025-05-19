@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\terminal\Places;
 use App\Models\rwAcceptance;
 use App\Models\rwBarcode;
 use App\Models\rwOffer;
+use App\Models\rwPlace;
 use App\Models\rwWarehouse;
 use App\Orchid\Services\DocumentService;
 use App\Services\CustomTranslator;
@@ -72,14 +73,14 @@ class OfferToPlaceScreen extends Screen
                 $placeId = 0;
                 $dbParentWh = rwWarehouse::find($this->whId);
 
-                if (isset($dbParentWh) &&  $dbParentWh->wh_parent_id > 0) {
+                if (isset($dbParentWh) && $dbParentWh->wh_parent_id > 0) {
                     $place = new WhPlaces($barcode, $dbParentWh->wh_parent_id);
                     $placeId = $place->getPlaceId();
                 }
 
                 if ($placeId > 0) {
-                    // ШК нормальный, привязываем товар
 
+                    // ШК нормальный, привязываем товар
                     $currentDocument->saveOfferToPlace($validatedData['offerWhId'], $placeId, $scanCount, $currentTime);
                     $action = '';
                     $barcode = '';
@@ -88,11 +89,66 @@ class OfferToPlaceScreen extends Screen
                     Alert::info(CustomTranslator::get('Товар привязан!'));
 
                 } else {
-                    // Это ШК не место хранения
 
-                    Alert::error(CustomTranslator::get('Отсканированный штрих-код не является штрих-кодом места хранения!'));
-                    $action = 'selectPlace';
-                    $barcode = '';
+                    $placeId = 0;
+
+                    if (preg_match('/^(\p{L})(\d{2})(\d{2})(\d)(\d)$/u', $barcode, $matches)) {
+
+                        // Ищем существующее место
+                        $place = rwPlace::where('pl_domain_id', $currentUser->domain_id)
+                            ->where('pl_wh_id', $currentUser->wh_id)
+                            ->where('pl_type', 102)
+                            ->where('pl_room', 'ПЭК')
+                            ->where('pl_floor', strtoupper($matches[1]))
+                            ->where('pl_row', (int)$matches[2])
+                            ->where('pl_section', (int)$matches[3])
+                            ->where('pl_cell', (int)$matches[4])
+                            ->where('pl_shelf', (int)$matches[5])
+                            ->first();
+
+                        // Если нашли — используем, иначе создаём
+                        if ($place) {
+                            $placeId = $place->pl_id;
+                        } else {
+                            $place = rwPlace::create([
+                                'pl_domain_id'      => $currentUser->domain_id,
+                                'pl_wh_id'          => $currentUser->wh_id,
+                                'pl_type'           => 102,
+                                'pl_room'           => 'ПЭК',
+                                'pl_floor'          => strtoupper($matches[1]),
+                                'pl_row'            => (int)$matches[2],
+                                'pl_section'        => (int)$matches[3],
+                                'pl_cell'           => (int)$matches[4],
+                                'pl_shelf'          => (int)$matches[5],
+                                'pl_place_weight'   => 0,
+                            ]);
+
+                            $placeId = $place->pl_id;
+
+                            $place_weight = WhPlaces::calcPlaceWeight($placeId);
+
+                            rwPlace::where('pl_id', $placeId)->update([
+                                'pl_place_weight' => $place_weight,
+                            ]);
+                        }
+                    }
+
+                    if ($placeId == 0) {
+                        // Это ШК не место хранения
+                        Alert::error(CustomTranslator::get('Отсканированный штрих-код не является штрих-кодом места хранения!'));
+                        $action = 'selectPlace';
+                        $barcode = '';
+                    } else {
+
+                        // Создали новое место, привязываем товар
+                        $currentDocument->saveOfferToPlace($validatedData['offerWhId'], $placeId, $scanCount, $currentTime);
+                        $action = '';
+                        $barcode = '';
+                        $validatedData['offerWhId'] = 0;
+
+                        Alert::info(CustomTranslator::get('Товар привязан!'));
+
+                    }
 
                 }
 

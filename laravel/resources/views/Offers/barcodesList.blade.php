@@ -44,6 +44,16 @@
                         </td>
                         <td style="padding-left: 10px;">
                             <button type="button"
+                                    class="btn btn-outline-dark btn-sm"
+                                    onclick="printBarcode({{ $barcode->br_id }}, '{{ $barcode->br_barcode }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+                                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+                                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+                                </svg>
+                            </button>
+                        </td>
+                        <td style="padding-left: 10px;">
+                            <button type="button"
                                     class="btn btn-outline-danger btn-sm"
                                     onclick="confirmDelete({{ $barcode->br_id }})">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -54,6 +64,29 @@
                         </td>
                     </tr>
                 @endforeach
+                @php
+                    $wmsBarcode = '100*'.$offerId.'*' . ($offerId + 100);
+                @endphp
+                    <tr>
+                        <td style="padding-left: 30px;">{{ $wmsBarcode }}</td>
+                        <td style="padding-left: 10px;">
+                        </td>
+                        <td style="padding-left: 10px;">
+
+                        </td>
+                        <td style="padding-left: 10px;">
+                            <button type="button"
+                                    class="btn btn-outline-dark btn-sm"
+                                    onclick="printBarcode({{ $barcode->br_id }}, '{{ $wmsBarcode }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+                                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+                                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+                                </svg>
+                            </button>
+                        </td>
+                        <td style="padding-left: 10px;">
+                        </td>
+                    </tr>
             </table>
 
             <br>
@@ -122,9 +155,15 @@
         modal.show();
     }
 
+    function printBarcode(id, barcode) {
+        const url = '{{ route('barcode.printOfferLable') }}' + '?id=' + {{ $offerId }} + '&barcode=' + barcode;
+        window.open(url, '_blank'); // откроет в новой вкладке или окне
+    }
+
     function confirmDelete(id) {
         if (confirm('Удалить штрихкод?')) {
             window.location.href = '{{ route('platform.offers.edit', $offerId) }}?action=delete&barcodeId=' + id;
         }
+
     }
 </script>

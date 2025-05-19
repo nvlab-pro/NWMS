@@ -61,12 +61,12 @@ class WhPlaces
     static function calcPlaceWeight($placeId = null)
     {
 
+        $sumWeight = 0;
+
         if ($placeId == NULL) $placeId = $this->placeId;
-        $currentPlace = rwPlace::find($this->placeId);
+        $currentPlace = rwPlace::find($placeId);
 
         if ($currentPlace) {
-
-            $sumWeight = 0;
 
             if ($currentPlace->pl_shelf > 0)
                 $sumWeight += $currentPlace->pl_shelf;
@@ -80,7 +80,9 @@ class WhPlaces
             if ($currentPlace->pl_section > 0)
                 $sumWeight += $currentPlace->pl_section * 10000;
 
-        }
+       }
+
+        return $sumWeight;
 
     }
 }
