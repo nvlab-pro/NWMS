@@ -92,6 +92,7 @@ class OfferToPlaceScreen extends Screen
 
                     $placeId = 0;
 
+                    // Конвретируем место хранения в формате C120432 в стандартный формат
                     if (preg_match('/^(\p{L})(\d{2})(\d{2})(\d)(\d)$/u', $barcode, $matches)) {
 
                         // Ищем существующее место
@@ -120,6 +121,48 @@ class OfferToPlaceScreen extends Screen
                                 'pl_section'        => (int)$matches[3],
                                 'pl_cell'           => (int)$matches[4],
                                 'pl_shelf'          => (int)$matches[5],
+                                'pl_place_weight'   => 0,
+                            ]);
+
+                            $placeId = $place->pl_id;
+
+                            $place_weight = WhPlaces::calcPlaceWeight($placeId);
+
+                            rwPlace::where('pl_id', $placeId)->update([
+                                'pl_place_weight' => $place_weight,
+                            ]);
+                        }
+                    }
+
+                    // Конвертируем место хранения в формате 120432 в стандартный формат
+                    if (preg_match('/^(\d{2})(\d{2})(\d{2})$/', $barcode, $matches)) {
+
+                        $row     = (int) $matches[1]; // 06
+                        $section = (int) $matches[2]; // 01
+                        $shelf   = (int) $matches[3]; // 08
+
+                        // Ищем существующее место
+                        $place = rwPlace::where('pl_domain_id', $currentUser->domain_id)
+                            ->where('pl_wh_id', $currentUser->wh_id)
+                            ->where('pl_type', 102)
+                            ->where('pl_room', 'ПЭК')
+                            ->where('pl_row', $row)
+                            ->where('pl_section', $section)
+                            ->where('pl_shelf', $shelf)
+                            ->first();
+
+                        // Если нашли — используем, иначе создаём
+                        if ($place) {
+                            $placeId = $place->pl_id;
+                        } else {
+                            $place = rwPlace::create([
+                                'pl_domain_id'      => $currentUser->domain_id,
+                                'pl_wh_id'          => $currentUser->wh_id,
+                                'pl_type'           => 102,
+                                'pl_room'           => 'ПЭК',
+                                'pl_row'            => $row,
+                                'pl_section'        => $section,
+                                'pl_shelf'          => $shelf,
                                 'pl_place_weight'   => 0,
                             ]);
 
