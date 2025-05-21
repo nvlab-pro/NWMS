@@ -38,7 +38,7 @@ class OfferToPlaceScreen extends Screen
             'action' => 'nullable|string',
         ]);
 
-        $currentOffer = [];
+        $currentOffer = $arRests = [];
         $currentTime = $scanCount = 0;
         $barcode = $action = '';
         $skip = false;
@@ -90,108 +90,10 @@ class OfferToPlaceScreen extends Screen
 
                 } else {
 
-                    $placeId = 0;
-
-                    // Конвретируем место хранения в формате C120432 в стандартный формат
-                    if (preg_match('/^(\p{L})(\d{2})(\d{2})(\d)(\d)$/u', $barcode, $matches)) {
-
-                        // Ищем существующее место
-                        $place = rwPlace::where('pl_domain_id', $currentUser->domain_id)
-                            ->where('pl_wh_id', $currentUser->wh_id)
-                            ->where('pl_type', 102)
-                            ->where('pl_room', 'ПЭК')
-                            ->where('pl_floor', strtoupper($matches[1]))
-                            ->where('pl_row', (int)$matches[2])
-                            ->where('pl_section', (int)$matches[3])
-                            ->where('pl_cell', (int)$matches[4])
-                            ->where('pl_shelf', (int)$matches[5])
-                            ->first();
-
-                        // Если нашли — используем, иначе создаём
-                        if ($place) {
-                            $placeId = $place->pl_id;
-                        } else {
-                            $place = rwPlace::create([
-                                'pl_domain_id'      => $currentUser->domain_id,
-                                'pl_wh_id'          => $currentUser->wh_id,
-                                'pl_type'           => 102,
-                                'pl_room'           => 'ПЭК',
-                                'pl_floor'          => strtoupper($matches[1]),
-                                'pl_row'            => (int)$matches[2],
-                                'pl_section'        => (int)$matches[3],
-                                'pl_cell'           => (int)$matches[4],
-                                'pl_shelf'          => (int)$matches[5],
-                                'pl_place_weight'   => 0,
-                            ]);
-
-                            $placeId = $place->pl_id;
-
-                            $place_weight = WhPlaces::calcPlaceWeight($placeId);
-
-                            rwPlace::where('pl_id', $placeId)->update([
-                                'pl_place_weight' => $place_weight,
-                            ]);
-                        }
-                    }
-
-                    // Конвертируем место хранения в формате 120432 в стандартный формат
-                    if (preg_match('/^(\d{2})(\d{2})(\d{2})$/', $barcode, $matches)) {
-
-                        $row     = (int) $matches[1]; // 06
-                        $section = (int) $matches[2]; // 01
-                        $shelf   = (int) $matches[3]; // 08
-
-                        // Ищем существующее место
-                        $place = rwPlace::where('pl_domain_id', $currentUser->domain_id)
-                            ->where('pl_wh_id', $currentUser->wh_id)
-                            ->where('pl_type', 102)
-                            ->where('pl_room', 'ПЭК')
-                            ->where('pl_row', $row)
-                            ->where('pl_section', $section)
-                            ->where('pl_shelf', $shelf)
-                            ->first();
-
-                        // Если нашли — используем, иначе создаём
-                        if ($place) {
-                            $placeId = $place->pl_id;
-                        } else {
-                            $place = rwPlace::create([
-                                'pl_domain_id'      => $currentUser->domain_id,
-                                'pl_wh_id'          => $currentUser->wh_id,
-                                'pl_type'           => 102,
-                                'pl_room'           => 'ПЭК',
-                                'pl_row'            => $row,
-                                'pl_section'        => $section,
-                                'pl_shelf'          => $shelf,
-                                'pl_place_weight'   => 0,
-                            ]);
-
-                            $placeId = $place->pl_id;
-
-                            $place_weight = WhPlaces::calcPlaceWeight($placeId);
-
-                            rwPlace::where('pl_id', $placeId)->update([
-                                'pl_place_weight' => $place_weight,
-                            ]);
-                        }
-                    }
-
-                    if ($placeId == 0) {
-                        // Это ШК не место хранения
-                        Alert::error(CustomTranslator::get('Отсканированный штрих-код не является штрих-кодом места хранения!'));
-                        $action = 'selectPlace';
-                        $barcode = '';
-                    } else {
-
-                        // Создали новое место, привязываем товар
-                        $currentDocument->saveOfferToPlace($validatedData['offerWhId'], $placeId, $scanCount, $currentTime);
-                        $action = '';
-                        $barcode = '';
-                        $validatedData['offerWhId'] = 0;
-
-                        Alert::info(CustomTranslator::get('Товар привязан!'));
-
-                    }
+                    // Это ШК не место хранения
+                    Alert::error(CustomTranslator::get('Отсканированный штрих-код не является штрих-кодом места хранения!'));
+                    $action = 'selectPlace';
+                    $barcode = '';
 
                 }
 
@@ -251,6 +153,8 @@ class OfferToPlaceScreen extends Screen
             // *** Формируем информацию о выбранном товаре и сохраняем данные
             // ********************************************************************
 
+            $placesList = [];
+
             if (isset($validatedData['offerWhId'])) {
 
                 // *********************************************
@@ -258,6 +162,8 @@ class OfferToPlaceScreen extends Screen
 
                 if ($validatedData['offerWhId'] > 0) {
                     $currentOffer = $currentDocument->getAcceptanceOffer($validatedData['offerWhId']);
+
+                    $arRests = WhPlaces::getPlacesList($currentOffer['ao_offer_id'], $this->whId);
                 }
 
             }
@@ -276,6 +182,7 @@ class OfferToPlaceScreen extends Screen
                 'offersList' => $dbOffersList,
                 'action' => $action,
                 'scanCount' => $scanCount,
+                'arRests' => $arRests,
             ];
 
         }
@@ -304,6 +211,7 @@ class OfferToPlaceScreen extends Screen
             Layout::view('Screens.Terminal.Places.ScanInput'),
             Layout::view('Screens.Terminal.Places.OfferDetail'),
             Layout::view('Screens.Terminal.Places.PlaceOffer'),
+            Layout::view('Screens.Terminal.Places.PlacesList'),
             Layout::view('Screens.Terminal.Places.OffersList'),
         ];
     }

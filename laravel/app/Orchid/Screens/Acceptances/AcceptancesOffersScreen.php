@@ -265,7 +265,7 @@ class AcceptancesOffersScreen extends Screen
             'docOfferAccept.*' => 'nullable|numeric|min:0', // Принятое количество должно быть числом >= 0
             'docOfferPrice.*' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
             'docOfferId.*' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
-            'docOfferPlaced.*' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'docOfferPlaced.*' => 'nullable|string', // Цена должна быть числом >= 0
             'acceptId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
             'shopId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
             'whId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
@@ -282,7 +282,7 @@ class AcceptancesOffersScreen extends Screen
 
             $offer = rwAcceptanceOffer::find($id);
 
-            if ($offer && ($validatedData['docOfferPlaced'][$id] == 0 || $validatedData['docOfferPlaced'][$id] === null)) {
+            if ($offer && ($validatedData['docOfferPlaced'][$id] == 0 || $validatedData['docOfferPlaced'][$id] == '' || $validatedData['docOfferPlaced'][$id] === null)) {
 
                 $offer->ao_expected = $validatedData['docOfferExept'][$id] ?? 0;
                 $offer->save();

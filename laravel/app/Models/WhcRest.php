@@ -23,6 +23,10 @@ class WhcRest extends Model
         'whcr_reserved_count',
         'whcr_date',
         'whcr_place_id',
+        'whcr_production_date',
+        'whcr_expiration_date',
+        'whcr_batch',
+        'whcr_updated',
     ];
 
     public function getPlace() {

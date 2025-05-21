@@ -10,6 +10,7 @@ use App\Models\rwShop;
 use App\Models\rwWarehouse;
 use App\Models\WhcRest;
 use App\Services\CustomTranslator;
+use App\WhPlaces\WhPlaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Button;
@@ -68,53 +69,14 @@ class OfferEditScreen extends Screen
             $this->offerName = $dbOffer->of_name;
             $this->shopName = $dbOffer->getShop->sh_name;
 
-            $dbRests = WhcRest::where('whcr_offer_id', $offerId)
-                ->with('getPlace')
-                ->orderBy('whcr_wh_id', 'ASC')
-                ->orderBy('whcr_count', 'DESC')
-                ->get();
-
-            foreach ($dbRests as $rest) {
-
-                $dbWh = rwWarehouse::where('wh_id', $rest->whcr_wh_id)->first();
-
-                $placeStr = '-';
-                if (isset($rest->getPlace->pl_id)) {
-                    if ($rest->getPlace->pl_room) $placeStr = $rest->getPlace->pl_room;
-                    if ($rest->getPlace->pl_floor) $placeStr .= '-' . $rest->getPlace->pl_floor;
-                    if ($rest->getPlace->pl_section) $placeStr .= '-' . $rest->getPlace->pl_section;
-                    if ($rest->getPlace->pl_row) $placeStr .= '-' . $rest->getPlace->pl_row;
-                    if ($rest->getPlace->pl_rack) $placeStr .= '-' . $rest->getPlace->pl_rack;
-                    if ($rest->getPlace->pl_shelf) $placeStr .= '-' . $rest->getPlace->pl_shelf;
-                }
-
-                $arRests[] = [
-                    'whName' => $dbWh->wh_name,
-                    'whId' => $rest->whcr_wh_id,
-                    'placeId' => $rest->whcr_place_id,
-                    'placeName' => $placeStr,
-                    'count' => $rest->whcr_count,
-                ];
-
-                if (isset($arWhRests[$rest->whcr_wh_id])) {
-                    $arWhRests[$rest->whcr_wh_id] = [
-                        'whName' => $dbWh->wh_name,
-                        'count' => $arWhRests[$rest->whcr_wh_id]['count'] + $rest->whcr_count,
-                    ];
-                } else {
-                    $arWhRests[$rest->whcr_wh_id] = [
-                        'whName' => $dbWh->wh_name,
-                        'count' => $rest->whcr_count,
-                    ];
-                }
-            }
+            $arWhRests = WhPlaces::getPlacesList($offerId);
 
             $dbBarcodes = rwBarcode::where('br_offer_id', $offerId)->get();
 
             return [
                 'rwOffer' => $dbOffer,
-                'rests' => $arRests,
-                'whRests' => $arWhRests,
+                'rests' => $arWhRests['arRests'] ?? null,
+                'whRests' => $arWhRests['arWhRests'] ?? null,
                 'offerId' => $offerId,
                 'barcodesList' => $dbBarcodes,
             ];

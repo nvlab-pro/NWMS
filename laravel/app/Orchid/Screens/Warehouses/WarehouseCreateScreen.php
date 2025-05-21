@@ -165,7 +165,7 @@ class WarehouseCreateScreen extends Screen
         }
 
         $arAddFields2[] = CheckBox::make('whList.wh_set_production_date')
-            ->title(CustomTranslator::get('Использовать срок производства товара'))
+            ->title(CustomTranslator::get('Использовать дату производства товара'))
             ->horizontal()
             ->sendTrueOrFalse()
             ->value($currentUser->wh_set_production_date);
@@ -177,7 +177,7 @@ class WarehouseCreateScreen extends Screen
             ->value($currentUser->wh_set_expiration_date);
 
         $arAddFields2[] = CheckBox::make('whList.wh_set_batch')
-            ->title(CustomTranslator::get('Использовать поле батч'))
+            ->title(CustomTranslator::get('Использовать поле партия'))
             ->horizontal()
             ->sendTrueOrFalse()
             ->value($currentUser->wh_set_batch);

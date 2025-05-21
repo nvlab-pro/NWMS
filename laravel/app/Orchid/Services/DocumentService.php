@@ -247,6 +247,7 @@ class DocumentService
             $acceptCount = $currentItem->whci_count;
             $acceptPrice = $currentItem->whci_price;
             $batch = $currentItem->whci_batch;
+            $productionDate = $currentItem->whci_production_date;
             $expirationDate = $currentItem->whci_expiration_date;
             $barcode = $currentItem->whci_barcode;
             $placed = $currentItem->whci_place_id;
@@ -256,6 +257,14 @@ class DocumentService
                 ->first();
 
             // 2. Преобразование формата даты expDate
+            if ($productionDate) {
+                // Проверяем, в каком формате пришла дата
+                if (strpos($productionDate, '-') !== false) {
+                    // Если дата в формате DD.MM.YYYY, преобразуем в YYYY-MM-DD
+                    $productionDate = \DateTime::createFromFormat('Y-m-d', $productionDate)->format('d.m.Y');
+                }
+            }
+
             if ($expirationDate) {
                 // Проверяем, в каком формате пришла дата
                 if (strpos($expirationDate, '-') !== false) {
@@ -277,6 +286,7 @@ class DocumentService
                     $docOffer->getOffers->of_dimension_z . ' / ' .
                     $docOffer->getOffers->of_weight . 'гр.',
                 'ao_batch' => $batch,
+                'ao_production_date' => $productionDate,
                 'ao_expiration_date' => $expirationDate,
                 'ao_barcode' => $barcode,
                 'ao_expected' => $docOffer->ao_expected,
@@ -298,9 +308,13 @@ class DocumentService
 
     // ************************************************************
     // *** Создаем новый элемент на складе
-    public function addItemCount($offerId, $docDate, $count, $currentTime = 0, $exeptDate = NULL, $batch = NULL)
+    public function addItemCount($offerId, $docDate, $count, $currentTime = 0, $exeptDate = NULL, $batch = NULL, $scanProdDate = NULL, $timeCash = 0)
     {
-        if ($this->currentWarehouse->addItemCount($offerId, $count, $currentTime, $exeptDate, $batch)) {
+        $isAddItems = $this->currentWarehouse->addItemCount($offerId, $count, $currentTime, $exeptDate, $batch, $scanProdDate);
+
+        if ($isAddItems === 100) return false; // Если это дубль (перегрузили страницу), то возвращаем false
+
+        if ($isAddItems) {
 
             return true;
 
@@ -308,6 +322,9 @@ class DocumentService
 
             if (strlen($exeptDate) == 6) {
                 $exeptDate = '20' . substr($exeptDate, 4, 2) . '-' . substr($exeptDate, 2, 2) . '-' . substr($exeptDate, 0, 2);
+            }
+            if (strlen($scanProdDate) == 6) {
+                $scanProdDate = '20' . substr($scanProdDate, 4, 2) . '-' . substr($scanProdDate, 2, 2) . '-' . substr($scanProdDate, 0, 2);
             }
 
             $dbItem = $this->currentWarehouse->getItem($offerId);
@@ -329,7 +346,9 @@ class DocumentService
                 $dbItem->whci_barcode,
                 $dbItem->whci_price,
                 $exeptDate,
-                $batch
+                $batch,
+                $scanProdDate,
+                $timeCash
             );
 
             return true;

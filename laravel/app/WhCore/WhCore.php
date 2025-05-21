@@ -134,13 +134,19 @@ class WhCore
         $rest = 0;
 
         $dbPlaces = DB::table('whc_wh' . $this->warehouseId . '_items')
-            ->selectRaw('whci_place_id')
+            ->select(
+                'whci_place_id',
+                DB::raw('MAX(whci_production_date) as whci_production_date'),
+                DB::raw('MAX(whci_expiration_date) as whci_expiration_date'),
+                DB::raw('MAX(whci_batch) as whci_batch')
+            )
             ->where('whci_offer_id', $offerId)
-            ->groupBy('whci_place_id')
+            ->groupBy('whci_place_id', 'whci_production_date', 'whci_expiration_date', 'whci_batch')
             ->get();
 
         WhcRest::where('whcr_offer_id', $offerId)->update([
-            'whcr_active'   => 0,
+            'whcr_active' => 0,
+            'whcr_updated' => 0,
         ]);
 
         foreach ($dbPlaces as $place) {
@@ -149,29 +155,62 @@ class WhCore
                 ->selectRaw('sum(whci_count * whci_sign) as total')
                 ->where('whci_offer_id', $offerId)
                 ->where('whci_place_id', $place->whci_place_id)
+                ->where('whci_production_date', $place->whci_production_date)
+                ->where('whci_expiration_date', $place->whci_expiration_date)
+                ->where('whci_batch', $place->whci_batch)
                 ->first();
 
             if (isset($dbRest->total)) {
 
                 $currantRest = $dbRest->total;
 
-                WhcRest::updateOrCreate(
-                    [
+                $existing = WhcRest::query()
+                    ->where('whcr_offer_id', $offerId)
+                    ->where('whcr_place_id', $place->whci_place_id)
+                    ->where(function ($query) use ($place) {
+                        $place->whci_production_date !== null
+                            ? $query->where('whcr_production_date', $place->whci_production_date)
+                            : $query->whereNull('whcr_production_date');
+
+                        $place->whci_expiration_date !== null
+                            ? $query->where('whcr_expiration_date', $place->whci_expiration_date)
+                            : $query->whereNull('whcr_expiration_date');
+
+                        $place->whci_batch !== null
+                            ? $query->where('whcr_batch', $place->whci_batch)
+                            : $query->whereNull('whcr_batch');
+                    })
+                    ->first();
+
+                if ($existing) {
+                    $existing->update([
+                        'whcr_count' => $currantRest,
+                        'whcr_active' => 1,
+                        'whcr_updated' => 1,
+                    ]);
+                } else {
+
+                    WhcRest::create([
                         'whcr_offer_id' => $offerId,
                         'whcr_place_id' => $place->whci_place_id,
-                    ],  // Условие поиска
-                    [
-                        'whcr_wh_id'    => $this->warehouseId,
-                        'whcr_count'    => $currantRest,
-                        'whcr_place_id' => $place->whci_place_id,
-                        'whcr_active'   => 1,
-                    ]
-                );
+                        'whcr_production_date' => $place->whci_production_date,
+                        'whcr_expiration_date' => $place->whci_expiration_date,
+                        'whcr_batch' => $place->whci_batch,
+                        'whcr_wh_id' => $this->warehouseId,
+                        'whcr_count' => $currantRest,
+                        'whcr_active' => 1,
+                        'whcr_updated' => 1,
+                    ]);
+                }
 
                 $rest += $dbRest->total;
 
             }
         }
+
+        WhcRest::where('whcr_offer_id', $offerId)
+            ->where('whcr_updated', 0)
+            ->delete();
 
         return $rest;
     }
@@ -324,6 +363,7 @@ class WhCore
     // *** Получаем список всех товаров из документа
     public function getDocumentOfferTurnover($offerId)
     {
+
         $items = whcWhItem::fromWarehouse($this->warehouseId)
             ->where('whci_offer_id', $offerId)
             ->orderBy('whci_date', 'ASC')
@@ -480,11 +520,15 @@ class WhCore
             ->delete();
 
 
-
     }
 
-    public function addItemCount($offerId, $count, $currentTime = 0, $exeptDate = NULL, $batch = NULL)
+    public function addItemCount($offerId, $count, $currentTime = 0, $exeptDate = NULL, $batch = NULL, $prodDate = NULL)
     {
+        if (strlen($prodDate) == 6) {
+            $prodDate = '20' . substr($prodDate, 4, 2) . '-' . substr($prodDate, 2, 2) . '-' . substr($prodDate, 0, 2);
+        } else {
+            $prodDate = NULL;
+        }
         if (strlen($exeptDate) == 6) {
             $exeptDate = '20' . substr($exeptDate, 4, 2) . '-' . substr($exeptDate, 2, 2) . '-' . substr($exeptDate, 0, 2);
         } else {
@@ -494,6 +538,7 @@ class WhCore
 
         $itemId = DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_id', $offerId)
+            ->where('whci_production_date', $prodDate)
             ->where('whci_expiration_date', $exeptDate)
             ->where('whci_batch', $batch)
             ->first();
@@ -506,6 +551,7 @@ class WhCore
             if (isset($itemIdTmp->whci_id)) {
                 $itemId = DB::table('whc_wh' . $this->warehouseId . '_items')
                     ->where('whci_offer_id', $itemIdTmp->whci_offer_id)
+                    ->where('whci_production_date', $prodDate)
                     ->where('whci_expiration_date', $exeptDate)
                     ->where('whci_batch', $batch)
                     ->first();
@@ -527,6 +573,8 @@ class WhCore
                         'whci_count' => $lastCount,
                         'whci_cash' => $currentTime,
                     ]);
+            } else {
+                return 100; //  Если это перезагрузка страницы, возвращаем 100
             }
 
             return true;
@@ -553,7 +601,9 @@ class WhCore
             'barcode' => $barcode,
             'price' => $price,
             'expDate' => $expDate,
+            'prodDate' => $prodDate,
             'batch' => $batch,
+            'timeCash' => $timeCash,
             'placeId' => $placeId,
         ], [
             'docId' => 'required|integer',
@@ -568,6 +618,7 @@ class WhCore
             'expDate' => 'nullable|date_format:d.m.Y,Y-m-d', // Допускаем оба формата
             'prodDate' => 'nullable|date_format:d.m.Y,Y-m-d', // Допускаем оба формата
             'batch' => 'nullable|string',
+            'timeCash' => 'required|numeric',
             'placeId' => 'nullable|numeric',
         ]);
 

@@ -79,7 +79,7 @@ class AcceptancesOffersTable extends Table
                     }
                 }),
 
-            TD::make('ao_batch', CustomTranslator::get('Батч'))
+            TD::make('ao_batch', CustomTranslator::get('Партия'))
                 ->sort()
                 ->canSee($isBatch)
                 ->render(function (rwAcceptanceOffer $modelName) {
@@ -88,7 +88,7 @@ class AcceptancesOffersTable extends Table
                     return '<input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="'.CustomTranslator::get('Батч').'" ' . $readonly . '>';
                 }),
 
-            TD::make('ao_production_date', CustomTranslator::get('Срок производства'))
+            TD::make('ao_production_date', CustomTranslator::get('Дата производства'))
                 ->sort()
                 ->canSee($isProductionDate)
                 ->render(function (rwAcceptanceOffer $modelName) {

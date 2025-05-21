@@ -204,13 +204,16 @@
                         </td>
                         <td style="vertical-align: top; padding-left: 15px;">
                             <div align="left"
-                                 class="termText">{{ CustomTranslator::get('Артикул') }}: {{ $currentOffer['ao_article']  }}</div>
+                                 class="termText">{{ CustomTranslator::get('Артикул') }}
+                                : {{ $currentOffer['ao_article']  }}</div>
 
                             <hr>
                             <b style="color: #AAAAAA;"
-                               class="termText">{{ CustomTranslator::get('Ожидается') }}: {{ round($currentOffer['ao_expected'], 2) }}</b><br>
+                               class="termText">{{ CustomTranslator::get('Ожидается') }}
+                                : {{ round($currentOffer['ao_expected'], 2) }}</b><br>
                             <b style="color: #AAAAAA;"
-                               class="termText">{{ CustomTranslator::get('Принято') }}: {{ round($currentOffer['ao_accepted'], 2)  }}</b><br>
+                               class="termText">{{ CustomTranslator::get('Принято') }}
+                                : {{ round($currentOffer['ao_accepted'], 2)  }}</b><br>
                             @php
                                 $restOfCount = $currentOffer['ao_expected'] - $currentOffer['ao_accepted'];
                             @endphp
@@ -231,18 +234,30 @@
                                        style="margin-bottom: 5px;" class="countInput"><br>
 
                                 @if($settingExeptDate)
+                                    <input type="text" name="scanProdDate" id="scanProdDate" size="15" value="@php
+                                            if (isset($currentOffer['ao_production_date']) && (strlen($currentOffer['ao_production_date']) == 10 )) {
+                                                $tDate = $currentOffer['ao_production_date'];
+                                                echo substr($tDate, 0, 2).substr($tDate, 3, 2).substr($tDate, 8, 2);
+                                            }
+                                        @endphp"
+                                           placeholder="{{ CustomTranslator::get('Срок (DDMMYY)') }}"
+                                           style="margin-top: 10px;"><br>
+
                                     <input type="text" name="scanExpDate" id="scanExpDate" size="15" value="@php
                                             if (isset($currentOffer['ao_expiration_date']) && (strlen($currentOffer['ao_expiration_date']) == 10 )) {
                                                 $tDate = $currentOffer['ao_expiration_date'];
                                                 echo substr($tDate, 0, 2).substr($tDate, 3, 2).substr($tDate, 8, 2);
                                             }
                                         @endphp"
-                                           placeholder="{{ CustomTranslator::get('Срок (DDMMYY)') }}" style="margin-top: 10px;"><br>
+                                           placeholder="{{ CustomTranslator::get('Срок (DDMMYY)') }}"
+                                           style="margin-top: 1px;"><br>
+
                                     <input type="text" name="scanBatch" id="scanBatch" size="15" value="@php
                                             if (isset($currentOffer['ao_batch']))
                                                 echo $currentOffer['ao_batch'];
                                     @endphp"
-                                           placeholder="Batch"><br>
+                                           placeholder="Batch"
+                                           style="margin-top: 1px;"><br>
 
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function () {

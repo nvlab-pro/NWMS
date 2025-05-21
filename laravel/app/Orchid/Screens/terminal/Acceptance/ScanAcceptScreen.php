@@ -42,6 +42,7 @@ class ScanAcceptScreen extends Screen
             'currentTime' => 'nullable|numeric|min:0',
             'barcode' => 'nullable|string',
             'saveBarcode' => 'nullable|string',
+            'scanProdDate' => 'nullable|string',
             'scanExpDate' => 'nullable|string',
             'scanBatch' => 'nullable|string',
         ]);
@@ -53,6 +54,7 @@ class ScanAcceptScreen extends Screen
         $barcode = '';
         $skip = false;
         $docDate = date('Y-m-d H:i:s');
+        isset($validatedData['scanProdDate']) ? $scanProdDate = $validatedData['scanProdDate'] : $scanProdDate = NULL;
         isset($validatedData['scanExpDate']) ? $scanExpDate = $validatedData['scanExpDate'] : $scanExpDate = NULL;
         isset($validatedData['scanBatch']) ? $scanBatch = $validatedData['scanBatch'] : $scanBatch = NULL;
 
@@ -108,8 +110,9 @@ class ScanAcceptScreen extends Screen
                                 'ao_img' => $dbOffer->of_img,
                                 'ao_name' => $dbOffer->of_name,
                                 'ao_article' => $dbOffer->of_article,
-                                'ao_batch' => '',
-                                'ao_expiration_date' => '',
+                                'ao_batch' => $scanBatch,
+                                'ao_production_date' => $scanProdDate,
+                                'ao_expiration_date' => $scanExpDate,
                                 'ao_barcode' => $barcode,
                                 'ao_expected' => 0,
                                 'ao_accepted' => 0,
@@ -144,40 +147,42 @@ class ScanAcceptScreen extends Screen
 
                 if ($validatedData['offerWhId'] > 0 && isset($validatedData['scanCount']) && $validatedData['scanCount'] != 0) {
 
-                    // Если товар есть в накладной добавляем в нее товар
+                    // Если товар есть в накладной добавляем в нее товар (если это не перезагрузка страницы)
 
-                    $currentDocument->addItemCount($validatedData['offerWhId'], $docDate, $validatedData['scanCount'], $currentTime, $scanExpDate, $scanBatch);
-                    Alert::success(CustomTranslator::get('Товар добавлен в накладную!'));
+                    if ($currentDocument->addItemCount($validatedData['offerWhId'], $docDate, $validatedData['scanCount'], $currentTime, $scanExpDate, $scanBatch, $scanProdDate, $currentTime)) {
 
-                    // Меняем статус у накладной с new на "принимается"
-                    rwAcceptance::where('acc_id', $this->docId)
-                        ->where('acc_status', 1)
-                        ->update([
-                            'acc_status' => 2,
+                        Alert::success(CustomTranslator::get('Товар добавлен в накладную!'));
+
+                        // Меняем статус у накладной с new на "принимается"
+                        rwAcceptance::where('acc_id', $this->docId)
+                            ->where('acc_status', 1)
+                            ->update([
+                                'acc_status' => 2,
+                            ]);
+
+                        // Обновляем остатки на морде документа
+                        $currentDocument->updateRest(1);
+
+                        // Пересчитываем остатки
+                        $currentWarehouse = new WhCore($this->whId);
+                        $currentWarehouse->calcRestOffer($validatedData['offerId']);
+
+                        $validatedData['offerWhId'] = 0;
+
+                        // Сохраняем данные в статистике
+                        WarehouseUserActionService::logAction([
+                            'ua_user_id' => $currentUser->id, // ID текущего кладовщика
+                            'ua_lat_id' => 1,            // ID типа действия (например, 1 — "подбор товара")
+                            'ua_domain_id' => $currentUser->domain_id,    // ID компании / окружения
+                            'ua_wh_id' => $this->whId, // ID склада
+                            'ua_shop_id' => $this->shopId,      // ID магазина, если применимо
+                            'ua_place_id' => NULL,     // ID ячейки склада
+                            'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                            'ua_doc_id' => $this->docId,     // ID выбранного товара
+                            'ua_entity_id' => $validatedData['offerId'],     // ID выбранного товара
+                            'ua_quantity' => $validatedData['scanCount'],          // Количество товара
                         ]);
-
-                    // Обновляем остатки на морде документа
-                    $currentDocument->updateRest(1);
-
-                    // Пересчитываем остатки
-                    $currentWarehouse = new WhCore($this->whId);
-                    $currentWarehouse->calcRestOffer($validatedData['offerId']);
-
-                    $validatedData['offerWhId'] = 0;
-
-                    // Сохраняем данные в статистике
-                    WarehouseUserActionService::logAction([
-                        'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
-                        'ua_lat_id'      => 1,            // ID типа действия (например, 1 — "подбор товара")
-                        'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
-                        'ua_wh_id'       => $this->whId, // ID склада
-                        'ua_shop_id'     => $this->shopId,      // ID магазина, если применимо
-                        'ua_place_id'    => NULL,     // ID ячейки склада
-                        'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
-                        'ua_doc_id'      => $this->docId,     // ID выбранного товара
-                        'ua_entity_id'   => $validatedData['offerId'],     // ID выбранного товара
-                        'ua_quantity'    => $validatedData['scanCount'],          // Количество товара
-                    ]);
+                    }
 
                 } else {
 
@@ -226,16 +231,16 @@ class ScanAcceptScreen extends Screen
 
                             // Сохраняем данные в статистике
                             WarehouseUserActionService::logAction([
-                                'ua_user_id'     => $currentUser->id, // ID текущего кладовщика
-                                'ua_lat_id'      => 1,            // ID типа действия (например, 1 — "подбор товара")
-                                'ua_domain_id'   => $currentUser->domain_id,    // ID компании / окружения
-                                'ua_wh_id'       => $this->whId, // ID склада
-                                'ua_shop_id'     => $this->shopId,      // ID магазина, если применимо
-                                'ua_place_id'    => NULL,     // ID ячейки склада
+                                'ua_user_id' => $currentUser->id, // ID текущего кладовщика
+                                'ua_lat_id' => 1,            // ID типа действия (например, 1 — "подбор товара")
+                                'ua_domain_id' => $currentUser->domain_id,    // ID компании / окружения
+                                'ua_wh_id' => $this->whId, // ID склада
+                                'ua_shop_id' => $this->shopId,      // ID магазина, если применимо
+                                'ua_place_id' => NULL,     // ID ячейки склада
                                 'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
-                                'ua_doc_id'      => $this->docId,     // ID выбранного товара
-                                'ua_entity_id'   => $validatedData['offerId'],     // ID выбранного товара
-                                'ua_quantity'    => $count,          // Количество товара
+                                'ua_doc_id' => $this->docId,     // ID выбранного товара
+                                'ua_entity_id' => $validatedData['offerId'],     // ID выбранного товара
+                                'ua_quantity' => $count,          // Количество товара
                             ]);
 
                             $skip = true;

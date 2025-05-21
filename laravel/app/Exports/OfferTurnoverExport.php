@@ -153,7 +153,7 @@ class OfferTurnoverExport implements FromCollection, WithHeadings, WithColumnWid
             CustomTranslator::get('Статус'),
             CustomTranslator::get('Дата производства'),
             CustomTranslator::get('Срок годности'),
-            CustomTranslator::get('Батч'),
+            CustomTranslator::get('Партия'),
             CustomTranslator::get('Место'),
             CustomTranslator::get('Количество'),
             CustomTranslator::get('Итого'),
