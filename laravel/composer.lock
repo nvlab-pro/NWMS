@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd108694153af479fcdb0cc6b0333abe",
+    "content-hash": "27ea61a8a9aaf8a984c383ee70f1695e",
     "packages": [
         {
             "name": "brick/math",
@@ -3513,16 +3513,16 @@
         },
         {
             "name": "orchid/platform",
-            "version": "14.50.0",
+            "version": "14.52.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchidsoftware/platform.git",
-                "reference": "36f4195a487c7ba21f4d9234d444c6f8b7026449"
+                "reference": "5a4d4ab91946e62ca90045aacad1f408d860a443"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchidsoftware/platform/zipball/36f4195a487c7ba21f4d9234d444c6f8b7026449",
-                "reference": "36f4195a487c7ba21f4d9234d444c6f8b7026449",
+                "url": "https://api.github.com/repos/orchidsoftware/platform/zipball/5a4d4ab91946e62ca90045aacad1f408d860a443",
+                "reference": "5a4d4ab91946e62ca90045aacad1f408d860a443",
                 "shasum": ""
             },
             "require": {
@@ -3616,7 +3616,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2025-03-30T23:39:48+00:00"
+            "time": "2025-05-03T22:52:20+00:00"
         },
         {
             "name": "owen-it/laravel-auditing",
