@@ -615,8 +615,8 @@ class WhCore
             'count' => 'required|numeric',
             'barcode' => 'nullable|string',
             'price' => 'required|numeric',
-            'expDate' => 'nullable|date_format:d.m.Y,Y-m-d', // Допускаем оба формата
-            'prodDate' => 'nullable|date_format:d.m.Y,Y-m-d', // Допускаем оба формата
+            'prodDate' => 'nullable|string',
+            'expDate'  => 'nullable|string',
             'batch' => 'nullable|string',
             'timeCash' => 'required|numeric',
             'placeId' => 'nullable|numeric',
@@ -624,10 +624,10 @@ class WhCore
 
         $currentUser = Auth::user();
 
-        if ($validator->fails()) {
-            // Обработка ошибок валидации, например, выброс исключения
-            throw new \Exception('Validation Error: ' . $validator->errors()->first());
-        }
+//        if ($validator->fails()) {
+//            // Обработка ошибок валидации, например, выброс исключения
+//            throw new \Exception('Validation Error: ' . $validator->errors()->first());
+//        }
 
         // 2. Преобразование формата даты expDate
         if ($expDate) {

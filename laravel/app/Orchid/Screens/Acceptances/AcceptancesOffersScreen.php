@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Acceptances;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\rwAcceptance;
 use App\Models\rwAcceptanceOffer;
 use App\Models\rwBarcode;
@@ -143,6 +144,7 @@ class AcceptancesOffersScreen extends Screen
                         'docId' => $this->acceptId,
                         '_token' => csrf_token(), // Добавляем CSRF-токен вручную
                     ])
+                    ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager,warehouse_worker'))
                     ->confirm(CustomTranslator::get('Вы уверены, что хотите закрыть накладную?')),
             ];
 

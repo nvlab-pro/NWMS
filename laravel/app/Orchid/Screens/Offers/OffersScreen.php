@@ -9,19 +9,20 @@ use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
+use Illuminate\Http\Request;
 
 class OffersScreen extends Screen
 {
 
     private $currentOffers;
 
-    public function query(): iterable
+    public function query(Request $request): iterable
     {
         $currentUser = Auth::user();
 
         if ($currentUser->hasRole('admin')) {
 
-            $dbOffers = rwOffer::query();
+            $dbOffers = rwOffer::with('barcodes');
 
         } else {
 
@@ -41,6 +42,14 @@ class OffersScreen extends Screen
         }
 
         $this->currentOffers = $dbOffers->filters();
+
+        if ($request->has('filter.barcodes')) {
+            $filter = $request->get('filter');
+
+            $dbOffers->whereHas('barcodes', function ($query) use ($filter) {
+                $query->where('br_barcode', 'like', '%' . $filter['barcodes'] . '%');
+            });
+        }
 
         return [
             'offersList' => $dbOffers->filters()->paginate(50),

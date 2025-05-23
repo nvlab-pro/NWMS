@@ -168,4 +168,8 @@ class rwOffer extends Model implements AuditableContract
         return $this->hasOne(rwShop::class, 'sh_id', 'of_shop_id');
     }
 
+    public function barcodes()
+    {
+        return $this->hasMany(rwBarcode::class, 'br_offer_id', 'of_id');
+    }
 }

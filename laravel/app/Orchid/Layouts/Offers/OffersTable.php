@@ -101,6 +101,17 @@ class OffersTable extends Table
                         ->route('platform.offers.edit', $modelName->of_id);
                 }),
 
+            TD::make('barcodes', CustomTranslator::get('Штрих-коды'))
+                ->align('center')
+                ->filter(TD::FILTER_TEXT)
+                ->render(function (rwOffer $model) {
+                    $str = '';
+                    foreach ($model->barcodes as $barcode) {
+                        $str .= $barcode->br_barcode . '<br>';
+                    }
+                    return $str;
+                }),
+
             TD::make('of_price', CustomTranslator::get('Cтоимость'))
                 ->sort()
                 ->align('center')
