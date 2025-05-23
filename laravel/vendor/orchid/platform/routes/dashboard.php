@@ -15,7 +15,7 @@ use Tabuna\Breadcrumbs\Trail;
 // Index and default...
 Route::get('/', [IndexController::class, 'index'])
     ->name('index')
-    ->breadcrumbs(fn (Trail $trail) => $trail->push(__('🏠'), route('platform.index')));
+    ->breadcrumbs(fn (Trail $trail) => $trail->push(__('Home'), route('platform.index')));
 
 Route::screen('search/{query}', SearchScreen::class)
     ->name('search')

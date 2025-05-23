@@ -9,15 +9,15 @@ use Orchid\Screen\Field;
 /**
  * Class Input.
  *
- * @method Code name(string $value = null)
- * @method Code value($value = true)
- * @method Code help(string $value = null)
- * @method Code popover(string $value = null)
- * @method Code language($value = true)
- * @method Code lineNumbers($value = true)
- * @method Code height($value = '300px')
- * @method Code readonly($value = true)
- * @method Code title(string $value = null)
+ * @method $this name(string $value = null)
+ * @method $this value($value = true)
+ * @method $this help(string $value = null)
+ * @method $this popover(string $value = null)
+ * @method $this language($value = true)
+ * @method $this lineNumbers($value = true)
+ * @method $this height($value = '300px')
+ * @method $this readonly($value = true)
+ * @method $this title(string $value = null)
  */
 class Code extends Field
 {

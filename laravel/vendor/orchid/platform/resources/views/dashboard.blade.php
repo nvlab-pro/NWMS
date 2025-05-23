@@ -1,7 +1,7 @@
 @extends(config('platform.workspace', 'platform::workspace.compact'))
 
 @section('aside')
-    <div class="aside col-xs-12 col-xxl-2 bg-dark d-flex flex-column me-auto" data-controller="menu">
+    <div class="aside col-xs-12 col-xxl-2 bg-dark d-flex flex-column" data-controller="menu">
         <header class="d-xl-block p-3 mt-xl-4 w-100 d-flex align-items-center">
             <a href="#" class="header-toggler d-xl-none me-auto order-first d-flex align-items-center lh-1"
                data-action="click->menu#toggle">
@@ -19,7 +19,7 @@
 
             @include('platform::partials.search')
 
-            <ul class="nav flex-column mb-md-1 mb-auto ps-0">
+            <ul class="nav flex-column mb-md-1 mb-auto ps-0 gap-1">
                 {!! Dashboard::renderMenu() !!}
             </ul>
 

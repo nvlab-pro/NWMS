@@ -11,15 +11,15 @@ use Orchid\Screen\Field;
 /**
  * Class TimeZone.
  *
- * @method TimeZone autofocus($value = true)
- * @method TimeZone disabled($value = true)
- * @method TimeZone form($value = true)
- * @method TimeZone name(string $value = null)
- * @method TimeZone required(bool $value = true)
- * @method TimeZone tabindex($value = true)
- * @method TimeZone help(string $value = null)
- * @method TimeZone popover(string $value = null)
- * @method TimeZone title(string $value = null)
+ * @method $this autofocus($value = true)
+ * @method $this disabled($value = true)
+ * @method $this form($value = true)
+ * @method $this name(string $value = null)
+ * @method $this required(bool $value = true)
+ * @method $this tabindex($value = true)
+ * @method $this help(string $value = null)
+ * @method $this popover(string $value = null)
+ * @method $this title(string $value = null)
  */
 class TimeZone extends Field
 {
@@ -72,7 +72,7 @@ class TimeZone extends Field
         });
     }
 
-    public function listIdentifiers(int $time = DateTimeZone::ALL): self
+    public function listIdentifiers(int $time = DateTimeZone::ALL): static
     {
         $timeZone = collect(DateTimeZone::listIdentifiers($time))
             ->mapWithKeys(static fn ($timezone) => [$timezone => $timezone])->toArray();

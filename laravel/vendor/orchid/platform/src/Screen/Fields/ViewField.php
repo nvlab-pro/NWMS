@@ -9,8 +9,8 @@ use Orchid\Screen\Field;
 /**
  * Class ViewField.
  *
- * @method ViewField name(string $value = null)
- * @method ViewField help(string $value = null)
+ * @method $this name(string $value = null)
+ * @method $this help(string $value = null)
  */
 class ViewField extends Field
 {

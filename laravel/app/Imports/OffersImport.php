@@ -27,16 +27,22 @@ class OffersImport implements ToModel, WithHeadingRow
         $shopId = $this->shopId;
 
         // Сначала ищем товар только в рамках текущего магазина
-        $offer = rwOffer::query()
-            ->where('of_shop_id', $shopId)
-            ->when(!empty($row['of_id']), fn($q) => $q->where('of_id', $row['of_id']))
-            ->when(empty($row['of_id']) && !empty($row['of_ext_id']), fn($q) => $q->where('of_ext_id', $row['of_ext_id']))
-            ->when(empty($row['of_id']) && empty($row['of_ext_id']) && !empty($row['of_sku']), fn($q) => $q->where('of_sku', $row['of_sku']))
-            ->when(empty($row['of_id']) && empty($row['of_ext_id']) && empty($row['of_sku']) && !empty($row['of_article']), fn($q) => $q->where('of_article', $row['of_article']))
-            ->first();
+        if (empty($row['of_id']) && empty($row['of_ext_id']) && empty($row['of_sku']) && empty($row['of_article'])) {
+
+            $offer = [];
+
+        } else {
+            $offer = rwOffer::query()
+                ->where('of_shop_id', $shopId)
+                ->when(!empty($row['of_id']), fn($q) => $q->where('of_id', $row['of_id']))
+                ->when(empty($row['of_id']) && !empty($row['of_ext_id']), fn($q) => $q->where('of_ext_id', $row['of_ext_id']))
+                ->when(empty($row['of_id']) && empty($row['of_ext_id']) && !empty($row['of_sku']), fn($q) => $q->where('of_sku', $row['of_sku']))
+                ->when(empty($row['of_id']) && empty($row['of_ext_id']) && empty($row['of_sku']) && !empty($row['of_article']), fn($q) => $q->where('of_article', $row['of_article']))
+                ->first();
+        }
 
         $payloadFields = [
-            'of_name' => $row['of_name'] ?? null,
+            'of_name' => $row['of_name'] ?? ' ',
             'of_article' => $row['of_article'] ?? null,
             'of_sku' => $row['of_sku'] ?? null,
             'of_price' => $row['of_price'] ?? null,

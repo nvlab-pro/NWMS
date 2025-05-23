@@ -10,38 +10,38 @@ use Orchid\Screen\Field;
 /**
  * Class Input.
  *
- * @method Input accept($value = true)
- * @method Input accesskey($value = true)
- * @method Input autocomplete($value = true)
- * @method Input autofocus($value = true)
- * @method Input checked($value = true)
- * @method Input disabled($value = true)
- * @method Input form($value = true)
- * @method Input formaction($value = true)
- * @method Input formenctype($value = true)
- * @method Input formmethod($value = true)
- * @method Input formnovalidate($value = true)
- * @method Input formtarget($value = true)
- * @method Input max(int $value)
- * @method Input maxlength(int $value)
- * @method Input min(int $value)
- * @method Input minlength(int $value)
- * @method Input name(string $value = null)
- * @method Input pattern($value = true)
- * @method Input placeholder(string $value = null)
- * @method Input readonly($value = true)
- * @method Input required(bool $value = true)
- * @method Input size($value = true)
- * @method Input src($value = true)
- * @method Input step($value = true)
- * @method Input tabindex($value = true)
- * @method Input type($value = true)
- * @method Input value($value = true)
+ * @method $this accept($value = true)
+ * @method $this accesskey($value = true)
+ * @method $this autocomplete($value = true)
+ * @method $this autofocus($value = true)
+ * @method $this checked($value = true)
+ * @method $this disabled($value = true)
+ * @method $this form($value = true)
+ * @method $this formaction($value = true)
+ * @method $this formenctype($value = true)
+ * @method $this formmethod($value = true)
+ * @method $this formnovalidate($value = true)
+ * @method $this formtarget($value = true)
+ * @method $this max(int $value)
+ * @method $this maxlength(int $value)
+ * @method $this min(int $value)
+ * @method $this minlength(int $value)
+ * @method $this name(string $value = null)
+ * @method $this pattern($value = true)
+ * @method $this placeholder(string $value = null)
+ * @method $this readonly($value = true)
+ * @method $this required(bool $value = true)
+ * @method $this size($value = true)
+ * @method $this src($value = true)
+ * @method $this step($value = true)
+ * @method $this tabindex($value = true)
+ * @method self  type($value = true)
+ * @method $this value($value = true)
  * @method Input help(string $value = null)
- * @method Input popover(string $value = null)
- * @method Input mask($value = true)
- * @method Input title(string $value = null)
- * @method Input inputmode(string $value = null)
+ * @method $this popover(string $value = null)
+ * @method $this mask($value = true)
+ * @method $this title(string $value = null)
+ * @method $this inputmode(string $value = null)
  */
 class Input extends Field
 {
@@ -114,7 +114,7 @@ class Input extends Field
         });
     }
 
-    public function datalist(array $datalist = []): self
+    public function datalist(array $datalist = []): static
     {
         if (empty($datalist)) {
             return $this;

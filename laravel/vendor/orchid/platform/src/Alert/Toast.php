@@ -46,9 +46,9 @@ class Toast extends Alert
      *
      * @param bool $autoHide
      *
-     * @return $this
+     * @return static
      */
-    public function autoHide(bool $autoHide = true): self
+    public function autoHide(bool $autoHide = true): static
     {
         $this->session->flash(static::SESSION_AUTO_HIDE, var_export($autoHide, true));
 
@@ -56,28 +56,58 @@ class Toast extends Alert
     }
 
     /**
+     * @alias persistent() method
+     *
      * Disable the auto hide option for the toast notification.
      *
      * @param bool $disable
      *
-     * @return $this
+     * @return static
      */
-    public function disableAutoHide(bool $disable = true): self
+    public function disableAutoHide(bool $disable = true): static
     {
-        return $this->autoHide(! $disable);
+        return $this->persistent($disable);
+    }
+
+    /**
+     * Make the toast notification persistent.
+     *
+     * Disables auto-hide, keeping the notification visible until manually dismissed.
+     *
+     * @param bool $persistent Whether the toast should remain visible indefinitely.
+     *
+     * @return static
+     */
+    public function persistent(bool $persistent = true): static
+    {
+        return $this->autoHide(! $persistent);
     }
 
     /**
      * Set the delay option for the toast notification.
      *
-     * @param int $delay The delay in seconds
+     * @param int $delay The delay in milliseconds before hiding the toast.
      *
-     * @return $this
+     * @return static
      */
-    public function delay(int $delay = 5000): self
+    public function delay(int $delay = 5000): static
     {
         $this->session->flash(static::SESSION_DELAY, $delay);
 
         return $this;
+    }
+
+    /**
+     * Set the toast notification delay in seconds.
+     *
+     * Converts seconds to milliseconds and applies the delay.
+     *
+     * @param int $seconds Delay duration in seconds.
+     *
+     * @return static
+     */
+    public function seconds(int $seconds): static
+    {
+        return $this->delay($seconds * 1000);
     }
 }

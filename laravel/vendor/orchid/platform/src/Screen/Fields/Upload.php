@@ -14,29 +14,29 @@ use Orchid\Support\Init;
 /**
  * Class Upload.
  *
- * @method Upload form($value = true)
- * @method Upload formaction($value = true)
- * @method Upload formenctype($value = true)
- * @method Upload formmethod($value = true)
- * @method Upload formnovalidate($value = true)
- * @method Upload formtarget($value = true)
- * @method Upload name(string $value = null)
- * @method Upload placeholder(string $value = null)
- * @method Upload value($value = true)
- * @method Upload help(string $value = null)
- * @method Upload parallelUploads($value = true)
- * @method Upload maxFileSize($value = true)
- * @method Upload maxFiles($value = true)
- * @method Upload timeOut(int $second = null)
- * @method Upload acceptedFiles($value = true)
- * @method Upload resizeQuality($value = true)
- * @method Upload resizeWidth($value = true)
- * @method Upload resizeHeight($value = true)
- * @method Upload popover(string $value = null)
- * @method Upload groups($value = true)
- * @method Upload media($value = true)
- * @method Upload closeOnAdd($value = true)
- * @method Upload title(string $value = null)
+ * @method $this form($value = true)
+ * @method $this formaction($value = true)
+ * @method $this formenctype($value = true)
+ * @method $this formmethod($value = true)
+ * @method $this formnovalidate($value = true)
+ * @method $this formtarget($value = true)
+ * @method $this name(string $value = null)
+ * @method $this placeholder(string $value = null)
+ * @method $this value($value = true)
+ * @method $this help(string $value = null)
+ * @method $this parallelUploads($value = true)
+ * @method $this maxFileSize($value = true)
+ * @method $this maxFiles($value = true)
+ * @method $this timeOut(int $second = null)
+ * @method $this acceptedFiles($value = true)
+ * @method $this resizeQuality($value = true)
+ * @method $this resizeWidth($value = true)
+ * @method $this resizeHeight($value = true)
+ * @method $this popover(string $value = null)
+ * @method $this groups($value = true)
+ * @method $this media($value = true)
+ * @method $this closeOnAdd($value = true)
+ * @method $this title(string $value = null)
  */
 class Upload extends Field
 {
@@ -146,11 +146,11 @@ class Upload extends Field
     }
 
     /**
-     * @throws \Throwable
+     * @param string $storage
      *
-     * @return $this
+     * @return static
      */
-    public function storage(string $storage): self
+    public function storage(string $storage): static
     {
         $disk = config('filesystems.disks.'.$storage);
 
@@ -164,7 +164,7 @@ class Upload extends Field
     /**
      * Set custom attachment upload path
      */
-    public function path(string $path): self
+    public function path(string $path): static
     {
         return $this->set('path', $path);
     }

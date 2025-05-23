@@ -8,6 +8,7 @@ use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
 use Orchid\Platform\Commands\AdminCommand;
 use Orchid\Platform\Commands\ChartCommand;
+use Orchid\Platform\Commands\FieldCommand;
 use Orchid\Platform\Commands\FilterCommand;
 use Orchid\Platform\Commands\InstallCommand;
 use Orchid\Platform\Commands\ListenerCommand;
@@ -16,6 +17,7 @@ use Orchid\Platform\Commands\PublishCommand;
 use Orchid\Platform\Commands\RowsCommand;
 use Orchid\Platform\Commands\ScreenCommand;
 use Orchid\Platform\Commands\SelectionCommand;
+use Orchid\Platform\Commands\StubPublishCommand;
 use Orchid\Platform\Commands\TableCommand;
 use Orchid\Platform\Commands\TabMenuCommand;
 use Orchid\Platform\Dashboard;
@@ -40,6 +42,8 @@ class ConsoleServiceProvider extends ServiceProvider
         ListenerCommand::class,
         PresenterCommand::class,
         TabMenuCommand::class,
+        StubPublishCommand::class,
+        FieldCommand::class,
     ];
 
     public function boot(): void

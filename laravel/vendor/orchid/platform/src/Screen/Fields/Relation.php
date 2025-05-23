@@ -14,19 +14,19 @@ use Orchid\Support\Assert;
 /**
  * Class Relation.
  *
- * @method Relation accesskey($value = true)
- * @method Relation autofocus($value = true)
- * @method Relation disabled($value = true)
- * @method Relation form($value = true)
- * @method Relation name(string $value = null)
- * @method Relation required(bool $value = true)
- * @method Relation size($value = true)
- * @method Relation tabindex($value = true)
- * @method Relation help(string $value = null)
- * @method Relation placeholder(string $placeholder = null)
- * @method Relation popover(string $value = null)
- * @method Relation title(string $value = null)
- * @method Relation allowAdd($value = false)
+ * @method $this accesskey($value = true)
+ * @method $this autofocus($value = true)
+ * @method $this disabled($value = true)
+ * @method $this form($value = true)
+ * @method $this name(string $value = null)
+ * @method $this required(bool $value = true)
+ * @method $this size($value = true)
+ * @method $this tabindex($value = true)
+ * @method $this help(string $value = null)
+ * @method $this placeholder(string $placeholder = null)
+ * @method $this popover(string $value = null)
+ * @method $this title(string $value = null)
+ * @method $this allowAdd($value = false)
  */
 class Relation extends Field
 {
@@ -89,7 +89,7 @@ class Relation extends Field
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function fromModel(string $model, string $name, ?string $key = null): self
+    public function fromModel(string $model, string $name, ?string $key = null): static
     {
         $key = $key ?? resolve($model)->getModel()->getKeyName();
 
@@ -126,7 +126,7 @@ class Relation extends Field
         });
     }
 
-    public function fromClass(string $class, string $name, string $key = 'id'): self
+    public function fromClass(string $class, string $name, string $key = 'id'): static
     {
         $this->set('relationModel', Crypt::encryptString($class));
         $this->set('relationName', Crypt::encryptString($name));
@@ -173,7 +173,7 @@ class Relation extends Field
     /**
      * @param array $parameters
      */
-    public function applyScope(string $scope, ...$parameters): self
+    public function applyScope(string $scope, ...$parameters): static
     {
         $data = [
             'name'       => lcfirst($scope),
@@ -188,9 +188,9 @@ class Relation extends Field
     /**
      * @param string|array $columns
      *
-     * @return $this
+     * @return static
      */
-    public function searchColumns(...$columns): self
+    public function searchColumns(...$columns): static
     {
         $columns = Arr::wrap($columns);
 
@@ -203,7 +203,7 @@ class Relation extends Field
      * Displays the calculated model
      * field in the selection field.
      */
-    public function displayAppend(string $append): self
+    public function displayAppend(string $append): static
     {
         $this->set('relationAppend', Crypt::encryptString($append));
 
@@ -213,9 +213,9 @@ class Relation extends Field
     /**
      * Set the maximum number of items that may be selected.
      *
-     * @return $this
+     * @return static
      */
-    public function max(int $number)
+    public function max(int $number): static
     {
         $this->set('data-maximum-selection-length', (string) $number);
 
@@ -225,9 +225,9 @@ class Relation extends Field
     /**
      * Sets the size of the chunk to be shown to the user.
      *
-     * @return $this
+     * @return static
      */
-    public function chunk(int $value)
+    public function chunk(int $value): static
     {
         return $this->set('chunk', $value);
     }
@@ -235,9 +235,9 @@ class Relation extends Field
     /**
      * Allow empty value to be set
      *
-     * @return $this
+     * @return static
      */
-    public function allowEmpty(bool $value = true)
+    public function allowEmpty(bool $value = true): static
     {
         return $this->set('allowEmpty', $value);
     }
@@ -247,7 +247,7 @@ class Relation extends Field
      *
      * @deprecated use `allowEmpty()` instead
      */
-    public function nullable(bool $value = true): self
+    public function nullable(bool $value = true): static
     {
         return $this->set('allowEmpty', $value);
     }

@@ -9,21 +9,21 @@ use Orchid\Screen\Field;
 /**
  * Class UTM.
  *
- * @method UTM form($value = true)
- * @method UTM formaction($value = true)
- * @method UTM formenctype($value = true)
- * @method UTM formmethod($value = true)
- * @method UTM formnovalidate($value = true)
- * @method UTM formtarget($value = true)
- * @method UTM name(string $value = null)
- * @method UTM placeholder(string $value = null)
- * @method UTM required(bool $value = true)
- * @method UTM tabindex($value = true)
- * @method UTM value($value = true)
- * @method UTM help(string $value = null)
- * @method UTM popover(string $value = null)
- * @method UTM title(string $value = null)
- * @method UTM pattern($value = true)
+ * @method $this form($value = true)
+ * @method $this formaction($value = true)
+ * @method $this formenctype($value = true)
+ * @method $this formmethod($value = true)
+ * @method $this formnovalidate($value = true)
+ * @method $this formtarget($value = true)
+ * @method $this name(string $value = null)
+ * @method $this placeholder(string $value = null)
+ * @method $this required(bool $value = true)
+ * @method $this tabindex($value = true)
+ * @method $this value($value = true)
+ * @method $this help(string $value = null)
+ * @method $this popover(string $value = null)
+ * @method $this title(string $value = null)
+ * @method $this pattern($value = true)
  */
 class UTM extends Field
 {

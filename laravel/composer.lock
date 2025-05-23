@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "955f5b7a25fa054dd9057be4279b6553",
+    "content-hash": "cd108694153af479fcdb0cc6b0333abe",
     "packages": [
         {
             "name": "brick/math",
@@ -3513,22 +3513,22 @@
         },
         {
             "name": "orchid/platform",
-            "version": "14.44.1",
+            "version": "14.50.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchidsoftware/platform.git",
-                "reference": "130e1aea00bc08f44715b6f08065e591ead9eed4"
+                "reference": "36f4195a487c7ba21f4d9234d444c6f8b7026449"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchidsoftware/platform/zipball/130e1aea00bc08f44715b6f08065e591ead9eed4",
-                "reference": "130e1aea00bc08f44715b6f08065e591ead9eed4",
+                "url": "https://api.github.com/repos/orchidsoftware/platform/zipball/36f4195a487c7ba21f4d9234d444c6f8b7026449",
+                "reference": "36f4195a487c7ba21f4d9234d444c6f8b7026449",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.2",
                 "composer/semver": "^3.0",
-                "laravel/framework": "^10.0 || ^11.0",
+                "laravel/framework": "^10.0 || ^11.0 || ^12.0",
                 "laravel/scout": "^9.0 || ^10.0",
                 "orchid/blade-icons": "^4.0",
                 "tabuna/breadcrumbs": "^4.0",
@@ -3536,17 +3536,17 @@
                 "watson/active": "^7.0"
             },
             "conflict": {
-                "laravel/framework": "<10.48.8",
+                "laravel/framework": "<=10.48.25, <=11.34.0",
                 "nesbot/carbon": "<2.66.0",
                 "orchestra/testbench-core": "<8.23.9"
             },
             "require-dev": {
                 "fakerphp/faker": "^1.9.1",
                 "laravel/pint": "^1.14",
-                "orchestra/testbench": "^8.0 || ^9.0",
-                "orchestra/testbench-core": "^8.0 || ^9.0",
-                "orchestra/testbench-dusk": "^8.0 || ^9.0",
-                "phpunit/phpunit": "^10.0 || ^11.0"
+                "orchestra/testbench": "^8.0 || ^9.0 || ^10.0",
+                "orchestra/testbench-core": "^8.0 || ^9.0 || ^10.0",
+                "orchestra/testbench-dusk": "^8.0 || ^9.0 || ^10.0",
+                "phpunit/phpunit": "^10.0 || ^11.0 || ^12.0"
             },
             "suggest": {
                 "orchid/crud": "Automated CRUD based on your files resources.",
@@ -3616,7 +3616,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2024-11-26T14:45:49+00:00"
+            "time": "2025-03-30T23:39:48+00:00"
         },
         {
             "name": "owen-it/laravel-auditing",

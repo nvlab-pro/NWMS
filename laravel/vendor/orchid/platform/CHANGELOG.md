@@ -5,6 +5,115 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 14.50.0 - 2025-03-31
+
+### Added
+- Added field stub [#2983](https://github.com/orchidsoftware/platform/pull/2983) [#2984](https://github.com/orchidsoftware/platform/pull/2984)
+- Methods `format/serverFormat` to `DateRange` field
+
+### Fixed
+- Disable check for latest package versions in `dev`
+
+
+## 14.49.0 - 2025-03-27
+
+### Added
+- Added a new Artisan command to publish `stubs` [#2978](https://github.com/orchidsoftware/platform/pull/2978)
+- Introduced the "confirm" attribute for property translations [#2976](https://github.com/orchidsoftware/platform/pull/2976)
+
+### Fixed
+- Corrected method annotation return type for `RadioButtons` [#2980](https://github.com/orchidsoftware/platform/pull/2980)
+
+## 14.48.1 - 2025-03-14
+
+### Fixed
+- Revert #2967 to `$this`
+
+## 14.48.0 - 2025-03-13
+
+### Added
+- `persistent` and `seconds` methods to Toast notification [#2974](https://github.com/orchidsoftware/platform/pull/2974)
+
+### Changed
+- Improve side menu notification badge and icon size
+
+### Fixed
+- Correct title for demo layouts page
+
+## 14.47.0 - 2025-03-13
+
+### Added
+- Support for simple persistent notification sending [#2968](https://github.com/orchidsoftware/platform/pull/2968)
+- Smoothing method for `Cropper` [#2966](https://github.com/orchidsoftware/platform/pull/2966)
+
+### Changed
+- Improved default text for the edit role screen
+- Updated triggers for GitHub Actions
+- Refactored `Field` class methods to support fluent chaining with a `static` return type [#2967](https://github.com/orchidsoftware/platform/pull/2967)
+
+## 14.46.1 - 2025-03-01
+
+### Fixed
+- Input files in the cropper now respect `$acceptedFiles` [#2962](https://github.com/orchidsoftware/platform/pull/2962)
+- Modal caching when navigating back and autofocus on open [#2959](https://github.com/orchidsoftware/platform/pull/2959)
+- Alias `disabled`/`readonly` for Quill [#2964](https://github.com/orchidsoftware/platform/pull/2964)
+
+## 14.46.0 - 2025-03-01
+
+### Added
+- Support for Laravel 12.x [#2957](https://github.com/orchidsoftware/platform/pull/2957) [#2960](https://github.com/orchidsoftware/platform/pull/2960)
+
+## 14.45.2 - 2025-02-05
+
+### Fixed
+- `like` filter for Laravel 11 [#2954](https://github.com/orchidsoftware/platform/issues/2954)
+
+## 14.45.1 - 2025-02-04
+
+### Fixed
+- Laravel version conflict [#2952](https://github.com/orchidsoftware/platform/pull/2952) [#2951](https://github.com/orchidsoftware/platform/issues/2951)
+
+## 14.45.0 - 2025-02-03
+
+### Added
+- Added keyboard accessibility for tab navigation [#2944](https://github.com/orchidsoftware/platform/pull/2944)
+- Added support for Kazakh language translations [#2949](https://github.com/orchidsoftware/platform/pull/2949)
+- Added `activeAccordion` method to `Accordion.php` [#2939](https://github.com/orchidsoftware/platform/pull/2939)
+- Added screen state test
+
+### Changed
+- Updated global search to use a window modal for better UX
+- Improved tag ID generation for tabs [#2935](https://github.com/orchidsoftware/platform/issues/2935)
+- Improved code on accordion layout
+- Improved type annotations and type hints
+- Improved types for screen testing
+
+### Fixed
+- Fixed Pslam errors
+- Fixed code style issues
+- Fixed types inconsistencies
+- Improved Accordion accessibility [#2946](https://github.com/orchidsoftware/platform/pull/2946)
+- Reload page when changing assets [#2932](https://github.com/orchidsoftware/platform/issues/2932)
+
+### CI/CD
+- Updated version of `actions/upload-artifact`
+
+## 14.44.2 - 2025-01-17
+
+### Added
+- Translated Role edit title and description in ru language [#2936](https://github.com/orchidsoftware/platform/pull/2936)
+
+### Changed
+- Use `whereLike` for case-insensitive search
+- Simplify RTL condition logic
+- Improved workspace centering on laptops
+- Increment pslam error level
+
+### Fixed
+- Laravel version conflict for PHP 8.4
+- Fixed jumping horizontal field title
+- Error Notifications Are Not Passing Correctly in Attach [#2934](https://github.com/orchidsoftware/platform/pull/2934)
+
 ## 14.44.1 - 2024-11-26
 
 ### Fixed

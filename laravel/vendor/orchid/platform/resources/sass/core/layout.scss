@@ -8,7 +8,6 @@ body {
   overflow-x: hidden;
 }
 
-
 @include media-breakpoint-up(xl) {
     .aside {
         width: $app-aside-width;
