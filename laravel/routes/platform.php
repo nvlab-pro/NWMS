@@ -52,6 +52,14 @@ use Illuminate\Support\Facades\Request;
 |
 */
 
+Route::post('logout', function (\Illuminate\Http\Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/admin'); // 👉 Здесь укажи свой путь
+})->name('platform.logout');
+
 // Main
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');

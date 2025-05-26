@@ -93,6 +93,8 @@
     <div class="row g-0">
         <div style="margin: 10px 0px 10px 10px;">
 
+            @if(count($dbTablesList) > 0)
+
             @foreach($dbTablesList as $table)
 
                 @php
@@ -207,6 +209,13 @@
                 </button><br>
 
             @endforeach
+            @else
+
+                <div class="alert alert-warning" role="alert">
+                    <a href="{{ route('platform.whmanagement.packing-process-settings.index') }}">{{ CustomTranslator::get('У вас не заведен ни один стол упаковки! Чтобы начать упаковку, пожалуйста создайте хотя бы один!') }}</a>
+                </div>
+
+            @endif
 
         </div>
     </div>

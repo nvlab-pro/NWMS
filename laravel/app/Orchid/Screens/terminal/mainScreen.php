@@ -167,6 +167,19 @@ class mainScreen extends Screen
                                     font-size: 20px; 
                                     background-color: #D3D3D4; 
                                     margin-bottom: 5px;'),
+
+                    Button::make(CustomTranslator::get('Выход'))
+                        ->icon('bs.box-arrow-left')
+                        ->route('platform.logout')
+                        ->style('border-bottom: 2px solid #999999; 
+                                    border-right: 2px solid #999999; 
+                                    border-top: 1px solid #DDDDDD; 
+                                    border-left: 1px solid #DDDDDD; 
+                                    width: 100%; text-align: left; 
+                                    padding: 15px 15px 15px 15px; 
+                                    font-size: 20px; 
+                                    background-color: #ffc6c6; 
+                                    margin-bottom: 5px;'),
                 ]),
             ];
         }
