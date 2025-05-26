@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Laravel\Scout\Builder;
+use Laravel\Scout\Exceptions\NotSupportedException;
 use stdClass;
 use Typesense\Client as Typesense;
 use Typesense\Collection as TypesenseCollection;
+use Typesense\Exceptions\ObjectAlreadyExists;
+use Typesense\Exceptions\ObjectNotFound;
 use Typesense\Exceptions\TypesenseClientError;
 
 class TypesenseEngine extends Engine
@@ -243,13 +246,23 @@ class TypesenseEngine extends Engine
      */
     protected function performSearch(Builder $builder, array $options = []): mixed
     {
-        $documents = $this->getOrCreateCollectionFromModel($builder->model, false)->getDocuments();
+        $documents = $this->getOrCreateCollectionFromModel(
+            $builder->model,
+            $builder->index,
+            false,
+        )->getDocuments();
 
         if ($builder->callback) {
             return call_user_func($builder->callback, $documents, $builder->query, $options);
         }
 
-        return $documents->search($options);
+        try {
+            return $documents->search($options);
+        } catch (ObjectNotFound) {
+            $this->getOrCreateCollectionFromModel($builder->model, $builder->index, true);
+
+            return $documents->search($options);
+        }
     }
 
     /**
@@ -306,7 +319,7 @@ class TypesenseEngine extends Engine
      * @param  int|null  $perPage
      * @return array
      */
-    public function buildSearchParameters(Builder $builder, int $page, int|null $perPage): array
+    public function buildSearchParameters(Builder $builder, int $page, ?int $perPage): array
     {
         $parameters = [
             'q' => $builder->query,
@@ -565,11 +578,11 @@ class TypesenseEngine extends Engine
      * @param  array  $options
      * @return void
      *
-     * @throws \Exception
+     * @throws NotSupportedException
      */
     public function createIndex($name, array $options = [])
     {
-        throw new Exception('Typesense indexes are created automatically upon adding objects.');
+        throw new NotSupportedException('Typesense indexes are created automatically upon adding objects.');
     }
 
     /**
@@ -591,16 +604,19 @@ class TypesenseEngine extends Engine
      * Get collection from model or create new one.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @return TypesenseCollection
+     * @return \Typesense\Collection
      *
      * @throws \Typesense\Exceptions\TypesenseClientError
      * @throws \Http\Client\Exception
      */
-    protected function getOrCreateCollectionFromModel($model, bool $indexOperation = true): TypesenseCollection
+    protected function getOrCreateCollectionFromModel($model, ?string $collectionName = null, bool $indexOperation = true): TypesenseCollection
     {
-        $method = $indexOperation ? 'indexableAs' : 'searchableAs';
+        if (! $indexOperation) {
+            $collectionName = $collectionName ?? $model->searchableAs();
+        } else {
+            $collectionName = $model->indexableAs();
+        }
 
-        $collectionName = $model->{$method}();
         $collection = $this->typesense->getCollections()->{$collectionName};
 
         if (! $indexOperation) {
@@ -629,7 +645,12 @@ class TypesenseEngine extends Engine
             $schema['name'] = $model->searchableAs();
         }
 
-        $this->typesense->getCollections()->create($schema);
+        try {
+            // Create the collection in Typesense...
+            $this->typesense->getCollections()->create($schema);
+        } catch (ObjectAlreadyExists $e) {
+            // Collection already exists...
+        }
 
         $collection->setExists(true);
 

@@ -60,6 +60,7 @@ final readonly class Configuration
     private ?array $excludeGroups;
     private ?int $executionOrder;
     private ?int $executionOrderDefects;
+    private ?bool $failOnAllIssues;
     private ?bool $failOnDeprecation;
     private ?bool $failOnPhpunitDeprecation;
     private ?bool $failOnEmptyTestSuite;
@@ -70,6 +71,7 @@ final readonly class Configuration
     private ?bool $failOnWarning;
     private ?bool $stopOnDefect;
     private ?bool $stopOnDeprecation;
+    private ?string $specificDeprecationToStopOn;
     private ?bool $stopOnError;
     private ?bool $stopOnFailure;
     private ?bool $stopOnIncomplete;
@@ -99,6 +101,11 @@ final readonly class Configuration
      * @var ?non-empty-list<non-empty-string>
      */
     private ?array $testsUsing;
+
+    /**
+     * @var ?non-empty-list<non-empty-string>
+     */
+    private ?array $testsRequiringPhpExtension;
     private bool $help;
     private ?string $includePath;
 
@@ -139,6 +146,7 @@ final readonly class Configuration
     private ?string $testSuite;
     private ?string $excludeTestSuite;
     private bool $useDefaultConfiguration;
+    private ?bool $displayDetailsOnAllIssues;
     private ?bool $displayDetailsOnIncompleteTests;
     private ?bool $displayDetailsOnSkippedTests;
     private ?bool $displayDetailsOnTestsThatTriggerDeprecations;
@@ -162,12 +170,13 @@ final readonly class Configuration
      * @param ?non-empty-list<non-empty-string>                    $groups
      * @param ?non-empty-list<non-empty-string>                    $testsCovering
      * @param ?non-empty-list<non-empty-string>                    $testsUsing
+     * @param ?non-empty-list<non-empty-string>                    $testsRequiringPhpExtension
      * @param ?non-empty-array<non-empty-string, non-empty-string> $iniSettings
      * @param ?non-empty-list<non-empty-string>                    $testSuffixes
      * @param ?non-empty-list<non-empty-string>                    $coverageFilter
      * @param ?non-empty-list<non-empty-string>                    $extensions
      */
-    public function __construct(array $arguments, ?string $atLeastVersion, ?bool $backupGlobals, ?bool $backupStaticProperties, ?bool $beStrictAboutChangesToGlobalState, ?string $bootstrap, ?string $cacheDirectory, ?bool $cacheResult, bool $checkVersion, ?string $colors, null|int|string $columns, ?string $configurationFile, ?string $coverageClover, ?string $coverageCobertura, ?string $coverageCrap4J, ?string $coverageHtml, ?string $coveragePhp, ?string $coverageText, ?bool $coverageTextShowUncoveredFiles, ?bool $coverageTextShowOnlySummary, ?string $coverageXml, ?bool $pathCoverage, bool $warmCoverageCache, ?int $defaultTimeLimit, ?bool $disableCodeCoverageIgnore, ?bool $disallowTestOutput, ?bool $enforceTimeLimit, ?array $excludeGroups, ?int $executionOrder, ?int $executionOrderDefects, ?bool $failOnDeprecation, ?bool $failOnPhpunitDeprecation, ?bool $failOnEmptyTestSuite, ?bool $failOnIncomplete, ?bool $failOnNotice, ?bool $failOnRisky, ?bool $failOnSkipped, ?bool $failOnWarning, ?bool $stopOnDefect, ?bool $stopOnDeprecation, ?bool $stopOnError, ?bool $stopOnFailure, ?bool $stopOnIncomplete, ?bool $stopOnNotice, ?bool $stopOnRisky, ?bool $stopOnSkipped, ?bool $stopOnWarning, ?string $filter, ?string $excludeFilter, ?string $generateBaseline, ?string $useBaseline, bool $ignoreBaseline, bool $generateConfiguration, bool $migrateConfiguration, ?array $groups, ?array $testsCovering, ?array $testsUsing, bool $help, ?string $includePath, ?array $iniSettings, ?string $junitLogfile, bool $listGroups, bool $listSuites, bool $listTestFiles, bool $listTests, ?string $listTestsXml, ?bool $noCoverage, ?bool $noExtensions, ?bool $noOutput, ?bool $noProgress, ?bool $noResults, ?bool $noLogging, ?bool $processIsolation, ?int $randomOrderSeed, ?bool $reportUselessTests, ?bool $resolveDependencies, ?bool $reverseList, ?bool $stderr, ?bool $strictCoverage, ?string $teamcityLogfile, ?string $testdoxHtmlFile, ?string $testdoxTextFile, ?array $testSuffixes, ?string $testSuite, ?string $excludeTestSuite, bool $useDefaultConfiguration, ?bool $displayDetailsOnIncompleteTests, ?bool $displayDetailsOnSkippedTests, ?bool $displayDetailsOnTestsThatTriggerDeprecations, ?bool $displayDetailsOnPhpunitDeprecations, ?bool $displayDetailsOnTestsThatTriggerErrors, ?bool $displayDetailsOnTestsThatTriggerNotices, ?bool $displayDetailsOnTestsThatTriggerWarnings, bool $version, ?array $coverageFilter, ?string $logEventsText, ?string $logEventsVerboseText, ?bool $printerTeamCity, ?bool $testdoxPrinter, ?bool $testdoxPrinterSummary, bool $debug, ?array $extensions)
+    public function __construct(array $arguments, ?string $atLeastVersion, ?bool $backupGlobals, ?bool $backupStaticProperties, ?bool $beStrictAboutChangesToGlobalState, ?string $bootstrap, ?string $cacheDirectory, ?bool $cacheResult, bool $checkVersion, ?string $colors, null|int|string $columns, ?string $configurationFile, ?string $coverageClover, ?string $coverageCobertura, ?string $coverageCrap4J, ?string $coverageHtml, ?string $coveragePhp, ?string $coverageText, ?bool $coverageTextShowUncoveredFiles, ?bool $coverageTextShowOnlySummary, ?string $coverageXml, ?bool $pathCoverage, bool $warmCoverageCache, ?int $defaultTimeLimit, ?bool $disableCodeCoverageIgnore, ?bool $disallowTestOutput, ?bool $enforceTimeLimit, ?array $excludeGroups, ?int $executionOrder, ?int $executionOrderDefects, ?bool $failOnAllIssues, ?bool $failOnDeprecation, ?bool $failOnPhpunitDeprecation, ?bool $failOnEmptyTestSuite, ?bool $failOnIncomplete, ?bool $failOnNotice, ?bool $failOnRisky, ?bool $failOnSkipped, ?bool $failOnWarning, ?bool $stopOnDefect, ?bool $stopOnDeprecation, ?string $specificDeprecationToStopOn, ?bool $stopOnError, ?bool $stopOnFailure, ?bool $stopOnIncomplete, ?bool $stopOnNotice, ?bool $stopOnRisky, ?bool $stopOnSkipped, ?bool $stopOnWarning, ?string $filter, ?string $excludeFilter, ?string $generateBaseline, ?string $useBaseline, bool $ignoreBaseline, bool $generateConfiguration, bool $migrateConfiguration, ?array $groups, ?array $testsCovering, ?array $testsUsing, ?array $testsRequiringPhpExtension, bool $help, ?string $includePath, ?array $iniSettings, ?string $junitLogfile, bool $listGroups, bool $listSuites, bool $listTestFiles, bool $listTests, ?string $listTestsXml, ?bool $noCoverage, ?bool $noExtensions, ?bool $noOutput, ?bool $noProgress, ?bool $noResults, ?bool $noLogging, ?bool $processIsolation, ?int $randomOrderSeed, ?bool $reportUselessTests, ?bool $resolveDependencies, ?bool $reverseList, ?bool $stderr, ?bool $strictCoverage, ?string $teamcityLogfile, ?string $testdoxHtmlFile, ?string $testdoxTextFile, ?array $testSuffixes, ?string $testSuite, ?string $excludeTestSuite, bool $useDefaultConfiguration, ?bool $displayDetailsOnAllIssues, ?bool $displayDetailsOnIncompleteTests, ?bool $displayDetailsOnSkippedTests, ?bool $displayDetailsOnTestsThatTriggerDeprecations, ?bool $displayDetailsOnPhpunitDeprecations, ?bool $displayDetailsOnTestsThatTriggerErrors, ?bool $displayDetailsOnTestsThatTriggerNotices, ?bool $displayDetailsOnTestsThatTriggerWarnings, bool $version, ?array $coverageFilter, ?string $logEventsText, ?string $logEventsVerboseText, ?bool $printerTeamCity, ?bool $testdoxPrinter, ?bool $testdoxPrinterSummary, bool $debug, ?array $extensions)
     {
         $this->arguments                                    = $arguments;
         $this->atLeastVersion                               = $atLeastVersion;
@@ -200,6 +209,7 @@ final readonly class Configuration
         $this->excludeGroups                                = $excludeGroups;
         $this->executionOrder                               = $executionOrder;
         $this->executionOrderDefects                        = $executionOrderDefects;
+        $this->failOnAllIssues                              = $failOnAllIssues;
         $this->failOnDeprecation                            = $failOnDeprecation;
         $this->failOnPhpunitDeprecation                     = $failOnPhpunitDeprecation;
         $this->failOnEmptyTestSuite                         = $failOnEmptyTestSuite;
@@ -210,6 +220,7 @@ final readonly class Configuration
         $this->failOnWarning                                = $failOnWarning;
         $this->stopOnDefect                                 = $stopOnDefect;
         $this->stopOnDeprecation                            = $stopOnDeprecation;
+        $this->specificDeprecationToStopOn                  = $specificDeprecationToStopOn;
         $this->stopOnError                                  = $stopOnError;
         $this->stopOnFailure                                = $stopOnFailure;
         $this->stopOnIncomplete                             = $stopOnIncomplete;
@@ -227,6 +238,7 @@ final readonly class Configuration
         $this->groups                                       = $groups;
         $this->testsCovering                                = $testsCovering;
         $this->testsUsing                                   = $testsUsing;
+        $this->testsRequiringPhpExtension                   = $testsRequiringPhpExtension;
         $this->help                                         = $help;
         $this->includePath                                  = $includePath;
         $this->iniSettings                                  = $iniSettings;
@@ -256,6 +268,7 @@ final readonly class Configuration
         $this->testSuite                                    = $testSuite;
         $this->excludeTestSuite                             = $excludeTestSuite;
         $this->useDefaultConfiguration                      = $useDefaultConfiguration;
+        $this->displayDetailsOnAllIssues                    = $displayDetailsOnAllIssues;
         $this->displayDetailsOnIncompleteTests              = $displayDetailsOnIncompleteTests;
         $this->displayDetailsOnSkippedTests                 = $displayDetailsOnSkippedTests;
         $this->displayDetailsOnTestsThatTriggerDeprecations = $displayDetailsOnTestsThatTriggerDeprecations;
@@ -876,6 +889,26 @@ final readonly class Configuration
     }
 
     /**
+     * @phpstan-assert-if-true !null $this->failOnAllIssues
+     */
+    public function hasFailOnAllIssues(): bool
+    {
+        return $this->failOnAllIssues !== null;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function failOnAllIssues(): bool
+    {
+        if (!$this->hasFailOnAllIssues()) {
+            throw new Exception;
+        }
+
+        return $this->failOnAllIssues;
+    }
+
+    /**
      * @phpstan-assert-if-true !null $this->failOnPhpunitDeprecation
      */
     public function hasFailOnPhpunitDeprecation(): bool
@@ -1053,6 +1086,26 @@ final readonly class Configuration
         }
 
         return $this->stopOnDeprecation;
+    }
+
+    /**
+     * @phpstan-assert-if-true !null $this->specificDeprecationToStopOn
+     */
+    public function hasSpecificDeprecationToStopOn(): bool
+    {
+        return $this->specificDeprecationToStopOn !== null;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function specificDeprecationToStopOn(): string
+    {
+        if (!$this->hasSpecificDeprecationToStopOn()) {
+            throw new Exception;
+        }
+
+        return $this->specificDeprecationToStopOn;
     }
 
     /**
@@ -1354,6 +1407,28 @@ final readonly class Configuration
         }
 
         return $this->testsUsing;
+    }
+
+    /**
+     * @phpstan-assert-if-true !null $this->testsRequiringPhpExtension
+     */
+    public function hasTestsRequiringPhpExtension(): bool
+    {
+        return $this->testsRequiringPhpExtension !== null;
+    }
+
+    /**
+     * @throws Exception
+     *
+     * @return non-empty-list<non-empty-string>
+     */
+    public function testsRequiringPhpExtension(): array
+    {
+        if (!$this->hasTestsRequiringPhpExtension()) {
+            throw new Exception;
+        }
+
+        return $this->testsRequiringPhpExtension;
     }
 
     public function help(): bool
@@ -1744,7 +1819,7 @@ final readonly class Configuration
     }
 
     /**
-     * @phpstan-assert-if-true !null $this->teamcityPrinter
+     * @phpstan-assert-if-true !null $this->teamCityPrinter
      */
     public function hasTeamCityPrinter(): bool
     {
@@ -1816,7 +1891,7 @@ final readonly class Configuration
      */
     public function testdoxPrinter(): bool
     {
-        if (!$this->hasTestdoxPrinter()) {
+        if (!$this->hasTestDoxPrinter()) {
             throw new Exception;
         }
 
@@ -1836,7 +1911,7 @@ final readonly class Configuration
      */
     public function testdoxPrinterSummary(): bool
     {
-        if (!$this->hasTestdoxPrinterSummary()) {
+        if (!$this->hasTestDoxPrinterSummary()) {
             throw new Exception;
         }
 
@@ -1886,7 +1961,7 @@ final readonly class Configuration
     }
 
     /**
-     * @phpstan-assert-if-true !null $this->excludedTestSuite
+     * @phpstan-assert-if-true !null $this->excludeTestSuite
      */
     public function hasExcludedTestSuite(): bool
     {
@@ -1908,6 +1983,26 @@ final readonly class Configuration
     public function useDefaultConfiguration(): bool
     {
         return $this->useDefaultConfiguration;
+    }
+
+    /**
+     * @phpstan-assert-if-true !null $this->displayDetailsOnAllIssues
+     */
+    public function hasDisplayDetailsOnAllIssues(): bool
+    {
+        return $this->displayDetailsOnAllIssues !== null;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function displayDetailsOnAllIssues(): bool
+    {
+        if (!$this->hasDisplayDetailsOnAllIssues()) {
+            throw new Exception;
+        }
+
+        return $this->displayDetailsOnAllIssues;
     }
 
     /**

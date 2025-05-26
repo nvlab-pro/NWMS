@@ -146,4 +146,8 @@ class rwOrder extends Model implements AuditableContract
     {
         return $this->hasMany(rwOrderOffer::class, 'oo_order_id', 'o_id');
     }
+    public function getOperationUser()
+    {
+        return $this->hasOne(User::class, 'id', 'o_operation_user_id');
+    }
 }

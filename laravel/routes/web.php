@@ -8,6 +8,8 @@ Route::get('/', function () {
     return view('Site/index', ['lang' => 'en']);
 });
 
+Route::get('/export-excel', [\App\Http\Controllers\ExcelExportController::class, 'download']);
+
 Route::get('/calc/yandex_pickup_points', function (Request $request) {
     $jsonPP = new ShowPVZ();
     return $jsonPP->showYDPvz($request);

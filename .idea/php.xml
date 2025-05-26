@@ -392,6 +392,8 @@
       <path value="$PROJECT_DIR$/laravel/vendor/psr/cache" />
       <path value="$PROJECT_DIR$/laravel/vendor/swagger-api/swagger-ui" />
       <path value="$PROJECT_DIR$/laravel/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/laravel/vendor/staabm/side-effects-detector" />
+      <path value="$PROJECT_DIR$/laravel/vendor/alhimik1986/php-excel-templator" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

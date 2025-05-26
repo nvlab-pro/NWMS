@@ -53,6 +53,7 @@ class OrderEditScreen extends Screen
                 $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)
                     ->where('o_id', $orderId)
                     ->with('getPlace')
+                    ->with('getOperationUser')
                     ->firstOrFail();
 
             } else {
@@ -63,6 +64,7 @@ class OrderEditScreen extends Screen
                     })
                     ->where('o_id', $orderId)
                     ->with('getPlace')
+                    ->with('getOperationUser')
                     ->firstOrFail();
             }
         }

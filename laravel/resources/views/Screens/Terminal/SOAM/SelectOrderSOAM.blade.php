@@ -84,10 +84,13 @@
                         let barcodeValue = document.getElementById('barcode').value;
                         let errorMessage = document.getElementById('error-message');
 
-                        let regex = /^102\*(\d+)\*(\d+)$/; // Регулярное выражение для формата 102*YYY*ZZZ
+                        let regex1 = /^102\*(\d+)\*(\d+)$/;                   // формат: 102*YYY*ZZZ
+                        let regex2 = /^(\p{L})(\d{2})(\d{2})(\d)(\d)$/u;       // формат: AYYZZNQ (буква + 2+2+1+1 цифры)
+                        let regex3 = /^(\d{2})(\d{2})(\d{2})$/;                // формат: 6 цифр подряд (например 010203)
+
                         let match = barcodeValue.match(regex);
 
-                        if (!match) {
+                        if (!regex1.test(barcodeValue) && !regex2.test(barcodeValue) && !regex3.test(barcodeValue)) {
                             errorMessage.textContent = '{{ CustomTranslator::get("Ошибка: отсканирован неверный штрихкод! Пожалуйста отсканируте ближайшую полку!") }}';
                             errorMessage.style.display = "block";
                             document.getElementById('barcode').value = '';

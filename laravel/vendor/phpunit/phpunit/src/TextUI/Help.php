@@ -32,7 +32,7 @@ final class Help
     private const LEFT_MARGIN              = '  ';
     private int $lengthOfLongestOptionName = 0;
     private readonly int $columnsAvailableForDescription;
-    private ?bool $hasColor;
+    private bool $hasColor;
 
     public function __construct(?int $width = null, ?bool $withColor = null)
     {
@@ -178,6 +178,7 @@ final class Help
                 ['arg' => '--exclude-group <name>', 'desc' => 'Exclude tests from the specified group(s)'],
                 ['arg' => '--covers <name>', 'desc' => 'Only run tests that intend to cover <name>'],
                 ['arg' => '--uses <name>', 'desc' => 'Only run tests that intend to use <name>'],
+                ['arg' => '--requires-php-extension <name>', 'desc' => 'Only run tests that require PHP extension <name>'],
                 ['arg' => '--list-test-files', 'desc' => 'List available test files'],
                 ['arg' => '--list-tests', 'desc' => 'List available tests'],
                 ['arg' => '--list-tests-xml <file>', 'desc' => 'List available tests in XML format'],
@@ -219,6 +220,7 @@ final class Help
                 ['arg'    => '--fail-on-notice', 'desc' => 'Signal failure using shell exit code when a notice was triggered'],
                 ['arg'    => '--fail-on-skipped', 'desc' => 'Signal failure using shell exit code when a test was skipped'],
                 ['arg'    => '--fail-on-incomplete', 'desc' => 'Signal failure using shell exit code when a test was marked incomplete'],
+                ['arg'    => '--fail-on-all-issues', 'desc' => 'Signal failure using shell exit code when an issue is triggered'],
                 ['spacer' => ''],
 
                 ['arg'    => '--cache-result', 'desc' => 'Write test results to cache file'],
@@ -248,6 +250,7 @@ final class Help
                 ['arg'    => '--display-errors', 'desc' => 'Display details for errors triggered by tests'],
                 ['arg'    => '--display-notices', 'desc' => 'Display details for notices triggered by tests'],
                 ['arg'    => '--display-warnings', 'desc' => 'Display details for warnings triggered by tests'],
+                ['arg'    => '--display-all-issues', 'desc' => 'Display details for all issues that are triggered'],
                 ['arg'    => '--reverse-list', 'desc' => 'Print defects in reverse order'],
                 ['spacer' => ''],
 
