@@ -1,6 +1,14 @@
 @if(isset($acceptId) && $acceptId > 0)
     <script>
         document.addEventListener('turbo:load', function () {
+            document.querySelectorAll('.date-mask').forEach(el => {
+                Inputmask({
+                    alias: 'datetime',
+                    inputFormat: 'dd.mm.yyyy',
+                    placeholder: 'dd.mm.yyyy',
+                }).mask(el);
+            });
+
             document.querySelectorAll('[data-inline-save]').forEach(input => {
                 input.addEventListener('change', function () {
                     const field = this.getAttribute('data-field');

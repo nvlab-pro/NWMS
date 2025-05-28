@@ -655,6 +655,8 @@ class WhCore
         $expDate = $this->normalizeDate($expDate);
         $prodDate = $this->normalizeDate($prodDate);
 
+        dump($expDate);
+
         $dbCurrentOffer = DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_doc_id', $docId)
             ->where('whci_doc_type', $docType)

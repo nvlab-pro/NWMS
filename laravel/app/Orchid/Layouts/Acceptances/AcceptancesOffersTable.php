@@ -86,60 +86,78 @@ class AcceptancesOffersTable extends Table
             TD::make('ao_batch', CustomTranslator::get('Партия'))
                 ->sort()
                 ->canSee($isBatch)
-                ->render(function (rwAcceptanceOffer $modelName) {
+                ->render(function (rwAcceptanceOffer $modelName) use ($acceptId, $shopId, $whId) {
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="' . CustomTranslator::get('Батч') . '" ' . $readonly . '>';
+
+                    return '<input 
+                        name="docOfferBatch[' . $modelName->ao_id . ']"        
+                        type="text" 
+                        value="' . $modelName->ao_batch . '"  
+                        data-inline-save 
+                        data-field="ao_batch" 
+                        data-offer-id="' . $modelName->ao_id . '" 
+                        data-accept-id="' . $acceptId . '" 
+                        data-shop-id="' . $shopId . '" 
+                        data-wh-id="' . $whId . '" 
+                        data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
+                        class="form-control"
+                        size=16 placeHolder="' . CustomTranslator::get('Партия') . '" ' . $readonly . '/>';
+
+
+//                    return '<input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="' . CustomTranslator::get('Батч') . '" ' . $readonly . '>';
                 }),
 
             TD::make('ao_production_date', CustomTranslator::get('Дата производства'))
                 ->sort()
                 ->canSee($isProductionDate)
-                ->render(function (rwAcceptanceOffer $modelName) {
+                ->render(function (rwAcceptanceOffer $modelName) use ($acceptId, $shopId, $whId) {
 
                     $readonly = '';
-                    if ($modelName->ao_placed > 0) $readonly = 'readonly';
-
-                    $input = Input::make('docOfferProdDate[' . $modelName->ao_id . ']')
-                        ->type('text')
-                        ->value($modelName->ao_production_date)
-                        ->mask([
-                            'alias' => 'datetime',
-                            'inputFormat' => 'dd.mm.yyyy',
-                            'placeholder' => CustomTranslator::get('дд.мм.гггг'),
-                        ])
-                        ->class('form-control');
-
                     if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) {
-                        $input->readonly(); // Применяем readonly только если $readonly === true
+                        $readonly = 'readonly';
                     }
 
-                    return $input;
+                    return '<input 
+                        name="docOfferProdDate[' . $modelName->ao_id . ']"        
+                        type="text" 
+                        value="' . $modelName->ao_production_date . '"  
+                        data-inline-save 
+                        data-field="ao_production_date" 
+                        data-offer-id="' . $modelName->ao_id . '" 
+                        data-accept-id="' . $acceptId . '" 
+                        data-shop-id="' . $shopId . '" 
+                        data-wh-id="' . $whId . '" 
+                        data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
+                        class="form-control date-mask"
+                        size=16 ' . $readonly . '/>';
+
                 }),
 
             TD::make('ao_expiration_date', CustomTranslator::get('Срок годности'))
                 ->sort()
                 ->canSee($isExpirationDate)
-                ->render(function (rwAcceptanceOffer $modelName) {
+                ->render(function (rwAcceptanceOffer $modelName) use ($acceptId, $shopId, $whId) {
 
                     $readonly = '';
-                    if ($modelName->ao_placed > 0) $readonly = 'readonly';
-
-                    $input = Input::make('docOfferExpDate[' . $modelName->ao_id . ']')
-                        ->type('text')
-                        ->value($modelName->ao_expiration_date)
-                        ->mask([
-                            'alias' => 'datetime',
-                            'inputFormat' => 'dd.mm.yyyy',
-                            'placeholder' => CustomTranslator::get('дд.мм.гггг'),
-                        ])
-                        ->class('form-control');
-
                     if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) {
-                        $input->readonly(); // Применяем readonly только если $readonly === true
+                        $readonly = 'readonly';
                     }
 
-                    return $input;
+                    return '<input 
+                        name="docOfferExpDate[' . $modelName->ao_id . ']"        
+                        type="text" 
+                        value="' . $modelName->ao_expiration_date . '"  
+                        data-inline-save 
+                        data-field="ao_expiration_date" 
+                        data-offer-id="' . $modelName->ao_id . '" 
+                        data-accept-id="' . $acceptId . '" 
+                        data-shop-id="' . $shopId . '" 
+                        data-wh-id="' . $whId . '" 
+                        data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
+                        class="form-control date-mask"
+                        size=16 ' . $readonly . '/>';
+
                 }),
 
             TD::make('ao_barcode', CustomTranslator::get('Штрих-код'))
