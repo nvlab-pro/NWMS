@@ -46,7 +46,7 @@ class DocumentService
             ->update([
                 'acc_count_expected' => $sumExpected,
                 'acc_count_accepted' => $sumAccepted,
-                'acc_count_placed' => $sumPlaced,
+                'acc_count_placed'   => $sumPlaced,
             ]);
 
     }

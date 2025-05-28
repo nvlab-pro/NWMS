@@ -587,7 +587,29 @@ class WhCore
 
     }
 
-    public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $prodDate = NULL, $timeCash = 0, $placeId = NULL)
+    public function getOffer($docId, $docType, $docOfferId, $placeId = null)
+    {
+        Validator::make([
+            'docId'      => $docId,
+            'docType'    => $docType,
+            'docOfferId' => $docOfferId,
+            'placeId'    => $placeId,
+        ], [
+            'docId'      => 'required|integer',
+            'docType'    => 'required|integer',
+            'docOfferId' => 'required|integer',
+            'placeId'    => 'nullable|numeric',
+        ])->validate();
+
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
+            ->where('whci_doc_offer_id', $docOfferId)
+            ->where('whci_place_id', $placeId)
+            ->first();
+    }
+
+        public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $prodDate = NULL, $timeCash = 0, $placeId = NULL)
     {
 
         $validator = Validator::make([
@@ -629,26 +651,9 @@ class WhCore
 //            throw new \Exception('Validation Error: ' . $validator->errors()->first());
 //        }
 
-        // 2. Преобразование формата даты expDate
-        if ($expDate) {
-            // Проверяем, в каком формате пришла дата
-            if (strpos($expDate, '.') !== false) {
-                // Если дата в формате DD.MM.YYYY, преобразуем в YYYY-MM-DD
-                $expDate = \DateTime::createFromFormat('d.m.Y', $expDate)->format('Y-m-d');
-            }
-        }
-
-        // 2. Преобразование формата даты expDate
-        if ($prodDate) {
-            // Проверяем, в каком формате пришла дата
-            if (strpos($prodDate, '.') !== false) {
-                // Если дата в формате DD.MM.YYYY, преобразуем в YYYY-MM-DD
-                $prodDate = \DateTime::createFromFormat('d.m.Y', $prodDate)->format('Y-m-d');
-            }
-            if (is_numeric($prodDate)) {
-                $prodDate = Carbon::createFromTimestamp($prodDate)->toDateString();
-            }
-        }
+        // Преобразование формата даты expDate
+        $expDate = $this->normalizeDate($expDate);
+        $prodDate = $this->normalizeDate($prodDate);
 
         $dbCurrentOffer = DB::table('whc_wh' . $this->warehouseId . '_items')
             ->where('whci_doc_id', $docId)
@@ -662,7 +667,7 @@ class WhCore
             // Сохраняем данные в базе
             DB::table('whc_wh' . $this->warehouseId . '_items')->where('whci_id', $dbCurrentOffer->whci_id)->update([
                 'whci_date' => $docDate,
-                'whci_count' => $count,
+                'whci_count' => (float) $count,
                 'whci_production_date' => $prodDate,
                 'whci_expiration_date' => $expDate,
                 'whci_batch' => $batch,
@@ -685,7 +690,7 @@ class WhCore
                 'whci_doc_id' => $docId,
                 'whci_doc_offer_id' => $docOfferId,
                 'whci_doc_type' => $docType,
-                'whci_count' => $count,
+                'whci_count' => (float) $count,
                 'whci_sign' => $sign,
                 'whci_production_date' => $prodDate,
                 'whci_expiration_date' => $expDate,
@@ -700,6 +705,24 @@ class WhCore
 
         $this->calcRestOffer($offerId);
 
+    }
+
+
+    private function normalizeDate($date)
+    {
+        if (!$date) {
+            return null;
+        }
+
+        if (strpos($date, '.') !== false) {
+            return \DateTime::createFromFormat('d.m.Y', $date)->format('Y-m-d');
+        }
+
+        if (is_numeric($date)) {
+            return \Carbon\Carbon::createFromTimestamp($date)->toDateString();
+        }
+
+        return $date;
     }
 
     // Создаем новые элементы

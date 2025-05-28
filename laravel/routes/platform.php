@@ -346,6 +346,18 @@ Route::screen('orders/create', \App\Orchid\Screens\Orders\OrderCreateScreen::cla
         ->parent('platform.orders.index')
         ->push(CustomTranslator::get('Создание нового заказа'), route('platform.orders.create.index')));
 
+Route::screen('orders/print_settings', \App\Orchid\Screens\Orders\OrderPrintSettingsScreen::class)
+    ->name('platform.orders.print.settings')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.orders.index')
+        ->push(CustomTranslator::get('Настройки печати'), route('platform.orders.print.settings')));
+
+Route::screen('orders/print_settings/{templateId}/edit', \App\Orchid\Screens\Orders\OrderPrintSettingEditScreen::class)
+    ->name('platform.orders.print.settings.edit')
+    ->breadcrumbs(fn(Trail $trail, $templateId) => $trail
+        ->parent('platform.orders.index')
+        ->push(CustomTranslator::get('Редактирование шаблона печати'), route('platform.orders.print.settings.edit', $templateId)));
+
 Route::screen('orders/{orderId}/edit', \App\Orchid\Screens\Orders\OrderEditScreen::class)
     ->name('platform.orders.edit')
     ->breadcrumbs(fn(Trail $trail, $orderId) => $trail
@@ -518,6 +530,9 @@ Route::screen('acceptances/{acceptId}/import', \App\Orchid\Screens\Acceptances\A
     ->breadcrumbs(fn(Trail $trail, $acceptId) => $trail
         ->parent('platform.acceptances.index')
         ->push(CustomTranslator::get('Импорт приходных накладных'), route('platform.acceptance.import', $acceptId)));
+
+Route::get('/acceptances/{acceptId}/add-offer', [\App\Orchid\Screens\Acceptances\AcceptancesOffersScreen::class, 'addOffer'])
+    ->name('platform.acceptances.add-offer');
 
 // Route::post('acceptances/{acceptId}/offers/save', [\App\Orchid\Screens\Acceptances\AcceptancesOffersScreen::class, 'save'])
 //    ->name('platform.acceptances.offers.save');

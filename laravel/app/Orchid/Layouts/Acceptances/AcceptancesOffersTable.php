@@ -27,9 +27,12 @@ class AcceptancesOffersTable extends Table
 
     protected function columns(array $params = []): iterable
     {
-        $isProductionDate = (bool) $this->query->get('isProductionDate');
-        $isExpirationDate = (bool) $this->query->get('isExpirationDate');
-        $isBatch = (bool) $this->query->get('isBatch');
+        $isProductionDate = (bool)$this->query->get('isProductionDate');
+        $isExpirationDate = (bool)$this->query->get('isExpirationDate');
+        $isBatch = (bool)$this->query->get('isBatch');
+        $acceptId = $this->query->get('acceptId');
+        $shopId = $this->query->get('shopId');
+        $whId = $this->query->get('whId');
 
         return [
 
@@ -59,7 +62,7 @@ class AcceptancesOffersTable extends Table
 
             TD::make('ao_dimension', CustomTranslator::get('Размеры'))
                 ->sort()
-                ->render(function (rwAcceptanceOffer $modelName) {
+                ->render(function (rwAcceptanceOffer $modelName) use ($acceptId) {
                     $currentUser = Auth::user(); // Получение текущего пользователя
 
                     if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
@@ -72,6 +75,7 @@ class AcceptancesOffersTable extends Table
                             ->method('saveDimensions') // Метод для обработки данных
                             ->parameters([
                                 'offerId' => $modelName->ao_id,
+                                'acceptId' => $acceptId,
                             ]);
                     } else {
                         // Если пользователь не имеет нужной роли, отображаем просто текст
@@ -85,7 +89,7 @@ class AcceptancesOffersTable extends Table
                 ->render(function (rwAcceptanceOffer $modelName) {
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="'.CustomTranslator::get('Батч').'" ' . $readonly . '>';
+                    return '<input type="text" name="docOfferBatch[' . $modelName->ao_id . ']" value="' . e($modelName->ao_batch) . '" class="form-control" size=10 placeHolder="' . CustomTranslator::get('Батч') . '" ' . $readonly . '>';
                 }),
 
             TD::make('ao_production_date', CustomTranslator::get('Дата производства'))
@@ -140,31 +144,74 @@ class AcceptancesOffersTable extends Table
 
             TD::make('ao_barcode', CustomTranslator::get('Штрих-код'))
                 ->sort()
-                ->render(function (rwAcceptanceOffer $modelName) {
+                ->render(function (rwAcceptanceOffer $modelName) use ($acceptId, $shopId, $whId) {
                     $bgColor = '';
                     if ($modelName->ao_barcode == '') $bgColor = 'style="background-color: #ffbdbf;"';
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferBarcode[' . $modelName->ao_id . ']" value="' . e($modelName->ao_barcode) . '" class="form-control" size=15 placeHolder="'.CustomTranslator::get('Штрих-код').'" ' . $bgColor . ' ' . $readonly . '>';
+
+                    return '<input 
+            name="docOfferBarcode[' . $modelName->ao_id . ']"        
+            type="number" 
+            value="' . e($modelName->ao_barcode) . '" 
+            data-inline-save 
+            data-field="ao_barcode" 
+            data-offer-id="' . $modelName->ao_id . '" 
+            data-accept-id="' . $acceptId . '" 
+            data-shop-id="' . $shopId . '" 
+            data-wh-id="' . $whId . '" 
+            data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
+            class="form-control" 
+            size=15 placeHolder="' . CustomTranslator::get('Штрих-код') . '" ' . $bgColor . ' ' . $readonly . '/>';
+
+//                    return '<input type="text" name="docOfferBarcode[' . $modelName->ao_id . ']" value="' . e($modelName->ao_barcode) . '" class="form-control" size=15 placeHolder="'.CustomTranslator::get('Штрих-код').'" ' . $bgColor . ' ' . $readonly . '>';
                 }),
 
             TD::make('ao_expected', CustomTranslator::get('Ожидается'))
                 ->sort()
-                ->render(function (rwAcceptanceOffer $modelName) {
+                ->render(function (rwAcceptanceOffer $modelName) use ($acceptId, $shopId, $whId) {
                     $bgColor = '';
                     if ($modelName->ao_expected == 0) $bgColor = 'style="background-color: #ffbdbf;"';
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status > 2) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferExept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_expected) . '" class="form-control" size=6 placeHolder="'.CustomTranslator::get('Ожидается').'" ' . $bgColor . ' ' . $readonly . '>';
+                    return '<input 
+                    name="docOfferExept[' . $modelName->ao_id . ']"
+            type="number" 
+            value="' . e($modelName->ao_expected) . '" 
+            data-inline-save 
+            data-field="ao_expected" 
+            data-offer-id="' . $modelName->ao_id . '" 
+            data-accept-id="' . $acceptId . '" 
+            data-shop-id="' . $shopId . '" 
+            data-wh-id="' . $whId . '" 
+            data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
+            class="form-control" ' . $readonly . '/>';
+
+                    //                    return '<input type="text" name="docOfferExept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_expected) . '" class="form-control" size=6 placeHolder="'.CustomTranslator::get('Ожидается').'" ' . $bgColor . ' ' . $readonly . '>';
                 }),
 
             TD::make('ao_accepted', CustomTranslator::get('Принято'))
                 ->sort()
-                ->render(function (rwAcceptanceOffer $modelName) {
+                ->render(function (rwAcceptanceOffer $modelName) use ($acceptId, $shopId, $whId) {
                     $isEditable = RoleMiddleware::checkUserPermission('admin,warehouse_manager'); // Проверка роли
                     $readonly = $isEditable ? '' : 'readonly'; // Установка атрибута readonly для пользователей без прав
                     if ($modelName->ao_placed > 0 || $modelName->oa_status == 1 || $modelName->oa_status > 3) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferAccept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_accepted) . '" class="form-control" size=6 placeHolder="Принято" ' . $readonly . '>';
+
+                    return '<input 
+            name="docOfferAccept[' . $modelName->ao_id . ']"        
+            type="number" 
+            value="' . e($modelName->ao_accepted) . '" 
+            data-inline-save 
+            data-field="ao_accepted" 
+            data-offer-id="' . $modelName->ao_id . '" 
+            data-accept-id="' . $acceptId . '" 
+            data-shop-id="' . $shopId . '" 
+            data-wh-id="' . $whId . '" 
+            data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
+            class="form-control" 
+            size=6 placeHolder="' . CustomTranslator::get('Принято') . '" ' . $readonly . '/>';
+
+//                    return '<input type="text" name="docOfferAccept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_accepted) . '" class="form-control" size=6 placeHolder="Принято" ' . $readonly . '>';
                 }),
 
             TD::make('ao_placed', CustomTranslator::get('Размещено'))
@@ -179,28 +226,42 @@ class AcceptancesOffersTable extends Table
 
             TD::make('ao_price', CustomTranslator::get('Закупочная цена'))
                 ->sort()
-                ->render(function (rwAcceptanceOffer $modelName) {
+                ->render(function (rwAcceptanceOffer $modelName) use ($acceptId, $shopId, $whId) {
                     $readonly = '';
                     if ($modelName->ao_placed > 0 || $modelName->oa_status > 3) $readonly = 'readonly';
-                    return '<input type="text" name="docOfferPrice[' . $modelName->ao_id . ']" value="' . e($modelName->ao_price) . '" class="form-control" size=6 placeHolder="'.CustomTranslator::get('Цена').'" ' . $readonly . '>';
+
+                    return '<input 
+            name="docOfferPrice[' . $modelName->ao_id . ']"        
+            type="number" 
+            value="' . e($modelName->ao_price) . '" 
+            data-inline-save 
+            data-field="ao_price" 
+            data-offer-id="' . $modelName->ao_id . '" 
+            data-accept-id="' . $acceptId . '" 
+            data-shop-id="' . $shopId . '" 
+            data-wh-id="' . $whId . '" 
+            data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
+            class="form-control" 
+            size=6 placeHolder="' . CustomTranslator::get('Цена') . '" ' . $readonly . '/>';
+
+//                    return '<input type="text" name="docOfferPrice[' . $modelName->ao_id . ']" value="' . e($modelName->ao_price) . '" class="form-control" size=6 placeHolder="' . CustomTranslator::get('Цена') . '" ' . $readonly . '>';
                 }),
 
             TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
-                ->render(fn(rwAcceptanceOffer $modelName) =>
-                (($modelName->ao_placed === null || $modelName->ao_placed == 0) && $modelName->oa_status == 1)
+                ->render(fn(rwAcceptanceOffer $modelName) => (($modelName->ao_placed === null || $modelName->ao_placed == 0) && $modelName->oa_status == 1)
                     ? Button::make(' Удалить')
-                    ->icon('bs.trash')
-                    ->method('deleteItem')
-                    ->parameters([
-                        'acceptId' => $modelName->ao_acceptance_id,
-                        'offerId' => $modelName->ao_id,
-                        'docType' => 1,
-                        '_token' => csrf_token(), // Добавляем CSRF-токен вручную
-                    ])
-                    ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить этот товар из накладной?'))
-                    ->style('color: red;')
+                        ->icon('bs.trash')
+                        ->method('deleteItem')
+                        ->parameters([
+                            'acceptId' => $modelName->ao_acceptance_id,
+                            'offerId' => $modelName->ao_id,
+                            'docType' => 1,
+                            '_token' => csrf_token(), // Добавляем CSRF-токен вручную
+                        ])
+                        ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить этот товар из накладной?'))
+                        ->style('color: red;')
                     : null
                 ),
 

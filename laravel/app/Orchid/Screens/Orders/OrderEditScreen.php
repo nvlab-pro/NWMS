@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Orders;
 
 use App\Console\scheduleOrders;
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\rwOffer;
 use App\Models\rwOrder;
 use App\Models\rwOrderAssembly;
@@ -256,6 +257,11 @@ class OrderEditScreen extends Screen
                 ->icon('bs.cloud-upload')
                 ->canSee(in_array($this->order->o_status_id, [10]))
                 ->route('platform.orders.import', $this->order->o_id),
+
+            Link::make(CustomTranslator::get('Настройка печати'))
+                ->icon('bs.gear')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                ->route('platform.orders.print.settings'),
 
             Button::make(CustomTranslator::get($dbStatus->os_name))
                 ->style('background-color: ' . $dbStatus->os_bgcolor . ';' . 'color: ' . $dbStatus->os_color . ';')

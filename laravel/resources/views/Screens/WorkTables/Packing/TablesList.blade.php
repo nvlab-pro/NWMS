@@ -212,7 +212,7 @@
             @else
 
                 <div class="alert alert-warning" role="alert">
-                    <a href="{{ route('platform.whmanagement.packing-process-settings.index') }}">{{ CustomTranslator::get('У вас не заведен ни один стол упаковки! Чтобы начать упаковку, пожалуйста создайте хотя бы один!') }}</a>
+                    <a href="{{ route('platform.warehouses.places.index') }}">{{ CustomTranslator::get('У вас не заведен ни один стол упаковки! Чтобы начать упаковку, пожалуйста создайте хотя бы один!') }}</a>
                 </div>
 
             @endif
