@@ -10,8 +10,10 @@ use App\Models\rwOrderAssembly;
 use App\Models\rwOrderOffer;
 use App\Models\rwOrderPacking;
 use App\Models\rwOrderStatus;
+use App\Models\rwPrintTemplate;
 use App\Models\WhcRest;
 use App\Orchid\Layouts\Orders\OrderOffersTable;
+use App\Orchid\Layouts\Orders\OrderPrint;
 use App\Orchid\Services\OrderService;
 use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
@@ -158,11 +160,23 @@ class OrderEditScreen extends Screen
             }
         }
 
+
+        // ****************************************
+        // ** Получаем список шаблонов для печати
+        $dbTemplates = rwPrintTemplate::where('pt_domain_id', $currentUser->domain_id)
+            ->where(function ($query) use ($currentUser) {
+                $query->whereNull('pt_user_id')
+                    ->orWhere('pt_user_id', $currentUser->id);
+            })
+            ->filters()
+            ->get();
+
         return [
             'order' => $this->order,
             'dbOrderOffersList' => $dbOrderOffersList,
             'arPickingOffersList' => $arPickingOffersList,
             'arPackedOffersList' => $arPackedOffersList,
+            'printTemplates'  => $dbTemplates,
         ];
     }
 
@@ -402,6 +416,8 @@ class OrderEditScreen extends Screen
                     ->canSee($this->order->o_status_id <= 10),
             ],
         ];
+
+        $tabs[CustomTranslator::get('Печать')] = OrderPrint::class;
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 

@@ -40,7 +40,7 @@ class AcceptancesOffersTable extends Table
                 ->sort()
                 ->align('center')
                 ->render(function (rwAcceptanceOffer $modelName) {
-                    return $modelName->ao_id . '<input type="hidden" name="docOfferId[' . $modelName->ao_id . ']" value="' . e($modelName->ao_offer_id) . '" >
+                    return '<nobr>' . $modelName->ao_id . '</nobr><input type="hidden" name="docOfferId[' . $modelName->ao_id . ']" value="' . e($modelName->ao_offer_id) . '" >
                     <input type="hidden" name="docOfferPlaced[' . $modelName->ao_id . ']" value="' . e($modelName->ao_placed) . '" >';
                 }),
 
@@ -55,9 +55,11 @@ class AcceptancesOffersTable extends Table
                 ->width('100px'),
 
             TD::make('ao_article', CustomTranslator::get('Артикул'))
+                ->style('white-space: nowrap;')
                 ->sort(),
 
             TD::make('ao_name', CustomTranslator::get('Товар'))
+                ->style('min-width: 300px;')
                 ->sort(),
 
             TD::make('ao_dimension', CustomTranslator::get('Размеры'))
@@ -102,6 +104,7 @@ class AcceptancesOffersTable extends Table
                         data-wh-id="' . $whId . '" 
                         data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
                         class="form-control"
+                        style="width: 120px;" 
                         size=16 placeHolder="' . CustomTranslator::get('Партия') . '" ' . $readonly . '/>';
 
 
@@ -130,6 +133,7 @@ class AcceptancesOffersTable extends Table
                         data-wh-id="' . $whId . '" 
                         data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
                         class="form-control date-mask"
+                        style="width: 120px;" 
                         size=16 ' . $readonly . '/>';
 
                 }),
@@ -156,6 +160,7 @@ class AcceptancesOffersTable extends Table
                         data-wh-id="' . $whId . '" 
                         data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
                         class="form-control date-mask"
+                        style="width: 120px;" 
                         size=16 ' . $readonly . '/>';
 
                 }),
@@ -180,6 +185,7 @@ class AcceptancesOffersTable extends Table
             data-wh-id="' . $whId . '" 
             data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
             class="form-control" 
+            style="width: 150px;" 
             size=15 placeHolder="' . CustomTranslator::get('Штрих-код') . '" ' . $bgColor . ' ' . $readonly . '/>';
 
 //                    return '<input type="text" name="docOfferBarcode[' . $modelName->ao_id . ']" value="' . e($modelName->ao_barcode) . '" class="form-control" size=15 placeHolder="'.CustomTranslator::get('Штрих-код').'" ' . $bgColor . ' ' . $readonly . '>';
@@ -203,6 +209,7 @@ class AcceptancesOffersTable extends Table
             data-shop-id="' . $shopId . '" 
             data-wh-id="' . $whId . '" 
             data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
+            style="width: 90px;" 
             class="form-control" ' . $readonly . '/>';
 
                     //                    return '<input type="text" name="docOfferExept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_expected) . '" class="form-control" size=6 placeHolder="'.CustomTranslator::get('Ожидается').'" ' . $bgColor . ' ' . $readonly . '>';
@@ -226,7 +233,8 @@ class AcceptancesOffersTable extends Table
             data-shop-id="' . $shopId . '" 
             data-wh-id="' . $whId . '" 
             data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
-            class="form-control" 
+            class="form-control"
+            style="width: 90px;" 
             size=6 placeHolder="' . CustomTranslator::get('Принято') . '" ' . $readonly . '/>';
 
 //                    return '<input type="text" name="docOfferAccept[' . $modelName->ao_id . ']" value="' . e($modelName->ao_accepted) . '" class="form-control" size=6 placeHolder="Принято" ' . $readonly . '>';
@@ -260,6 +268,7 @@ class AcceptancesOffersTable extends Table
             data-wh-id="' . $whId . '" 
             data-doc-date="' . e(now()->format('Y-m-d H:i:s')) . '" 
             class="form-control" 
+            style="width: 90px;" 
             size=6 placeHolder="' . CustomTranslator::get('Цена') . '" ' . $readonly . '/>';
 
 //                    return '<input type="text" name="docOfferPrice[' . $modelName->ao_id . ']" value="' . e($modelName->ao_price) . '" class="form-control" size=6 placeHolder="' . CustomTranslator::get('Цена') . '" ' . $readonly . '>';
