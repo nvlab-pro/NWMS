@@ -32,6 +32,7 @@ class rwPlace extends Model
     ];
 
     protected $allowedFilters = [
+        'pl_id'             => Where::class,
         'pl_wh_id'          => Where::class,
         'pl_type'           => Where::class,
         'pl_room'           => Like::class,

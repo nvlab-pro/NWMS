@@ -37,13 +37,14 @@ class PlacesTable extends Table
         return [
             TD::make('pl_id', 'ID')
                 ->sort()
+                ->filter()
                 ->align(TD::ALIGN_CENTER)
                 ->render(function (rwPlace $place) {
                     return Link::make($place->pl_id)
                         ->route('platform.warehouses.places.index', $place->pl_id);
                 }),
 
-            TD::make('pl_id', CustomTranslator::get('Штрих-код'))
+            TD::make('pl_barcode', CustomTranslator::get('Штрих-код'))
                 ->sort()
                 ->align(TD::ALIGN_CENTER)
                 ->render(function (rwPlace $place) {
