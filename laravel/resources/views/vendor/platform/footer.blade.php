@@ -3,7 +3,7 @@
 @else
     <div class="text-center user-select-none my-4 d-none d-lg-block">
         <p class="small mb-0">
-            (с) Copyright by NWMS. Version of deploy 0.642 from 30.05.2025. Fix acceptance fields side.
+            (с) Copyright by NWMS. Version of deploy 0.643 from 03.06.2025.
         </p>
     </div>
 @endguest

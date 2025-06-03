@@ -4,9 +4,11 @@ namespace App\Orchid\Screens\Orders;
 
 use App\Console\scheduleOrders;
 use App\Http\Middleware\RoleMiddleware;
+use App\Models\rwCompany;
 use App\Models\rwOffer;
 use App\Models\rwOrder;
 use App\Models\rwOrderAssembly;
+use App\Models\rwOrderContact;
 use App\Models\rwOrderOffer;
 use App\Models\rwOrderPacking;
 use App\Models\rwOrderStatus;
@@ -47,6 +49,8 @@ class OrderEditScreen extends Screen
 
             $this->order = rwOrder::where('o_id', $orderId)
                 ->with('getPlace')
+                ->with('getCompany')
+                ->with('getContact')
                 ->firstOrFail();
 
         } else {
@@ -56,7 +60,9 @@ class OrderEditScreen extends Screen
                 $this->order = rwOrder::where('o_domain_id', $currentUser->domain_id)
                     ->where('o_id', $orderId)
                     ->with('getPlace')
+                    ->with('getCompany')
                     ->with('getOperationUser')
+                    ->with('getContact')
                     ->firstOrFail();
 
             } else {
@@ -67,7 +73,9 @@ class OrderEditScreen extends Screen
                     })
                     ->where('o_id', $orderId)
                     ->with('getPlace')
+                    ->with('getCompany')
                     ->with('getOperationUser')
+                    ->with('getContact')
                     ->firstOrFail();
             }
         }
@@ -171,12 +179,15 @@ class OrderEditScreen extends Screen
             ->filters()
             ->get();
 
+        $contact = rwOrderContact::where('oc_order_id', $orderId)->first();
+
         return [
             'order' => $this->order,
             'dbOrderOffersList' => $dbOrderOffersList,
             'arPickingOffersList' => $arPickingOffersList,
             'arPackedOffersList' => $arPackedOffersList,
-            'printTemplates'  => $dbTemplates,
+            'printTemplates' => $dbTemplates,
+            'contact' => $contact ? $contact->toArray() : [],
         ];
     }
 
@@ -417,6 +428,59 @@ class OrderEditScreen extends Screen
             ],
         ];
 
+        if ($this->order->o_customer_type == 0) {
+            $tabs[CustomTranslator::get('Физическое лицо')] = [
+                Layout::rows([
+                    Input::make('contact.oc_first_name')
+                        ->title(CustomTranslator::get('Имя')),
+                    Input::make('contact.oc_middle_name')
+                        ->title(CustomTranslator::get('Отчество')),
+                    Input::make('contact.oc_last_name')
+                        ->title(CustomTranslator::get('Фамилия')),
+                    Input::make('contact.oc_phone')
+                        ->title(CustomTranslator::get('Телефон')),
+                    Input::make('contact.oc_email')
+                        ->title(CustomTranslator::get('Email')),
+                    Input::make('contact.oc_postcode')
+                        ->title(CustomTranslator::get('Почтовый индекс')),
+                    Input::make('contact.oc_full_address')
+                        ->title(CustomTranslator::get('Полный адрес')),
+                    Button::make(CustomTranslator::get('Сохранить изменения'))
+                        ->method('saveIndividualEntityChanges')
+                        ->parameters([
+                            '_token' => csrf_token(),
+                            'docId' => $this->order->o_id,
+                            'status' => $this->order->o_status_id,
+                        ])
+                        ->canSee($this->order->o_status_id <= 10)
+                        ->class('btn btn-primary'),
+                ]),
+            ];
+        } else {
+            $tabs[CustomTranslator::get('Юридическое лицо')] = [
+                Layout::rows([
+
+                    Select::make('order.o_company_id')
+                        ->title(CustomTranslator::get('Выберите юридическое лицо:'))
+                        ->width('100px')
+                        ->fromModel(rwCompany::where('co_domain_id', $currentUser->domain_id), 'co_name', 'co_id')
+                        ->empty(CustomTranslator::get('Не выбрано'), 0),
+
+                    Button::make(CustomTranslator::get('Сохранить изменения'))
+                        ->method('saveLegalEntityChanges')
+                        ->parameters([
+                            '_token' => csrf_token(),
+                            'docId' => $this->order->o_id,
+                            'status' => $this->order->o_status_id,
+                        ])
+                        ->canSee($this->order->o_status_id <= 10)
+                        ->class('btn btn-primary'),
+
+                ]),
+                Layout::view('Orders/OrderLegalEntityShow'),
+            ];
+        }
+
         $tabs[CustomTranslator::get('Печать')] = OrderPrint::class;
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
@@ -433,7 +497,7 @@ class OrderEditScreen extends Screen
         return [
             Layout::tabs($tabs),
 
-//                  ->title(CustomTranslator::get('Добавление нового товара'))->applyButton(CustomTranslator::get('Добавить'))->closeButton(CustomTranslator::get('Закрыть')),
+            //                  ->title(CustomTranslator::get('Добавление нового товара'))->applyButton(CustomTranslator::get('Добавить'))->closeButton(CustomTranslator::get('Закрыть')),
 
 
             // Определение модальных окон
@@ -504,11 +568,40 @@ class OrderEditScreen extends Screen
         }
     }
 
+    public function saveIndividualEntityChanges(Request $request)
+    {
+        $validatedData = $request->validate([
+        'docId' => 'required|numeric|min:0',
+        'status' => 'nullable|numeric|min:0',
+        'contact.oc_first_name' => 'nullable|string|max:50',
+        'contact.oc_middle_name' => 'nullable|string|max:50',
+        'contact.oc_last_name' => 'nullable|string|max:50',
+        'contact.oc_phone' => 'nullable|string|max:20',
+        'contact.oc_email' => 'nullable|string|max:75',
+        'contact.oc_postcode' => 'nullable|string|max:10',
+        'contact.oc_full_address' => 'nullable|string|max:255',
+    ]);
+
+    $order = rwOrder::findOrFail($validatedData['docId']);
+
+    $contact = $order->getContact;
+
+    if (!$contact) {
+        $contact = new rwOrderContact();
+        $contact->oc_order_id = $order->o_id;
+    }
+
+    $contact->fill($validatedData['contact'] ?? []);
+    $contact->save();
+
+    Alert::success(CustomTranslator::get('Данные физического лица сохранены!'));
+}
+
     public function changeStatusToNew(Request $request)
     {
         $validatedData = $request->validate([
-            'docId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
-            'status' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'docId' => 'nullable|numeric|min:0',
+            'status' => 'nullable|numeric|min:0',
         ]);
 
         if ($validatedData['status'] == 5 || $validatedData['status'] == 10 || $validatedData['status'] == 15 || $validatedData['status'] == 20 || $validatedData['status'] == 30 || $validatedData['status'] == 40) {
@@ -535,11 +628,37 @@ class OrderEditScreen extends Screen
         }
     }
 
+    public function saveLegalEntityChanges(Request $request)
+    {
+        $validatedData = $request->validate([
+            'docId' => 'nullable|numeric|min:0',
+            'order.o_company_id' => 'nullable|numeric|min:0',
+            'status' => 'nullable|numeric|min:0',
+
+        ]);
+
+        if ($validatedData['status'] <= 10) {
+
+            $order = rwOrder::where('o_id', $validatedData['docId'])
+                ->first();
+
+            if ($order) {
+
+                $order->o_company_id = $validatedData['order']['o_company_id'];
+                $order->save(); // Автоматически вызовет аудит, если модель использует AuditableContract
+
+            }
+
+            Alert::success(CustomTranslator::get('Юридическо лицо у заказа') . ' ' . $validatedData['docId'] . ' ' . CustomTranslator::get('было изменено!'));
+
+        }
+    }
+
     public function changeStatusToCancel(Request $request)
     {
         $validatedData = $request->validate([
-            'docId' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
-            'status' => 'nullable|numeric|min:0', // Цена должна быть числом >= 0
+            'docId' => 'nullable|numeric|min:0',
+            'status' => 'nullable|numeric|min:0',
         ]);
 
         if ($validatedData['status'] == 10 || $validatedData['status'] == 15 || $validatedData['status'] == 20 || $validatedData['status'] == 30 || $validatedData['status'] == 40) {

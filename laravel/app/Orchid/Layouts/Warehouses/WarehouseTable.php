@@ -91,6 +91,19 @@ class WarehouseTable extends Table
                     }
                 }),
 
+            TD::make('getCompany.co_name', CustomTranslator::get('Компания'))
+                ->sort()
+                ->align(TD::ALIGN_CENTER)
+                ->filter(TD::FILTER_TEXT)
+                ->render(function (rwWarehouse $modelName) {
+                    if ($modelName->getCompany) {
+                        return Link::make($modelName->getCompany->co_name)
+                            ->route('platform.warehouses.edit',$modelName->wh_id);
+                    } else {
+                        return '-';
+                    }
+                }),
+
             TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')

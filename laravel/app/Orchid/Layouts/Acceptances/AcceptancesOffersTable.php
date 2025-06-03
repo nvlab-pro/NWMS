@@ -38,6 +38,7 @@ class AcceptancesOffersTable extends Table
 
             TD::make('ao_id', 'ID')
                 ->sort()
+                ->style('white-space: nowrap;')
                 ->align('center')
                 ->render(function (rwAcceptanceOffer $modelName) {
                     return '<nobr>' . $modelName->ao_id . '</nobr><input type="hidden" name="docOfferId[' . $modelName->ao_id . ']" value="' . e($modelName->ao_offer_id) . '" >

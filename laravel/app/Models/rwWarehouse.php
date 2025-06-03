@@ -18,6 +18,7 @@ class rwWarehouse extends Model implements AuditableContract
     protected $primaryKey = 'wh_id';
 
     // Другие разрешённые для массового присвоения атрибуты
+    // Другие разрешённые для массового присвоения атрибуты
     protected $fillable = [
         'wh_id',
         'wh_user_id',
@@ -28,6 +29,8 @@ class rwWarehouse extends Model implements AuditableContract
         'wh_set_expiration_date',
         'wh_set_production_date',
         'wh_set_batch',
+        'wh_country_id',
+        'wh_company_id',
     ];
 
     public static function perPage(): int
@@ -36,6 +39,10 @@ class rwWarehouse extends Model implements AuditableContract
     }
     public function getOwner() {
         return $this->hasOne(User::class, 'id', 'wh_user_id');
+    }
+
+    public function getCompany() {
+        return $this->hasOne(rwCompany::class, 'co_id', 'wh_company_id');
     }
 
     public function getWhType() {

@@ -28,6 +28,8 @@ class rwOrder extends Model implements AuditableContract
         'o_parcel_id',
         'o_type_id',
         'o_client_id',
+        'o_customer_type',
+        'o_company_id',
         'o_ext_id',
         'o_shop_id',
         'o_user_id',
@@ -46,6 +48,7 @@ class rwOrder extends Model implements AuditableContract
         'o_parcel_id'       => Where::class,
         'o_type_id'         => Where::class,
         'o_client_id'       => Where::class,
+        'o_customer_type'   => Where::class,
         'o_ext_id'          => Where::class,
         'o_shop_id'         => Where::class,
         'o_wh_id'           => Where::class,
@@ -550,6 +553,15 @@ class rwOrder extends Model implements AuditableContract
     public static function getPrintImportDescriptions(): array
     {
         return (new self())->printImportDescriptions;
+    }
+
+    public function getContact()
+    {
+        return $this->hasOne(rwOrderContact::class, 'oc_order_id', 'o_id');
+    }
+
+    public function getCompany() {
+        return $this->hasOne(rwCompany::class, 'co_id', 'o_company_id');
     }
 
     public function getShop() {

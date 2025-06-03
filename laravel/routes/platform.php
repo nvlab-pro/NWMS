@@ -746,6 +746,28 @@ Route::prefix('delivery-services')
     });
 
 // *********************
+// *** Биллинг
+// *********************
+
+Route::screen('billing/companies', \App\Orchid\Screens\Billing\Companies\CompaniesScreen::class)
+    ->name('platform.billing.companies.list')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(CustomTranslator::get('Компании'), route('platform.billing.companies.list')));
+
+Route::screen('billing/companies/create', \App\Orchid\Screens\Billing\Companies\CompanyEditScreen::class)
+    ->name('platform.billing.companies.create')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.billing.companies.list')
+        ->push(CustomTranslator::get('Создать компанию'), route('platform.billing.companies.create')));
+
+Route::screen('billing/companies/{company}/edit', \App\Orchid\Screens\Billing\Companies\CompanyEditScreen::class)
+    ->name('platform.billing.companies.edit')
+    ->breadcrumbs(fn(Trail $trail, $company) => $trail
+        ->parent('platform.billing.companies.list')
+        ->push(CustomTranslator::get('Редактировать компанию'), route('platform.billing.companies.edit', $company)));
+
+// *********************
 // *** Фиксация входа
 // *********************
 

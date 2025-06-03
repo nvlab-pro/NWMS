@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Warehouses;
 
+use App\Models\rwCompany;
 use App\Models\rwDomain;
 use App\Models\rwLibWhType;
 use App\Models\rwWarehouse;
@@ -164,6 +165,11 @@ class WarehouseCreateScreen extends Screen
             }
         }
 
+        $arAddFields2[] = Select::make('whList.wh_company_id')
+            ->title(CustomTranslator::get('Компания'))
+            ->fromModel(rwCompany::where('co_domain_id', $currentUser->domain_id), 'co_name', 'co_id')
+            ->empty(CustomTranslator::get('Не выбрано'), '');
+
         $arAddFields2[] = CheckBox::make('whList.wh_set_production_date')
             ->title(CustomTranslator::get('Использовать дату производства товара'))
             ->horizontal()
@@ -215,6 +221,7 @@ class WarehouseCreateScreen extends Screen
             'whList.wh_id' => 'nullable|integer',
             'whList.wh_name' => 'required|string|max:150',
             'whList.wh_user_id' => 'required|integer',
+            'whList.wh_company_id' => 'required|integer',
             'whList.wh_type' => 'required|integer',
             'whList.wh_parent_id' => 'nullable|integer',
             'whList.wh_domain_id' => 'nullable|integer',
@@ -238,6 +245,8 @@ class WarehouseCreateScreen extends Screen
             rwWarehouse::where('wh_id', $data['whList']['wh_id'])->update([
                 'wh_name' => $data['whList']['wh_name'],
                 'wh_user_id' => $data['whList']['wh_user_id'],
+                'wh_country_id' => $data['whList']['wh_user_id'],
+                'wh_company_id' => $data['whList']['wh_company_id'],
                 'wh_type' => $data['whList']['wh_type'],
                 'wh_parent_id' => $data['whList']['wh_parent_id'],
                 'wh_domain_id' => $data['whList']['wh_domain_id'],
@@ -256,6 +265,7 @@ class WarehouseCreateScreen extends Screen
                 'wh_type' => $data['whList']['wh_type'],
                 'wh_parent_id' => $data['whList']['wh_parent_id'],
                 'wh_domain_id' => $data['whList']['wh_domain_id'],
+                'wh_company_id' => $data['whList']['wh_company_id'],
                 'wh_set_production_date' => $data['whList']['wh_set_production_date'],
                 'wh_set_expiration_date' => $data['whList']['wh_set_expiration_date'],
                 'wh_set_batch' => $data['whList']['wh_set_batch'],

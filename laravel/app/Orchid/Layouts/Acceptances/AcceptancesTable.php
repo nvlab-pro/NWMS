@@ -37,6 +37,7 @@ class AcceptancesTable extends Table
         return [
             TD::make('acc_id', CustomTranslator::get('ID'))
                 ->align('center')
+                ->style('white-space: nowrap;')
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwAcceptance $modelName) {
@@ -46,6 +47,7 @@ class AcceptancesTable extends Table
 
             TD::make('acc_status', CustomTranslator::get('Статус'))
                 ->align('center')
+                ->style('white-space: nowrap;')
                 ->sort()
                 ->filter(
                     TD::FILTER_SELECT,

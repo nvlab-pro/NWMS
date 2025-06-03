@@ -53,6 +53,7 @@ class OffersTable extends Table
 
             TD::make('of_status', CustomTranslator::get('Статус'))
                 ->sort()
+                ->style('white-space: nowrap;')
                 ->align('center')
                 ->filter(
                     TD::FILTER_SELECT,

@@ -94,6 +94,14 @@ class OrderCreateScreen extends Screen
                 Input::make('order.o_ext_id')
                     ->title(CustomTranslator::get('Внешний ID')),
 
+                Select::make('order.o_customer_type')
+                    ->title(CustomTranslator::get('Тип клиента'))
+                    ->options([
+                        0 => CustomTranslator::get('Физическое лицо'),
+                        1 => CustomTranslator::get('Юридическое лицо'),
+                    ])
+                    ->required(),
+
                 DateTimer::make('order.o_date')
                     ->title(CustomTranslator::get('Дата заказа'))
                     ->format('Y-m-d')
@@ -120,6 +128,7 @@ class OrderCreateScreen extends Screen
             'order.o_type_id' => 'required',
             'order.o_shop_id' => 'required',
             'order.o_wh_id' => 'required',
+            'order.o_customer_type' => 'required',
             'order.o_date' => 'required|date',
         ]);
 

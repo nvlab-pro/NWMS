@@ -107,4 +107,8 @@ class scheduleYandexDelivery
         }
 
     }
-}
+
+    public static function uploadOrdersToYandexDelivery()
+    {
+
+    }

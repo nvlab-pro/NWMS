@@ -51,6 +51,7 @@ class OrdersTable extends Table
         return [
             TD::make('o_id', 'ID')
                 ->sort()
+                ->style('white-space: nowrap;')
                 ->filter(TD::FILTER_TEXT)
                 ->align('center')
                 ->render(function (rwOrder $order) {
@@ -60,6 +61,7 @@ class OrdersTable extends Table
 
             TD::make('o_status_id', CustomTranslator::get('Статус'))
                 ->sort()
+                ->style('white-space: nowrap;')
                 ->align('center')
                 ->filter(
                     TD::FILTER_SELECT,
@@ -110,6 +112,24 @@ class OrdersTable extends Table
                         ->route('platform.orders.edit', $order->o_id)
                         : Link::make('-')
                             ->route('platform.orders.edit', $order->o_id);
+                }),
+
+            TD::make('o_customer_type', CustomTranslator::get('Тип клиента'))
+                ->sort()
+                ->align('center')
+                ->filter(
+                    TD::FILTER_SELECT,
+                    [
+                        '0' => CustomTranslator::get('Физическое лицо'),
+                        '1' => CustomTranslator::get('Юридическое лицо'),
+                    ]
+
+                )
+                ->render(function (rwOrder $order) {
+                    $str = CustomTranslator::get('Физическое лицо');
+                    if($order->o_customer_type == 1) $str = CustomTranslator::get('Юридическое лицо');
+                    return Link::make($str)
+                        ->route('platform.orders.edit', $order->o_id);
                 }),
 
             TD::make('o_date', CustomTranslator::get('Дата заказа'))

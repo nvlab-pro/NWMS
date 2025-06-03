@@ -181,6 +181,19 @@ class PlatformProvider extends OrchidServiceProvider
                 ]),
 
             // ************************
+            // *    Биллинг      *
+            // ************************
+
+            Menu::make(CustomTranslator::get('Биллинг'))
+                ->icon('bs.credit-card-fill')
+                ->list([
+                    Menu::make(CustomTranslator::get('Компании'))
+                        ->icon('bs.person-rolodex')
+                        ->route('platform.billing.companies.list'),
+
+                ]),
+
+            // ************************
             // *    Службы доставки      *
             // ************************
 
