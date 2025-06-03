@@ -432,19 +432,33 @@ class OrderEditScreen extends Screen
             $tabs[CustomTranslator::get('Физическое лицо')] = [
                 Layout::rows([
                     Input::make('contact.oc_first_name')
-                        ->title(CustomTranslator::get('Имя')),
+                        ->title(CustomTranslator::get('Имя'))
+                        ->readonly($this->order->o_status_id > 10),
+
                     Input::make('contact.oc_middle_name')
-                        ->title(CustomTranslator::get('Отчество')),
+                        ->title(CustomTranslator::get('Отчество'))
+                        ->readonly($this->order->o_status_id > 10),
+
                     Input::make('contact.oc_last_name')
-                        ->title(CustomTranslator::get('Фамилия')),
+                        ->title(CustomTranslator::get('Фамилия'))
+                        ->readonly($this->order->o_status_id > 10),
+
                     Input::make('contact.oc_phone')
-                        ->title(CustomTranslator::get('Телефон')),
+                        ->title(CustomTranslator::get('Телефон'))
+                        ->readonly($this->order->o_status_id > 10),
+
                     Input::make('contact.oc_email')
-                        ->title(CustomTranslator::get('Email')),
+                        ->title(CustomTranslator::get('Email'))
+                        ->readonly($this->order->o_status_id > 10),
+
                     Input::make('contact.oc_postcode')
-                        ->title(CustomTranslator::get('Почтовый индекс')),
+                        ->title(CustomTranslator::get('Почтовый индекс'))
+                        ->readonly($this->order->o_status_id > 10),
+
                     Input::make('contact.oc_full_address')
-                        ->title(CustomTranslator::get('Полный адрес')),
+                        ->title(CustomTranslator::get('Полный адрес'))
+                        ->readonly($this->order->o_status_id > 10),
+
                     Button::make(CustomTranslator::get('Сохранить изменения'))
                         ->method('saveIndividualEntityChanges')
                         ->parameters([
