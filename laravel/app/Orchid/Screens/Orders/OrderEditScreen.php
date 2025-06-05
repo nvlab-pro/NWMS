@@ -525,7 +525,7 @@ class OrderEditScreen extends Screen
                 $tabs[CustomTranslator::get('Сборка')] = Layout::view('Orders/OrderPickedOffersList');
             }
             if ($this->order->o_status_id >= 90) {
-                $tabs[CustomTranslator::get('Упаковка')] = Layout::view('Orders/OrderpackedOffersList');
+                $tabs[CustomTranslator::get('Упаковка')] = Layout::view('Orders/OrderPackedOffersList');
             }
 
         }
