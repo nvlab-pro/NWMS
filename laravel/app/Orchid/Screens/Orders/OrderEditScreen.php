@@ -38,7 +38,7 @@ class OrderEditScreen extends Screen
 {
     public $order, $currentUser;
 
-    public function query($orderId): array
+    public function query($orderId, Request $request): array
     {
         $currentUser = Auth::user();
         $this->currentUser = $currentUser;
@@ -82,11 +82,27 @@ class OrderEditScreen extends Screen
 
         $dbOrderOffersList = rwOrderOffer::where('oo_order_id', $orderId)
             ->with('getOffer')
-            ->with('getPackingOffer')
             ->orderBy('oo_id', 'DESC')
             ->get();
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
+
+            // *************************************************************
+            // *** Скидываем упаковку если ни один товар еще не упакован
+            if (isset($request->action) && $request->action == 'cancel_packing' && $this->order->o_status_id == 90) {
+
+                $packSum = rwOrderPacking::where('op_order_id', $orderId)
+                    ->sum('op_qty');
+
+                if ($packSum == 0) {
+
+                    $this->order->o_status_id = 80;
+                    $this->order->save();
+
+                    Alert::success(CustomTranslator::get('Заказ вернули обратно на место размещения после сборки!'));
+
+                }
+            }
 
             if ($this->order->o_status_id >= 50) {
                 // ****************************************
@@ -132,6 +148,11 @@ class OrderEditScreen extends Screen
 
                 foreach ($dbOrderOffersList as $currentOffer) {
 
+                    $dbOfferPacking = rwOrderPacking::where('op_order_id', $orderId)
+                        ->where('op_offer_id', $currentOffer->oo_offer_id)
+                        ->with('getUser')
+                        ->first();
+
                     $dbOffer = [];
 
                     $packDate = '-';
@@ -139,14 +160,14 @@ class OrderEditScreen extends Screen
                     $packQty = 0;
                     $userName = '-';
 
-                    if (isset($currentOffer->getPackingOffer->op_id) && $currentOffer->getPackingOffer->op_qty > 0) {
+                    if (isset($dbOfferPacking->op_id) && $dbOfferPacking->op_qty > 0) {
 
-                        $dbOffer = $currentOffer->getPackingOffer;
-                        $packQty = $currentOffer->getPackingOffer->op_qty;
-                        $userName = $currentOffer->getPackingOffer->getUser->name;
+                        $dbOffer = $dbOfferPacking;
+                        $packQty = $dbOfferPacking->op_qty;
+                        $userName = $dbOfferPacking->getUser->name;
 
-                        $packDate = Carbon::parse($currentOffer->getPackingOffer->op_data)->format('d.m.Y H:i:s');
-                        $packTime = Carbon::parse($currentOffer->getPackingOffer->op_data)->timestamp;
+                        $packDate = Carbon::parse($dbOfferPacking->op_data)->format('d.m.Y H:i:s');
+                        $packTime = Carbon::parse($dbOfferPacking->op_data)->timestamp;
                     }
 
                     isset($currentOffer->getPlace->pl_id) ? $currentPlace = $this->getPageStr($currentOffer->getPlace) : $currentPlace = '-';
@@ -183,6 +204,7 @@ class OrderEditScreen extends Screen
 
         return [
             'order' => $this->order,
+            'currentUser' => $currentUser,
             'dbOrderOffersList' => $dbOrderOffersList,
             'arPickingOffersList' => $arPickingOffersList,
             'arPackedOffersList' => $arPackedOffersList,

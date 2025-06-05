@@ -42,7 +42,10 @@
 
                         if ($offer['packed_qty'] > 0) $tClass = 'table-warning';
 
+                        if ($offer['of_img'] == '') $offer['of_img'] = '/img/no_image.png';
+
                     @endphp
+
                     <tr>
                         <td class="tdMain {{ $tClass }}" style="{{ $tStyle }}">{{ $num }}</td>
                         <td class="tdMain {{ $tClass }}" style="{{ $tStyle }}"><img src="{{ $offer['of_img'] }}" width="85"></td>
@@ -57,7 +60,8 @@
                                 </svg><br>
                             @endif
                             {{ $offer['of_article'] }}</td>
-                        <td class="tdMain {{ $tClass }}" style="text-align: left; {{ $tStyle }}">{{ $offer['of_name'] }}
+                        <td class="tdMain {{ $tClass }}" style="text-align: left; {{ $tStyle }}">{{ $offer['of_name'] }}<br>
+                            <i style="font-size: 11px; color: #777777;">{{ $offer['op_barcodes'] }}</i>
                         </td>
                         @if($queueStartPlaceType == 102)
                             @if($offer['accepted_count'] == $offer['oo_qty'] )
@@ -96,6 +100,7 @@
                 @php
                     $num = 0;
                 @endphp
+
                 @foreach($arPackedOffersList as $offer)
                     @php
                         $num++;
@@ -103,6 +108,8 @@
                         $tStyle = 'font-size: 20px;';
 
                         $rest = $offer['oo_qty'] - $offer['packed_qty'];
+
+                        if ($offer['of_img'] == '') $offer['of_img'] = '/img/no_image.png';
 
                     @endphp
                     <tr>

@@ -329,6 +329,7 @@ class PackingScreen extends Screen
 
         $dbOffersList = rwOrderOffer::where('oo_order_id', $orderId)
             ->with('getOffer')
+            ->with('getOffer.barcodes')
             ->orderBy('oo_cash', 'desc')
             ->get();
 
@@ -377,6 +378,7 @@ class PackingScreen extends Screen
                     'oo_qty' => $dbOffer->oo_qty,
                     'op_cash' => $currentCash,
                     'packed_qty' => $packedQty,
+                    'op_barcodes' => $dbOffer->getOffer->barcodes->pluck('br_barcode')->implode(', '),
                     'accepted_count' => $acceptedCount,
                 ];
             }

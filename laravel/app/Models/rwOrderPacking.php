@@ -30,6 +30,7 @@ class rwOrderPacking extends Model implements AuditableContract
         'op_box',
         'op_cash',
     ];
+
     public function getUser()
     {
         return $this->hasOne(User::class, 'id', 'op_user_id');

@@ -104,9 +104,9 @@
         </div>
 
         <script>
-            window.onload = function () {
+            document.addEventListener("turbo:load", function () {
                 window.print();
-            };
+            });
         </script>
 
         <form action="{{ route('platform.tables.packing.select', [$queueId]) }}" method="GET"

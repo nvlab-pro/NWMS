@@ -40,7 +40,7 @@ class PackingService
         $currentOrder = rwOrder::where('o_domain_id', $currentUser->domain_id)
             ->where('o_status_id', 90)
             ->where('o_order_place', $tableId)
-            ->with('getPlace')
+            ->with('getPlace', 'getWarehouse')
             ->first();
 
         if ($currentOrder) {
@@ -51,6 +51,8 @@ class PackingService
             $arOrders = [
                 'id' => $orderUser->id,
                 'name' => $orderUser->name,
+                'order_id' => $currentOrder->o_id,
+                'wh_client_name' => $currentOrder->getWarehouse->wh_name,
             ];
 
             return $arOrders;
@@ -85,6 +87,7 @@ class PackingService
                 ->where('o_wh_id', $queueWhId)
                 ->with('getPlace')
                 ->get();
+
 
             foreach ($dbOrdersList as $currentOrder) {
                 // Если способ подбора совпадает с типом очереди
