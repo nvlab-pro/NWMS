@@ -14,6 +14,7 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Screen;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Alert;
@@ -189,30 +190,74 @@ class WarehouseCreateScreen extends Screen
             ->value($currentUser->wh_set_batch);
 
         return [
+            Layout::tabs([
+                CustomTranslator::get('Основная') => [
+                    Layout::rows(
+                        array_merge(
+                            [
+                                Input::make('whList.wh_id')
+                                    ->type('hidden'),
 
-            Layout::rows(
-                array_merge(
-                    [
-                        Input::make('whList.wh_id')
-                            ->type('hidden'),
+                                Input::make('whList.wh_name')
+                                    ->width(50)
+                                    ->title(CustomTranslator::get('Название')),
+                            ],
+                            $arAddFields,
+                            $arAddFields2,
+                            [
+                                Button::make(CustomTranslator::get('Сохранить'))
+                                    ->type(Color::DARK)
+                                    ->style('margin-bottom: 20px;')
+                                    ->method('saveWh'),
+                            ]
+                        )
+                    ),
+                ],
+                CustomTranslator::get('Настройка этикетки') => [
+                    Layout::rows([
+                        CheckBox::make('whList.wh_use_custom_label')
+                            ->sendTrueOrFalse()
+                            ->placeholder(CustomTranslator::get(' - При включении, при печати этикетки на упаковке будет использоваться HTML-код ниже')),
 
-                        Input::make('whList.wh_name')
-                            ->width(50)
-                            ->title(CustomTranslator::get('Название')),
-                    ],
-                    $arAddFields,
-                    $arAddFields2,
-                    [
+                        TextArea::make('whList.wh_custom_label')
+                            ->rows(20)
+                            ->cols(100)
+                            ->title(CustomTranslator::get('HTML-код этикетки'))
+                            ->popover(CustomTranslator::get('Введите HTML для печатной этикетки.')),
+
                         Button::make(CustomTranslator::get('Сохранить'))
                             ->type(Color::DARK)
                             ->style('margin-bottom: 20px;')
-                            ->method('saveWh'),
-
-                    ])
-            ),
+                            ->method('saveLabel'),
+                    ]),
+                    Layout::view('Screens.Warehouses.WhLabelInstructions'),
+                ],
+            ]),
         ];
+
     }
 
+    function saveLabel(Request $request)
+    {
+        $currentUser = Auth::user();
+
+        $data = $request->validate([
+            'whList.wh_id' => 'nullable|integer',
+            'whList.wh_use_custom_label' => 'nullable|integer',
+            'whList.wh_custom_label' => 'required|string',
+        ]);
+
+        $whId = $data['whList']['wh_id'];
+
+        $dbWarehouse = rwWarehouse::find($whId);
+        $dbWarehouse->wh_use_custom_label = $data['whList']['wh_use_custom_label'];
+        $dbWarehouse->wh_custom_label = $data['whList']['wh_custom_label'];
+        $dbWarehouse->save();
+
+        Alert::success(CustomTranslator::get('Данные этикетки сохранены!'));
+
+        return redirect()->route('platform.warehouses.edit', $whId);
+    }
     function saveWh(Request $request)
     {
         $currentUser = Auth::user();

@@ -37,13 +37,14 @@ class PackingScreen extends Screen
         return 'loyouts.base';
     }
 
-    protected $orderId, $tableId, $queueId, $queueStartPlaceType, $queuePackType, $currentPallet, $currentBox;
+    protected $orderId, $orderExtId, $tableId, $queueId, $queueStartPlaceType, $queuePackType, $currentPallet, $currentBox;
 
     public function query($queueId, $tableId, $orderId, Request $request): iterable
     {
 
         $currentUser = Auth::user();
         $this->orderId = $orderId;
+        $this->orderExtId = '';
         $arOffersList = [];
         $arPackedOffersList = [];
         $printPalletLabel = 0;
@@ -80,7 +81,7 @@ class PackingScreen extends Screen
         // **************************************
         // Получаем данные по заказу товарам
         $dbOrder = rwOrder::where('o_id', $orderId)
-            ->with('getWarehouse')
+            ->with('getWarehouse', 'getContact')
             ->first();
 
         $this->currentPallet = $dbOrder->o_current_pallet;
@@ -388,6 +389,8 @@ class PackingScreen extends Screen
 //            return $b['op_cash'] <=> $a['op_cash'];
 //        });
 
+        $this->orderExtId = $dbOrder->o_ext_id;
+
         return [
             'dbOrder' => $dbOrder,
             'arOffersList' => $arOffersList,
@@ -409,7 +412,7 @@ class PackingScreen extends Screen
 
     public function name(): ?string
     {
-        return CustomTranslator::get('Упаковка заказа') . ' № ' . $this->orderId;
+        return CustomTranslator::get('Упаковка заказа') . ' № ' . $this->orderId . ' (' . $this->orderExtId . ')';
     }
 
     public function description(): ?string

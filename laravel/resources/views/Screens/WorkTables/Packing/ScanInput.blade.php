@@ -65,6 +65,13 @@
             $orderCode = '101' . '*' . $dbOrder->o_id . '*' . $controlSum . '*' . $currentPallet . '*' . $currentBox;
             $orderBarcode = $showCurrentBarcode->getBarcodeSVG($orderCode, 'C128', 1, 30, 'black', false);
 
+            if ($dbOrder->o_ext_id != '')
+                $orderCode3 = $dbOrder->o_ext_id;
+            else
+                $orderCode3 = '@#$';
+
+            $orderExtBarcode = $showCurrentBarcode->getBarcodeSVG($orderCode3, 'C128', 1, 30, 'black', false);
+
             $orderLable = '<div align="center">'.$orderBarcode.'<br>'.$dbOrder->o_id.' (pl ' . $currentPallet . ' / box ' . $currentBox . ')<br><span style="font-size: 10px;">'.$dbOrder->getWarehouse->wh_name.'</span></div>';
 
         @endphp
@@ -78,6 +85,7 @@
             window.print();
         </script>
     @endif
+
     @if(count($arOffersList) == 0 && count($arPackedOffersList) > 0)
 
         @php
@@ -86,9 +94,34 @@
             $controlSum = $dbOrder->o_id + 101;
             $orderCode = '101' . '*' . $dbOrder->o_id . '*' . $controlSum;
             $orderCode2 = '101' . ';' . $dbOrder->o_id . ';' . $controlSum;
-            $orderBarcode = $showCurrentBarcode->getBarcodeSVG($orderCode, 'C128', 1, 30, 'black', false);
+            if ($dbOrder->o_ext_id != '')
+                $orderCode3 = $dbOrder->o_ext_id;
+            else
+                $orderCode3 = '@#$';
 
-            $orderLable = '<div align="center">'.$orderBarcode.'<br>'.$dbOrder->o_id.'<br><span style="font-size: 10px;">'.$dbOrder->getWarehouse->wh_name.'</span></div>';
+            $orderBarcode = $showCurrentBarcode->getBarcodeSVG($orderCode, 'C128', 1, 30, 'black', false);
+            $orderExtBarcode = $showCurrentBarcode->getBarcodeSVG($orderCode3, 'C128', 1, 30, 'black', false);
+
+            if (isset($dbOrder->getWarehouse->wh_use_custom_label) && $dbOrder->getWarehouse->wh_use_custom_label == 1) {
+
+                $orderLable = $dbOrder->getWarehouse->wh_custom_label;
+                $orderLable = str_replace('{order_id}', $dbOrder->o_id, $orderLable);
+                $orderLable = str_replace('{order_ext_id}', $dbOrder->o_ext_id, $orderLable);
+                $orderLable = str_replace('{barcode_order_id}', $orderBarcode, $orderLable);
+                $orderLable = str_replace('{barcode_order_ext_id}', $orderExtBarcode, $orderLable);
+
+                $fio = '';
+                if (isset($dbOrder->getContact->oc_first_name)) $fio .= $dbOrder->getContact->oc_first_name;
+                if (isset($dbOrder->getContact->oc_last_name)) $fio .= ' ' . $dbOrder->getContact->oc_last_name;
+
+                $orderLable = str_replace('{customer_fio}', $fio, $orderLable);
+                $orderLable = str_replace('{wh_name}', $dbOrder->getWarehouse->wh_name, $orderLable);
+
+            } else {
+
+                $orderLable = '<div align="center">'.$orderBarcode.'<br>'.$dbOrder->o_id.'<br><span style="font-size: 10px;">'.$dbOrder->getWarehouse->wh_name.'</span></div>';
+
+            }
 
         @endphp
 
@@ -134,8 +167,9 @@
                 let barcodeInput = document.getElementById("barcode").value;
                 let validCode = "{{ $orderCode }}";
                 let validCode2 = "{{ $orderCode2 }}";
+                let validCode3 = "{{ $orderCode3 }}";
 
-                if (barcodeInput === validCode || barcodeInput === validCode2) {
+                if (barcodeInput === validCode || barcodeInput === validCode2 || barcodeInput === validCode3) {
                     document.forms[0].submit();
                 } else {
                     event.preventDefault();
