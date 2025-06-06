@@ -53,7 +53,9 @@
         </div>
 
         <script>
-            window.print();
+            document.addEventListener("turbo:load", function () {
+                printDivContent('printableArea');
+            });
         </script>
 
     @endif
@@ -82,7 +84,9 @@
         </div>
 
         <script>
-            window.print();
+            document.addEventListener("turbo:load", function () {
+                printDivContent('printableArea');
+            });
         </script>
     @endif
 
@@ -138,7 +142,7 @@
 
         <script>
             document.addEventListener("turbo:load", function () {
-                window.print();
+                printDivContent('printableArea');
             });
         </script>
 
@@ -218,3 +222,52 @@
         document.getElementById("barcode").focus();
     </script>
 @endif
+
+<script>
+    function printDivContent(divId) {
+        // Берем содержимое дива
+        const divContents = document.getElementById(divId).innerHTML;
+
+        // Открываем новое окно (попап)
+        const printWindow = window.open('', '', 'height=600,width=800');
+
+        // Записываем туда HTML
+        printWindow.document.write('<html><head><title>Print</title>');
+        // Можно добавить базовые стили для печати
+        printWindow.document.write('<style>body { font-family: Arial, sans-serif; text-align: center; } @page { margin: 0; } </style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+
+        printWindow.document.close();
+
+        // Ждем пока контент подгрузится, потом печатаем
+        printWindow.onload = function () {
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+
+            // После закрытия окна ПЕЧАТИ вернуть фокус на #barcode
+            setTimeout(() => {
+                const barcodeInput = document.getElementById("barcode");
+                if (barcodeInput) {
+                    barcodeInput.focus();
+                }
+            }, 300); // небольшая задержка, чтобы DOM успел восстановиться
+        };
+
+        // На всякий случай фокусим #barcode при каждом turbo:load
+        document.addEventListener("turbo:load", function () {
+            const barcodeInput = document.getElementById("barcode");
+            if (barcodeInput) {
+                barcodeInput.focus();
+            }
+        });
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('btn').click();
+            }
+        }
+    }
+</script>
