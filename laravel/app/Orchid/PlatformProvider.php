@@ -181,19 +181,6 @@ class PlatformProvider extends OrchidServiceProvider
                 ]),
 
             // ************************
-            // *    Биллинг      *
-            // ************************
-
-            Menu::make(CustomTranslator::get('Биллинг'))
-                ->icon('bs.credit-card-fill')
-                ->list([
-                    Menu::make(CustomTranslator::get('Компании'))
-                        ->icon('bs.person-rolodex')
-                        ->route('platform.billing.companies.list'),
-
-                ]),
-
-            // ************************
             // *    Службы доставки      *
             // ************************
 
@@ -213,11 +200,37 @@ class PlatformProvider extends OrchidServiceProvider
                 ]),
 
             // ************************
+            // *    Статистика      *
+            // ************************
+
+            Menu::make(CustomTranslator::get('Статистика'))
+                ->icon('bs.graph-up')
+                ->list([
+                    Menu::make(CustomTranslator::get('Работники'))
+                        ->icon('bs.person-lines-fill')
+                        ->route('platform.statistics.workers'),
+
+                ]),
+
+            // ************************
+            // *    Биллинг      *
+            // ************************
+
+            Menu::make(CustomTranslator::get('Биллинг'))
+                ->icon('bs.credit-card-fill')
+                ->list([
+                    Menu::make(CustomTranslator::get('Компании'))
+                        ->icon('bs.person-rolodex')
+                        ->route('platform.billing.companies.list'),
+
+                ]),
+
+            // ************************
             // *    Фиксация входа      *
             // ************************
 
             Menu::make(CustomTranslator::get('Посещаемость'))
-                ->icon('bs.file-person-fill')
+                ->icon('bs.person-walking')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
                     Menu::make(CustomTranslator::get('Фиксация входа'))

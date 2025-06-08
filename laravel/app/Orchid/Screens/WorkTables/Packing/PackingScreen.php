@@ -17,6 +17,7 @@ use App\Models\rwPlace;
 use App\Models\rwSettingsProcPacking;
 use App\Models\WhcRest;
 use App\Orchid\Services\ChestnyZnakParser;
+use App\Orchid\Services\WarehouseUserActionService;
 use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -254,6 +255,20 @@ class PackingScreen extends Screen
                                 'op_cash'   => $cash,
                             ]);
 
+                            // Сохраняем данные в статистике
+                            WarehouseUserActionService::logAction([
+                                'ua_user_id' => $currentUser->id, // ID текущего кладовщика
+                                'ua_lat_id' => 4,            // ID типа действия (например, 1 — "подбор товара")
+                                'ua_domain_id' => $currentUser->domain_id,    // ID компании / окружения
+                                'ua_wh_id' => $dbOrder->o_wh_id, // ID склада
+                                'ua_shop_id' => $dbOrder->o_shop_id,      // ID магазина, если применимо
+                                'ua_place_id' => NULL,     // ID ячейки склада
+                                'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                                'ua_doc_id' => $dbOrder->o_id,     // ID документа
+                                'ua_entity_id' => $selectOffer->oo_offer_id,     // ID выбранного товара
+                                'ua_quantity' => 1,          // Количество товара
+                            ]);
+
                             Alert::success(CustomTranslator::get('Товар добавлен в заказ!'));
 
                         }
@@ -270,6 +285,20 @@ class PackingScreen extends Screen
                             'op_box'    => $this->currentBox,
                             'op_cash' => $cash,
                             'op_qty' => 1,
+                        ]);
+
+                        // Сохраняем данные в статистике
+                        WarehouseUserActionService::logAction([
+                            'ua_user_id' => $currentUser->id, // ID текущего кладовщика
+                            'ua_lat_id' => 4,            // ID типа действия (например, 1 — "подбор товара")
+                            'ua_domain_id' => $currentUser->domain_id,    // ID компании / окружения
+                            'ua_wh_id' => $dbOrder->o_wh_id, // ID склада
+                            'ua_shop_id' => $dbOrder->o_shop_id,      // ID магазина, если применимо
+                            'ua_place_id' => NULL,     // ID ячейки склада
+                            'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                            'ua_doc_id' => $dbOrder->o_id,     // ID документа
+                            'ua_entity_id' => $selectOffer->oo_offer_id,     // ID выбранного товара
+                            'ua_quantity' => 1,          // Количество товара
                         ]);
 
                         Alert::success(CustomTranslator::get('Товар добавлен в заказ!'));

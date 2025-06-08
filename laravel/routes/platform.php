@@ -746,6 +746,17 @@ Route::prefix('delivery-services')
     });
 
 // *********************
+// *** Статистика
+// *********************
+
+Route::screen('statistics/workers', \App\Orchid\Screens\Statistics\Workers\WorkersScreen::class)
+    ->name('platform.statistics.workers')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(CustomTranslator::get('Статистика работников'), route('platform.statistics.workers')));
+
+
+// *********************
 // *** Биллинг
 // *********************
 
