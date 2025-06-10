@@ -5,7 +5,7 @@
 
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
     <div class="row g-0">
-        <div style="margin: 20px 20px 20px 20px; text-align: left;">
+        <div style="padding: 20px 20px 20px 20px; text-align: left;">
 
             <h3>{{ CustomTranslator::get('Статистика по работникам склада с ') }}: {{ $startDate }}
                 до {{ $endDate }}</h3>

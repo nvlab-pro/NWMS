@@ -5,10 +5,13 @@ namespace App\Orchid\Screens\Orders;
 use App\Console\scheduleOrders;
 use App\Http\Middleware\RoleMiddleware;
 use App\Models\rwCompany;
+use App\Models\rwDeliveryService;
 use App\Models\rwOffer;
 use App\Models\rwOrder;
 use App\Models\rwOrderAssembly;
 use App\Models\rwOrderContact;
+use App\Models\rwOrderDs;
+use App\Models\rwOrderDsStatus;
 use App\Models\rwOrderOffer;
 use App\Models\rwOrderPacking;
 use App\Models\rwOrderStatus;
@@ -200,7 +203,11 @@ class OrderEditScreen extends Screen
             ->filters()
             ->get();
 
+        // Контакты
         $contact = rwOrderContact::where('oc_order_id', $orderId)->first();
+
+        // Службы доставки
+        $dbOrderDs = rwOrderDs::where('ods_id', $orderId)->first();
 
         return [
             'order' => $this->order,
@@ -210,6 +217,7 @@ class OrderEditScreen extends Screen
             'arPackedOffersList' => $arPackedOffersList,
             'printTemplates' => $dbTemplates,
             'contact' => $contact ? $contact->toArray() : [],
+            'ds' => $dbOrderDs ? $dbOrderDs->toArray() : [],
         ];
     }
 
@@ -517,6 +525,41 @@ class OrderEditScreen extends Screen
             ];
         }
 
+        $tabs[CustomTranslator::get('Доставка')] = [
+            Layout::rows([
+                Select::make('ds.ods_ds_id')
+                    ->title(CustomTranslator::get('Служба доставки'))
+                    ->options(
+                        rwDeliveryService::all()->pluck('ds_name', 'ds_id')->toArray()
+                    )
+                    ->empty(CustomTranslator::get('Не выбрано'), 0)
+                    ->readonly($this->order->o_status_id > 10),
+
+                Select::make('ds.ods_status')
+                    ->title(CustomTranslator::get('Статус'))
+                    ->options(
+                        rwOrderDsStatus::all()->pluck('odss_name', 'odss_id')->toArray()
+                    )
+                    ->empty(CustomTranslator::get('Не выбран'), 0)
+                    ->readonly($this->order->o_status_id > 10),
+
+                Input::make('ds.ods_track_number')
+                    ->title(CustomTranslator::get('Трек-номер'))
+                    ->readonly($this->order->o_status_id > 10),
+
+                Button::make(CustomTranslator::get('Сохранить изменения'))
+                    ->method('saveDSChanges')
+                    ->parameters([
+                        '_token' => csrf_token(),
+                        'docId' => $this->order->o_id,
+                        'status' => $this->order->o_status_id,
+                    ])
+                    ->canSee($this->order->o_status_id <= 10)
+                    ->class('btn btn-primary'),
+            ]),
+        ];
+
+
         $tabs[CustomTranslator::get('Печать')] = OrderPrint::class;
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
@@ -575,6 +618,37 @@ class OrderEditScreen extends Screen
                 ->applyButton(CustomTranslator::get('Сохранить'))
                 ->async('asyncGetOrder'),
         ];
+    }
+
+    public function saveDSChanges(Request $request)
+    {
+        $validatedData = $request->validate([
+            'ds.ods_ds_id' => 'nullable|numeric|min:0',
+            'ds.ods_status' => 'nullable|numeric|min:0',
+            'ds.ods_track_number' => 'nullable|string|max:50',
+            'docId' => 'nullable|numeric|min:0',
+            'status' => 'nullable|numeric|min:0',
+        ]);
+
+        if ($validatedData['status'] <= 10) {
+
+            $orderDs = rwOrderDs::where('ods_id', $validatedData['docId'])
+                ->first();
+
+            if (!$orderDs) {
+                // создаем новую запись, если нет
+                $orderDs = new rwOrderDs();
+                $orderDs->ods_id = $validatedData['docId'];
+            }
+
+            // сохраняем данные
+            $orderDs->ods_ds_id = $validatedData['ds']['ods_ds_id'];
+            $orderDs->ods_status = $validatedData['ds']['ods_status'];
+            $orderDs->ods_track_number = $validatedData['ds']['ods_track_number'];
+            $orderDs->save(); // Автоматически вызовет аудит, если модель использует AuditableContract
+
+            Alert::success(CustomTranslator::get('Данные по доставке у заказа') . ' ' . $validatedData['docId'] . ' ' . CustomTranslator::get('были изменены!'));
+        }
     }
 
     public function tryReservOrder(Request $request)

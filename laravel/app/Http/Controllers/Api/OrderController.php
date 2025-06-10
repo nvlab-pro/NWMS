@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\rwOrder;
+use App\Models\rwOrderContact;
+use App\Models\rwOrderDs;
 use App\Models\rwOrderOffer;
 use App\Orchid\Services\OrderService;
 use Illuminate\Http\Request;
@@ -16,29 +18,88 @@ use OpenApi\Annotations as OA;
  *     description="Order management endpoints"
  * )
  *
+ * @OA\RequestBody(
+ *     request="Order",
+ *     required=true,
+ *     description="Полный набор полей для создания заказа",
+ *     @OA\JsonContent(
+ *         type="object",
+ *         required={"o_type_id","o_shop_id","o_wh_id"},
+ *
+ *         @OA\Property(property="o_type_id",       type="integer", description="ID типа заказа"),
+ *         @OA\Property(property="o_ext_id",        type="string",  maxLength=30, description="Внешний ID заказа"),
+ *         @OA\Property(property="o_shop_id",       type="integer", description="ID магазина"),
+ *         @OA\Property(property="o_wh_id",         type="integer", description="ID склада"),
+ *         @OA\Property(property="o_date_send",     type="string",  format="date", description="Дата отправки"),
+ *         @OA\Property(property="o_source_id",     type="integer", description="Источник заказа"),
+ *         @OA\Property(property="o_customer_type", type="integer", description="0 – частное лицо, 1 – компания"),
+ *         @OA\Property(property="o_company_id",    type="integer", description="Ссылка на rw_companies"),
+ *
+ *         @OA\Property(
+ *             property="contact",
+ *             type="object",
+ *             description="Данные получателя",
+ *             @OA\Property(property="oc_first_name",      type="string"),
+ *             @OA\Property(property="oc_middle_name",     type="string"),
+ *             @OA\Property(property="oc_last_name",       type="string"),
+ *             @OA\Property(property="oc_phone",           type="string"),
+ *             @OA\Property(property="oc_email",           type="string", format="email"),
+ *             @OA\Property(property="oc_country_id",      type="integer"),
+ *             @OA\Property(property="oc_city_id",         type="integer"),
+ *             @OA\Property(property="oc_postcode",        type="string"),
+ *             @OA\Property(property="oc_coord_latitude",  type="number", format="float"),
+ *             @OA\Property(property="oc_coord_longitude", type="number", format="float"),
+ *             @OA\Property(property="oc_full_address",    type="string")
+ *         ),
+ *
+ *         @OA\Property(
+ *             property="ds",
+ *             type="object",
+ *             description="Информация о доставке",
+ *             @OA\Property(property="ods_ds_id",        type="integer", description="ID службы доставки"),
+ *             @OA\Property(property="ods_status",       type="integer", description="Статус доставки"),
+ *             @OA\Property(property="ods_track_number", type="string",  description="Трек-номер")
+ *         )
+ *     )
+ * )
+ *
  * @OA\Schema(
  *     schema="Order",
  *     type="object",
- *     required={"o_status_id", "o_type_id", "o_user_id", "o_shop_id", "o_wh_id", "o_date", "o_count", "o_sum"},
+ *     required={
+ *         "o_status_id","o_type_id","o_user_id",
+ *         "o_shop_id","o_wh_id","o_date",
+ *         "o_count","o_sum"
+ *     },
  *     @OA\Property(property="o_status_id", type="integer"),
- *     @OA\Property(property="o_type_id", type="integer"),
- *     @OA\Property(property="o_user_id", type="integer"),
- *     @OA\Property(property="o_ext_id", type="string", maxLength=30),
- *     @OA\Property(property="o_shop_id", type="integer"),
- *     @OA\Property(property="o_wh_id", type="integer"),
- *     @OA\Property(property="o_date", type="string", format="date-time"),
+ *     @OA\Property(property="o_type_id",   type="integer"),
+ *     @OA\Property(property="o_user_id",   type="integer"),
+ *     @OA\Property(property="o_ext_id",    type="string", maxLength=30),
+ *     @OA\Property(property="o_shop_id",   type="integer"),
+ *     @OA\Property(property="o_wh_id",     type="integer"),
+ *     @OA\Property(property="o_date",      type="string", format="date-time"),
  *     @OA\Property(property="o_date_send", type="string", format="date"),
  *     @OA\Property(property="o_source_id", type="integer"),
- *     @OA\Property(property="o_count", type="number"),
- *     @OA\Property(property="o_sum", type="number"),
+ *     @OA\Property(property="o_count",     type="number"),
+ *     @OA\Property(property="o_sum",       type="number"),
  *     @OA\Property(property="o_operation_user_id", type="integer"),
- *     @OA\Property(property="o_order_place", type="integer"),
- *     @OA\Property(property="o_current_pallet", type="integer"),
- *     @OA\Property(property="o_current_box", type="integer")
+ *     @OA\Property(property="o_order_place",       type="integer"),
+ *     @OA\Property(property="o_current_pallet",    type="integer"),
+ *     @OA\Property(property="o_current_box",       type="integer")
+ * )
+ * @OA\RequestBody(
+ * required=true,
+ * @OA\JsonContent(
+ * type="array",
+ * @OA\Items(ref="#/components/schemas/OrderOffer")
+ * )
  * )
  */
 class OrderController extends Controller
 {
+    /*---------------------------------------------------------------
+     |  Вспомогательный фильтр доступа
+     *--------------------------------------------------------------*/
     private function applyAccessFilters($query, $user)
     {
         if (!$user->hasRole('admin')) {
@@ -55,6 +116,9 @@ class OrderController extends Controller
         return $query;
     }
 
+    /*---------------------------------------------------------------
+     |  GET /api/orders
+     *--------------------------------------------------------------*/
     /**
      * @OA\Get(
      *     path="/api/orders",
@@ -75,6 +139,9 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
+    /*---------------------------------------------------------------
+     |  GET /api/orders/{id}
+     *--------------------------------------------------------------*/
     /**
      * @OA\Get(
      *     path="/api/orders/{id}",
@@ -93,14 +160,18 @@ class OrderController extends Controller
         return new OrderResource($order->firstOrFail());
     }
 
+    /*---------------------------------------------------------------
+     |  POST /api/orders
+     *--------------------------------------------------------------*/
     /**
      * @OA\Post(
      *     path="/api/orders",
      *     summary="Create a new order",
      *     tags={"Orders"},
      *     security={{"sanctum":{}}},
-     *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/Order")),
-     *     @OA\Response(response=201, description="Order created successfully")
+     *     @OA\RequestBody(ref="#/components/requestBodies/Order"),
+     *     @OA\Response(response=201, description="Order created"),
+     *     @OA\Response(response=422, description="Validation error")
      * )
      */
     public function insert(Request $request)
@@ -112,6 +183,27 @@ class OrderController extends Controller
             'o_wh_id' => 'required|integer',
             'o_date_send' => 'nullable|date',
             'o_source_id' => 'nullable|integer',
+            'o_customer_type' => 'nullable|integer',
+
+            'o_company_id' => 'nullable|integer|exists:rw_companies,co_id',
+
+            'contact' => 'nullable|array',
+            'contact.oc_first_name' => 'nullable|string|max:255',
+            'contact.oc_middle_name' => 'nullable|string|max:255',
+            'contact.oc_last_name' => 'nullable|string|max:255',
+            'contact.oc_phone' => 'nullable|string|max:50',
+            'contact.oc_email' => 'nullable|email|max:255',
+            'contact.oc_country_id' => 'nullable|integer',
+            'contact.oc_city_id' => 'nullable|integer',
+            'contact.oc_postcode' => 'nullable|string|max:20',
+            'contact.oc_coord_latitude' => 'nullable|numeric',
+            'contact.oc_coord_longitude' => 'nullable|numeric',
+            'contact.oc_full_address' => 'nullable|string|max:255',
+
+            'ds' => 'nullable|array',
+            'ds.ods_ds_id' => 'nullable|integer',
+            'ds.ods_status' => 'nullable|integer',
+            'ds.ods_track_number' => 'nullable|string|max:50',
         ]);
 
         $data += [
@@ -127,16 +219,41 @@ class OrderController extends Controller
             'o_current_box' => 1,
         ];
 
-        return new OrderResource(rwOrder::create($data));
+        $order = rwOrder::create($data);
+
+        if ($request->filled('contact')) {
+            $contactData = $request->input('contact');
+            $contactData['oc_order_id'] = $order->o_id;
+
+            rwOrderContact::create($contactData);
+        }
+
+        if ($request->filled('ds')) {
+            $dsData = $request->input('ds');
+            $dsData['ods_id'] = $order->o_id;
+
+            rwOrderDs::create($dsData);
+        }
+
+        if ($request->filled('o_company_id')) {
+            $order->o_company_id = $request->input('o_company_id');
+            $order->save();
+        }
+
+        return new OrderResource($order);
     }
 
+
+    /*---------------------------------------------------------------
+     |  PUT /api/orders/{id}
+     *--------------------------------------------------------------*/
     /**
      * @OA\Put(
      *     path="/api/orders/{id}",
      *     summary="Update an order",
      *     tags={"Orders"},
      *     security={{"sanctum":{}}},
-     *     @OA\RequestBody(@OA\JsonContent(ref="#/components/schemas/Order")),
+     *     @OA\RequestBody(ref="#/components/requestBodies/Order"),
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Order updated successfully")
      * )
@@ -150,6 +267,9 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
+    /*---------------------------------------------------------------
+     |  DELETE /api/orders/{id}
+     *--------------------------------------------------------------*/
     /**
      * @OA\Delete(
      *     path="/api/orders/{id}",
@@ -169,6 +289,9 @@ class OrderController extends Controller
         return response()->json(['message' => 'Deleted']);
     }
 
+    /*---------------------------------------------------------------
+     |  POST /api/orders/{id}/offers
+     *--------------------------------------------------------------*/
     /**
      * @OA\Post(
      *     path="/api/orders/{id}/offers",
@@ -214,6 +337,9 @@ class OrderController extends Controller
         return response()->json($results, 201);
     }
 
+    /*---------------------------------------------------------------
+     |  PUT /api/orders/{order_id}/offers/{offer_id}
+     *--------------------------------------------------------------*/
     /**
      * @OA\Put(
      *     path="/api/orders/{order_id}/offers/{offer_id}",
@@ -255,6 +381,9 @@ class OrderController extends Controller
         return response()->json($offer);
     }
 
+    /*---------------------------------------------------------------
+     |  DELETE /api/orders/{order_id}/offers/{offer_id}
+     *--------------------------------------------------------------*/
     /**
      * @OA\Delete(
      *     path="/api/orders/{order_id}/offers/{offer_id}",

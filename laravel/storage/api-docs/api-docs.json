@@ -1,8 +1,8 @@
 {
-    "openapi": "3.0.0",
+    "openapi": "3.1.0",
     "info": {
         "title": "NWMS API",
-        "description": "This API uses Bearer Token authentication.\n *     To authorize, use the 'Authorize' button above and enter a token in the format:\n *     Bearer {your_token}",
+        "description": "This API uses Bearer Token authentication. To authorize, use the 'Authorize' button above and enter a token in the format: Bearer {your_token}",
         "version": "1.0.0"
     },
     "paths": {
@@ -270,7 +270,7 @@
                 "operationId": "78ce1bd22726e99d8f30c6c8fa329168",
                 "parameters": [
                     {
-                        "name": "sku",
+                        "name": "of_sku",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -278,7 +278,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "of_id",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -286,7 +286,7 @@
                         }
                     },
                     {
-                        "name": "name",
+                        "name": "of_name",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -294,7 +294,7 @@
                         }
                     },
                     {
-                        "name": "status",
+                        "name": "of_status",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -475,17 +475,14 @@
                 "summary": "Create a new order",
                 "operationId": "61f0ce377b9ca021577dd300752ec6b8",
                 "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Order"
-                            }
-                        }
-                    }
+                    "$ref": "#/components/requestBodies/Order"
                 },
                 "responses": {
                     "201": {
-                        "description": "Order created successfully"
+                        "description": "Order created"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 },
                 "security": [
@@ -543,13 +540,7 @@
                     }
                 ],
                 "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Order"
-                            }
-                        }
-                    }
+                    "$ref": "#/components/requestBodies/Order"
                 },
                 "responses": {
                     "200": {
@@ -906,6 +897,27 @@
                     "ao_barcode": {
                         "description": "Barcode",
                         "type": "string"
+                    },
+                    "offer": {
+                        "properties": {
+                            "of_id": {
+                                "description": "Product ID",
+                                "type": "integer"
+                            },
+                            "of_name": {
+                                "description": "Product name",
+                                "type": "string"
+                            },
+                            "of_article": {
+                                "description": "Product article number",
+                                "type": "string"
+                            },
+                            "of_img": {
+                                "description": "Image URL",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
                     }
                 },
                 "type": "object"
@@ -1132,6 +1144,131 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                }
+            },
+            "Order": {
+                "description": "Полный набор полей для создания заказа",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "o_type_id",
+                                "o_shop_id",
+                                "o_wh_id"
+                            ],
+                            "properties": {
+                                "o_type_id": {
+                                    "description": "ID типа заказа",
+                                    "type": "integer"
+                                },
+                                "o_ext_id": {
+                                    "description": "Внешний ID заказа",
+                                    "type": "string",
+                                    "maxLength": 30
+                                },
+                                "o_shop_id": {
+                                    "description": "ID магазина",
+                                    "type": "integer"
+                                },
+                                "o_wh_id": {
+                                    "description": "ID склада",
+                                    "type": "integer"
+                                },
+                                "o_date_send": {
+                                    "description": "Дата отправки",
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "o_source_id": {
+                                    "description": "Источник заказа",
+                                    "type": "integer"
+                                },
+                                "o_customer_type": {
+                                    "description": "0 – частное лицо, 1 – компания",
+                                    "type": "integer"
+                                },
+                                "o_company_id": {
+                                    "description": "Ссылка на rw_companies",
+                                    "type": "integer"
+                                },
+                                "contact": {
+                                    "description": "Данные получателя",
+                                    "properties": {
+                                        "oc_first_name": {
+                                            "type": "string"
+                                        },
+                                        "oc_middle_name": {
+                                            "type": "string"
+                                        },
+                                        "oc_last_name": {
+                                            "type": "string"
+                                        },
+                                        "oc_phone": {
+                                            "type": "string"
+                                        },
+                                        "oc_email": {
+                                            "type": "string",
+                                            "format": "email"
+                                        },
+                                        "oc_country_id": {
+                                            "type": "integer"
+                                        },
+                                        "oc_city_id": {
+                                            "type": "integer"
+                                        },
+                                        "oc_postcode": {
+                                            "type": "string"
+                                        },
+                                        "oc_coord_latitude": {
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "oc_coord_longitude": {
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "oc_full_address": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "ds": {
+                                    "description": "Информация о доставке",
+                                    "properties": {
+                                        "ods_ds_id": {
+                                            "description": "ID службы доставки",
+                                            "type": "integer"
+                                        },
+                                        "ods_status": {
+                                            "description": "Статус доставки",
+                                            "type": "integer"
+                                        },
+                                        "ods_track_number": {
+                                            "description": "Трек-номер",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "OrderController": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/OrderOffer"
                             }
                         }
                     }

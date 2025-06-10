@@ -250,6 +250,8 @@ class AcceptancesOffersScreen extends Screen
                         'shopId' => $this->shopId,
                         'whId' => $this->whId,
                         'docDate' => $this->docDate,
+                        '_token' => csrf_token(),
+
                     ]),
             ])->canSee($this->docStatus < 4),
 
@@ -471,12 +473,20 @@ class AcceptancesOffersScreen extends Screen
         );
 
         if ($data['field'] === 'ao_barcode' && $data['value']) {
-            rwBarcode::firstOrCreate([
-                'br_offer_id' => $offer->ao_offer_id,
-                'br_barcode' => $data['value'],
-            ], [
-                'br_shop_id' => $data['shopId'],
-            ]);
+            if ($data['value'] != '') {
+
+                $currentBarcode = rwBarcode::where('br_offer_id', $offer->ao_offer_id)
+                    ->where('br_barcode',$data['value'])
+                    ->first();
+
+                if (!isset($currentBarcode->br_id)) {
+                    rwBarcode::query()->insert([
+                        'br_offer_id' => $offer->ao_offer_id,
+                        'br_shop_id' => $data['shopId'],
+                        'br_barcode' => $data['value']],
+                    ]);
+                }
+            }
         }
 
         $warehouse->calcRestOffer($offer->ao_offer_id);
