@@ -295,16 +295,20 @@ class AcceptancesOffersScreen extends Screen
                 $offer->save();
 
                 $status = 0;
+                $tmpCount = 0;
 
                 // Сохраняем статистику
-                $tmpCount = $validatedData['docOfferAccept'][$id];
+                if (isset($validatedData['docOfferAccept'][$id])) {
 
-                $sumCount = rwUserAction::where('ua_doc_id', $validatedData['acceptId'])
-                    ->where('ua_entity_id', $validatedData['docOfferId'][$id])
-                    ->where('ua_wh_id', $validatedData['whId'])
-                    ->where('ua_lat_id', 1)
-                    ->where('ua_entity_type', 'offer')
-                    ->sum('ua_quantity');
+                    $tmpCount = $validatedData['docOfferAccept'][$id];
+
+                    $sumCount = rwUserAction::where('ua_doc_id', $validatedData['acceptId'])
+                        ->where('ua_entity_id', $validatedData['docOfferId'][$id])
+                        ->where('ua_wh_id', $validatedData['whId'])
+                        ->where('ua_lat_id', 1)
+                        ->where('ua_entity_type', 'offer')
+                        ->sum('ua_quantity');
+                }
 
                 if ($sumCount > 0) {
                     $tmpCount = $validatedData['docOfferAccept'][$id] - $sumCount;
@@ -476,7 +480,7 @@ class AcceptancesOffersScreen extends Screen
             if ($data['value'] != '') {
 
                 $currentBarcode = rwBarcode::where('br_offer_id', $offer->ao_offer_id)
-                    ->where('br_barcode',$data['value'])
+                    ->where('br_barcode', $data['value'])
                     ->first();
 
                 if (!isset($currentBarcode->br_id)) {
