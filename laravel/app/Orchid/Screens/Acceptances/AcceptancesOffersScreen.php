@@ -308,26 +308,26 @@ class AcceptancesOffersScreen extends Screen
                         ->where('ua_lat_id', 1)
                         ->where('ua_entity_type', 'offer')
                         ->sum('ua_quantity');
-                }
 
-                if ($sumCount > 0) {
-                    $tmpCount = $validatedData['docOfferAccept'][$id] - $sumCount;
-                }
+                    if ($sumCount > 0) {
+                        $tmpCount = $validatedData['docOfferAccept'][$id] - $sumCount;
+                    }
 
-                if ($tmpCount > 0) {
-                    // Сохраняем данные в статистике
-                    WarehouseUserActionService::logAction([
-                        'ua_user_id' => $currentUser->id, // ID текущего кладовщика
-                        'ua_lat_id' => 1,            // ID типа действия (например, 1 — "подбор товара")
-                        'ua_domain_id' => $currentUser->domain_id,    // ID компании / окружения
-                        'ua_wh_id' => $validatedData['whId'], // ID склада
-                        'ua_shop_id' => $validatedData['shopId'],      // ID магазина, если применимо
-                        'ua_place_id' => NULL,     // ID ячейки склада
-                        'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
-                        'ua_doc_id' => $validatedData['acceptId'],     // ID документа
-                        'ua_entity_id' => $validatedData['docOfferId'][$id],     // ID выбранного товара
-                        'ua_quantity' => $tmpCount,          // Количество товара
-                    ]);
+                    if ($tmpCount > 0) {
+                        // Сохраняем данные в статистике
+                        WarehouseUserActionService::logAction([
+                            'ua_user_id' => $currentUser->id, // ID текущего кладовщика
+                            'ua_lat_id' => 1,            // ID типа действия (например, 1 — "подбор товара")
+                            'ua_domain_id' => $currentUser->domain_id,    // ID компании / окружения
+                            'ua_wh_id' => $validatedData['whId'], // ID склада
+                            'ua_shop_id' => $validatedData['shopId'],      // ID магазина, если применимо
+                            'ua_place_id' => NULL,     // ID ячейки склада
+                            'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
+                            'ua_doc_id' => $validatedData['acceptId'],     // ID документа
+                            'ua_entity_id' => $validatedData['docOfferId'][$id],     // ID выбранного товара
+                            'ua_quantity' => $tmpCount,          // Количество товара
+                        ]);
+                    }
                 }
 
                 $currentWarehouse->saveOffers(
