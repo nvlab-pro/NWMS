@@ -483,7 +483,7 @@ class AcceptancesOffersScreen extends Screen
                     rwBarcode::query()->insert([
                         'br_offer_id' => $offer->ao_offer_id,
                         'br_shop_id' => $data['shopId'],
-                        'br_barcode' => $data['value']],
+                        'br_barcode' => $data['value'],
                     ]);
                 }
             }
