@@ -458,6 +458,30 @@ class WhCore
 
     }
 
+    // Устанавливаем кеш перед обновлением товаров, для последующего удаления необновленных
+    public function setCashDocument($docId, $docType, $value = 1): string
+    {
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
+            ->update([
+                'whci_cash' => $value,
+            ]);
+
+    }
+
+    // Удаляем необновленные товары
+    public function deleteCashDocument($docId, $docType, $value = 1): string
+    {
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
+            ->where('whci_cash', $value)
+            ->delete();
+
+    }
+
+
     // Удаляем элемент со склада, зная его документ
     public function deleteItemFromDocument($docOfferId, $docId, $docType, $placeId = NULL): string
     {
@@ -509,6 +533,7 @@ class WhCore
                 $price,
                 $expDate = NULL,
                 $batch = NULL,
+                $prodDate = NULL,
                 $timeCash = 1,
                 $placeId = $dbAssembledOffer->oa_place_id
             );
@@ -611,7 +636,26 @@ class WhCore
             ->first();
     }
 
-        public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $prodDate = NULL, $timeCash = 0, $placeId = NULL)
+    public function getOfferRest($docId, $docType, $offerId)
+    {
+
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
+            ->where('whci_offer_id', $offerId)
+            ->sum('whci_count');
+    }
+
+    public function getDocRest($docId, $docType)
+    {
+
+        return DB::table('whc_wh' . $this->warehouseId . '_items')
+            ->where('whci_doc_id', $docId)
+            ->where('whci_doc_type', $docType)
+            ->sum('whci_count');
+    }
+
+    public function saveOffers($docId, $docDate, $docType, $docOfferId, $offerId, $status, $count, $barcode, $price, $expDate = NULL, $batch = NULL, $prodDate = NULL, $timeCash = 0, $placeId = NULL)
     {
 
         $validator = Validator::make([
@@ -647,11 +691,6 @@ class WhCore
         ]);
 
         $currentUser = Auth::user();
-
-//        if ($validator->fails()) {
-//            // Обработка ошибок валидации, например, выброс исключения
-//            throw new \Exception('Validation Error: ' . $validator->errors()->first());
-//        }
 
         // Преобразование формата даты expDate
         $expDate = $this->normalizeDate($expDate);

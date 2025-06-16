@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Layouts\Orders;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\rwLibStatus;
 use App\Models\rwOffer;
 use App\Models\rwOrder;
@@ -10,13 +11,17 @@ use App\Models\rwOrderType;
 use App\Models\rwShop;
 use App\Models\rwWarehouse;
 use App\Services\CustomTranslator;
+use App\WhCore\WhCore;
 use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Fields\DateRange;
 use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\TD;
+use Orchid\Support\Facades\Alert;
+use Illuminate\Http\Request;
 
 class OrdersTable extends Table
 {
@@ -48,6 +53,7 @@ class OrdersTable extends Table
             $dbShopsList = $dbShopsList->where('sh_user_id', $currentUser->id);
 
         }
+
         return [
             TD::make('o_id', 'ID')
                 ->sort()
@@ -127,7 +133,7 @@ class OrdersTable extends Table
                 )
                 ->render(function (rwOrder $order) {
                     $str = CustomTranslator::get('Физическое лицо');
-                    if($order->o_customer_type == 1) $str = CustomTranslator::get('Юридическое лицо');
+                    if ($order->o_customer_type == 1) $str = CustomTranslator::get('Юридическое лицо');
                     return Link::make($str)
                         ->route('platform.orders.edit', $order->o_id);
                 }),
@@ -154,13 +160,33 @@ class OrdersTable extends Table
                             ->route('platform.orders.edit', $order->o_id);
                 }),
 
-            TD::make('o_count', CustomTranslator::get('Кол-во твара'))
+            TD::make('o_count', CustomTranslator::get('Товара заказано'))
                 ->sort()
                 ->align('center')
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwOrder $modelName) {
                     return Link::make(isset($modelName->o_count) ? $modelName->o_count : '-')
                         ->route('platform.orders.edit', $modelName->o_id);
+                }),
+
+            TD::make('wh_count', CustomTranslator::get('Товара отправлено'))
+                ->sort()
+                ->align('center')
+                ->filter(TD::FILTER_TEXT)
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                ->render(function (rwOrder $modelName) {
+
+                    $whCore = new WhCore($modelName->o_wh_id);
+
+                    $bgcolor = ' style="background-color: #ef2828; color: #FFFFFF; border-radius: 10px;"';
+                    $offerQtySend = $whCore->getDocRest($modelName->o_id, 2);
+
+                    if ($offerQtySend == $modelName->o_count) $bgcolor = '';
+
+                    return '<div ' . $bgcolor . '><b>' . $offerQtySend . '</b></div>';
+
+//                    return Link::make(isset($modelName->o_count) ? $modelName->o_count : '-')
+//                        ->route('platform.orders.edit', $modelName->o_id);
                 }),
 
             TD::make('o_sum', CustomTranslator::get('Сумма'))
@@ -208,7 +234,15 @@ class OrdersTable extends Table
                         Link::make(CustomTranslator::get('Ред.'))
                             ->route('platform.orders.index', $order->id)
                             ->icon('bs.pencil'),
+                        Button::make(CustomTranslator::get('Пересчитать'))
+                            ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                            ->method('recalcOrder', [
+                                'orderId' => $order->o_id
+                            ])
+                            ->icon('bs.plus-slash-minus'),
+
                     ])),
         ];
     }
+
 }

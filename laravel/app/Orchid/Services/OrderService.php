@@ -76,6 +76,7 @@ class OrderService
                     $currentDocOffer->oo_price,
                     $currentDocOffer->oo_expiration_date,
                     $currentDocOffer->oo_batch,
+                    $currentDocOffer->oo_expiration_date,
                     time()
                 );
 
@@ -94,12 +95,17 @@ class OrderService
         $docDate = $this->dbOrder->o_date;
         $status = 1;
 
+        // Получаем список всех товаров заказа
         $dbDocOffers = rwOrderOffer::where('oo_order_id', $this->docId)->get();
+
+        $this->currentWarehouse->setCashDocument($this->docId, 2);
 
         foreach ($dbDocOffers as $currentDocOffer) {
 
+            // Получаем количество товара, которое должно быть собрано
             $currentQty = $currentDocOffer->oo_qty;
 
+            // Получаем сколько уже собрано данного товара
             $dbOrderAssembly = rwOrderAssembly::where('oa_order_id', $this->docId)
                 ->where('oa_offer_id', $currentDocOffer->oo_offer_id)
                 ->where('oa_qty', '>', 0)
@@ -107,6 +113,7 @@ class OrderService
 
             foreach ($dbOrderAssembly as $currentOffer) {
 
+                // Сохраняем на остатках количество реально собранного товара
                 $this->currentWarehouse->saveOffers(
                     $this->docId,
                     $currentOffer->oa_data,
@@ -119,6 +126,7 @@ class OrderService
                     $currentDocOffer->oo_price,
                     $currentDocOffer->oo_expiration_date,
                     $currentDocOffer->oo_batch,
+                    $currentDocOffer->oo_production_date,
                     time(),
                     $currentOffer->oa_place_id
                 );
@@ -127,33 +135,36 @@ class OrderService
 
             }
 
-            if ($currentQty > 0) {
+//            if ($currentQty > 0) {
+//
+//                $this->currentWarehouse->saveOffers(
+//                    $this->docId,
+//                    $docDate,
+//                    2,                                  // Приемка (таблица rw_lib_type_doc)
+//                    $currentDocOffer->oo_id,                    // ID офера в документе
+//                    $currentDocOffer->oo_offer_id,              // оригинальный ID товара
+//                    0,
+//                    $currentQty,
+//                    NULL,
+//                    $currentDocOffer->oo_price,
+//                    $currentDocOffer->oo_expiration_date,
+//                    $currentDocOffer->oo_batch,
+//                    time()
+//                );
+//
+//            } else {
+//
+//                $this->currentWarehouse->deleteItemFromDocument(
+//                    $currentDocOffer->oo_id,
+//                    $this->docId,
+//                    2,
+//                    NULL
+//                );
+//
+//            }
 
-                $this->currentWarehouse->saveOffers(
-                    $this->docId,
-                    $docDate,
-                    2,                                  // Приемка (таблица rw_lib_type_doc)
-                    $currentDocOffer->oo_id,                    // ID офера в документе
-                    $currentDocOffer->oo_offer_id,              // оригинальный ID товара
-                    0,
-                    $currentQty,
-                    NULL,
-                    $currentDocOffer->oo_price,
-                    $currentDocOffer->oo_expiration_date,
-                    $currentDocOffer->oo_batch,
-                    time()
-                );
-
-            } else {
-
-                $this->currentWarehouse->deleteItemFromDocument(
-                    $currentDocOffer->oo_id,
-                    $this->docId,
-                    2,
-                    NULL
-                );
-
-            }
         }
+
+        $this->currentWarehouse->deleteCashDocument($this->docId, 2);
     }
 }

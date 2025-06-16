@@ -895,6 +895,7 @@ class OrderEditScreen extends Screen
                     if ($dbOrder->o_status_id <= 10) $count = 0; // Если статус документа "новый", товар не резервируем
 
                     if ($count > 0) {
+//                        dd('OK');
                         // Сохраняем товар
                         $currentWarehouse->saveOffers(
                             $validatedData['docId'],
@@ -981,6 +982,7 @@ class OrderEditScreen extends Screen
                 0,
                 $barcode,
                 0,
+                NULL,
                 NULL,
                 NULL,
             );

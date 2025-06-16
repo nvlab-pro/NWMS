@@ -49,8 +49,13 @@
                 <table>
                     <tr>
                         <td style="text-align: center; vertical-align: top;">
+                            @if ($dbOffer->of_img == '')
+                            <img src="/img/no_image.png"
+                                 border="1" class="photoOffer">
+                            @else
                             <img src="{{ $dbOffer->of_img }}"
                                  border="1" class="photoOffer">
+                                @endif
                         </td>
                         <td style="vertical-align: top; padding-left: 15px;" class="textOffer">
                             <b>{{ CustomTranslator::get('Арт.') }}:</b> {{ $dbOffer->of_article }}<br>

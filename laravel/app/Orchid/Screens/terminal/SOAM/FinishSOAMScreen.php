@@ -10,6 +10,7 @@ use App\Models\rwOrderAssembly;
 use App\Models\rwOrderSorting;
 use App\Models\rwSettingsSoa;
 use App\Models\rwWarehouse;
+use App\Orchid\Services\OrderService;
 use App\Orchid\Services\SOAService;
 use App\Services\CustomTranslator;
 use App\WhPlaces\WhPlaces;
@@ -82,19 +83,22 @@ class FinishSOAMScreen extends Screen
                     foreach ($dbOrderOffers as $dbOrderOffer) {
 
                         rwOrderSorting::create([
-                            'os_user_id'    => $currentUser->id,
-                            'os_order_id'   => $orderId,
-                            'os_offer_id'   => $dbOrderOffer->oa_offer_id,
-                            'os_place_id'   => $currentPlace->getPlaceId(),
-                            'os_qty'        => $dbOrderOffer->oa_qty,
-                            'os_barcode'    => $dbOrderOffer->oa_barcode,
-                            'os_data'       => date('Y-m-d H:i:s', time()),
-                            'os_cash'       => time(),
+                            'os_user_id' => $currentUser->id,
+                            'os_order_id' => $orderId,
+                            'os_offer_id' => $dbOrderOffer->oa_offer_id,
+                            'os_place_id' => $currentPlace->getPlaceId(),
+                            'os_qty' => $dbOrderOffer->oa_qty,
+                            'os_barcode' => $dbOrderOffer->oa_barcode,
+                            'os_data' => date('Y-m-d H:i:s', time()),
+                            'os_cash' => time(),
                         ]);
 
                     }
 
                     $action = 'finishOrder';
+
+                    $serviceOrder = new OrderService($dbOrder->o_id);
+                    $serviceOrder->resaveOrderRests();
 
                 }
 
@@ -114,11 +118,11 @@ class FinishSOAMScreen extends Screen
         }
 
         return [
-            'soaId'  => $soaId,
-            'dbOrder'  => $dbOrder,
-            'placeTypeName'    => $placeTypeName,
-            'placeType'    => $placeType,
-            'action'    => $action,
+            'soaId' => $soaId,
+            'dbOrder' => $dbOrder,
+            'placeTypeName' => $placeTypeName,
+            'placeType' => $placeType,
+            'action' => $action,
         ];
     }
 

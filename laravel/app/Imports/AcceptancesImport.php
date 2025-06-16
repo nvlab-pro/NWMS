@@ -138,7 +138,8 @@ class AcceptancesImport implements ToModel, WithHeadingRow
                     $row['ao_barcode'] ?? null,
                     $row['oa_price'] ?? 0,
                     $row['oa_expiration_date'] ?? null,
-                    $row['oa_batch'] ?? null
+                    $row['oa_batch'] ?? null,
+                    $row['oa_production_date'] ?? null,
                 );
             }
         }

@@ -7,11 +7,14 @@ use App\Models\rwOffer;
 use App\Models\rwOrder;
 use App\Models\rwWarehouse;
 use App\Orchid\Layouts\Orders\OrdersTable;
+use App\Orchid\Services\OrderService;
 use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
+use Illuminate\Http\Request;
+use Orchid\Support\Facades\Alert;
 
 class OrdersScreen extends Screen
 {
@@ -86,5 +89,16 @@ class OrdersScreen extends Screen
 
     private function WhCore(int $int)
     {
+    }
+
+    public function recalcOrder(Request $request)
+    {
+        $orderId = $request->get('orderId');
+
+        $serviceOrder = new OrderService($orderId);
+        $serviceOrder->resaveOrderRests();
+
+
+        Alert::info(CustomTranslator::get('Заказ') . ' ' . $orderId . ' '  . CustomTranslator::get('успешно обновлен!'));
     }
 }

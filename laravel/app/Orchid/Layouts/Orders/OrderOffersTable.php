@@ -88,7 +88,7 @@ class OrderOffersTable extends Table
                     }
                 }),
 
-            TD::make('oo_qty', CustomTranslator::get('Количество'))
+            TD::make('oo_qty', CustomTranslator::get('Заказано'))
                 ->sort()
                 ->align('center')
                 ->render(function (rwOrderOffer $model) use ($status) {
@@ -100,6 +100,19 @@ class OrderOffersTable extends Table
                         <input type="text" name="orderOfferQty[' . $model->oo_id . ']" value="' . e($model->oo_qty) . '" class="form-control" size=6>';
                     else
                         return $model->oo_qty;
+                }),
+
+            TD::make('qty_from_wh', CustomTranslator::get('Отгружено'))
+                ->sort()
+                ->align('center')
+                ->render(function (rwOrderOffer $model) use ($whCore) {
+
+                    $bgcolor = '#ef2828';
+                    $offerQtySend = $whCore->getOfferRest($model->oo_order_id, 2, $model->oo_offer_id);
+
+                    if ($offerQtySend == $model->oo_qty) $bgcolor = '#1ebc33';
+
+                    return '<div style="background-color: '.$bgcolor.'; color: #FFFFFF; border-radius: 10px;"><b>' . $offerQtySend . '</b></div>';
                 }),
 
             TD::make('oo_oc_price', CustomTranslator::get('Цена (оценка)'))

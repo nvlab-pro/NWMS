@@ -117,8 +117,8 @@ class SelectOrderSOAMScreen extends Screen
                         Alert::success(CustomTranslator::get('Товар подобран, выберите следующий!'));
 
                         // Пересчитываем остатки
-                        $serviceOrder = new OrderService($dbOrder->o_id);
-                        $serviceOrder->resaveOrderRests();
+//                        $serviceOrder = new OrderService($dbOrder->o_id);
+//                        $serviceOrder->resaveOrderRests();
 
                     }
 
@@ -152,11 +152,10 @@ class SelectOrderSOAMScreen extends Screen
                     Alert::success(CustomTranslator::get('Товар подобран, выберите следующий!'));
 
                     // Пересчитываем остатки
-                    $serviceOrder = new OrderService($dbOrder->o_id);
-                    $serviceOrder->resaveOrderRests();
+//                    $serviceOrder = new OrderService($dbOrder->o_id);
+//                    $serviceOrder->resaveOrderRests();
 
                 }
-
 
                 $action = '';
 

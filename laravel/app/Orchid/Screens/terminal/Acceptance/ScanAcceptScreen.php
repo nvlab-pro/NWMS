@@ -205,9 +205,11 @@ class ScanAcceptScreen extends Screen
 
                             $tmpBarcode = '';
                             $expDate = NULL;
+                            $prodDate = NULL;
                             $batch = NULL;
                             if (isset($validatedData['saveBarcode'])) $tmpBarcode = $validatedData['saveBarcode'];
                             if (isset($validatedData['scanExpDate'])) $expDate = $validatedData['scanExpDate'];
+                            if (isset($validatedData['scanProdDate'])) $prodDate = $validatedData['scanProdDate'];
                             if (isset($validatedData['scanBatch'])) $batch = $validatedData['scanBatch'];
 
                             if (strlen($expDate) == 6) {
@@ -226,6 +228,7 @@ class ScanAcceptScreen extends Screen
                                 0,
                                 $expDate,
                                 $batch,
+                                $prodDate,
                                 $currentTime,
                             );
 
