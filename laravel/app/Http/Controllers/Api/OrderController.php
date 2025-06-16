@@ -9,6 +9,7 @@ use App\Models\rwOrderContact;
 use App\Models\rwOrderDs;
 use App\Models\rwOrderOffer;
 use App\Orchid\Services\OrderService;
+use App\WhCore\WhCore;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 
@@ -328,9 +329,26 @@ class OrderController extends Controller
 
         $results = [];
 
+        $currentWarehouse = new WhCore($order->o_wh_id);
+        $barcode = '';
+
         foreach ($validatedOffers as $offerData) {
             $offerData['oo_order_id'] = $order->o_id;
-            $results[] = rwOrderOffer::create($offerData);
+            $results[] = $dbOffer = rwOrderOffer::create($offerData);
+
+            $currentWarehouse->saveOffers(
+                $offerData['oo_order_id'],
+                date('Y-m-d', time()),
+                2,                       // Приемка (таблица rw_lib_type_doc)
+                $dbOffer->oo_id,                                // ID офера в документе
+                $offerData['oo_offer_id'],                                // оригинальный ID товара
+                0,
+                0,
+                $barcode,
+                0,
+                NULL,
+                NULL,
+            );
         }
 
         (new OrderService($order->o_id))->recalcOrderRest();
