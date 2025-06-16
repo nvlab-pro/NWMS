@@ -22,7 +22,7 @@
                     <th></th>
                 </tr>
                 @foreach($printImportDescriptions as $desc)
-                    @if($desc['field'] == 'title')
+                    @if(isset($desc['field']) && ($desc['field'] == 'title'))
                         <tr>
                             <td style="padding-left: 30px; background-color: #EEEEEE;" colspan="5"><H4>{{ $desc['name'] }}</H4></td>
                         </tr>

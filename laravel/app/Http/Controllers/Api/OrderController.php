@@ -204,6 +204,7 @@ class OrderController extends Controller
             'ds.ods_ds_id' => 'nullable|integer',
             'ds.ods_status' => 'nullable|integer',
             'ds.ods_track_number' => 'nullable|string|max:50',
+            'ds.ods_ds_pp_id' => 'nullable|string|max:100',
         ]);
 
         $data += [

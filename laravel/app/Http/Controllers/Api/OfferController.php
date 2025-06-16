@@ -68,6 +68,7 @@ class OfferController extends Controller
 
         $query->when($request->filled('of_sku'), fn($q) => $q->where('of_sku', $request->of_sku))
             ->when($request->filled('of_id'), fn($q) => $q->where('of_id', $request->of_id))
+            ->when($request->filled('of_ext_id'), fn($q) => $q->where('of_ext_id', $request->of_ext_id))
             ->when($request->filled('of_name'), fn($q) => $q->where('of_name', 'like', "%{$request->of_name}%"))
             ->when($request->filled('of_status'), fn($q) => $q->where('of_status', $request->of_status));
 

@@ -1,157 +1,181 @@
 <?php
+/**
+ * Мульти-импорт заказов из Excel.
+ * ─ при каждом новом order_ext_id создаётся (или берётся) отдельный заказ
+ * ─ ID склада (wh) и магазина (shop) берутся из формы, одинаковы для всех заказов файла
+ */
 
 namespace App\Imports;
 
-use App\Models\rwAcceptance;
-use App\Models\rwAcceptanceOffer;
-use App\Models\rwImportLog;
-use App\Models\rwOffer;
-use App\Models\rwOrder;
-use App\Models\rwOrderOffer;
-use App\Models\rwWarehouse;
+use App\Models\{
+    rwOrder, rwOrderOffer, rwOrderContact, rwCompany, rwWarehouse, rwShop, rwOffer, rwImportLog
+};
 use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\{
+    ToCollection, WithHeadingRow, WithChunkReading,
+    SkipsOnFailure, SkipsFailures
+};
 
-class OrdersImport implements ToModel, WithHeadingRow
+class OrdersImport implements ToCollection, WithHeadingRow, WithChunkReading, SkipsOnFailure
 {
-    protected int $importId, $orderId, $whId;
+    use SkipsFailures;
 
-    public function __construct($request, int $importId, $orderId)
+    /** @var int[]  все созданные/обновлённые заказы (для последующего вывода) */
+    private array $orderIds = [];
+
+    /** @var rwOrder[] кеш заказов по order_ext_id */
+    private array $orders = [];
+
+    public function __construct(
+        private readonly Request $request,
+        private readonly int     $importId
+    ) {
+        // shop/wh фиксированы для всего файла
+        $this->shopId = (int)$request->o_shop_id;
+        $this->whId   = (int)$request->o_wh_id;
+    }
+
+    /* ---------- Excel / Maatwebsite настройки ---------- */
+
+    public function chunkSize(): int  { return 1_000; }
+
+    /* ---------- Основная обработка ---------- */
+
+    public function collection(Collection $rows): void
     {
-        $this->importId = $importId;
-        $this->orderId = $orderId;
+        foreach ($rows as $row) {
+            // «ключ» заказа
+            $extId = trim((string)($row['order_ext_id'] ?? ''));
 
-        if ($orderId == 0) {
+            if ($extId === '') {
+                // если не указан – генерируем surrogate-key (чтобы каждый заказ был уникален)
+                $extId = 'AUTO-' . md5(json_encode($row));
+            }
 
-            $currentUser = Auth::user();
+            /** @var rwOrder $order */
+            $order = $this->orders[$extId] ??= $this->createOrUpdateOrder($row, $extId);
 
-            // Создаем приходную накладную
-            $request->validate([
-                'o_type_id' => 'nullable|integer',
-                'o_wh_id' => 'required|integer',
-                'o_domain_id' => 'required|integer',
-                'o_user_id' => 'required|integer',
-                'o_ext_id' => 'nullable|string|max:30',
-                'o_shop_id' => 'required|integer',
-                'o_date' => 'required|string|max:10',
-                'o_date_send' => 'nullable|string|max:10',
-            ]);
+            // сохраняем ID первого созданного заказа (для redirect-а)
+            $this->orderIds[ $order->o_id ] = $order->o_id;
 
-            $userId = rwWarehouse::query()->where('wh_id', $request->o_wh_id)->first()->wh_user_id;
-
-            if ($request->o_date_send == '') $request->o_date_send = date('Y-m-d');
-
-            $this->orderId = rwOrder::create([
-                'o_status_id' => 10,
-                'o_type_id' => $request->o_type_id,
-                'o_user_id' => $userId,
-                'o_ext_id' => $request->o_ext_id,
-                'o_shop_id' => $request->o_shop_id,
-                'o_wh_id' => $request->o_wh_id,
-                'o_date' => $request->o_date . ' 00:00:00', // если нужно привести к datetime
-                'o_date_send' => $request->o_date_send . ' 00:00:00', // если нужно привести к datetime
-                'o_domain_id' => $currentUser->domain_id,
-            ])->o_id;
-
-            $this->whId = $request->o_wh_id;
-
-        } else {
-
-            $this->whId = rwOrder::where('o_id', $orderId)->first()->o_wh_id;
-
+            // товары
+            $this->attachOffer($order, $row);
         }
     }
 
-    public function model(array $row)
+    /* ---------- HELPERS ---------- */
+
+    /** Создание/обновление заказа и базовых сущностей */
+    private function createOrUpdateOrder(array $row, string $extId): rwOrder
     {
         $currentUser = Auth::user();
 
-        $shopId = rwOrder::where('o_id', $this->orderId)->first()->o_shop_id;
+        $order = rwOrder::firstOrCreate(
+            ['o_ext_id' => $extId],
+            [
+                'o_status_id'     => 10,
+                'o_domain_id'     => $currentUser->domain_id,
+                'o_user_id'       => $currentUser->id,
+                'o_shop_id'       => $this->shopId,
+                'o_wh_id'         => $this->whId,
+                'o_type_id'       => $row['o_type_id']               ?? 1,
+                'o_date'          => ($row['order_date']      ?? now())->startOfDay(),
+                'o_date_send'     => ($row['order_date_send'] ?? now())->startOfDay(),
+                'o_customer_type' => $row['order_customer_type']     ?? 0,
+                'o_company_id'    => $row['order_company_id']        ?? null,
+            ]
+        );
 
-        $offer = rwOffer::query()
-            ->where('of_shop_id', $shopId)
-            ->when(!empty($row['of_id']), fn($q) => $q->where('of_id', (int) $row['of_id']))
-            ->when(empty($row['of_id']) && !empty($row['of_ext_id']), fn($q) => $q->where('of_ext_id', $row['of_ext_id']))
-            ->when(empty($row['of_id']) && empty($row['of_ext_id']) && !empty($row['of_sku']), fn($q) => $q->where('of_sku', $row['of_sku']))
-            ->when(empty($row['of_id']) && empty($row['of_ext_id']) && empty($row['of_sku']) && !empty($row['of_article']), fn($q) => $q->where('of_article', $row['of_article']))
-            ->first();
-
-        if ($offer) {
-            // Сначала ищем товар только в рамках текущего магазина
-
-            $payloadFields = [
-                'oo_order_id' => $this->orderId ?? null,
-                'oo_offer_id' => $offer->of_id ?? null,
-                'oo_qty' => $row['oo_qty'] ?? null,
-                'oo_oc_price' => $row['oo_oc_price'] ?? null,
-                'oo_price' => $row['oo_price'] ?? null,
-            ];
-
-            // если все поля пустые — пропускаем строку
-            if (collect($payloadFields)->filter(fn($v) => !is_null($v) && $v !== '')->isEmpty()) {
-                return null;
-            }
-
-            // Ищем товар в накладной
-            $dbCurrentOrder = rwOrderOffer::where('oo_order_id', $this->orderId)
-                ->where('oo_offer_id', $offer->of_id)
-                ->first();
-
-            if (!$dbCurrentOrder) {
-                // Если товара в накладной еще нет
-
-                // Создание лога
-                rwImportLog::create([
-                    'il_import_id' => $this->importId,
-                    'il_date' => date('Y-m-d H:i:s'),
-                    'il_operation' => 1,
-                    'il_name' => CustomTranslator::get('Добавление нового товара в заказ') . ': ' . $this->orderId,
-                    'il_fields' => json_encode([
-                        'oo_order_id'       => $this->orderId ?? null,
-                        'oo_offer_id'       => $offer->of_id ?? null,
-                        'oo_qty'            => $row['oo_qty'] ?? null,
-                        'oo_oc_price'        => $row['oo_oc_price'] ?? null,
-                        'oo_price'          => $row['oo_price'] ?? null,
-                    ]),
-                ]);
-
-                // Создаю запись
-                $currentOrder = rwOrderOffer::create($payloadFields);
-                $status = 0;
-
-                // Добавляю запись на склад
-                $currentWarehouse = new WhCore($this->whId);
-
-                $currentWarehouse->saveOffers(
-                    $this->orderId,
-                    date('Y-m-d H:i:s', time()),
-                    2,                                  // Приемка (таблица rw_lib_type_doc)
-                    $currentOrder->oo_id,                                        // ID офера в документе
-                    $offer->of_id,          // оригинальный ID товара
-                    $status,
-                    $row['oo_qty'],
-                    null,
-                    $row['oo_oc_price'] ?? 0,
-                    null,
-                    null
-                );
-            }
+        /* ---- Контакт клиента (создаём один раз) ---- */
+        if ($order->getContact()->doesntExist() && !empty($row['oc_phone'])) {
+            rwOrderContact::create([
+                'oc_order_id'     => $order->o_id,
+                'oc_first_name'   => $row['oc_first_name']   ?? '',
+                'oc_middle_name'  => $row['oc_middle_name']  ?? '',
+                'oc_last_name'    => $row['oc_last_name']    ?? '',
+                'oc_phone'        => $row['oc_phone']        ?? '',
+                'oc_email'        => $row['oc_email']        ?? '',
+                'oc_city_id'      => $row['oc_city_id']      ?? null,
+                'oc_postcode'     => $row['oc_postcode']     ?? '',
+                'oc_full_address' => $row['oc_full_address'] ?? '',
+            ]);
         }
+
+        /* ---- Служба доставки / ПВЗ ----
+           При необходимости – запишите данные в rwOrderDs или другую таблицу,
+           используя те же row['ds_id'], row['ds_pp_id'].
+        */
+
+        return $order;
     }
 
-    public function getOrderId(): int
+    /** Добавление / обновление товарной строки заказа + склад */
+    private function attachOffer(rwOrder $order, array $row): void
     {
-        return $this->orderId;
+        // ① Поиск оффера
+        /** @var rwOffer|null $offer */
+        $offer = rwOffer::query()
+            ->when(!empty($row['of_id']),  fn($q) => $q->where('of_id',       $row['of_id']))
+            ->when(empty($row['of_id']) && !empty($row['of_ext_id']),
+                fn($q) => $q->where('of_ext_id',  $row['of_ext_id']))
+            ->when(empty($row['of_id']) && empty($row['of_ext_id']) && !empty($row['of_sku']),
+                fn($q) => $q->where('of_sku',     $row['of_sku']))
+            ->when(empty($row['of_id']) && empty($row['of_ext_id']) && empty($row['of_sku']) && !empty($row['of_article']),
+                fn($q) => $q->where('of_article', $row['of_article']))
+            ->first();
+
+        if (!$offer) {
+            rwImportLog::create([
+                'il_import_id' => $this->importId,
+                'il_date'      => now(),
+                'il_operation' => 0,
+                'il_name'      => 'Товар не найден',
+                'il_fields'    => json_encode($row),
+            ]);
+            return;
+        }
+
+        // ② Запись строки заказа
+        $orderOffer = rwOrderOffer::updateOrCreate(
+            [
+                'oo_order_id' => $order->o_id,
+                'oo_offer_id' => $offer->of_id,
+            ],
+            [
+                'oo_qty'      => $row['oo_qty']      ?? 1,
+                'oo_oc_price' => $row['oo_oc_price'] ?? 0,
+                'oo_price'    => $row['oo_price']    ?? 0,
+            ]
+        );
+
+        // ③ Обновление склада
+        (new WhCore($this->whId))->saveOffers(
+            $order->o_id,
+            now(),
+            2,
+            $orderOffer->oo_id,
+            $offer->of_id,
+            0,
+            $row['oo_qty'] ?? 1,
+            null,
+            $row['oo_oc_price'] ?? 0
+        );
+    }
+
+    /* ---------- Служебные геттеры ---------- */
+
+    /** Для redirect’а после импорта */
+    public function getFirstOrderId(): ?int
+    {
+        return array_key_first($this->orderIds) ?: null;
     }
 
     public function getWhId(): int
     {
         return $this->whId;
     }
-
 }

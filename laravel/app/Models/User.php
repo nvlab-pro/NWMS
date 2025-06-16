@@ -128,10 +128,25 @@ class User extends Authenticatable
     {
         $tmpRole = false;
 
-        foreach ($this->role as $currentRole)
+        foreach ($this->role as $currentRole) {
             if ($role === $currentRole->slug) $tmpRole = true;
+        }
 
         return $tmpRole;
+    }
+
+    public function hasAnyRole($roles): bool
+    {
+        // Приводим к массиву, если передали строку
+        $roles = is_array($roles) ? $roles : [$roles];
+
+        foreach ($this->role as $currentRole) {
+            if (in_array($currentRole->slug, $roles, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

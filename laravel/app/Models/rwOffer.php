@@ -38,6 +38,7 @@ class rwOffer extends Model implements AuditableContract
 
     // Другие разрешённые для массового присвоения атрибуты
     protected $fillable = [
+        'of_ext_id',
         'of_domain_id',
         'of_shop_id',
         'of_status',

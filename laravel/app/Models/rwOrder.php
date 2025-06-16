@@ -64,6 +64,120 @@ class rwOrder extends Model implements AuditableContract
     ];
 
     protected $importDescriptions = [
+        'title_1'              => [
+            'name'              => 'Данные о заказе',
+            'field'             => 'title',
+        ],
+        'order_ext_id'             => [
+            'name'              => 'order_ext_id',
+            'description'       => 'ID заказа в системе клиента. Необязательное поле, но если указано, то заказ будет создан с этим ext_id. Используется для загрузки нескольких заказов одним файлом.',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+
+        ],
+        'order_offer_type'             => [
+            'name'              => 'order_offer_type',
+            'description'       => 'Тип товара: 1 - товар, 2 - короб ',
+            'type'              => 'необязательно',
+            'defaultValue'      => '1',
+
+        ],
+        'order_date_send'      => [
+            'name'              => 'order_date_send',
+            'description'       => 'Дата отправки заказа. Формат: YYYY-MM-DD',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+
+        ],
+        'order_customer_type'      => [
+            'name'              => 'order_customer_type',
+            'description'       => 'Тип клиента: 0 - физическое лицо, 1 - юридическое лицо',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+
+        ],
+        'title_2'              => [
+            'name'              => 'Юридическое лицо',
+            'field'             => 'title',
+        ],
+        'order_company_id'      => [
+            'name'              => 'order_company_id',
+            'description'       => 'ID юридического лица (можно взять из соотвествующего раздела в системе)',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'title_3'              => [
+            'name'              => 'Физическое лицо',
+            'field'             => 'title',
+        ],
+        'oc_first_name'      => [
+            'name'              => 'oc_first_name',
+            'description'       => 'Имя клиента',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'oc_middle_name'      => [
+            'name'              => 'oc_middle_name',
+            'description'       => 'Отчество клиента',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'oc_last_name'      => [
+            'name'              => 'oc_last_name',
+            'description'       => 'Фамилия клиента',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'oc_phone'      => [
+            'name'              => 'oc_phone',
+            'description'       => 'Телефонный номер клиента',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'oc_email'      => [
+            'name'              => 'oc_email',
+            'description'       => 'E-Mail клиента',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'oc_city_id'      => [
+            'name'              => 'oc_city_id',
+            'description'       => 'ID города клиента',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'oc_postcode'      => [
+            'name'              => 'oc_postcode',
+            'description'       => 'Индекс клиента',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'oc_full_address'      => [
+            'name'              => 'oc_full_address',
+            'description'       => 'Полный адрес клиента',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'title_4'              => [
+            'name'              => 'Данные о способе доставки',
+            'field'             => 'title',
+        ],
+        'ds_id'      => [
+            'name'              => 'ds_id',
+            'description'       => 'ID службы доставки',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'ds_pp_id'      => [
+            'name'              => 'ds_pp_id',
+            'description'       => 'ID пункта самовывоза',
+            'type'              => 'необязательно',
+            'defaultValue'      => '-',
+        ],
+        'title_5'              => [
+            'name'              => 'Данные о товаре',
+            'field'             => 'title',
+        ],
         'of_id'             => [
             'name'              => 'of_id',
             'description'       => 'ID товара в системе. Необязательное, но если указано, будет использоваться для поиска товара в первую очередь.',
