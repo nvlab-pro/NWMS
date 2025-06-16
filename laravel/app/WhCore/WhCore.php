@@ -99,14 +99,16 @@ class WhCore
                 $version = $whcWarehouse->whc_ver;
 
                 // Если версия 1, нужно добавить новое поле whci_production_date
-                if ($version == 1) {
+                if ($version == 1 || $version == 2) {
 
-                    $whcWarehouse->whc_ver = 2;
+                    $whcWarehouse->whc_ver = 3;
                     $whcWarehouse->save();
 
-                    Schema::table($this->itemTableName, function (Blueprint $table) {
-                        $table->date('whci_production_date')->nullable()->index()->after('whci_sign');
-                    });
+                    if (!Schema::hasColumn($this->itemTableName, 'whci_production_date')) {
+                        Schema::table($this->itemTableName, function (Blueprint $table) {
+                            $table->date('whci_production_date')->nullable()->index()->after('whci_sign');
+                        });
+                    }
 
                 }
 
