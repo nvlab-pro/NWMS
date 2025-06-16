@@ -10,6 +10,7 @@ use App\Models\rwOrderStatus;
 use App\Models\rwOrderType;
 use App\Models\rwShop;
 use App\Models\rwWarehouse;
+use App\Orchid\Services\OrderService;
 use App\Services\CustomTranslator;
 use App\WhCore\WhCore;
 use Illuminate\Support\Facades\Auth;
@@ -181,7 +182,11 @@ class OrdersTable extends Table
                     $bgcolor = ' style="background-color: #ef2828; color: #FFFFFF; border-radius: 10px;"';
                     $offerQtySend = $whCore->getDocRest($modelName->o_id, 2);
 
-                    if ($offerQtySend == $modelName->o_count) $bgcolor = '';
+                    if ($offerQtySend == $modelName->o_count || $modelName->o_status_id < 20) $bgcolor = '';
+                        else {
+                            $serviceOrder = new OrderService($modelName->o_id);
+                            $serviceOrder->resaveOrderRests();
+                        }
 
                     return '<div ' . $bgcolor . '><b>' . $offerQtySend . '</b></div>';
 
