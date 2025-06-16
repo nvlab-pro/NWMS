@@ -184,8 +184,9 @@ class OrdersTable extends Table
 
                     if ($offerQtySend == $modelName->o_count || $modelName->o_status_id < 20) $bgcolor = '';
                         else {
-                            $serviceOrder = new OrderService($modelName->o_id);
-                            $serviceOrder->resaveOrderRests();
+                            // Пересчитываем по умолчанию
+//                            $serviceOrder = new OrderService($modelName->o_id);
+//                            $serviceOrder->resaveOrderRests();
                         }
 
                     return '<div ' . $bgcolor . '><b>' . $offerQtySend . '</b></div>';
