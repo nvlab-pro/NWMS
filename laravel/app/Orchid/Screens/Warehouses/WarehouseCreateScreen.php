@@ -171,6 +171,14 @@ class WarehouseCreateScreen extends Screen
             ->fromModel(rwCompany::where('co_domain_id', $currentUser->domain_id), 'co_name', 'co_id')
             ->empty(CustomTranslator::get('Не выбрано'), '');
 
+        $arAddFields2[] = Input::make('whList.wh_doc_num')
+            ->width(10)
+            ->title(CustomTranslator::get('Номер договора'));
+
+        $arAddFields2[] = Input::make('whList.wh_doc_date')
+            ->width(15)
+            ->title(CustomTranslator::get('Дата договора'));
+
         $arAddFields2[] = CheckBox::make('whList.wh_set_production_date')
             ->title(CustomTranslator::get('Использовать дату производства товара'))
             ->horizontal()
@@ -270,6 +278,8 @@ class WarehouseCreateScreen extends Screen
             'whList.wh_type' => 'required|integer',
             'whList.wh_parent_id' => 'nullable|integer',
             'whList.wh_domain_id' => 'nullable|integer',
+            'whList.wh_doc_num' => 'nullable|string',
+            'whList.wh_doc_date' => 'nullable|string',
             'whList.wh_set_production_date' => 'nullable|integer',
             'whList.wh_set_expiration_date' => 'nullable|integer',
             'whList.wh_set_batch' => 'nullable|integer',
@@ -295,6 +305,8 @@ class WarehouseCreateScreen extends Screen
                 'wh_type' => $data['whList']['wh_type'],
                 'wh_parent_id' => $data['whList']['wh_parent_id'],
                 'wh_domain_id' => $data['whList']['wh_domain_id'],
+                'wh_doc_num' => $data['whList']['wh_doc_num'],
+                'wh_doc_date' => $data['whList']['wh_doc_date'],
                 'wh_set_production_date' => $data['whList']['wh_set_production_date'],
                 'wh_set_expiration_date' => $data['whList']['wh_set_expiration_date'],
                 'wh_set_batch' => $data['whList']['wh_set_batch'],
