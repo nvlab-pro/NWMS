@@ -22,4 +22,9 @@ class whcWhItem extends Model
     {
         return $this->belongsTo(rwOrderStatus::class, 'whci_status', 'os_id');
     }
+
+    public function getOffer()
+    {
+        return $this->belongsTo(rwOffer::class, 'whci_offer_id', 'of_id');
+    }
 }

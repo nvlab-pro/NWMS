@@ -345,10 +345,19 @@ class WhCore
     // *** Получаем список всех товаров из документа
     public function getDocumentOffers($docId, $docType)
     {
-        return DB::table('whc_wh' . $this->warehouseId . '_items')
+        $items = whcWhItem::fromWarehouse($this->warehouseId)
             ->where('whci_doc_id', $docId)
             ->where('whci_doc_type', $docType)
-            ->orderBy('whci_doc_offer_id', 'DESC');
+            ->orderBy('whci_doc_offer_id', 'DESC')
+            ->with('getStatus')
+            ->with('getOffer');
+
+        return $items;
+
+//        return DB::table('whc_wh' . $this->warehouseId . '_items')
+//            ->where('whci_doc_id', $docId)
+//            ->where('whci_doc_type', $docType)
+//            ->orderBy('whci_doc_offer_id', 'DESC');
     }
 
     // *******************************************************
@@ -374,10 +383,6 @@ class WhCore
 
         return $items;
 
-//        return DB::table('whc_wh' . $this->warehouseId . '_items')
-//            ->where('whci_offer_id', $offerId)
-//            ->orderBy('whci_date', 'ASC')
-//            ->get();
     }
 
 

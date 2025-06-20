@@ -20,4 +20,10 @@ class rwOrderDs extends Model implements AuditableContract
         'ods_status',
         'ods_track_number',
     ];
+
+    public function getDsName()
+    {
+        return $this->belongsTo(rwDeliveryService::class, 'ds_id', 'ods_ds_id');
+    }
+
 }

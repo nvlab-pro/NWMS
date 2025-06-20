@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Json\ShowPVZ;
+use App\Http\Controllers\OrderPrintController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -9,6 +10,10 @@ Route::get('/', function () {
 });
 
 Route::get('/export-excel', [\App\Http\Controllers\ExcelExportController::class, 'download']);
+
+Route::get('/orders/{orderId}/print/{tmpId}', [OrderPrintController::class, 'download'])
+    ->name('platform.orders.print')
+    ->middleware(['platform', 'auth']);
 
 Route::get('/calc/yandex_pickup_points', function (Request $request) {
     $jsonPP = new ShowPVZ();

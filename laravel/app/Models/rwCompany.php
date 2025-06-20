@@ -36,4 +36,9 @@ class rwCompany extends Model implements AuditableContract
         'co_contact_person',
     ];
 
+    public function getCity()
+    {
+        return $this->belongsTo(rwLibCity::class, 'lcit_id', 'co_city_id');
+    }
+
 }

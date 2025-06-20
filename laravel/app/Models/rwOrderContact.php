@@ -29,4 +29,10 @@ class rwOrderContact extends Model implements AuditableContract
         'oc_coord_longitude',
         'oc_full_address',
     ];
+
+    public function getCity()
+    {
+        return $this->belongsTo(rwLibCity::class, 'lcit_id', 'oc_city_id');
+    }
+
 }

@@ -27,6 +27,9 @@ class OrderPrint extends Table
      */
     protected function columns(): iterable
     {
+
+        $order = $this->query->get('order');
+
         return [
             TD::make('pt_name', CustomTranslator::get('Название')),
 
@@ -38,13 +41,11 @@ class OrderPrint extends Table
             TD::make(CustomTranslator::get('Действия'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
-                ->render(fn($template) => Button::make(CustomTranslator::get('Печать'))
+                ->render(fn($template) => Link::make(CustomTranslator::get('Печать'))
                     ->icon('bs.printer')
-                    ->novalidate()
-                    ->method('print')
-                    ->parameters([
-                        'id' => $template->pt_id,
-                        '_token' => csrf_token(), // Добавляем CSRF-токен вручную
+                    ->route('platform.orders.print', [
+                        'orderId' => $order->o_id,
+                        'tmpId'   => $template->pt_id,
                     ])
                 ),
         ];
