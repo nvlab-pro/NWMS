@@ -10,21 +10,18 @@ use Orchid\Screen\AsSource;
 use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
-class rwOrderDs extends Model implements AuditableContract
+class rwBillingSetting extends Model implements AuditableContract
 {
+    protected $primaryKey = 'bs_id';
+
     use AsSource, Filterable, Attachable, HasFactory, Auditable;
-    protected $primaryKey = 'ods_id';
 
     protected $fillable = [
-        'ods_id',
-        'ods_ds_id',
-        'ods_status',
-        'ods_track_number',
+        'bs_domain_id',
+        'bs_data',
+        'bs_status',
+        'bs_name',
+        'bs_tariffs',
     ];
-
-    public function getDsName()
-    {
-        return $this->belongsTo(rwDeliveryService::class, 'ds_id', 'ods_ds_id');
-    }
 
 }

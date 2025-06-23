@@ -778,6 +778,24 @@ Route::screen('billing/companies/{company}/edit', \App\Orchid\Screens\Billing\Co
         ->parent('platform.billing.companies.list')
         ->push(CustomTranslator::get('Редактировать компанию'), route('platform.billing.companies.edit', $company)));
 
+Route::screen('billing/billing', \App\Orchid\Screens\Billing\Billing\BlillingScreen::class)
+    ->name('platform.billing.billing.list')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(CustomTranslator::get('Компании'), route('platform.billing.billing.list')));
+
+Route::screen('billing/billing/create', \App\Orchid\Screens\Billing\Billing\BlillingCreateScreen::class)
+    ->name('platform.billing.billing.create')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.billing.billing.list')
+        ->push(CustomTranslator::get('Создать компанию'), route('platform.billing.billing.create')));
+
+Route::screen('billing/billing/{billing}/edit', \App\Orchid\Screens\Billing\Billing\BlillingEditScreen::class)
+    ->name('platform.billing.billing.edit')
+    ->breadcrumbs(fn(Trail $trail, $billing) => $trail
+        ->parent('platform.billing.companies.list')
+        ->push(CustomTranslator::get('Редактировать компанию'), route('platform.billing.billing.edit', $billing)));
+
 // *********************
 // *** Фиксация входа
 // *********************
