@@ -19,6 +19,7 @@ class rwOrderDs extends Model implements AuditableContract
         'ods_id',
         'ods_ds_id',
         'ods_status',
+        'ods_ds_pp_id',
         'ods_track_number',
     ];
 
