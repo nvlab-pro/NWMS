@@ -54,16 +54,32 @@ class MarkingSettingsTable extends Table
                 }),
 
             TD::make('sm_date_from', CustomTranslator::get('Дата от'))
-                ->render(fn($sm) => $sm->sm_date_from ? $sm->sm_date_from->format('Y-m-d') : '-'),
+                ->render(fn($sm) =>
+                $sm->sm_date_from instanceof \DateTimeInterface
+                    ? $sm->sm_date_from->format('Y-m-d')
+                    : '-'
+                ),
 
             TD::make('sm_date_to', CustomTranslator::get('Дата до'))
-                ->render(fn($sm) => $sm->sm_date_to ? $sm->sm_date_to->format('Y-m-d') : '-'),
+                ->render(fn($sm) =>
+                $sm->sm_date_to instanceof \DateTimeInterface
+                    ? $sm->sm_date_to->format('Y-m-d')
+                    : '-'
+                ),
 
             TD::make('created_at', CustomTranslator::get('Дата создания'))
-                ->render(fn($sm) => $sm->created_at ? $sm->created_at->format('Y-m-d H:i') : '-'),
+                ->render(fn($sm) =>
+                $sm->created_at instanceof \DateTimeInterface
+                    ? $sm->created_at->format('Y-m-d H:i')
+                    : '-'
+                ),
 
             TD::make('updated_at', CustomTranslator::get('Дата обновления'))
-                ->render(fn($sm) => $sm->updated_at ? $sm->updated_at->format('Y-m-d H:i') : '-'),
+                ->render(fn($sm) =>
+                $sm->updated_at instanceof \DateTimeInterface
+                    ? $sm->updated_at->format('Y-m-d H:i')
+                    : '-'
+                ),
 
             // Actions column: Edit button (opens edit modal)
             TD::make('actions', '')
