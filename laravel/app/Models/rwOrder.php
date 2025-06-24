@@ -795,6 +795,11 @@ class rwOrder extends Model implements AuditableContract
         return (new self())->printImportDescriptions;
     }
 
+    public function getDs()
+    {
+        return $this->hasOne(rwOrderDs::class, 'ods_id', 'o_id');
+    }
+
     public function getContact()
     {
         return $this->hasOne(rwOrderContact::class, 'oc_order_id', 'o_id');
@@ -827,8 +832,14 @@ class rwOrder extends Model implements AuditableContract
     {
         return $this->hasMany(rwOrderOffer::class, 'oo_order_id', 'o_id');
     }
+
     public function getOperationUser()
     {
         return $this->hasOne(User::class, 'id', 'o_operation_user_id');
+    }
+
+    public function getMeasurements()
+    {
+        return $this->hasOne(rwOrderMeasurement::class, 'om_id', 'o_id');
     }
 }

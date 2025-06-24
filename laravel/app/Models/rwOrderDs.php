@@ -25,7 +25,12 @@ class rwOrderDs extends Model implements AuditableContract
 
     public function getDsName()
     {
-        return $this->belongsTo(rwDeliveryService::class, 'ds_id', 'ods_ds_id');
+        return $this->belongsTo(rwDeliveryService::class, 'ods_ds_id', 'ds_id');
+    }
+
+    public function getSource()
+    {
+        return $this->belongsTo(rwIntegration::class, 'ods_source_id', 'int_id');
     }
 
 }

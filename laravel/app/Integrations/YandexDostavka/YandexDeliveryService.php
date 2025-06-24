@@ -2,6 +2,7 @@
 
 namespace App\Integrations\YandexDostavka;
 
+use App\Models\rwOrder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
@@ -39,6 +40,87 @@ class YandexDeliveryService
         }
 
         return $response->json();
+    }
+
+    // Загружаем заказ в сервис доставки
+    public function uploadOrderToDeliveryService(rwOrder $order): ?string
+    {
+
+        $items = [];
+        foreach ($order->offers as $offer) {
+            $items[] = [
+                'count' => $offer->oo_qty,
+                'name' => $offer->offer->of_name ?? 'Товар',
+                'article' => $offer->offer->of_article ?? '',
+                'uin' => $offer->offer->of_article ?? '',
+                'billing_details' => [
+                    'inn' => '5048036702',
+                    'nds' => 20,
+                    'unit_price' => $offer->oo_price ?? 0,
+                    'assessed_unit_price' => $offer->oo_oc_price ?? 0
+                ],
+                'physical_dims' => [
+                    'dx' => $offer->of_dimension_x ?? 0,
+                    'dy' => $offer->of_dimension_y ?? 0,
+                    'dz' => $offer->of_dimension_z ?? 0,
+                    'predefined_volume' => 0
+                ],
+                'place_barcode' => ''
+            ];
+        }
+
+        $payload = [
+            'info' => [
+                'operator_request_id' => $order->o_id,
+                'comment' => ''
+            ],
+            'source' => [
+                'platform_station' => [
+                    'platform_id' => $this->pickUpPoint
+                ]
+            ],
+            'destination' => [
+                'type' => 'platform_station',
+                'platform_station' => [
+                    'platform_id' => $order->getDs->ods_ds_pp_id
+                ]
+            ],
+            'items' => $items,
+            'places' => [[
+                'physical_dims' => [
+                    'weight_gross' => $order->weight ?? 0,
+                    'dx' => $order->dimension_x ?? 0,
+                    'dy' => $order->dimension_y ?? 0,
+                    'dz' => $order->dimension_z ?? 0,
+                    'predefined_volume' => 0
+                ],
+                'barcode' => $barcode,
+                'description' => 'Упаковка заказа '
+            ]],
+            'billing_info' => [
+                'payment_method' => 'already_paid',
+                'delivery_cost' => 0
+            ],
+            'recipient_info' => [
+                'first_name' => $order->getContact?->oc_first_name ?? 'Имя',
+                'last_name' => $order->getContact?->oc_last_name ?? 'Фамилия',
+                'partonymic' => $order->getContact?->oc_middle_name ?? '',
+                'phone' => $order->getContact?->oc_phone ?? '+70000000000',
+                'email' => $order->getContact?->oc_email ?? 'email@example.com'
+            ],
+            'last_mile_policy' => 'self_pickup'
+        ];
+
+        $response = Http::withToken($this->token)
+            ->baseUrl($this->baseUrl)
+            ->acceptJson()
+            ->post('/b2b/platform/request/create', $payload);
+
+        if ($response->failed()) {
+            throw new RequestException($response);
+        }
+
+        return $response->json('id');
     }
 
     /**

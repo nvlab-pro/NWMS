@@ -279,8 +279,6 @@ Route::prefix('tables')
                     ->push(CustomTranslator::get('Выбор стола упаковки'), route('platform.tables.marking.scan', $queueId));
             });
 
-
-
     });
 
 // ******************************************************
