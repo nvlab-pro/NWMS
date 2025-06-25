@@ -48,6 +48,11 @@ Route::middleware([ForceJsonResponse::class])->group(function () {
         ]);
     });
 
+    // Работа с пользователями
+    Route::middleware('auth:sanctum')->prefix('accounts')->group(function () {
+        Route::post('/create', [\App\Http\Controllers\Api\NewUserController::class, 'createNewAccount']);
+    });
+
     // Работа с товарами
     Route::middleware('auth:sanctum')->prefix('products')->group(function () {
         Route::get('/', [OfferController::class, 'index']);
