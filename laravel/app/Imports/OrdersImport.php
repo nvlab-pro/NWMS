@@ -48,22 +48,26 @@ class OrdersImport implements ToCollection, WithHeadingRow, WithChunkReading, Sk
     public function collection(Collection $rows): void
     {
         foreach ($rows as $row) {
+            $rowArray = $row->toArray();
+
+            // ⛔️ Пропускаем полностью пустые строки
+            if (collect($rowArray)->filter()->isEmpty()) {
+                continue;
+            }
+
             // «ключ» заказа
             $extId = trim((string)($row['order_ext_id'] ?? ''));
 
             if ($extId === '') {
-                // если не указан – генерируем surrogate-key (чтобы каждый заказ был уникален)
-                $extId = 'AUTO-' . md5(json_encode($row));
+                $extId = 'AUTO-' . md5(json_encode($rowArray));
             }
 
             /** @var rwOrder $order */
-            $order = $this->orders[$extId] ??= $this->createOrUpdateOrder($row, $extId);
+            $order = $this->orders[$extId] ??= $this->createOrUpdateOrder($rowArray, $extId);
 
-            // сохраняем ID первого созданного заказа (для redirect-а)
-            $this->orderIds[ $order->o_id ] = $order->o_id;
+            $this->orderIds[$order->o_id] = $order->o_id;
 
-            // товары
-            $this->attachOffer($order, $row);
+            $this->attachOffer($order, $rowArray);
         }
     }
 

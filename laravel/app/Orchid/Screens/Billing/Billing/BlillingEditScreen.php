@@ -97,7 +97,15 @@ class BlillingEditScreen extends Screen
                     ->value(0)
                     ->placeholder(' - ' . CustomTranslator::get('Хранение товара (полочное)'))
                     ->sendTrueOrFalse(),
+
+                Button::make(CustomTranslator::get('Сохранить'))
+                    ->method('saveBookmarks')
+                    ->class('btn btn-success btn-sm')
+                    ->parameters([
+                        'billingId' => $this->billing->bs_id,
+                    ]),
             ]),
+
         ];
 
         return [
@@ -132,6 +140,15 @@ class BlillingEditScreen extends Screen
             ])->title('Редактировать статус')->applyButton('Сохранить')->async('asyncGetBilling'),
         ];
     }
+
+    public function saveBookmarks(Request $request)
+    {
+        rwBillingSetting::findOrFail($request->input('billing.bs_id'))
+            ->update(['bs_name' => $request->input('billing.bs_name')]);
+
+        Alert::success('Название обновлено');
+    }
+
 
     public function asyncGetBilling(Request $request): iterable
     {
