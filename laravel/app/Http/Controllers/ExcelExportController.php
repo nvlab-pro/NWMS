@@ -131,10 +131,10 @@ class ExcelExportController extends Controller
                 $clientsTags = [
                     '{buyer_name}' => $resOrderClient->oc_first_name . ' ' . $resOrderClient->oc_last_name,
                     '{buyer_inn}' => '',
-                    '{buyer_phone}' => $resOrderClient->oc_phone,
-                    '{buyer_email}' => $resOrderClient->oc_email,
-                    '{buyer_city}' => $resOrderClient->getCity->lcit_name,
-                    '{buyer_address}' => $resOrderClient->oc_full_address,
+                    '{buyer_phone}' => $resOrderClient->oc_phone ?? '',
+                    '{buyer_email}' => $resOrderClient->oc_email ?? '',
+                    '{buyer_city}' => $resOrderClient->getCity->lcit_name ?? '',
+                    '{buyer_address}' => $resOrderClient->oc_full_address ?? '',
                 ];
             }
         }

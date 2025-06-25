@@ -6,6 +6,7 @@ use App\Http\Middleware\Offers\OffersMiddleware;
 use App\Models\rwBarcode;
 use App\Models\rwLibStatus;
 use App\Models\rwOffer;
+use App\Models\rwOrder;
 use App\Models\rwShop;
 use App\Models\rwWarehouse;
 use App\Models\WhcRest;
@@ -26,7 +27,7 @@ use Orchid\Support\Facades\Layout;
 
 class OfferEditScreen extends Screen
 {
-    public $offerId = 0, $offerName = '', $shopName = '';
+    public $offerId = 0, $offerName = '', $shopName = '', $dbOffer;
 
     public function query(Request $request, $offerId = 0): iterable
     {
@@ -69,6 +70,8 @@ class OfferEditScreen extends Screen
             $this->offerName = $dbOffer->of_name;
             $this->shopName = $dbOffer->getShop->sh_name;
 
+            $this->dbOffer = $dbOffer;
+
             $arWhRests = WhPlaces::getPlacesList($offerId);
 
             $dbBarcodes = rwBarcode::where('br_offer_id', $offerId)->get();
@@ -96,7 +99,21 @@ class OfferEditScreen extends Screen
 
     public function commandBar(): iterable
     {
-        return [];
+        return [
+
+            Button::make(' ' . CustomTranslator::get('Удалить'))
+                ->icon('bs.trash3-fill')
+                ->style('border: 1px solid #FF0000; background-color: #FF0000; color: #FFFFFF; border-radius: 10px;')
+                ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить этот товар?'))
+                ->method('offerDelete')
+                ->canSee(in_array($this->dbOffer->of_status, [3]))
+                ->parameters([
+                    '_token' => csrf_token(),
+                    'offerId' => $this->dbOffer->of_id,
+                    'status' => $this->dbOffer->of_status,
+                ]),
+
+        ];
     }
 
     /**
@@ -251,6 +268,28 @@ class OfferEditScreen extends Screen
         ];
     }
 
+    public function offerDelete(Request $request)
+    {
+        $validatedData = $request->validate([
+            'offerId' => 'nullable|numeric|min:0',
+            'status' => 'nullable|numeric|min:0',
+        ]);
+
+        if ($validatedData['status'] == 3) {
+
+            rwOffer::where('of_id', $validatedData['offerId'])
+                ->delete();
+
+            Alert::error(CustomTranslator::get('Товар') . ' ' . $validatedData['offerId'] . ' ' . CustomTranslator::get('был удален!'));
+
+        } else {
+
+            Alert::error(CustomTranslator::get('Товар') . ' ' . $validatedData['offerId'] . ' ' . CustomTranslator::get('не может быть удален!'));
+
+        }
+
+        return redirect()->route('platform.offers.index');
+    }
 
     function saveOffer(Request $request)
     {

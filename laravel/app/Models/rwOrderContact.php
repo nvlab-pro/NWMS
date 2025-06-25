@@ -32,7 +32,7 @@ class rwOrderContact extends Model implements AuditableContract
 
     public function getCity()
     {
-        return $this->belongsTo(rwLibCity::class, 'lcit_id', 'oc_city_id');
+        return $this->belongsTo(rwLibCity::class, 'oc_city_id', 'lcit_id');
     }
 
 }

@@ -268,9 +268,21 @@ class OrderEditScreen extends Screen
 
             Button::make(' ' . CustomTranslator::get('Откатить'))
                 ->icon('bs.arrow-return-left')
-                ->style('border: 1px solid #D62222; color: #D62222; border-radius: 10px;')
+                ->style('border: 1px solid #005500; color: #005500; border-radius: 10px;')
                 ->method('changeStatusToNew')
                 ->canSee(in_array($this->order->o_status_id, [5, 15, 20, 30, 40]))
+                ->parameters([
+                    '_token' => csrf_token(),
+                    'docId' => $this->order->o_id,
+                    'status' => $this->order->o_status_id,
+                ]),
+
+            Button::make(' ' . CustomTranslator::get('Удалить'))
+                ->icon('bs.trash3-fill')
+                ->style('border: 1px solid #FF0000; background-color: #FF0000; color: #FFFFFF; border-radius: 10px;')
+                ->confirm(CustomTranslator::get('Вы уверены, что хотите удалить этот заказ?'))
+                ->method('changeStatusToDelete')
+                ->canSee(in_array($this->order->o_status_id, [5]))
                 ->parameters([
                     '_token' => csrf_token(),
                     'docId' => $this->order->o_id,
@@ -413,6 +425,7 @@ class OrderEditScreen extends Screen
                             ->width('100px')
                             ->options(
                                 rwOffer::where('of_shop_id', $this->order->o_shop_id)
+                                    ->whereNot('of_status', 3)
                                     ->whereNotIn('of_id', function ($query) {
                                         $query->select('oo_offer_id')
                                             ->from('rw_order_offers')
@@ -801,6 +814,29 @@ class OrderEditScreen extends Screen
             Alert::error(CustomTranslator::get('Заказ') . ' ' . $validatedData['docId'] . ' ' . CustomTranslator::get('не может быть отменен!'));
 
         }
+    }
+
+    public function changeStatusToDelete(Request $request)
+    {
+        $validatedData = $request->validate([
+            'docId' => 'nullable|numeric|min:0',
+            'status' => 'nullable|numeric|min:0',
+        ]);
+
+        if ($validatedData['status'] == 5) {
+
+            rwOrder::where('o_id', $validatedData['docId'])
+                ->delete();
+
+            Alert::error(CustomTranslator::get('Заказ') . ' ' . $validatedData['docId'] . ' ' . CustomTranslator::get('был удален!'));
+
+        } else {
+
+            Alert::error(CustomTranslator::get('Заказ') . ' ' . $validatedData['docId'] . ' ' . CustomTranslator::get('не может быть удален!'));
+
+        }
+
+        return redirect()->route('platform.orders.index');
     }
 
     public function changeStatusToProcessing(Request $request)
