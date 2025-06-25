@@ -14,6 +14,11 @@
                     @php
                         $lang_str = '/' . $lang;
                         if ($lang == 'en') $lang_str = '';
+
+                        if ($lang === 'rus') {
+                            echo '<script>window.location.href="https://nwms.ru";</script>';
+                        }
+
                     @endphp
                     <a class="logo_img" href="{{ $lang_str }}/" title="techo">
                         <img src="/img/cm_logo.png" alt="logo" style="width:130px">
@@ -30,19 +35,24 @@
                     @endphp
 
                     <ul class="nav_scroll">
-                        <li><a href="{{ $lang_str }}/" class="{{ $currentPath === $lang_str || $currentPath === $lang_str.'/' ? 'active' : '' }}">
+                        <li><a href="{{ $lang_str }}/"
+                               class="{{ $currentPath === $lang_str || $currentPath === $lang_str.'/' ? 'active' : '' }}">
                                 {{ CustomSiteTranslator::get('Start', $lang) }}</a></li>
 
-                        <li><a href="{{ $lang_str }}/about_wms" class="{{ str_starts_with($currentPath, $lang_str.'/about_wms') ? 'active' : '' }}">
+                        <li><a href="{{ $lang_str }}/about_wms"
+                               class="{{ str_starts_with($currentPath, $lang_str.'/about_wms') ? 'active' : '' }}">
                                 {{ CustomSiteTranslator::get('About WMS', $lang) }}</a></li>
 
-                        <li><a href="{{ $lang_str }}/pricing" class="{{ str_starts_with($currentPath, $lang_str.'/pricing') ? 'active' : '' }}">
+                        <li><a href="{{ $lang_str }}/pricing"
+                               class="{{ str_starts_with($currentPath, $lang_str.'/pricing') ? 'active' : '' }}">
                                 {{ CustomSiteTranslator::get('Pricing', $lang) }}</a></li>
 
-                        <li><a href="{{ $lang_str }}/support" class="{{ str_starts_with($currentPath, $lang_str.'/support') ? 'active' : '' }}">
+                        <li><a href="{{ $lang_str }}/support"
+                               class="{{ str_starts_with($currentPath, $lang_str.'/support') ? 'active' : '' }}">
                                 {{ CustomSiteTranslator::get('Support', $lang) }}</a></li>
 
-                        <li><a href="{{ $lang_str }}/docs/theory" class="{{ str_starts_with($currentPath, $lang_str.'/docs/theory') ? 'active' : '' }}">
+                        <li><a href="{{ $lang_str }}/docs/theory"
+                               class="{{ str_starts_with($currentPath, $lang_str.'/docs/theory') ? 'active' : '' }}">
                                 {{ CustomSiteTranslator::get('Education', $lang) }}</a></li>
                     </ul>                 <!-- header button -->
                     <div class="header-src-btn">
