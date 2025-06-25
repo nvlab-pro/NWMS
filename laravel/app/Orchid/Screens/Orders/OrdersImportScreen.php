@@ -123,11 +123,11 @@ class OrdersImportScreen extends Screen
                 $import = new OrdersImport($request, $attId);
                 Excel::import($import, $fullPath);
 
-                $firstOrderId = $import->getFirstOrderId();
+                $arOrdersId = $import->getOrdersId();
 
                 // Пересчёт первого заказа (остальные пересчитаются в очереди/по крону)
-                if ($firstOrderId) {
-                    (new OrderService($firstOrderId))->recalcOrderRest();
+                foreach ($arOrdersId as $orderId) {
+                    (new OrderService($orderId))->recalcOrderRest();
                 }
 
                 $attachment->status = 2; // завершён
@@ -135,9 +135,7 @@ class OrdersImportScreen extends Screen
 
                 Alert::success(CustomTranslator::get('Импорт завершён успешно!'));
 
-                return $firstOrderId
-                    ? redirect()->route('platform.orders.edit', $firstOrderId)
-                    : redirect()->route('platform.orders.index');
+                return redirect()->route('platform.orders.index');
 
             } catch (\Throwable $e) {
                 $attachment->status = 3; // ошибка
