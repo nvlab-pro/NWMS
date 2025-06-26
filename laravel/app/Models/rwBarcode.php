@@ -23,4 +23,8 @@ class rwBarcode extends Model
         'br_main',
     ];
 
+    public function offer()
+    {
+        return $this->belongsTo(rwOffer::class, 'br_offer_id', 'of_id');
+    }
 }

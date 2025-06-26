@@ -10,6 +10,7 @@ use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Label;
+use Orchid\Screen\Fields\Matrix;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Layouts;
 use Orchid\Screen\Screen;
@@ -26,7 +27,20 @@ class BlillingEditScreen extends Screen
     public function query($billing): iterable
     {
         $this->billing = rwBillingSetting::find($billing);
-        return ['billing' => $this->billing];
+
+        // Безопасно декодируем JSON или получаем пустой массив
+        $decodedRates = json_decode($this->billing->bs_rates ?? '{}', true) ?? [];
+
+        // Обработка "accepting"
+        $accepting = collect($decodedRates['accepting'] ?? [])
+            ->map(fn($v,$rate) => array_merge(['rate'=>$rate], $v))
+            ->values()
+            ->all();
+
+        return [
+            'billing'         => $this->billing,
+            'accepting_rates' => $accepting,   // <-- новое имя
+        ];
     }
 
     public function name(): ?string
@@ -41,8 +55,9 @@ class BlillingEditScreen extends Screen
 
     public function layout(): iterable
     {
+        $checkedFields = collect(explode(',', $this->billing->bs_fields ?? ''));
 
-        $tabs['Основное'] = [
+        $tabs[CustomTranslator::get('Основное')] = [
             Layout::rows([
                 Group::make([
                     ModalToggle::make($this->billing->bs_name)
@@ -66,47 +81,78 @@ class BlillingEditScreen extends Screen
             ]),
         ];
 
-        $tabs['Что считаем'] = [
+        $tabs[CustomTranslator::get('Что считаем')] = [
             Layout::rows([
                 Label::make('info_label')
                     ->title('Выберите опции, которые будут считаться по данному тарифу:'),
 
-                CheckBox::make('accepting_calc')
-                    ->value(0)
+                CheckBox::make('accepting')
+                    ->checked($checkedFields->contains('accepting'))
                     ->placeholder(' - ' . CustomTranslator::get('Приемка товара'))
                     ->help(CustomTranslator::get('Расчет стоимости приемки товара на склад.'))
-
                     ->sendTrueOrFalse(),
 
-                CheckBox::make('accepting_calc')
-                    ->value(0)
+                CheckBox::make('picking')
+                    ->checked($checkedFields->contains('picking'))
                     ->placeholder(' - ' . CustomTranslator::get('Подбор товара'))
                     ->sendTrueOrFalse(),
 
-                CheckBox::make('accepting_calc')
-                    ->value(0)
+                CheckBox::make('packing')
+                    ->checked($checkedFields->contains('packing'))
                     ->placeholder(' - ' . CustomTranslator::get('Упаковка заказов'))
                     ->sendTrueOrFalse(),
 
-                CheckBox::make('accepting_calc')
-                    ->value(0)
-                    ->placeholder(' - ' . CustomTranslator::get('Хранение товара (поэкземплярное)'))
+                CheckBox::make('storage_items')
+                    ->checked($checkedFields->contains('storage_items'))
+                    ->placeholder(' - ' . CustomTranslator::get('Хранение товара (по экземплярное)'))
                     ->sendTrueOrFalse(),
 
-                CheckBox::make('accepting_calc')
-                    ->value(0)
+                CheckBox::make('storage_places')
+                    ->checked($checkedFields->contains('storage_places'))
                     ->placeholder(' - ' . CustomTranslator::get('Хранение товара (полочное)'))
                     ->sendTrueOrFalse(),
 
                 Button::make(CustomTranslator::get('Сохранить'))
                     ->method('saveBookmarks')
-                    ->class('btn btn-success btn-sm')
+                    ->class('btn btn-primary btn-sm')
                     ->parameters([
                         'billingId' => $this->billing->bs_id,
                     ]),
             ]),
 
         ];
+
+        // Блок приемки
+        if ($checkedFields->contains('accepting')) {
+            $tabs[CustomTranslator::get('Приемка товара')] = [
+                Layout::rows([
+                    Label::make('info_label')
+                        ->title('Заполните таблицу с весогабартиными характеристиками товара и ценами. Расчет начинается с 0 объема и 0 веса. Каждый следующей объем и вес считаются от предыдущего:'),
+
+                    Matrix::make('accepting_rates')        // ← новое имя
+                    ->columns([
+                        'Тариф'              => 'rate',
+                        'Объём до (см³)'     => 'volume_to',
+                        'Вес до (г)'         => 'weight_to',
+                        'Стоимость'          => 'price',
+                    ])
+                        ->fields([
+                            'rate'        => Input::make()->type('string'),
+                            'volume_to'   => Input::make()->type('number'),
+                            'weight_to'   => Input::make()->type('number'),
+                            'price'       => Input::make()->type('number'),
+                        ]),
+
+                    Button::make(CustomTranslator::get('Сохранить'))
+                        ->method('saveRates')
+                        ->class('btn btn-primary btn-sm')
+                        ->parameters([
+                            'billingId' => $this->billing->bs_id,
+                        ]),
+                ]),
+
+            ];
+        }
 
         return [
             Layout::tabs($tabs),
@@ -141,12 +187,48 @@ class BlillingEditScreen extends Screen
         ];
     }
 
+    public function saveRates(Request $request)
+    {
+        $arRates = [];
+
+        if ($rows = $request->input('accepting_rates')) {   // ← новое имя
+            $arRates['accepting'] = [];
+            foreach ($rows as $row) {
+                $key = $row['rate'];
+                unset($row['rate']);
+                $arRates['accepting'][$key] = $row;
+            }
+        }
+
+        rwBillingSetting::findOrFail($request->billingId)
+            ->update(['bs_rates' => json_encode($arRates, JSON_UNESCAPED_UNICODE)]);
+
+        Alert::success('Настройки биллинга обновлены');
+    }
+
     public function saveBookmarks(Request $request)
     {
-        rwBillingSetting::findOrFail($request->input('billing.bs_id'))
-            ->update(['bs_name' => $request->input('billing.bs_name')]);
+        // Список всех возможных чекбоксов
+        $checkboxes = [
+            'accepting',
+            'picking',
+            'packing',
+            'storage_items',
+            'storage_places',
+        ];
 
-        Alert::success('Название обновлено');
+        // Оставляем только те, которые реально установлены (== '1' или true)
+        $checked = collect($checkboxes)
+            ->filter(fn($field) => $request->input($field) == '1');
+
+        // Преобразуем в строку
+        $fieldsString = $checked->implode(',');
+
+        // Сохраняем
+        rwBillingSetting::findOrFail($request->input('billingId'))
+            ->update(['bs_fields' => $fieldsString]);
+
+        Alert::success('Настройки биллинга обновлены');
     }
 
 

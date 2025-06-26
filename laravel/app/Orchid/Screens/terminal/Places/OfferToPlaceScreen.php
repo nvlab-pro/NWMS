@@ -132,7 +132,10 @@ class OfferToPlaceScreen extends Screen
 
             if ($barcode != '') {
 
-                $dbOfferBarcode = rwBarcode::where('br_barcode', $barcode)->where('br_shop_id', $this->shopId)->first();
+                $dbOfferBarcode = rwBarcode::where('br_barcode', $barcode)
+                    ->where('br_shop_id', $this->shopId)
+                    ->whereHas('offer', fn($q) => $q->where('of_status', 1))
+                    ->first();
 
                 if (isset($dbOfferBarcode->br_offer_id)) {
                     $offerId = $dbOfferBarcode->br_offer_id;

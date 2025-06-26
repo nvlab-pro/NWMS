@@ -21,7 +21,8 @@ class rwBillingSetting extends Model implements AuditableContract
         'bs_data',
         'bs_status',
         'bs_name',
-        'bs_tariffs',
+        'bs_rates',
+        'bs_fields',
     ];
 
 }
