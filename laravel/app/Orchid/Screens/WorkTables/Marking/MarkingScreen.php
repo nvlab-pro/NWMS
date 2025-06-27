@@ -4,6 +4,7 @@ namespace App\Orchid\Screens\WorkTables\Marking;
 
 use App\Integrations\DeliveryServices;
 use App\Models\rwOrder;
+use App\Models\rwOrderDs;
 use App\Models\rwOrderMeasurement;
 use App\Models\rwSettingsMarking;
 use App\Services\CustomTranslator;
@@ -28,6 +29,9 @@ class MarkingScreen extends Screen
         $orderId = 0;
         $order = [];
         $label = 0;
+
+        $dsOrderId = '';
+        $currentLable = [];
 
         $dX = $dY = $dZ = $Weight = 0;
 
@@ -136,6 +140,37 @@ class MarkingScreen extends Screen
         if (isset($request->barcode) && $orderId > 0) {
 
             $label = new DeliveryServices($dsId);
+            $ydOrderId = $label->uploadOrderToDeliveryService($order);
+
+            if ($ydOrderId['status'] == 'ERROR') {
+
+                Alert::error(CustomTranslator::get('Создать заказ в службе доставки не удалось. Служба доставки вернула следующую ошибку: ') . $ydOrderId['message']);
+
+            } else {
+
+                Alert::success(CustomTranslator::get('Заказ выгружен!'));
+
+                // Сохраняем ID
+                if ($ydOrderId['id']) {
+                    rwOrderDs::where('ods_id', $order->o_id)
+                        ->update(
+                            [
+                                'ods_order_ds_id' => $ydOrderId['id']
+                            ]
+                        );
+
+                    $dsOrderId = $ydOrderId['id'];
+
+                }
+
+            }
+
+        }
+
+        // *** Получаем этикетку
+        if ($dsOrderId > 0 &&  $orderId > 0) {
+
+            $currentLable = $label->getOrderLable($order, $dsOrderId);
 
         }
 
@@ -147,6 +182,7 @@ class MarkingScreen extends Screen
             'dY' => $dY,
             'dZ' => $dZ,
             'Weight' => $Weight,
+            'currentLable' => $currentLable,
         ];
     }
 

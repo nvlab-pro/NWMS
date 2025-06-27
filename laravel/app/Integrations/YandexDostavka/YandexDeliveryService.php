@@ -3,6 +3,7 @@
 namespace App\Integrations\YandexDostavka;
 
 use App\Models\rwOrder;
+use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
@@ -42,8 +43,9 @@ class YandexDeliveryService
         return $response->json();
     }
 
-    // Загружаем заказ в сервис доставки
-    public function uploadOrderToDeliveryService(rwOrder $order): ?string
+    // **************************************************
+    // *** Загружаем заказ в сервис доставки
+    public function uploadOrderToDeliveryService(rwOrder $order): ?array
     {
 
         $items = [];
@@ -65,13 +67,13 @@ class YandexDeliveryService
                     'dz' => $offer->of_dimension_z ?? 0,
                     'predefined_volume' => 0
                 ],
-                'place_barcode' => ''
+                'place_barcode' => '1011*' . $order->o_id . '*' . (101 * $order->o_id),
             ];
         }
 
         $payload = [
             'info' => [
-                'operator_request_id' => $order->o_id,
+                'operator_request_id' => (string)$order->o_id . '2',
                 'comment' => ''
             ],
             'source' => [
@@ -94,7 +96,7 @@ class YandexDeliveryService
                     'dz' => $order->dimension_z ?? 0,
                     'predefined_volume' => 0
                 ],
-                'barcode' => $barcode,
+                'barcode' => '1011*' . $order->o_id . '*' . (101 * $order->o_id),
                 'description' => 'Упаковка заказа '
             ]],
             'billing_info' => [
@@ -111,16 +113,69 @@ class YandexDeliveryService
             'last_mile_policy' => 'self_pickup'
         ];
 
-        $response = Http::withToken($this->token)
-            ->baseUrl($this->baseUrl)
-            ->acceptJson()
-            ->post('/b2b/platform/request/create', $payload);
+        try {
+            $response = Http::withToken($this->token)
+                ->withHeaders(['Accept-Language' => 'ru'])
+                ->baseUrl($this->baseUrl)
+                ->acceptJson()
+                ->post('/b2b/platform/request/create', $payload);
 
-        if ($response->failed()) {
-            throw new RequestException($response);
+            if ($response->successful()) {
+                return [
+                    'status' => 'OK',
+                    'id' => $response->json('request_id')
+                ];
+            }
+
+            return [
+                'status' => 'ERROR',
+                'message' => $response->json('message') ?? CustomTranslator::get('Неизвестная ошибка'),
+                'code' => $response->status(),
+                'details' => $response->json()
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'status' => 'ERROR',
+                'message' => CustomTranslator::get('Сетевая или системная ошибка') . ': ' . $e->getMessage(),
+                'code' => $e->getCode()
+            ];
+        }
+    }
+
+    // *********************************************
+    // *** Получаем этикетку для заказа
+    public function getOrderLable($dsOrderId): ?array
+    {
+        $this->baseUrl = 'https://b2b-authproxy.taxi.yandex.net/api';
+
+        $response = Http::withToken($this->token)
+            ->withHeaders(['Accept-Language' => 'ru'])
+            ->baseUrl($this->baseUrl)
+            ->accept('application/pdf')
+            ->post('/b2b/platform/request/generate-labels', [
+                'request_ids' => [$dsOrderId],
+                'generate_type' => 'one',
+                'language' => 'ru',
+            ]);
+
+        if ($response->successful()) {
+            // Сохраняем PDF в файл
+            $path = storage_path("app/public/label_{$dsOrderId}.pdf");
+            file_put_contents($path, $response->body());
+
+            return [
+                'status' => 'OK',
+                'path' => $path,
+                'filename' => "label_{$dsOrderId}.pdf",
+                'url' => asset("storage/label_{$dsOrderId}.pdf"),
+            ];
         }
 
-        return $response->json('id');
+        return [
+            'status' => 'ERROR',
+            'message' => 'Ошибка при получении этикетки',
+            'code' => $response->status(),
+        ];
     }
 
     /**

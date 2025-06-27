@@ -1,5 +1,24 @@
 @php use App\Services\CustomTranslator; @endphp
 
+@if(isset($currentLable['url']))
+    <button onclick="openLabelWindow('{{ $currentLable['url'] }}')">Печать этикетки</button>
+
+    <script>
+        function openLabelWindow(url) {
+            const win = window.open(url, '_blank');
+            if (win) {
+                // Ждём загрузки и вызываем печать
+                win.onload = () => {
+                    win.focus();
+                    win.print();
+                };
+            } else {
+                alert('Браузер блокирует всплывающие окна');
+            }
+        }
+    </script>
+@endif
+
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
     <div class="row g-0">
         <div style="margin: 10px 0px 10px 10px;">
