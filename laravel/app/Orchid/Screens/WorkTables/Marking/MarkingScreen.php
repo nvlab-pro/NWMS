@@ -31,7 +31,7 @@ class MarkingScreen extends Screen
         $label = 0;
 
         $dsOrderId = '';
-        $currentLable = [];
+        $currentLabel = [];
 
         $dX = $dY = $dZ = $Weight = 0;
 
