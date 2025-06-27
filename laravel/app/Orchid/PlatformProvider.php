@@ -219,6 +219,7 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(CustomTranslator::get('Биллинг'))
                 ->icon('bs.credit-card-fill')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
                     Menu::make(CustomTranslator::get('Биллинг'))
                         ->icon('bs.person-rolodex')
@@ -227,6 +228,7 @@ class PlatformProvider extends OrchidServiceProvider
 
                     Menu::make(CustomTranslator::get('Компании'))
                         ->icon('bs.person-rolodex')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                         ->route('platform.billing.companies.list'),
 
                 ]),

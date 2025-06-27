@@ -5,6 +5,7 @@ namespace App\Orchid\Screens\Billing\Companies;
 use App\Models\rwCompany;
 use App\Models\rwLibCity;
 use App\Models\rwLibCountry;
+use App\Models\rwWarehouse;
 use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,9 +27,23 @@ class CompaniesScreen extends Screen
 
     public function query(): array
     {
+        $currentUser = Auth::user();
+        $dbCompanies = rwCompany::where('co_domain_id', $currentUser->domain_id);
+
+//        if (!$currentUser->hasRole('admin')) {
+//            if ($currentUser->hasRole('warehouse_manager') || $currentUser->hasRole('warehouse_worker')) {
+//                $arWhList = rwWarehouse::where('wh_parent_id', $currentUser->wh_id)
+//                    ->pluck('wh_id')
+//                    ->toArray();
+//                $dbOrders = $dbOrders->whereIn('o_wh_id', $arWhList);
+//            } else {
+//                $dbCompanies->where('getShop', );
+//            }
+//        }
+
+
         return [
-            'companies' => rwCompany::filters()
-                ->where('co_domain_id', Auth::user()->domain_id)
+            'companies' => $dbCompanies->filters()
                 ->paginate(20),
         ];
     }
