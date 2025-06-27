@@ -4,6 +4,8 @@ namespace App\Integrations;
 
 use App\Integrations\YandexDostavka\YandexDeliveryService;
 use App\Models\rwOrder;
+use App\Models\rwOrderDs;
+use App\Models\rwOrderDsStatus;
 
 class DeliveryServices
 {
@@ -37,7 +39,7 @@ class DeliveryServices
 
     }
 
-    public function getOrderLable($resOrder, $dsOrderId)
+    public function getOrderLabel($resOrder, $dsOrderId)
     {
 
         // Если это Яндекс Доставка
@@ -48,9 +50,11 @@ class DeliveryServices
             $pickUpPointTo = $resOrder->getDs->ods_ds_pp_id;
 
             $yd = new YandexDeliveryService($baseUrl, $token, $pickUpPointTo);
-            $ydOrderId = $yd->getOrderLable($dsOrderId);
+            $ydOrderId = $yd->getOrderLabel($dsOrderId);
 
-            dump($ydOrderId);
+            $resOrderDs = rwOrderDs::find($dsOrderId);
+            $resOrderDs->ods_order_label = $ydOrderId['url'];
+            $resOrderDs->save();
 
         }
 

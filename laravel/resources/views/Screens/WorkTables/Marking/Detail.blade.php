@@ -1,8 +1,6 @@
 @php use App\Services\CustomTranslator; @endphp
 
-@if(isset($currentLable['url']))
-    <button onclick="openLabelWindow('{{ $currentLable['url'] }}')">Печать этикетки</button>
-
+@if(isset($currentLabel['url']))
     <script>
         function openLabelWindow(url) {
             const win = window.open(url, '_blank');
@@ -16,6 +14,8 @@
                 alert('Браузер блокирует всплывающие окна');
             }
         }
+
+        openLabelWindow('{{ $currentLabel['url'] }}');
     </script>
 @endif
 

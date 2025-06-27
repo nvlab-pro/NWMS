@@ -67,7 +67,7 @@ class YandexDeliveryService
                     'dz' => $offer->of_dimension_z ?? 0,
                     'predefined_volume' => 0
                 ],
-                'place_barcode' => '1011*' . $order->o_id . '*' . (101 * $order->o_id),
+                'place_barcode' => '101*' . $order->o_id . '*' . (101 * $order->o_id),
             ];
         }
 
@@ -96,7 +96,7 @@ class YandexDeliveryService
                     'dz' => $order->dimension_z ?? 0,
                     'predefined_volume' => 0
                 ],
-                'barcode' => '1011*' . $order->o_id . '*' . (101 * $order->o_id),
+                'barcode' => '101*' . $order->o_id . '*' . (101 * $order->o_id),
                 'description' => 'Упаковка заказа '
             ]],
             'billing_info' => [
@@ -144,7 +144,7 @@ class YandexDeliveryService
 
     // *********************************************
     // *** Получаем этикетку для заказа
-    public function getOrderLable($dsOrderId): ?array
+    public function getOrderLabel($dsOrderId): ?array
     {
         $this->baseUrl = 'https://b2b-authproxy.taxi.yandex.net/api';
 

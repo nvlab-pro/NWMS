@@ -137,7 +137,7 @@ class MarkingScreen extends Screen
         }
 
         //  Есть заказ и заданы все габариты. Получаем и печатаем этикету
-        if (isset($request->barcode) && $orderId > 0) {
+        if (isset($request->barcode) && $orderId > 0 && $dX > 0 && $dY > 0 && $dZ > 0 && $Weight > 0) {
 
             $label = new DeliveryServices($dsId);
             $ydOrderId = $label->uploadOrderToDeliveryService($order);
@@ -168,9 +168,9 @@ class MarkingScreen extends Screen
         }
 
         // *** Получаем этикетку
-        if ($dsOrderId > 0 &&  $orderId > 0) {
+        if ($dsOrderId != '' &&  $orderId > 0) {
 
-            $currentLable = $label->getOrderLable($order, $dsOrderId);
+            $currentLabel = $label->getOrderLabel($order, $dsOrderId);
 
         }
 
@@ -182,7 +182,7 @@ class MarkingScreen extends Screen
             'dY' => $dY,
             'dZ' => $dZ,
             'Weight' => $Weight,
-            'currentLable' => $currentLable,
+            'currentLabel' => $currentLabel,
         ];
     }
 
