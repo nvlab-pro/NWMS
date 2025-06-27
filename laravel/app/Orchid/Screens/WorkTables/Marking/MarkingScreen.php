@@ -140,26 +140,26 @@ class MarkingScreen extends Screen
         if (isset($request->barcode) && $orderId > 0 && $dX > 0 && $dY > 0 && $dZ > 0 && $Weight > 0) {
 
             $label = new DeliveryServices($dsId);
-            $ydOrderId = $label->uploadOrderToDeliveryService($order);
+            $orderInDeliveryService = $label->uploadOrderToDeliveryService($order);
 
-            if ($ydOrderId['status'] == 'ERROR') {
+            if ($orderInDeliveryService['status'] == 'ERROR') {
 
-                Alert::error(CustomTranslator::get('Создать заказ в службе доставки не удалось. Служба доставки вернула следующую ошибку: ') . $ydOrderId['message']);
+                Alert::error(CustomTranslator::get('Создать заказ в службе доставки не удалось. Служба доставки вернула следующую ошибку: ') . $orderInDeliveryService['message']);
 
             } else {
 
                 Alert::success(CustomTranslator::get('Заказ выгружен!'));
 
                 // Сохраняем ID
-                if ($ydOrderId['id']) {
+                if ($orderInDeliveryService['id']) {
                     rwOrderDs::where('ods_id', $order->o_id)
                         ->update(
                             [
-                                'ods_order_ds_id' => $ydOrderId['id']
+                                'ods_order_ds_id' => $orderInDeliveryService['id']
                             ]
                         );
 
-                    $dsOrderId = $ydOrderId['id'];
+                    $dsOrderId = $orderInDeliveryService['id'];
 
                 }
 

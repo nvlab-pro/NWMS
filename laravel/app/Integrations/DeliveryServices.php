@@ -52,7 +52,7 @@ class DeliveryServices
             $yd = new YandexDeliveryService($baseUrl, $token, $pickUpPointTo);
             $ydOrderId = $yd->getOrderLabel($dsOrderId);
 
-            $resOrderDs = rwOrderDs::find($dsOrderId);
+            $resOrderDs = rwOrderDs::find($resOrder->o_id);
             $resOrderDs->ods_order_label = $ydOrderId['url'];
             $resOrderDs->save();
 
