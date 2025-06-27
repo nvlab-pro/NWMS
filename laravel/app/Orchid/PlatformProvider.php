@@ -208,6 +208,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->list([
                     Menu::make(CustomTranslator::get('Работники'))
                         ->icon('bs.person-lines-fill')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                         ->route('platform.statistics.workers'),
 
                 ]),
@@ -221,6 +222,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->list([
                     Menu::make(CustomTranslator::get('Биллинг'))
                         ->icon('bs.person-rolodex')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                         ->route('platform.billing.billing.list'),
 
                     Menu::make(CustomTranslator::get('Компании'))

@@ -52,9 +52,16 @@ class DeliveryServices
             $yd = new YandexDeliveryService($baseUrl, $token, $pickUpPointTo);
             $ydOrderId = $yd->getOrderLabel($dsOrderId);
 
-            $resOrderDs = rwOrderDs::find($resOrder->o_id);
-            $resOrderDs->ods_order_label = $ydOrderId['url'];
-            $resOrderDs->save();
+            if ($ydOrderId['status'] == 'OK') {
+                $resOrderDs = rwOrderDs::find($resOrder->o_id);
+                $resOrderDs->ods_order_label = $ydOrderId['url'];
+                $resOrderDs->save();
+
+                $resOrder->o_status_id = 110;
+                $resOrder->save();
+
+            }
+
 
         }
 
