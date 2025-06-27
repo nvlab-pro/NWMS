@@ -62,7 +62,6 @@ class MarkingScreen extends Screen
 
         $dsId = $currentQueues->sm_ds_id;
 
-
         // Отсканирован штрих-код ВГХ
         if (isset($request->barcode) && $orderId > 0) {
             if (strpos($request->barcode, '/') > 0) {
@@ -137,7 +136,7 @@ class MarkingScreen extends Screen
         }
 
         //  Есть заказ и заданы все габариты. Получаем и печатаем этикету
-        if (isset($request->barcode) && $orderId > 0 && $dX > 0 && $dY > 0 && $dZ > 0 && $Weight > 0) {
+        if (isset($request->barcode) && $orderId > 0 && $dX > 0 && $dY > 0 && $dZ > 0 && $Weight > 0 && $dsOrderId == '') {
 
             $label = new DeliveryServices($dsId);
             $orderInDeliveryService = $label->uploadOrderToDeliveryService($order);

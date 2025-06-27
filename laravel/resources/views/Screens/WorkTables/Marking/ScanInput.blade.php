@@ -28,6 +28,25 @@
     }
 </style>
 
+@if(isset($currentLabel['url']))
+    <script>
+        function openLabelWindow(url) {
+            const win = window.open(url, '_blank');
+            if (win) {
+                // Ждём загрузки и вызываем печать
+                win.onload = () => {
+                    win.focus();
+                    win.print();
+                };
+            } else {
+                alert('Браузер блокирует всплывающие окна');
+            }
+        }
+
+        openLabelWindow('{{ $currentLabel['url'] }}');
+    </script>
+@endif
+
 <form action="{{ route('platform.tables.marking.scan', $queueId) }}" method="GET"
       style="text-align: center; padding: 0px 0px 0px 0px; margin-top: 0px; margin-bottom: 0px;">
     @csrf
@@ -37,7 +56,7 @@
             <b>{{ CustomTranslator::get('Отсканируйте посылку') }}:</b>
             <input type="text" name="barcode" id="barcode" size="30" autofocus onkeyup="handleKeyPress(event)">
             <input type="hidden" name="cash" id="cash" value="{{ time() }}">
-            @if(isset($order->o_id))
+            @if(isset($order->o_id) && !isset($currentLabel['url']))
                 <input type="hidden" name="orderId" id="orderId" value="{{ $order->o_id }}">
             @endif
             <input type="submit" value="Scan" id="btn">
