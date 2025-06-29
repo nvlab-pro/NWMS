@@ -753,6 +753,12 @@ Route::screen('statistics/workers', \App\Orchid\Screens\Statistics\Workers\Worke
         ->parent('platform.index')
         ->push(CustomTranslator::get('Статистика работников'), route('platform.statistics.workers')));
 
+Route::screen('statistics/{workerId}/worker', \App\Orchid\Screens\Statistics\Workers\CurrentWorkerScreen::class)
+    ->name('platform.statistics.current.worker')
+    ->breadcrumbs(fn(Trail $trail, $workerId) => $trail
+        ->parent('platform.statistics.workers')
+        ->push(CustomTranslator::get('Статистика работников'), route('platform.statistics.current.worker', $workerId)));
+
 
 // *********************
 // *** Биллинг

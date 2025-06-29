@@ -205,12 +205,13 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(CustomTranslator::get('Статистика'))
                 ->icon('bs.graph-up')
+                ->active('platform.statistics.*')
                 ->list([
                     Menu::make(CustomTranslator::get('Работники'))
                         ->icon('bs.person-lines-fill')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
-                        ->route('platform.statistics.workers'),
-
+                        ->route('platform.statistics.workers')
+                        ->active('platform.statistics.*'),
                 ]),
 
             // ************************

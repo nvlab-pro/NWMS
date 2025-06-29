@@ -14,7 +14,6 @@ use Orchid\Support\Facades\Layout;
 use Illuminate\Http\Request;
 use Orchid\Support\Facades\Alert;
 
-
 class MarkingScreen extends Screen
 {
     public function screenBaseView(): string

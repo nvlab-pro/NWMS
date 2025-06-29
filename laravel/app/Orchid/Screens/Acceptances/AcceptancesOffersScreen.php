@@ -325,6 +325,7 @@ class AcceptancesOffersScreen extends Screen
                             'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                             'ua_doc_id' => $validatedData['acceptId'],     // ID документа
                             'ua_entity_id' => $validatedData['docOfferId'][$id],     // ID выбранного товара
+                            'ua_barcode' => $validatedData['docOfferBarcode'][$id],          // Баркод
                             'ua_quantity' => $tmpCount,          // Количество товара
                         ]);
                     }

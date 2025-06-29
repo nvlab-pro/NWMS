@@ -43,4 +43,11 @@ class rwUserAction extends Model
         return $this->belongsTo(rwLibActionType::class, 'ua_lat_id');
     }
 
+    public function place() {
+        return $this->belongsTo(rwPlace::class, 'ua_place_id');
+    }
+    public function offer() {
+        return $this->belongsTo(rwOffer::class, 'ua_entity_id');
+    }
+
 }

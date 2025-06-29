@@ -47,6 +47,11 @@ class WorkersScreen extends Screen
         $arDaysCount = [];
         $arDaysStats = [];
         $arUserStats = [];
+        $arHours = [];
+
+        $maxHour = $minHour = $maxHourTmp = 0;
+        $minHourTmp = 1000000;
+
         $maxCount = 0;
 
         $date = Carbon::parse($this->filterCurrentDate);
@@ -58,33 +63,54 @@ class WorkersScreen extends Screen
             if (!isset($arDaysStats[$dd])) $arDaysStats[$dd] = 0;
         }
 
+        for ($h = 1; $h <= 24; $h++) {
+            $arHours[$h] = 0;
+        }
+
+
         foreach ($dbActionsList as $dbAction) {
-            if (!isset($arUsersList[$dbAction->ua_user_id])) $arUsersList[$dbAction->ua_user_id] = $dbAction->user->name;
+            if (!isset($arUsersList[$dbAction->ua_user_id])) {
+                $arUsersList[$dbAction->ua_user_id] = $dbAction->user->name;
+            }
 
-            $currentDay = date('d', strtotime($dbAction->ua_time_start)); // будет '06'
-
-            $arDaysStats[$currentDay] += $dbAction->ua_quantity;
+            $currentDay = date('d', strtotime($dbAction->ua_time_start));
+            $arDaysStats[$currentDay] = ($arDaysStats[$currentDay] ?? 0) + $dbAction->ua_quantity;
             if ($arDaysStats[$currentDay] > $maxCount) $maxCount = $arDaysStats[$currentDay];
 
             if ($this->currentDateIsDay == 0) {
-                // Если статистика текущего дня
+                // Статистика за текущий день
+
+                // Проверка что дата совпадает
                 if (date('d', strtotime($this->filterCurrentDate)) == $currentDay) {
-                    if (!isset($arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id])) $arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id] = 0;
-                    $arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id] += $dbAction->ua_quantity;
+                    $arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id] =
+                        ($arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id] ?? 0) + $dbAction->ua_quantity;
+
+                    // Собираем по часам
+                    $hour = date('H', strtotime($dbAction->ua_time_start)); // например, '14'
+                    $arHours[$hour] = ($arHours[$hour] ?? 0) + $dbAction->ua_quantity;
+
+                    if ($arHours[$hour] > $maxHourTmp) $maxHourTmp = $arHours[$hour];
+                    if ($arHours[$hour] < $minHourTmp && $arHours[$hour] > 0) $minHourTmp = $arHours[$hour];
                 }
+
+                $startDate = date('Y-m-d', strtotime($this->filterCurrentDate)) . ' 00:00:00';
+                $endDate   = date('Y-m-d', strtotime($this->filterCurrentDate)) . ' 23:59:59';
             } else {
-                //  Если статистика за весь месяц
-                if (!isset($arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id])) $arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id] = 0;
-                $arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id] += $dbAction->ua_quantity;
+                // Статистика за месяц
+                $arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id] =
+                    ($arUserStats[$dbAction->ua_user_id][$dbAction->ua_lat_id] ?? 0) + $dbAction->ua_quantity;
             }
         }
 
         for ($day = 1; $day <= $maxDaysInMonth; $day++) {
-
             $dd = $day;
             if ($day < 10) $dd = "0" . $day;
             $arDaysCount[$dd] = $this->calculateColumnHeight($arDaysStats[$dd], $maxCount, 200);
+        }
 
+        for ($h = 1; $h <= 24; $h++) {
+            if ($arHours[$h] == $maxHourTmp) $maxHour = $h;
+            if ($arHours[$h] == $minHourTmp) $minHour = $h;
         }
 
         return [
@@ -95,6 +121,9 @@ class WorkersScreen extends Screen
             'arDaysStats' => $arDaysStats,
             'arUsersList' => $arUsersList,
             'arUserStats' => $arUserStats,
+            'arHours'     => $arHours,
+            'maxHour'     => $maxHour,
+            'minHour'     => $minHour,
             'currentDateIsDay' => $this->currentDateIsDay,
             'currentDay' => date('d', strtotime($this->filterCurrentDate)),
             'currentMonth' => $date->month,
@@ -162,6 +191,7 @@ class WorkersScreen extends Screen
             ]),
 
             Layout::view('Screens.Statistics.Workers.WorkersMonthСhart'),
+            Layout::view('Screens.Statistics.Workers.WorkersDayСhart'),
             Layout::view('Screens.Statistics.Workers.WorkersList'),
         ];
     }

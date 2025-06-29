@@ -106,6 +106,7 @@ class SelectOrderSOAMScreen extends Screen
                             'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                             'ua_doc_id'      => $dbOrder->o_id,     // ID документа
                             'ua_entity_id'   => $orderOfferId,     // ID выбранного товара
+                            'ua_barcode'     => $barcode,          // Баркод
                             'ua_quantity'    => $count,          // Количество товара
                         ]);
 
@@ -135,6 +136,7 @@ class SelectOrderSOAMScreen extends Screen
                         'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                         'ua_doc_id'      => $dbOrder->o_id,     // ID документа
                         'ua_entity_id'   => $orderOfferId,     // ID выбранного товара
+                        'ua_barcode'     => $barcode,          // Баркод
                         'ua_quantity'    => $count,          // Количество товара
                     ]);
 

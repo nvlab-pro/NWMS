@@ -29,7 +29,7 @@
                                 $charColor = '#AAAAAA';
 
                                 if ($currentDateIsDay == 0 && $currentDay == $day)
-                                    $charColor = '#009900';
+                                    $charColor = '#002aff';
 
                                 echo '<td align="center" valign="bottom" style="border: 1px dotted #A0A0A0; font-size: 11px; line-height: 0; '.$bgcolor.'"><img src="/img/1x1.png" width="25" height="'.$arDaysCount[$day].'" style="background-color: '.$charColor.'; margin: 0; padding: 0;"></td>'."\n";
 

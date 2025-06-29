@@ -120,6 +120,7 @@ class DocumentService
                 'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                 'ua_doc_id'      => $dbOffer->whci_doc_id,     // ID выбранного товара
                 'ua_entity_id'   => $dbOffer->whci_offer_id,     // ID выбранного товара
+                'ua_barcode'     => $dbOffer->whci_barcode,          // Баркод
                 'ua_quantity'    => $scanCount,          // Количество товара
             ]);
 

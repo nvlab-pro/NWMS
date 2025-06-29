@@ -129,7 +129,8 @@
                                     </svg>
                                     <div class="place-box">{!! $docPlace2[$item->whci_id] !!}</div>
                                 @endif
-                            </div>                        </td>
+                            </div>
+                        </td>
                         <td class="{{ $className }} turnoverTD">
                             {{ $count }}
                         </td>

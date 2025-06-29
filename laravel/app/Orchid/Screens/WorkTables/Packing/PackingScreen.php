@@ -266,6 +266,7 @@ class PackingScreen extends Screen
                                 'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                                 'ua_doc_id' => $dbOrder->o_id,     // ID документа
                                 'ua_entity_id' => $selectOffer->oo_offer_id,     // ID выбранного товара
+                                'ua_barcode'     => $barcode,          // Баркод
                                 'ua_quantity' => 1,          // Количество товара
                             ]);
 
@@ -298,6 +299,7 @@ class PackingScreen extends Screen
                             'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                             'ua_doc_id' => $dbOrder->o_id,     // ID документа
                             'ua_entity_id' => $selectOffer->oo_offer_id,     // ID выбранного товара
+                            'ua_barcode'     => $barcode,          // Баркод
                             'ua_quantity' => 1,          // Количество товара
                         ]);
 

@@ -243,6 +243,7 @@ class ScanAcceptScreen extends Screen
                                 'ua_entity_type' => 'offer',      // Тип сущности (например, offer, order)
                                 'ua_doc_id' => $this->docId,     // ID выбранного товара
                                 'ua_entity_id' => $validatedData['offerId'],     // ID выбранного товара
+                                'ua_barcode'     => $tmpBarcode,          // Баркод
                                 'ua_quantity' => $count,          // Количество товара
                             ]);
 

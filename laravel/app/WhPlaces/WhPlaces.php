@@ -227,4 +227,19 @@ class WhPlaces
         ];
 
     }
+
+    static function getPlaceStr($dbPlace)
+    {
+
+        $str = $dbPlace->pl_room;
+        if (strlen($dbPlace->pl_floor) > 0) $str .= ' | ' . $dbPlace->pl_floor;
+        if (strlen($dbPlace->pl_section) > 0) $str .= ' | ' . $dbPlace->pl_section;
+        if ($dbPlace->pl_row > 0) $str .= ' | ' . $dbPlace->pl_row;
+        if ($dbPlace->pl_rack > 0) $str .= ' | ' . $dbPlace->pl_rack;
+        if ($dbPlace->pl_shelf > 0) $str .= $dbPlace->pl_shelf;
+
+        return $str;
+
+    }
+
 }

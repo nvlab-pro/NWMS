@@ -18,6 +18,7 @@
                     <th style="text-align: center;">{{ CustomTranslator::get('Привязано') }}</th>
                     <th style="text-align: center;">{{ CustomTranslator::get('Собрано') }}</th>
                     <th style="text-align: center;">{{ CustomTranslator::get('Упаковано') }}</th>
+                    <th style="text-align: center;">{{ CustomTranslator::get('Промаркировано') }}</th>
                     <th style="text-align: center;">{{ CustomTranslator::get('Итого') }}</th>
                 </tr>
                 </thead>
@@ -26,36 +27,66 @@
 
                 @foreach($arUsersList as $userId => $userName)
                     <tr>
-                        <td style="text-align: center;">{{ $userName }}</td>
-                        <td style="text-align: center;">
+                        <td style="text-align: center; cursor: pointer; transition: background-color 0.2s;"
+                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                            onmouseout="this.style.backgroundColor='';"
+                            onClick="window.location.href='{{ route('platform.statistics.current.worker', $userId) }}?startDate={{ $startDate }}&endDate={{ $endDate }}&type=0';">
+                            {{ $userName }}
+                        </td>
+                        <td style="text-align: center; cursor: pointer; transition: background-color 0.2s;"
+                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                            onmouseout="this.style.backgroundColor='';"
+                            onClick="window.location.href='{{ route('platform.statistics.current.worker', $userId) }}?startDate={{ $startDate }}&endDate={{ $endDate }}&type=1';">
                             @if(isset($arUserStats[$userId][1]))
                                 {{ $arUserStats[$userId][1] }}
                             @else
                                 -
                             @endif
                         </td>
-                        <td style="text-align: center;">
+                        <td style="text-align: center; cursor: pointer; transition: background-color 0.2s;"
+                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                            onmouseout="this.style.backgroundColor='';"
+                            onClick="window.location.href='{{ route('platform.statistics.current.worker', $userId) }}?startDate={{ $startDate }}&endDate={{ $endDate }}&type=2';">
                             @if(isset($arUserStats[$userId][2]))
                                 {{ $arUserStats[$userId][2] }}
                             @else
                                 -
                             @endif
                         </td>
-                        <td style="text-align: center;">
+                        <td style="text-align: center; cursor: pointer; transition: background-color 0.2s;"
+                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                            onmouseout="this.style.backgroundColor='';"
+                            onClick="window.location.href='{{ route('platform.statistics.current.worker', $userId) }}?startDate={{ $startDate }}&endDate={{ $endDate }}&type=3';">
                             @if(isset($arUserStats[$userId][3]))
                                 {{ $arUserStats[$userId][3] }}
                             @else
                                 -
                             @endif
                         </td>
-                        <td style="text-align: center;">
+                        <td style="text-align: center; cursor: pointer; transition: background-color 0.2s;"
+                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                            onmouseout="this.style.backgroundColor='';"
+                            onClick="window.location.href='{{ route('platform.statistics.current.worker', $userId) }}?startDate={{ $startDate }}&endDate={{ $endDate }}&type=4';">
                             @if(isset($arUserStats[$userId][4]))
                                 {{ $arUserStats[$userId][4] }}
                             @else
                                 -
                             @endif
                         </td>
-                        <td style="text-align: center;">
+                        <td style="text-align: center; cursor: pointer; transition: background-color 0.2s;"
+                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                            onmouseout="this.style.backgroundColor='';"
+                            onClick="window.location.href='{{ route('platform.statistics.current.worker', $userId) }}?startDate={{ $startDate }}&endDate={{ $endDate }}&type=5;">
+                            @if(isset($arUserStats[$userId][5]))
+                                {{ $arUserStats[$userId][5] }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td style="text-align: center; cursor: pointer; transition: background-color 0.2s;"
+                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                            onmouseout="this.style.backgroundColor='';"
+                            onClick="window.location.href='{{ route('platform.statistics.current.worker', $userId) }}?startDate={{ $startDate }}&endDate={{ $endDate }}&type=0';">
                             @php
                                 $userOperationSum = 0;
                                 for($n = 1; $n <= 4; $n++)
