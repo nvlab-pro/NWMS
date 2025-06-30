@@ -53,7 +53,10 @@ class OrderOffersTable extends Table
                 ->sort()
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwOrderOffer $modelName) {
-                    return Link::make($modelName->getOffer->of_name);
+                    if (isset($modelName->getOffer->of_name))
+                        return Link::make($modelName->getOffer->of_name);
+                    else
+                        return Link::make('-');
                 }),
 
             TD::make('rest', CustomTranslator::get('Остаток'))
