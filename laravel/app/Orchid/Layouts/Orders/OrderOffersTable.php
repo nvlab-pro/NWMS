@@ -34,10 +34,10 @@ class OrderOffersTable extends Table
 
             TD::make(CustomTranslator::get('Изображение'))
                 ->render(function ($model) {
-                    if (isset($model->getOffer->of_img) && $model->getOffer->of_img == '')
-                        return "<img src='/img/no_image.png' alt='Image' width='75' height='75'>";
-                    else
+                    if (isset($model->getOffer->of_img) && $model->getOffer->of_img != '')
                         return "<img src='{$model->getOffer->of_img}' alt='Image' width='75' height='75'>";
+                    else
+                        return "<img src='/img/no_image.png' alt='Image' width='75' height='75'>";
                 })
                 ->width('100px'),
 
