@@ -70,6 +70,7 @@ class OffersTable extends Table
 
             TD::make('of_ext_id', CustomTranslator::get('Внешний ID'))
                 ->sort()
+                ->filter(TD::FILTER_TEXT)
                 ->align('center')
                 ->render(function (rwOffer $modelName) {
                     return Link::make(isset($modelName->of_ext_id) ? $modelName->of_ext_id : '-')

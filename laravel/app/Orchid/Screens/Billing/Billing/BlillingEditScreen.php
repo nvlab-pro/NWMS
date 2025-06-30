@@ -41,7 +41,11 @@ class BlillingEditScreen extends Screen
 
         foreach ($this->tariffTypes as $key => $label) {
             $data = $decodedRates[$key] ?? [];
-            $rates = collect($data['rates'] ?? [])->map(fn($v, $rate) => array_merge(['rate' => $rate], $v))->values()->all();
+            $rates = collect($data['rates'] ?? [])
+                ->filter(fn($v) => is_array($v)) // оставить только массивы
+                ->map(fn($v, $rate) => array_merge(['rate' => $rate], $v))
+                ->values()
+                ->all();
             $result[$key . '_rates'] = $rates;
             $result[$key . '_code'] = $data['code'] ?? '';
             $result[$key . '_template'] = $data['template'] ?? '';
@@ -231,14 +235,14 @@ class BlillingEditScreen extends Screen
                         ->columns([
                             CustomTranslator::get('Тариф') => 'rate',
                             CustomTranslator::get('Объём до (см³)') => 'volume_to',
-                            'weight_to' => Input::make()->type('number')->step('0.001'),
-                            'price' => Input::make()->type('number')->step('0.01'),
+                            CustomTranslator::get('Вес до (кг.)') => 'weight_to',
+                            CustomTranslator::get('Стоимость') => 'price',
                         ])
                         ->fields([
                             'rate' => Input::make()->type('string'),
                             'volume_to' => Input::make()->type('number'),
-                            'weight_to' => Input::make()->type('number'),
-                            'price' => Input::make()->type('number'),
+                            'weight_to' => Input::make()->type('number')->step('0.001'),
+                            'price' => Input::make()->type('number')->step('0.01'),
                         ]),
 
                     Button::make(CustomTranslator::get('Сохранить'))

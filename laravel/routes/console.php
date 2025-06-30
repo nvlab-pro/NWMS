@@ -9,12 +9,12 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-Artisan::command('reserveOrders', function () {
+Artisan::command('orders:reserve', function () {
     $current = new scheduleOrders();
     $current->reserveOrders();
 })->everyFiveMinutes();
 
-Artisan::command('updateYDPickUps', function () {
+Artisan::command('delivery:yd-pickups:update', function () {
     $current = new scheduleYandexDelivery();
     $current->getPickUpsList();
 })->everyTwoHours();
