@@ -151,14 +151,14 @@ class BlillingEditScreen extends Screen
                         ->columns([
                             CustomTranslator::get('Тариф') => 'rate',
                             CustomTranslator::get('Объём до (см³)') => 'volume_to',
-                            CustomTranslator::get('Вес до (г)') => 'weight_to',
+                            CustomTranslator::get('Вес до (кг.)') => 'weight_to',
                             CustomTranslator::get('Стоимость') => 'price',
                         ])
                         ->fields([
                             'rate' => Input::make()->type('string'),
                             'volume_to' => Input::make()->type('number'),
-                            'weight_to' => Input::make()->type('number'),
-                            'price' => Input::make()->type('number'),
+                            'weight_to' => Input::make()->type('number')->step('0.001'),
+                            'price' => Input::make()->type('number')->step('0.01'),
                         ]),
 
                     Button::make(CustomTranslator::get('Сохранить'))
@@ -191,14 +191,14 @@ class BlillingEditScreen extends Screen
                         ->columns([
                             CustomTranslator::get('Тариф') => 'rate',
                             CustomTranslator::get('Объём до (см³)') => 'volume_to',
-                            CustomTranslator::get('Вес до (г)') => 'weight_to',
+                            CustomTranslator::get('Вес до (кг.)') => 'weight_to',
                             CustomTranslator::get('Стоимость') => 'price',
                         ])
                         ->fields([
                             'rate' => Input::make()->type('string'),
                             'volume_to' => Input::make()->type('number'),
-                            'weight_to' => Input::make()->type('number'),
-                            'price' => Input::make()->type('number'),
+                            'weight_to' => Input::make()->type('number')->step('0.001'),
+                            'price' => Input::make()->type('number')->step('0.01'),
                         ]),
 
                     Button::make(CustomTranslator::get('Сохранить'))
@@ -231,8 +231,8 @@ class BlillingEditScreen extends Screen
                         ->columns([
                             CustomTranslator::get('Тариф') => 'rate',
                             CustomTranslator::get('Объём до (см³)') => 'volume_to',
-                            CustomTranslator::get('Вес до (г)') => 'weight_to',
-                            CustomTranslator::get('Стоимость') => 'price',
+                            'weight_to' => Input::make()->type('number')->step('0.001'),
+                            'price' => Input::make()->type('number')->step('0.01'),
                         ])
                         ->fields([
                             'rate' => Input::make()->type('string'),
@@ -271,14 +271,14 @@ class BlillingEditScreen extends Screen
                         ->columns([
                             CustomTranslator::get('Тариф') => 'rate',
                             CustomTranslator::get('Объём до (см³)') => 'volume_to',
-                            CustomTranslator::get('Вес до (г)') => 'weight_to',
+                            CustomTranslator::get('Вес до (кг.)') => 'weight_to',
                             CustomTranslator::get('Стоимость') => 'price',
                         ])
                         ->fields([
                             'rate' => Input::make()->type('string'),
                             'volume_to' => Input::make()->type('number'),
-                            'weight_to' => Input::make()->type('number'),
-                            'price' => Input::make()->type('number'),
+                            'weight_to' => Input::make()->type('number')->step('0.001'),
+                            'price' => Input::make()->type('number')->step('0.01'),
                         ]),
 
                     Button::make(CustomTranslator::get('Сохранить'))
