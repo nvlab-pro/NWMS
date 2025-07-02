@@ -394,6 +394,7 @@
       <path value="$PROJECT_DIR$/laravel/vendor/doctrine/annotations" />
       <path value="$PROJECT_DIR$/laravel/vendor/staabm/side-effects-detector" />
       <path value="$PROJECT_DIR$/laravel/vendor/alhimik1986/php-excel-templator" />
+      <path value="$PROJECT_DIR$/laravel/vendor/laravel/horizon" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

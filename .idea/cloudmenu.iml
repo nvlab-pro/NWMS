@@ -144,6 +144,7 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/zircote/swagger-php" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/alhimik1986/php-excel-templator" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/staabm/side-effects-detector" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/laravel/horizon" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

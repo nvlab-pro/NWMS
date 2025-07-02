@@ -223,7 +223,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
                     Menu::make(CustomTranslator::get('Биллинг'))
-                        ->icon('bs.person-rolodex')
+                        ->icon('bs.cash-coin')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                         ->route('platform.billing.billing.list'),
 
