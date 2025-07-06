@@ -47,6 +47,21 @@ class CompanyEditScreen extends Screen
                 Input::make('company.co_name')->title(CustomTranslator::get('Название'))->required(),
                 Input::make('company.co_legal_name')->title(CustomTranslator::get('Юридическое название')),
                 Input::make('company.co_vat_number')->title(CustomTranslator::get('ИНН / VAT')),
+
+                Select::make('company.co_vat_availability')
+                    ->title(CustomTranslator::get('Наличие НДС'))
+                    ->options([
+                        0 => CustomTranslator::get('Без НДС'),
+                        1 => CustomTranslator::get('С НДС'),
+                    ])
+                    ->empty(CustomTranslator::get('Не указано')),
+
+                Input::make('company.co_vat_proc')
+                    ->type('number')
+                    ->title(CustomTranslator::get('Ставка НДС (%)'))
+                    ->min(0)
+                    ->step(1),
+
                 Input::make('company.co_registration_number')->title(CustomTranslator::get('Регистрационный номер')),
 
                 Relation::make('company.co_country_id')

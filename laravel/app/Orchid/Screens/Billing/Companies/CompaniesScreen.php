@@ -28,7 +28,7 @@ class CompaniesScreen extends Screen
     public function query(): array
     {
         $currentUser = Auth::user();
-        $dbCompanies = rwCompany::where('co_domain_id', $currentUser->domain_id);
+        $dbCompanies = rwCompany::where('co_domain_id', $currentUser->domain_id)->with('getCity');
 
 //        if (!$currentUser->hasRole('admin')) {
 //            if ($currentUser->hasRole('warehouse_manager') || $currentUser->hasRole('warehouse_worker')) {
@@ -43,7 +43,8 @@ class CompaniesScreen extends Screen
 
 
         return [
-            'companies' => $dbCompanies->filters()
+            'companies' => $dbCompanies
+                ->filters()
                 ->paginate(20),
         ];
     }
@@ -72,9 +73,24 @@ class CompaniesScreen extends Screen
                 TD::make('co_vat_number', CustomTranslator::get('ИНН / VAT'))
                     ->sort()
                     ->filter()
+                    ->align(TD::ALIGN_CENTER)
                     ->render(function (rwCompany $modelName) {
                         return Link::make($modelName->co_vat_number)
                             ->route('platform.billing.companies.edit', $modelName->co_id);
+                    }),
+
+                TD::make('co_vat_availability', CustomTranslator::get('НДС'))
+                    ->sort()
+                    ->filter()
+                    ->align(TD::ALIGN_CENTER)
+                    ->render(function (rwCompany $modelName) {
+                        if ($modelName->co_vat_availability == 0)
+                            return Link::make(CustomTranslator::get('Без НДС'))
+                                ->route('platform.billing.companies.edit', $modelName->co_id);
+                        else
+                            return Link::make($modelName->co_vat_proc . '%')
+                                ->route('platform.billing.companies.edit', $modelName->co_id);
+
                     }),
 
                 TD::make('co_email', CustomTranslator::get('Email'))
@@ -91,10 +107,9 @@ class CompaniesScreen extends Screen
 
                 TD::make('co_city_id', CustomTranslator::get('Город'))
                     ->render(function (rwCompany $modelName) {
-                        return Link::make($modelName->co_email)
+                        return Link::make($modelName->getCity->lcit_name ?? '-')
                             ->route('platform.billing.companies.edit', $modelName->co_id);
                     }),
-//                    ->render(fn($model) => optional(rwLibCity::find($model->co_city_id))->lcit_name)
 
                 TD::make('Actions', CustomTranslator::get('Действия'))
                     ->align(TD::ALIGN_CENTER)

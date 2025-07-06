@@ -222,8 +222,13 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.credit-card-fill')
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
-                    Menu::make(CustomTranslator::get('Биллинг'))
+                    Menu::make(CustomTranslator::get('Счета'))
                         ->icon('bs.cash-coin')
+                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                        ->route('platform.billing.accounts.list'),
+
+                    Menu::make(CustomTranslator::get('Биллинг'))
+                        ->icon('bs.currency-exchange')
                         ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                         ->route('platform.billing.billing.list'),
 

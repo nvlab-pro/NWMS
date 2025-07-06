@@ -207,7 +207,7 @@ class DocumentService
                 'ao_dimension' => $docOffer->getOffers->of_dimension_x . 'x' .
                     $docOffer->getOffers->of_dimension_y . 'x' .
                     $docOffer->getOffers->of_dimension_z . ' / ' .
-                    $docOffer->getOffers->of_weight . 'гр.',
+                    $docOffer->getOffers->of_weight . 'kg.',
                 'ao_batch' => $batch,
                 'ao_expiration_date' => $expirationDate,
                 'ao_production_date' => $productionDate,

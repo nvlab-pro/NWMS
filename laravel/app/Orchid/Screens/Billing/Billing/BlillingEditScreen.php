@@ -16,6 +16,7 @@ use Orchid\Screen\Layouts;
 use Orchid\Screen\Screen;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\ModalToggle;
+use Orchid\Screen\TD;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
@@ -48,7 +49,9 @@ class BlillingEditScreen extends Screen
                 ->all();
             $result[$key . '_rates'] = $rates;
             $result[$key . '_code'] = $data['code'] ?? '';
+            $result[$key . '_datamatrix'] = $data['datamatrix'] ?? '';
             $result[$key . '_template'] = $data['template'] ?? '';
+            $result[$key . '_proc_dimensions'] = $data['proc_dimensions'] ?? '';
             if ($key === 'storage_places') {
                 $result[$key . '_price'] = $data['price'] ?? '';
             }
@@ -90,6 +93,12 @@ class BlillingEditScreen extends Screen
                         ->modal('editStatusModal')
                         ->method('saveStatus')
                         ->title(CustomTranslator::get('Статус'))
+                        ->asyncParameters(['billing' => $this->billing->bs_id]),
+
+                    ModalToggle::make($this->statusDateType($this->billing->bs_date_type))
+                        ->modal('editDataTypeModal')
+                        ->method('saveDateType')
+                        ->title(CustomTranslator::get('Как считается дата'))
                         ->asyncParameters(['billing' => $this->billing->bs_id]),
                 ]),
             ]),
@@ -139,14 +148,6 @@ class BlillingEditScreen extends Screen
         if ($checkedFields->contains('accepting')) {
             $tabs[CustomTranslator::get('Приемка товара')] = [
                 Layout::rows([
-                    Input::make('accepting_code')
-                        ->type('string')
-                        ->title(CustomTranslator::get('Код')),
-
-                    Input::make('accepting_template')
-                        ->type('string')
-                        ->help(CustomTranslator::get('Используйте следующие теги') . ': {rate}, {volume}, {weight}, {price}, {currency}')
-                        ->title(CustomTranslator::get('Шаблон для отчетов')),
 
                     Label::make('info_label')
                         ->title(CustomTranslator::get('Заполните таблицу с весогабартиными характеристиками товара и ценами. Расчет начинается с 0 объема и 0 веса. Каждый следующий объем и вес считаются от предыдущего:')),
@@ -165,6 +166,36 @@ class BlillingEditScreen extends Screen
                             'price' => Input::make()->type('number')->step('0.01'),
                         ]),
 
+                    Input::make('accepting_datamatrix')
+                        ->type('number')
+                        ->step('0.01')
+                        ->help(CustomTranslator::get('Укажите стоимость только если используете DataMatrix при приемки товара.'))
+                        ->title(CustomTranslator::get('Стоимость приемки товара с DataMatrix')),
+
+                    Input::make('accepting_template')
+                        ->type('string')
+                        ->title(CustomTranslator::get('Шаблон для отчетов')),
+
+                    Label::make('tag_description')
+                        ->value(CustomTranslator::get('Используйте следующие теги для построения шаблона для отчетов:'))
+                        ->style('font-weight: bold; adding-top: 20px;'),
+
+                    Label::make('tag_description')
+                        ->value("{doc_id} — " . CustomTranslator::get('Номер документа'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{count_offers} — " . CustomTranslator::get('Количество товаров в документе'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{rate} — " . CustomTranslator::get('Тариф'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{sum} — " . CustomTranslator::get('Начисленная сумма'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
                     Button::make(CustomTranslator::get('Сохранить'))
                         ->method('saveRates')
                         ->class('btn btn-primary btn-sm')
@@ -179,14 +210,6 @@ class BlillingEditScreen extends Screen
         if ($checkedFields->contains('picking')) {
             $tabs[CustomTranslator::get('Подбор товара')] = [
                 Layout::rows([
-                    Input::make('picking_code')
-                        ->type('string')
-                        ->title(CustomTranslator::get('Код')),
-
-                    Input::make('picking_template')
-                        ->type('string')
-                        ->help(CustomTranslator::get('Используйте следующие теги') . ': {rate}, {volume}, {weight}, {price}, {currency}')
-                        ->title(CustomTranslator::get('Шаблон для отчетов')),
 
                     Label::make('info_label')
                         ->title(CustomTranslator::get('Заполните таблицу с весогабартиными характеристиками товара и ценами. Расчет начинается с 0 объема и 0 веса. Каждый следующий объем и вес считаются от предыдущего:')),
@@ -205,6 +228,36 @@ class BlillingEditScreen extends Screen
                             'price' => Input::make()->type('number')->step('0.01'),
                         ]),
 
+                    Input::make('picking_datamatrix')
+                        ->type('number')
+                        ->step('0.01')
+                        ->help(CustomTranslator::get('Укажите стоимость только если используете DataMatrix при сборке товара.'))
+                        ->title(CustomTranslator::get('Стоимость приемки товара с DataMatrix')),
+
+                    Input::make('picking_template')
+                        ->type('string')
+                        ->title(CustomTranslator::get('Шаблон для отчетов')),
+
+                    Label::make('tag_description')
+                        ->value(CustomTranslator::get('Используйте следующие теги для построения шаблона для отчетов:'))
+                        ->style('font-weight: bold; adding-top: 20px;'),
+
+                    Label::make('tag_description')
+                        ->value("{doc_id} — " . CustomTranslator::get('Номер документа'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{count_offers} — " . CustomTranslator::get('Количество товаров в документе'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{rate} — " . CustomTranslator::get('Тариф'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{sum} — " . CustomTranslator::get('Начисленная сумма'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
                     Button::make(CustomTranslator::get('Сохранить'))
                         ->method('saveRates')
                         ->class('btn btn-primary btn-sm')
@@ -219,15 +272,6 @@ class BlillingEditScreen extends Screen
         if ($checkedFields->contains('packing')) {
             $tabs[CustomTranslator::get('Упаковка заказов')] = [
                 Layout::rows([
-                    Input::make('packing_code')
-                        ->type('string')
-                        ->title(CustomTranslator::get('Код')),
-
-                    Input::make('packing_template')
-                        ->type('string')
-                        ->help(CustomTranslator::get('Используйте следующие теги') . ': {rate}, {volume}, {weight}, {price}, {currency}')
-                        ->title(CustomTranslator::get('Шаблон для отчетов')),
-
                     Label::make('info_label')
                         ->title(CustomTranslator::get('Заполните таблицу с весогабартиными характеристиками товара и ценами. Расчет начинается с 0 объема и 0 веса. Каждый следующий объем и вес считаются от предыдущего:')),
 
@@ -245,6 +289,42 @@ class BlillingEditScreen extends Screen
                             'price' => Input::make()->type('number')->step('0.01'),
                         ]),
 
+                    Input::make('packing_proc_dimensions')
+                        ->type('number')
+                        ->step('1')
+                        ->help(CustomTranslator::get('В случе если у заказа не заданы габариты, то система посчитает сумму габаритов товара этого заказа и увеличит полученную сумму на заданный выше процент.'))
+                        ->title(CustomTranslator::get('Укажите процент надбавки на габариты товара')),
+
+                    Input::make('packing_datamatrix')
+                        ->type('number')
+                        ->step('0.01')
+                        ->help(CustomTranslator::get('Укажите стоимость только если используете DataMatrix при упаковки товара.'))
+                        ->title(CustomTranslator::get('Стоимость приемки товара с DataMatrix')),
+
+                    Input::make('packing_template')
+                        ->type('string')
+                        ->title(CustomTranslator::get('Шаблон для отчетов')),
+
+                    Label::make('tag_description')
+                        ->value(CustomTranslator::get('Используйте следующие теги для построения шаблона для отчетов:'))
+                        ->style('font-weight: bold; adding-top: 20px;'),
+
+                    Label::make('tag_description')
+                        ->value("{doc_id} — " . CustomTranslator::get('Номер документа'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{rate} — " . CustomTranslator::get('Тариф'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{doc_weight} — " . CustomTranslator::get('Вес заказа (объемный или физический) используемый в расчетах (sm3 или kg будут добавлены автоматически).'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
+                    Label::make('tag_description')
+                        ->value("{sum} — " . CustomTranslator::get('Начисленная сумма'))
+                        ->style('margin-top: 0px; margin-bottom: 0px; padding-left: 30px;'),
+
                     Button::make(CustomTranslator::get('Сохранить'))
                         ->method('saveRates')
                         ->class('btn btn-primary btn-sm')
@@ -259,9 +339,6 @@ class BlillingEditScreen extends Screen
         if ($checkedFields->contains('storage_items')) {
             $tabs[CustomTranslator::get('Хранение поэкземпларное')] = [
                 Layout::rows([
-                    Input::make('storage_items_code')
-                        ->type('string')
-                        ->title(CustomTranslator::get('Код')),
 
                     Input::make('storage_items_template')
                         ->type('string')
@@ -299,9 +376,6 @@ class BlillingEditScreen extends Screen
         if ($checkedFields->contains('storage_places')) {
             $tabs[CustomTranslator::get('Хранение полочное')] = [
                 Layout::rows([
-                    Input::make('storage_places_code')
-                        ->type('string')
-                        ->title(CustomTranslator::get('Код')),
 
                     Input::make('storage_places_template')
                         ->type('string')
@@ -350,6 +424,19 @@ class BlillingEditScreen extends Screen
                         ->required(),
                 ])
             ])->title(CustomTranslator::get('Редактировать статус'))->applyButton(CustomTranslator::get('Сохранить'))->async('asyncGetBilling'),
+
+            Layout::modal('editDataTypeModal', [
+                Layout::rows([
+                    Input::make('billing.bs_id')->type('hidden'),
+                    Select::make('billing.bs_date_type')
+                        ->title(CustomTranslator::get('Как считается дата'))
+                        ->options([
+                            0 => CustomTranslator::get('Дата документа'),
+                            1 => CustomTranslator::get('Текущая дата'),
+                        ])
+                        ->required(),
+                ])
+            ])->title(CustomTranslator::get('Редактировать статус'))->applyButton(CustomTranslator::get('Сохранить'))->async('asyncGetBilling'),
         ];
     }
 
@@ -391,7 +478,9 @@ class BlillingEditScreen extends Screen
 
             $section = [
                 'code' => $request->input($key . '_code'),
+                'datamatrix' => $request->input($key . '_datamatrix'),
                 'template' => $request->input($key . '_template'),
+                'proc_dimensions' => $request->input($key . '_proc_dimensions'),
             ];
 
             if ($key === 'storage_places') {
@@ -458,12 +547,29 @@ class BlillingEditScreen extends Screen
         Alert::success(CustomTranslator::get('Статус обновлен'));
     }
 
+    public function saveDateType(Request $request)
+    {
+        rwBillingSetting::findOrFail($request->input('billing.bs_id'))
+            ->update(['bs_date_type' => $request->input('billing.bs_date_type')]);
+
+        Alert::success(CustomTranslator::get('Тип расчета даты обновлен'));
+    }
+
     private function statusLabel($status): string
     {
         return match ((int)$status) {
             1 => CustomTranslator::get('Активный'),
             2 => CustomTranslator::get('Не активный'),
             3 => CustomTranslator::get('Удален'),
+            default => CustomTranslator::get('Неизвестно'),
+        };
+    }
+
+    private function statusDateType($status): string
+    {
+        return match ((int)$status) {
+            0 => CustomTranslator::get('Дата документа'),
+            1 => CustomTranslator::get('Текущая дата'),
             default => CustomTranslator::get('Неизвестно'),
         };
     }

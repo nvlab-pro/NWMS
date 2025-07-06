@@ -189,19 +189,19 @@ class AcceptancesOffersScreen extends Screen
             Layout::modal('editDimensions', [
                 Layout::rows([
                     Input::make('offer.dimension_x')
-                        ->title(CustomTranslator::get('Длина'))
+                        ->title(CustomTranslator::get('Длина') . ' (sm.)')
                         ->required(),
 
-                    Input::make(CustomTranslator::get('offer.dimension_y'))
-                        ->title('Ширина')
+                    Input::make('offer.dimension_y')
+                        ->title(CustomTranslator::get('Ширина') . ' (sm.)')
                         ->required(),
 
-                    Input::make(CustomTranslator::get('offer.dimension_z'))
-                        ->title('Высота')
+                    Input::make('offer.dimension_z')
+                        ->title(CustomTranslator::get('Высота')  . ' (sm.)')
                         ->required(),
 
                     Input::make('offer.weight')
-                        ->title(CustomTranslator::get('Вес'))
+                        ->title(CustomTranslator::get('Вес') . ' (kg.)')
                         ->required(),
                 ]),
             ])->async('asyncGetOfferDimensions'), // Метод для загрузки данных

@@ -21,6 +21,8 @@ class rwCompany extends Model implements AuditableContract
         'co_name',
         'co_legal_name',
         'co_vat_number',
+        'co_vat_availability',
+        'co_vat_proc',
         'co_registration_number',
         'co_country_id',
         'co_city_id',
@@ -38,7 +40,7 @@ class rwCompany extends Model implements AuditableContract
 
     public function getCity()
     {
-        return $this->belongsTo(rwLibCity::class, 'lcit_id', 'co_city_id');
+        return $this->belongsTo(rwLibCity::class, 'co_city_id', 'lcit_id');
     }
 
 }

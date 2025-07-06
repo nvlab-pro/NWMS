@@ -33,6 +33,7 @@ class rwAcceptance extends Model implements AuditableContract
         'acc_count_expected',
         'acc_count_accepted',
         'acc_count_placed',
+        'acc_transaction_id',
     ];
 
     protected $allowedFilters = [

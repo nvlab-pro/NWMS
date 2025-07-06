@@ -17,10 +17,9 @@ class rwWarehouse extends Model implements AuditableContract
 
     protected $primaryKey = 'wh_id';
 
-    // Другие разрешённые для массового присвоения атрибуты
-    // Другие разрешённые для массового присвоения атрибуты
     protected $fillable = [
         'wh_id',
+        'wh_status',
         'wh_user_id',
         'wh_type',
         'wh_parent_id',
@@ -31,8 +30,12 @@ class rwWarehouse extends Model implements AuditableContract
         'wh_set_batch',
         'wh_country_id',
         'wh_company_id',
+        'wh_billing_id',
         'wh_doc_num',
         'wh_doc_date',
+        'wh_billing_cost',
+        'wh_billing_received',
+        'wh_billing_sum',
     ];
 
     public static function perPage(): int
@@ -57,6 +60,10 @@ class rwWarehouse extends Model implements AuditableContract
 
     public function getParent() {
         return $this->hasOne(rwWarehouse::class, 'wh_id', 'wh_parent_id');
+    }
+
+    public function getBilling() {
+        return $this->hasOne(rwBillingSetting::class, 'bs_id', 'wh_billing_id');
     }
 
 

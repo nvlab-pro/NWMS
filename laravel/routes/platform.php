@@ -800,6 +800,19 @@ Route::screen('billing/billing/{billing}/edit', \App\Orchid\Screens\Billing\Bill
         ->parent('platform.billing.companies.list')
         ->push(CustomTranslator::get('Редактировать компанию'), route('platform.billing.billing.edit', $billing)));
 
+Route::screen('billing/accounts', \App\Orchid\Screens\Billing\Accounts\AccountScreen::class)
+    ->name('platform.billing.accounts.list')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(CustomTranslator::get('Счета'), route('platform.billing.accounts.list')));
+
+Route::screen('billing/accounts/{whId}/edit', \App\Orchid\Screens\Billing\Accounts\AccountEditScreen::class)
+    ->name('platform.billing.accounts.edit')
+    ->breadcrumbs(fn(Trail $trail, $whId) => $trail
+        ->parent('platform.billing.accounts.list')
+        ->push(CustomTranslator::get('Детали счета'), route('platform.billing.accounts.edit', $whId)));
+
+
 // *********************
 // *** Фиксация входа
 // *********************

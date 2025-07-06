@@ -2,10 +2,12 @@
 
 namespace App\Orchid\Screens\Warehouses;
 
+use App\Models\rwBillingSetting;
 use App\Models\rwCompany;
 use App\Models\rwDomain;
 use App\Models\rwLibWhType;
 use App\Models\rwWarehouse;
+use App\Models\rwWhBilling;
 use App\Models\User;
 use App\Services\CustomTranslator;
 use Illuminate\Http\Request;
@@ -16,27 +18,24 @@ use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Screen;
+use Orchid\Screen\TD;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
 class WarehouseCreateScreen extends Screen
 {
-    public $whId;
+    public $whId, $billingId;
 
-    /**
-     * Fetch data to be displayed on the screen.
-     *
-     * @return array
-     */
     public function query($whId = 0): iterable
     {
 
         $this->whId = $whId;
+        $this->billingId = 0;
 
         $currentUser = Auth::user();
 
-        $dbWhList = rwWarehouse::query();
+        $dbWhList = rwWarehouse::where('wh_id', $this->whId);
 
         if ($currentUser->hasRole('admin') || $currentUser->hasRole('warehouse_manager')) {
 
@@ -47,36 +46,31 @@ class WarehouseCreateScreen extends Screen
 
         }
 
+        $resWhList = $dbWhList->first();
+        if (isset($resWhList->wh_billing_id) && $resWhList->wh_billing_id > 0) $this->billingId = $resWhList->wh_billing_id;
+
+        // Загружаем логи биллинга по текущему складу
+        $billingLogs = rwWhBilling::where('wb_wh_id', $this->whId)
+            ->orderBy('wb_date', 'desc')
+            ->with('billingSetting') // загружаем связанный тариф
+            ->get();
+
         return [
-            'whList' => $dbWhList->where('wh_id', $this->whId)->first(),
-        ];
+            'whList' => $resWhList,
+            'billingLogs' => $billingLogs,
+            ];
     }
 
-    /**
-     * The name of the screen displayed in the header.
-     *
-     * @return string|null
-     */
     public function name(): ?string
     {
         return $this->whId > 0 ? CustomTranslator::get('Редактирование склада') : CustomTranslator::get('Создание склада');
     }
 
-    /**
-     * The screen's action buttons.
-     *
-     * @return \Orchid\Screen\Action[]
-     */
     public function commandBar(): iterable
     {
         return [];
     }
 
-    /**
-     * The screen's layout elements.
-     *
-     * @return \Orchid\Screen\Layout[]|string[]
-     */
     public function layout(): iterable
     {
         $currentUser = Auth::user();
@@ -112,7 +106,6 @@ class WarehouseCreateScreen extends Screen
                 ->title(CustomTranslator::get('Выберите владельца'));
 
             $arAddFields[] = Select::make('whList.wh_parent_id')
-//                ->fromModel(rwWarehouse::where('wh_type', 1)->where('wh_domain_id', $currentUser->domain_id)->get(), 'wh_name', 'wh_id')
                 ->options(
                     rwWarehouse::where('wh_type', 1)->with('getDomain')->get()->pluck('wh_name', 'wh_id')->map(function ($name, $id) {
                         $wh = rwWarehouse::find($id);
@@ -221,6 +214,41 @@ class WarehouseCreateScreen extends Screen
                         )
                     ),
                 ],
+                CustomTranslator::get('Биллинг') => [
+                    Layout::rows([
+
+                        Select::make('whList.wh_billing_id')
+                            ->title(CustomTranslator::get('Выберите текущий биллинг'))
+                            ->fromModel(
+                                rwBillingSetting::where('bs_domain_id', $currentUser->domain_id)
+                                    ->where('bs_status', 1)
+                                    ->get(),
+                                'bs_name', 'bs_id'
+                            )
+                            ->empty(CustomTranslator::get('Не выбрано'), 0)
+                            ->value($this->billingId),
+
+                        TextArea::make('whList.billing_comment')
+                            ->rows(5)
+                            ->cols(100)
+                            ->title(CustomTranslator::get('Комментарий к биллингу'))
+                            ->popover(CustomTranslator::get('Необязательное поле. Здесь вы можете указать какие-то пояснения почему для данного клиента сейчас ставится именно этот тарифный план.')),
+
+                        Button::make(CustomTranslator::get('Сохранить'))
+                            ->type(Color::DARK)
+                            ->style('margin-bottom: 20px;')
+                            ->method('saveBilling'),
+
+                    ]),
+                    Layout::table('billingLogs', [
+                        TD::make('wb_date', CustomTranslator::get('Дата'))
+                            ->render(fn($log) => $log->wb_date),
+                        TD::make('wb_billing_id', CustomTranslator::get('Биллинг'))
+                            ->render(fn($log) => optional($log->billingSetting)->bs_name ?? '-'),
+                        TD::make('wb_comment', CustomTranslator::get('Комментарий')),
+                    ]),
+                ],
+
                 CustomTranslator::get('Настройка этикетки') => [
                     Layout::rows([
                         CheckBox::make('whList.wh_use_custom_label')
@@ -243,6 +271,49 @@ class WarehouseCreateScreen extends Screen
             ]),
         ];
 
+    }
+
+    function saveBilling(Request $request)
+    {
+        $currentUser = Auth::user();
+
+        $data = $request->validate([
+            'whList.wh_id' => 'nullable|integer',
+            'whList.wh_billing_id' => 'nullable|integer',
+            'whList.billing_comment' => 'nullable|string',
+        ]);
+
+        $whId = $data['whList']['wh_id'];
+
+        $dbWarehouse = rwWarehouse::find($whId);
+        $dbWarehouse->wh_billing_id = $data['whList']['wh_billing_id'];
+        $dbWarehouse->save();
+
+        $resBillingLog = rwWhBilling::where('wb_wh_id', $whId)
+            ->orderBy('wb_id', 'DESC')
+            ->first();
+
+        $addBillingLog = 0;
+
+        if (isset($resBillingLog->wb_billing_id)) {
+            if ($resBillingLog->wb_billing_id == $data['whList']['wh_billing_id'])
+                $addBillingLog = 1;
+        }
+
+        if ($addBillingLog == 0) {
+            rwWhBilling::create([
+                'wb_wh_id' => $whId,
+                'wb_date' => date('Y-m-d H:i:s'),
+                'wb_billing_id' => $data['whList']['wh_billing_id'],
+                'wb_comment' => $data['whList']['billing_comment'] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        Alert::success(CustomTranslator::get('Данные биллинга сохранены!'));
+
+        return redirect()->route('platform.warehouses.edit', $whId);
     }
 
     function saveLabel(Request $request)
