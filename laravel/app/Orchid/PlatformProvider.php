@@ -115,6 +115,7 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(CustomTranslator::get('Управление складом'))
                 ->icon('bs.display')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
                     Menu::make(CustomTranslator::get('Волновая сборка'))
@@ -149,6 +150,7 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(CustomTranslator::get('Настройки склада'))
                 ->icon('bs.buildings-fill')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
 
                     Menu::make(CustomTranslator::get('Склады'))
@@ -205,6 +207,7 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(CustomTranslator::get('Статистика'))
                 ->icon('bs.graph-up')
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->active('platform.statistics.*')
                 ->list([
                     Menu::make(CustomTranslator::get('Работники'))
@@ -220,11 +223,9 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(CustomTranslator::get('Биллинг'))
                 ->icon('bs.credit-card-fill')
-                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
                     Menu::make(CustomTranslator::get('Счета'))
                         ->icon('bs.cash-coin')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                         ->route('platform.billing.accounts.list'),
 
                     Menu::make(CustomTranslator::get('Биллинг'))

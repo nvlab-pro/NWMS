@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Layouts\Billings\Accounts;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\rwBillingTransactions;
 use App\Models\rwWarehouse;
 use App\Services\CustomTranslator;
@@ -75,18 +76,19 @@ class AccountEditTable extends Table
 
 
             TD::make(CustomTranslator::get('Действия'))
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
                 ->render(fn(rwBillingTransactions $tx) => DropDown::make()
                     ->icon('bs.three-dots-vertical')
                     ->list([
-                        ModalToggle::make(CustomTranslator::get('Редактировать'))
-                            ->canSee($tx->bt_act_id == 0)
+                        ModalToggle::make('Редактировать')
+                            ->icon('bs.pencil')
                             ->modal('editTransactionModal')
+                            ->method('editTransaction')
                             ->asyncParameters([
-                                'id' => $tx->bt_id,
-                            ])
-                            ->icon('bs.pencil'),
+                                'transaction_id' => $tx->bt_id,   // 👈 передаём параметр
+                            ]),
 
                         Button::make(CustomTranslator::get('Удалить'))
                             ->canSee($tx->bt_act_id == 0)

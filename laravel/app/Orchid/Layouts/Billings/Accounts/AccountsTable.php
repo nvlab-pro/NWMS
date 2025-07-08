@@ -36,7 +36,7 @@ class AccountsTable extends Table
                 ->align(TD::ALIGN_CENTER)
                 ->render(function (rwWarehouse $modelName) {
                     return Link::make($modelName->wh_id)
-                        ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                        ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                 }),
 
             TD::make('wh_type', CustomTranslator::get('Тип склада'))
@@ -56,7 +56,7 @@ class AccountsTable extends Table
                 ->filter(TD::FILTER_TEXT)
                 ->render(function (rwWarehouse $modelName) {
                     return Link::make($modelName->wh_name)
-                        ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                        ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                 }),
 
             TD::make('getCompany.co_name', CustomTranslator::get('Компания заказчика'))
@@ -66,10 +66,10 @@ class AccountsTable extends Table
                 ->render(function (rwWarehouse $modelName) {
                     if ($modelName->getCompany) {
                         return Link::make($modelName->getCompany->co_name)
-                            ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                            ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                     } else {
                         return Link::make('-')
-                            ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                            ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                     }
                 }),
 
@@ -81,10 +81,10 @@ class AccountsTable extends Table
                 ->render(function (rwWarehouse $modelName) {
                     if (isset($modelName->getParent->getCompany->co_name)) {
                         return Link::make($modelName->getParent->getCompany->co_name)
-                            ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                            ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                     } else {
                         return Link::make('-')
-                            ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                            ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                     }
                 }),
 
@@ -95,7 +95,7 @@ class AccountsTable extends Table
                 ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->render(function (rwWarehouse $modelName) {
                     return Link::make($modelName->getOwner->name)
-                        ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                        ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                 }),
 
             TD::make('getParent.wh_name', CustomTranslator::get('Родитель'))
@@ -106,10 +106,10 @@ class AccountsTable extends Table
                 ->render(function (rwWarehouse $modelName) {
                     if (isset($modelName->getParent->wh_name))
                         return Link::make($modelName->getParent->wh_name)
-                            ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                            ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                     else
                         return Link::make('-')
-                            ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                            ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                 }),
 
             TD::make('getDomain.dm_name', CustomTranslator::get('Домен'))
@@ -120,7 +120,7 @@ class AccountsTable extends Table
                 ->render(function (rwWarehouse $modelName) {
                     if ($modelName->getDomain) {
                         return Link::make($modelName->getDomain->dm_name)
-                            ->route('platform.billing.accounts.edit',$modelName->wh_id);
+                            ->route('platform.billing.accounts.edit.transactions',$modelName->wh_id);
                     } else {
                         return '-';
                     }
@@ -174,17 +174,6 @@ class AccountsTable extends Table
                         return '0';
                     }
                 }),
-
-            TD::make(CustomTranslator::get('Действия'))
-                ->align(TD::ALIGN_CENTER)
-                ->width('100px')
-                ->render(fn (rwWarehouse $modelName) => DropDown::make()
-                    ->icon('bs.three-dots-vertical')
-                    ->list([
-                        Link::make(CustomTranslator::get('Ред.'))
-                            ->route('platform.billing.accounts.edit', $modelName->wh_id)
-                            ->icon('bs.pencil'),
-                    ])),
 
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Billing\Accounts;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\rwBillingTransactions;
 use App\Models\rwCompany;
 use App\Models\rwInvoce;
@@ -9,6 +10,7 @@ use App\Models\rwLibActionType;
 use App\Models\rwWarehouse;
 use App\Models\rwWhBilling;
 use App\Orchid\Layouts\Billings\Accounts\AccountEditTable;
+use App\Orchid\Layouts\Billings\Accounts\AccountNavigation;
 use App\Orchid\Layouts\Billings\Accounts\AccountTotalTable;
 use App\Orchid\Layouts\Billings\Accounts\CustomerCompanyTable;
 use App\Orchid\Layouts\Billings\Accounts\InvoceTable;
@@ -18,6 +20,7 @@ use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Label;
 use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Layouts\TabMenu;
 use Orchid\Screen\Sight;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
@@ -36,6 +39,7 @@ class AccountEditScreen extends Screen
         $this->whId = $whId;
         $transactionsList = [];
         $companyRequisites = [];
+        $executorRequisites = [];
 
         $currentUser = Auth::user();
 
@@ -54,87 +58,55 @@ class AccountEditScreen extends Screen
             ->first();
 
         if (isset($resWhList->wh_id)) {
-
             $transactionsList = rwBillingTransactions::where('bt_wh_id', $this->whId)
                 ->with(['actionType', 'customerCompany', 'executorCompany'])
                 ->orderBy('bt_date', 'desc')
                 ->filters()
                 ->paginate(100);
-
-            $totalTransList = rwBillingTransactions::select(
-                'bt_service_id',
-                DB::raw('SUM(bt_total_sum) as total_sum')
-            )
-                ->where('bt_wh_id', $this->whId)
-                ->with(['actionType'])
-                ->groupBy('bt_service_id')
-                ->filters()
-                ->get();
-
-            $invoicesList = rwInvoce::where('in_wh_id', $this->whId)
-                ->with(['getCustomerCompany', 'getExecutorCompany'])
-                ->paginate(100);
-
-            $companyRequisites = $resWhList->getCompany;
-            $executorRequisites = $resWhList->getParent->getCompany;
-
         }
 
         return [
             'transactionsList' => $transactionsList,
-            'totalTransList' => $totalTransList,
-            'invoicesList' => $invoicesList,
-            'companyRequisites' => $companyRequisites,
-            'executorRequisites' => $executorRequisites,
         ];
     }
 
     public function name(): ?string
     {
-        return CustomTranslator::get('Детали счета');
+        return CustomTranslator::get('Список транзакций по складу');
     }
 
-    /**
-     * The screen's action buttons.
-     *
-     * @return \Orchid\Screen\Action[]
-     */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            ModalToggle::make(CustomTranslator::get('Добавить транзакцию'))
+                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                ->modal('createTransactionModal')
+                ->method('createTransaction')
+                ->style('margin-left: auto;')
+                ->icon('plus')
+                ->type(Color::SUCCESS),
+
+        ];
     }
 
-    /**
-     * The screen's layout elements.
-     *
-     * @return \Orchid\Screen\Layout[]|string[]
-     */
     public function layout(): iterable
     {
+
         return [
             // ***********************
             // Диалоговые окна
 
-            // Редактирование транзакции
             Layout::modal('editTransactionModal', [
                 Layout::rows([
-                    Input::make('id')
-                        ->type('text'),
-
+                    Input::make('transaction_id')->type('hidden'),
                     Input::make('bt_sum')
-                        ->title(CustomTranslator::get('Сумма'))
-                        ->type('number')
-                        ->step('any')
-                        ->required(),
-
-                    Input::make('bt_desc')
-                        ->title(CustomTranslator::get('Описание'))
-                        ->type('text'),
-                    ])
-                ])
-                ->title(CustomTranslator::get('Редактировать транзакцию'))
-                ->applyButton(CustomTranslator::get('Сохранить'))
+                        ->title('Сумма')->type('number')->step('any')->required(),
+                    Input::make('bt_desc')->title('Описание'),
+                ]),
+            ])
+                ->title('Редактировать транзакцию')
                 ->method('editTransaction')
+                ->applyButton('Сохранить')
                 ->async('asyncGetTransaction'),
 
             // Создание транзакции
@@ -158,136 +130,18 @@ class AccountEditScreen extends Screen
                     Input::make('bt_desc')
                         ->title(CustomTranslator::get('Описание'))
                         ->type('text'),
-                    ])
                 ])
+            ])
                 ->title(CustomTranslator::get('Добавить транзакцию'))
                 ->applyButton(CustomTranslator::get('Сохранить')),
 
-            // Диалоговое окно добавления счёта
-            Layout::modal('createInvoceModal', [
-                Layout::rows([
-                    Input::make('whId')
-                        ->value($this->whId)
-                        ->type('hidden'),
-
-                    Input::make('in_sum')
-                        ->title(CustomTranslator::get('Сумма без учета НДС'))
-                        ->type('number')
-                        ->step('any')
-                        ->required(),
-                ])
-            ])
-                ->title(CustomTranslator::get('Добавить счёт'))
-                ->applyButton(CustomTranslator::get('Сохранить'))
-                ->method('createInvoce'),
-
-            // ***********************
-            // Закладки
-
-            Layout::tabs([
-
-                // Список начислений
-                CustomTranslator::get('Список начислений') => [
-                    Layout::rows([
-                        ModalToggle::make(CustomTranslator::get('Добавить транзакцию'))
-                            ->modal('createTransactionModal')
-                            ->method('createTransaction')
-                            ->style('margin-left: auto;')
-                            ->icon('plus')
-                            ->type(Color::SUCCESS),
-
-                    ]),
-                    AccountEditTable::class,
-                ],
-
-                // Счет
-                CustomTranslator::get('Счета') => [
-                    Layout::rows([
-                        ModalToggle::make(CustomTranslator::get('Добавить счет'))
-                            ->modal('createInvoceModal')
-                            ->method('createInvoce')
-                            ->style('margin-left: auto;')
-                            ->icon('receipt')
-                            ->type(Color::PRIMARY),
-
-                    ]),
-
-                    InvoceTable::class,
-                ],
-
-                // Акты
-                CustomTranslator::get('Акты') => [
-                    AccountEditTable::class,
-                ],
-
-                // Итого
-                CustomTranslator::get('Итого') => [
-                    AccountTotalTable::class,
-                ],
-
-                // Текущие тарифы клиента
-                CustomTranslator::get('Текущие тарифы') => [
-                    // тут будут тарифы
-                ],
-
-                CustomTranslator::get('Реквизиты') => [
-                    Layout::columns([
-                        // --- левая колонка: клиент -----------------
-                        Layout::legend('companyRequisites', [
-                            Sight::make('co_name', CustomTranslator::get('Название')),
-                            Sight::make('co_legal_name', CustomTranslator::get('Юридическое название')),
-                            Sight::make('co_vat_number', CustomTranslator::get('ИНН / VAT')),
-                            Sight::make('co_vat_availability', CustomTranslator::get('НДС'))
-                                ->render(fn($c) => $c->co_vat_availability ? 'С НДС' : 'Без НДС'),
-                            Sight::make('co_vat_proc', CustomTranslator::get('Ставка НДС'))
-                                ->render(fn($c) => $c->co_vat_proc . ' %'),
-                            Sight::make('co_registration_number', CustomTranslator::get('Регистрационный номер')),
-                            Sight::make('co_country_id', CustomTranslator::get('Страна')),
-                            Sight::make('co_city_id', CustomTranslator::get('Город'))
-                                ->render(fn($c) => $c->getCity->lcit_name ?? '-'),
-                            Sight::make('co_postcode', CustomTranslator::get('Индекс')),
-                            Sight::make('co_address', CustomTranslator::get('Адрес')),
-                            Sight::make('co_phone', CustomTranslator::get('Телефон')),
-                            Sight::make('co_email', CustomTranslator::get('Email')),
-                            Sight::make('co_website', CustomTranslator::get('Сайт')),
-                            Sight::make('co_bank_account', CustomTranslator::get('Расчётный счёт')),
-                            Sight::make('co_bank_ks', CustomTranslator::get('Кор.счёт')),
-                            Sight::make('co_bank_name', CustomTranslator::get('Банк')),
-                            Sight::make('co_swift_bic', CustomTranslator::get('SWIFT/BIC')),
-                            Sight::make('co_contact_person', CustomTranslator::get('Контактное лицо')),
-                        ])->title('Реквизиты клиента'),
-
-                        // --- правая колонка: исполнитель ----------
-                        Layout::legend('executorRequisites', [
-                            Sight::make('co_name', CustomTranslator::get('Название')),
-                            Sight::make('co_legal_name', CustomTranslator::get('Юридическое название')),
-                            Sight::make('co_vat_number', CustomTranslator::get('ИНН / VAT')),
-                            Sight::make('co_vat_availability', CustomTranslator::get('НДС'))
-                                ->render(fn($c) => $c->co_vat_availability ? 'С НДС' : 'Без НДС'),
-                            Sight::make('co_vat_proc', CustomTranslator::get('Ставка НДС'))
-                                ->render(fn($c) => $c->co_vat_proc . ' %'),
-                            Sight::make('co_registration_number', CustomTranslator::get('Регистрационный номер')),
-                            Sight::make('co_country_id', CustomTranslator::get('Страна')),
-                            Sight::make('co_city_id', CustomTranslator::get('Город'))
-                                ->render(fn($c) => $c->getCity->lcit_name ?? '-'),
-                            Sight::make('co_postcode', CustomTranslator::get('Индекс')),
-                            Sight::make('co_address', CustomTranslator::get('Адрес')),
-                            Sight::make('co_phone', CustomTranslator::get('Телефон')),
-                            Sight::make('co_email', CustomTranslator::get('Email')),
-                            Sight::make('co_website', CustomTranslator::get('Сайт')),
-                            Sight::make('co_bank_account', CustomTranslator::get('Расчётный счёт')),
-                            Sight::make('co_bank_ks', CustomTranslator::get('Кор.счёт')),
-                            Sight::make('co_bank_name', CustomTranslator::get('Банк')),
-                            Sight::make('co_swift_bic', CustomTranslator::get('SWIFT/BIC')),
-                            Sight::make('co_contact_person', CustomTranslator::get('Контактное лицо')),
-                        ])->title('Реквизиты исполнителя'),
-                    ]),
-                ],
+            AccountNavigation::class,
+            AccountEditTable::class,
 
 
-            ]),
         ];
     }
+
 
     // ************************************************************************
     // *** Блок асинхронной выдачи данных для диалоговых окон
@@ -295,16 +149,11 @@ class AccountEditScreen extends Screen
 
     public function asyncGetTransaction(Request $request): array
     {
-        return [
-            'id' => 1,
-            'bt_sum' => 2,
-            'bt_desc' => '3',
-        ];
-
-        $tx = rwBillingTransactions::find($request->integer('id'));
+        $tx = rwBillingTransactions::find($request->integer('transaction_id'));
+        abort_if(!$tx, 404, 'Transaction not found');
 
         return [
-            'id' => $tx->bt_id,
+            'transaction_id' => $tx->bt_id,
             'bt_sum' => $tx->bt_sum,
             'bt_desc' => $tx->bt_desc,
         ];
@@ -330,8 +179,9 @@ class AccountEditScreen extends Screen
 
     public function editTransaction(Request $request): RedirectResponse
     {
+
         $tx = rwBillingTransactions::with('getWarehouse.getParent.getCompany')
-            ->find($request->get('id'));
+            ->find($request->get('transaction_id'));
 
 
         if ($tx && $tx->bt_act_id == 0) {
@@ -399,40 +249,4 @@ class AccountEditScreen extends Screen
         return back();
     }
 
-    public function createInvoce(Request $request): RedirectResponse
-    {
-        if ($request->get('whId')) {
-
-            $resWh = rwWarehouse::with(['getParent'])
-                ->find($request->get('whId'));
-
-            $vat = optional(optional($resWh->getParent)->getCompany)->co_vat_proc ?? 0; // Получаем ставку НДС
-
-            $sumDoc = $request->get('in_sum');
-
-            // считаем налоги
-            if ($vat > 0) {
-                $tax = round($sumDoc * ($vat / 100), 2);
-                $totalSum = $sumDoc + round($sumDoc * ($vat / 100), 2);
-            } else {
-                $tax = 0;
-                $totalSum = $sumDoc;
-            }
-
-            rwInvoce::create([
-                'in_date' => now(),
-                'in_wh_id' => $request->get('whId'),
-                'in_customer_company_id' => $resWh->wh_company_id,
-                'in_executor_company_id' => $resWh->getParent->wh_company_id ?? 0,
-                'in_sum' => $sumDoc,
-                'in_tax' => $tax,
-                'in_total_sum' => $totalSum,
-            ]);
-
-            Alert::success(CustomTranslator::get('Счёт успешно добавлен'));
-
-        }
-
-        return back();
-    }
 }

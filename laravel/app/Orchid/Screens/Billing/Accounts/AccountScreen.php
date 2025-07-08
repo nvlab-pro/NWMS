@@ -31,10 +31,11 @@ class AccountScreen extends Screen
 
             } else {
 
-                $dbWhList->where('wh_user_id', $currentUser->id)
-                    ->where('wh_user_id', $currentUser->parent_id)
+                $dbWhList->where(function ($query) use ($currentUser) {
+                    $query->where('wh_user_id', $currentUser->id)
+                        ->orWhere('wh_user_id', $currentUser->parent_id);
+                })
                     ->where('wh_domain_id', $currentUser->domain_id);
-
             }
         }
 
@@ -51,9 +52,9 @@ class AccountScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            Link::make(CustomTranslator::get('Добавить новый склад'))
-                ->icon('bs.plus-circle')
-                ->route('platform.warehouses.create'),
+//            Link::make(CustomTranslator::get('Добавить новый склад'))
+//                ->icon('bs.plus-circle')
+//                ->route('platform.warehouses.create'),
         ];
     }
 

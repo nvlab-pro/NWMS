@@ -556,7 +556,7 @@ Route::prefix('lib')
                 ->parent('platform.lib.datamatrix.index')
                 ->push(CustomTranslator::get('Честный знак'), route('platform.lib.datamatrix.import')));
 
-         Route::screen('datamatrix', \App\Orchid\Screens\Datamatrix\DatamatrixScreen::class)
+        Route::screen('datamatrix', \App\Orchid\Screens\Datamatrix\DatamatrixScreen::class)
             ->name('.datamatrix.index')
             ->breadcrumbs(fn(Trail $trail) => $trail
                 ->parent('platform.index')
@@ -800,17 +800,53 @@ Route::screen('billing/billing/{billing}/edit', \App\Orchid\Screens\Billing\Bill
         ->parent('platform.billing.companies.list')
         ->push(CustomTranslator::get('Редактировать компанию'), route('platform.billing.billing.edit', $billing)));
 
+// Список счетов
+
 Route::screen('billing/accounts', \App\Orchid\Screens\Billing\Accounts\AccountScreen::class)
     ->name('platform.billing.accounts.list')
     ->breadcrumbs(fn(Trail $trail) => $trail
         ->parent('platform.index')
         ->push(CustomTranslator::get('Счета'), route('platform.billing.accounts.list')));
 
-Route::screen('billing/accounts/{whId}/edit', \App\Orchid\Screens\Billing\Accounts\AccountEditScreen::class)
-    ->name('platform.billing.accounts.edit')
+Route::screen('billing/accounts/{whId}/edit/transactions', \App\Orchid\Screens\Billing\Accounts\AccountEditScreen::class)
+    ->name('platform.billing.accounts.edit.transactions')
     ->breadcrumbs(fn(Trail $trail, $whId) => $trail
         ->parent('platform.billing.accounts.list')
-        ->push(CustomTranslator::get('Детали счета'), route('platform.billing.accounts.edit', $whId)));
+        ->push(CustomTranslator::get('Детали счета'), route('platform.billing.accounts.edit.transactions', $whId)));
+
+Route::screen(
+    'billing/accounts/{whId}/edit/invoices',
+    \App\Orchid\Screens\Billing\Accounts\AccountEditInvoicesScreen::class
+    )
+    ->name('platform.billing.accounts.edit.invoices')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.billing.accounts.list', request('whId'))   // ← передаём whId родителю
+        ->push(CustomTranslator::get('Список счетов'),
+            route('platform.billing.accounts.edit.invoices', request('whId')))
+    );
+
+Route::screen(
+    'billing/accounts/{whId}/edit/acts',
+    \App\Orchid\Screens\Billing\Accounts\AccountEditActsScreen::class
+    )
+    ->name('platform.billing.accounts.edit.acts')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.billing.accounts.list', request('whId'))   // ← передаём whId родителю
+        ->push(CustomTranslator::get('Список счетов'),
+            route('platform.billing.accounts.edit.acts', request('whId')))
+    );
+
+Route::screen('billing/accounts/{whId}/edit/requisites', \App\Orchid\Screens\Billing\Accounts\AccountEditRequisitesScreen::class)
+    ->name('platform.billing.accounts.edit.requisites')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.billing.accounts.list', request('whId'))
+        ->push(CustomTranslator::get('Список счетов'), route('platform.billing.accounts.edit.requisites', request('whId'))));
+
+Route::screen('billing/accounts/{whId}/edit/total', \App\Orchid\Screens\Billing\Accounts\AccountEditTotalScreen::class)
+    ->name('platform.billing.accounts.edit.total')
+    ->breadcrumbs(fn(Trail $trail) => $trail
+        ->parent('platform.billing.accounts.list', request('whId'))
+        ->push(CustomTranslator::get('Список счетов'), route('platform.billing.accounts.edit.total', request('whId'))));
 
 
 // *********************

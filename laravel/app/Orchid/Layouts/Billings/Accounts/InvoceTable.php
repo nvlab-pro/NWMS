@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Layouts\Billings\Accounts;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\rwInvoce;
 use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Button;
@@ -48,25 +49,26 @@ class InvoceTable extends Table
                         ->icon('bs.three-dots')
                         ->list([
                             Link::make(CustomTranslator::get('Печать'))
-                                ->route('platform.billing.accounts.edit', $in->in_id)
+                                ->route('platform.billing.accounts.edit.invoices', $in->in_id)
                                 ->icon('bs.printer'),
 
                             Button::make(CustomTranslator::get('Оплачен'))
+                                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                                 ->icon('bs.check2-circle')
                                 ->confirm(CustomTranslator::get('Подтвердить оплату?'))
                                 ->method('markInvoicePaid', ['id' => $in->in_id])
                                 ->canSee(in_array($in->in_status, [0, 2])),
 
                             Link::make(CustomTranslator::get('Редактировать'))
-                                ->route('platform.billing.accounts.edit', $in->in_id)
+                                ->route('platform.billing.accounts.edit.invoices', $in->in_id)
                                 ->icon('bs.pencil')
-                        ->canSee(in_array($in->in_status, [0, 2])),
+                                ->canSee(in_array($in->in_status, [0, 2])),
 
                             Button::make(CustomTranslator::get('Удалить'))
                                 ->icon('bs.trash')
-                                ->confirm(CustomTranslator::get('Подтвердить удаление?'))
-                                ->method('platform.billing.accounts.edit', ['id' => $in->in_id])
-                                ->canSee(in_array($in->in_status, [0, 2])),
+                                ->confirm(CustomTranslator::get('Вы уверены что хотите удалить счёт?'))
+                                ->method('deleteInvoice', ['id' => $in->in_id])
+                                ->canSee(in_array($in->in_status, [0])),
                         ]);
                 }),
         ];

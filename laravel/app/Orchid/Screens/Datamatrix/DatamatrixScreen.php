@@ -34,10 +34,13 @@ class DatamatrixScreen extends Screen
             $dbShop->where('sh_user_id', $currentUser->id);
         }
 
-        $this->dbShop = $dbShop->pluck('sh_name', 'sh_id')->toArray();
+//        $this->dbShop = $dbShop->pluck('sh_name', 'sh_id')->toArray();
+        $this->dbShop = $dbShop->pluck('sh_id')->toArray();
 
         return [
-            'datamatrixList' => rwDatamatrix::paginate(50),
+            'datamatrixList' => !empty($this->dbShop)
+                ? rwDatamatrix::whereIn('dmt_shop_id', $this->dbShop)->paginate(50)
+                : rwDatamatrix::whereRaw('1 = 0')->paginate(50), // безопасно вернёт пустой результат
         ];
     }
 
