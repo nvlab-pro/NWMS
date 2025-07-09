@@ -5,7 +5,8 @@ namespace App\Orchid\Screens\Billing\Accounts;
 use App\Models\rwBillingTransactions;
 use App\Models\rwWarehouse;
 use App\Orchid\Layouts\Billings\Accounts\AccountNavigation;
-use App\Services\CustomTranslator;
+use App\Services\CustomTranslator as CT;
+use Orchid\Screen\Fields\Label;
 use Orchid\Screen\Screen;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,8 @@ use Orchid\Support\Facades\Layout;
 class AccountEditRequisitesScreen extends Screen
 {
     private $whId;
+    private bool $hasCompanyRequisites = false;
+    private bool $hasExecutorRequisites = false;
 
     public function query($whId): iterable
     {
@@ -43,20 +46,25 @@ class AccountEditRequisitesScreen extends Screen
 
         if (isset($resWhList->wh_id)) {
 
-            $companyRequisites = $resWhList->getCompany;
-            $executorRequisites = $resWhList->getParent->getCompany;
+            $companyRequisites = $resWhList->getCompany ?? null;
+            $executorRequisites = $resWhList->getParent->getCompany ?? null;
 
         }
+
+        $this->hasCompanyRequisites = isset($companyRequisites->co_id);
+        $this->hasExecutorRequisites = isset($executorRequisites->co_id);
 
         return [
             'companyRequisites' => $companyRequisites,
             'executorRequisites' => $executorRequisites,
+            'hasCompanyRequisites' => is_object($companyRequisites),
+            'hasExecutorRequisites' => is_object($executorRequisites),
         ];
     }
 
     public function name(): ?string
     {
-        return CustomTranslator::get('Список транзакций по складу');
+        return CT::get('Список транзакций по складу');
     }
 
     /**
@@ -82,53 +90,62 @@ class AccountEditRequisitesScreen extends Screen
             Layout::columns([
                 // --- левая колонка: клиент -----------------
                 Layout::legend('companyRequisites', [
-                            Sight::make('co_name', CustomTranslator::get('Название')),
-                            Sight::make('co_legal_name', CustomTranslator::get('Юридическое название')),
-                            Sight::make('co_vat_number', CustomTranslator::get('ИНН / VAT')),
-                            Sight::make('co_vat_availability', CustomTranslator::get('НДС'))
-                                ->render(fn($c) => $c->co_vat_availability ? 'С НДС' : 'Без НДС'),
-                            Sight::make('co_vat_proc', CustomTranslator::get('Ставка НДС'))
-                                ->render(fn($c) => $c->co_vat_proc . ' %'),
-                            Sight::make('co_registration_number', CustomTranslator::get('Регистрационный номер')),
-                            Sight::make('co_country_id', CustomTranslator::get('Страна')),
-                            Sight::make('co_city_id', CustomTranslator::get('Город'))
-                                ->render(fn($c) => $c->getCity->lcit_name ?? '-'),
-                            Sight::make('co_postcode', CustomTranslator::get('Индекс')),
-                            Sight::make('co_address', CustomTranslator::get('Адрес')),
-                            Sight::make('co_phone', CustomTranslator::get('Телефон')),
-                            Sight::make('co_email', CustomTranslator::get('Email')),
-                            Sight::make('co_website', CustomTranslator::get('Сайт')),
-                            Sight::make('co_bank_account', CustomTranslator::get('Расчётный счёт')),
-                            Sight::make('co_bank_ks', CustomTranslator::get('Кор.счёт')),
-                            Sight::make('co_bank_name', CustomTranslator::get('Банк')),
-                            Sight::make('co_swift_bic', CustomTranslator::get('SWIFT/BIC')),
-                            Sight::make('co_contact_person', CustomTranslator::get('Контактное лицо')),
+                            Sight::make('co_name', CT::get('Название'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_legal_name', CT::get('Юридическое название'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_vat_number', CT::get('ИНН / VAT'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_vat_availability', CT::get('НДС'))
+                                ->render(fn($c) => $c->co_vat_availability ? 'С НДС' : 'Без НДС')->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_vat_proc', CT::get('Ставка НДС'))
+                                ->render(fn($c) => $c->co_vat_proc . ' %')->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_registration_number', CT::get('Регистрационный номер'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_country_id', CT::get('Страна'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_city_id', CT::get('Город'))
+                                ->render(fn($c) => $c->getCity->lcit_name ?? '-')->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_postcode', CT::get('Индекс'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_address', CT::get('Адрес'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_phone', CT::get('Телефон'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_email', CT::get('Email'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_website', CT::get('Сайт'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_bank_account', CT::get('Расчётный счёт'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_bank_ks', CT::get('Кор.счёт'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_bank_name', CT::get('Банк'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_swift_bic', CT::get('SWIFT/BIC'))->canSee($this->hasCompanyRequisites),
+                            Sight::make('co_contact_person', CT::get('Контактное лицо'))->canSee($this->hasCompanyRequisites),
+
+                            Sight::make('')->render(fn () => CT::get('Реквизиты склада клиента не заданы. Пожалуйста, проверьте настройки.'))
+                                ->canSee(!$this->hasCompanyRequisites)
+
                 ])->title('Реквизиты клиента'),
 
                 // --- правая колонка: исполнитель ----------
                 Layout::legend('executorRequisites', [
-                            Sight::make('co_name', CustomTranslator::get('Название')),
-                            Sight::make('co_legal_name', CustomTranslator::get('Юридическое название')),
-                            Sight::make('co_vat_number', CustomTranslator::get('ИНН / VAT')),
-                            Sight::make('co_vat_availability', CustomTranslator::get('НДС'))
-                                ->render(fn($c) => $c->co_vat_availability ? 'С НДС' : 'Без НДС'),
-                            Sight::make('co_vat_proc', CustomTranslator::get('Ставка НДС'))
-                                ->render(fn($c) => $c->co_vat_proc . ' %'),
-                            Sight::make('co_registration_number', CustomTranslator::get('Регистрационный номер')),
-                            Sight::make('co_country_id', CustomTranslator::get('Страна')),
-                            Sight::make('co_city_id', CustomTranslator::get('Город'))
-                                ->render(fn($c) => $c->getCity->lcit_name ?? '-'),
-                            Sight::make('co_postcode', CustomTranslator::get('Индекс')),
-                            Sight::make('co_address', CustomTranslator::get('Адрес')),
-                            Sight::make('co_phone', CustomTranslator::get('Телефон')),
-                            Sight::make('co_email', CustomTranslator::get('Email')),
-                            Sight::make('co_website', CustomTranslator::get('Сайт')),
-                            Sight::make('co_bank_account', CustomTranslator::get('Расчётный счёт')),
-                            Sight::make('co_bank_ks', CustomTranslator::get('Кор.счёт')),
-                            Sight::make('co_bank_name', CustomTranslator::get('Банк')),
-                            Sight::make('co_swift_bic', CustomTranslator::get('SWIFT/BIC')),
-                            Sight::make('co_contact_person', CustomTranslator::get('Контактное лицо')),
-                ])->title('Реквизиты исполнителя'),
+                            Sight::make('co_name', CT::get('Название'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_legal_name', CT::get('Юридическое название'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_vat_number', CT::get('ИНН / VAT'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_vat_availability', CT::get('НДС'))
+                                ->render(fn($c) => $c->co_vat_availability ? 'С НДС' : 'Без НДС')->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_vat_proc', CT::get('Ставка НДС'))
+                                ->render(fn($c) => $c->co_vat_proc . ' %')->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_registration_number', CT::get('Регистрационный номер'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_country_id', CT::get('Страна'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_city_id', CT::get('Город'))
+                                ->render(fn($c) => $c->getCity->lcit_name ?? '-')->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_postcode', CT::get('Индекс'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_address', CT::get('Адрес'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_phone', CT::get('Телефон'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_email', CT::get('Email'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_website', CT::get('Сайт'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_bank_account', CT::get('Расчётный счёт'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_bank_ks', CT::get('Кор.счёт'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_bank_name', CT::get('Банк'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_swift_bic', CT::get('SWIFT/BIC'))->canSee($this->hasExecutorRequisites),
+                            Sight::make('co_contact_person', CT::get('Контактное лицо'))->canSee($this->hasExecutorRequisites),
+
+                            Sight::make('')->render(fn () => CT::get('Реквизиты склада клиента не заданы. Пожалуйста, проверьте настройки.'))
+                                ->canSee(!$this->hasExecutorRequisites)
+
+                ])->title('Реквизиты исполнителя')
+                    ->canSee($this->hasExecutorRequisites),
 
             ]),
         ];

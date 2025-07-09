@@ -1,4 +1,4 @@
-@php use App\Services\CustomTranslator as CT;; @endphp
+@php use App\Services\CustomTranslator as CT; @endphp
 <div class="bg-white rounded-top shadow-sm mb-4 rounded-bottom">
     <div class="row g-0">
         <div style="padding: 20px 20px 20px 20px; padding: 20px;">
@@ -35,7 +35,7 @@
                     @if($totalSum > 0)
                         <td style="background-color: #99DD99"><b> + {{ $totalSum }}</b></td>
                     @else
-                        <td style="background-color: #FF9999"><b> - {{ $totalSum }}</b></td>
+                        <td style="background-color: #FF9999"><b>{{ $totalSum }}</b></td>
                     @endif
                 </tr>
                 </tbody>
