@@ -3,7 +3,7 @@
 namespace App\Orchid\Screens\Billing\Billing;
 
 use App\Models\rwBillingSetting;
-use App\Services\CustomTranslator;
+use App\Services\CustomTranslator as CT;;
 use Carbon\Carbon;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
@@ -29,19 +29,19 @@ class BlillingScreen extends Screen
 
     public function name(): ?string
     {
-        return CustomTranslator::get('Настройки биллинга');
+        return CT::get('Настройки биллинга');
     }
 
     public function description(): ?string
     {
-        return CustomTranslator::get('Список настроек биллинга');
+        return CT::get('Список настроек биллинга');
     }
 
 
     public function commandBar(): iterable
     {
         return [
-            Link::make(CustomTranslator::get('Создать'))
+            Link::make(CT::get('Создать'))
                 ->icon('bs.plus-circle')
                 ->route('platform.billing.billing.create')
         ];
@@ -55,12 +55,12 @@ class BlillingScreen extends Screen
                     return Link::make($b->bs_id)
                         ->route('platform.billing.billing.edit', $b->bs_id);
                 }),
-                TD::make('bs_status', 'Статус')->sort(),
-                TD::make('bs_name', 'Название')->sort()->render(function ($b) {
+                TD::make('bs_status', CT::get('Статус'))->sort(),
+                TD::make('bs_name', CT::get('Название'))->sort()->render(function ($b) {
                     return Link::make($b->bs_name)
                         ->route('platform.billing.billing.edit', $b->bs_id);
                 }),
-                TD::make('bs_data', 'Дата')
+                TD::make('bs_data', CT::get('Дата'))
                     ->sort()
                     ->render(function ($b) {
                         return Link::make(
@@ -68,10 +68,10 @@ class BlillingScreen extends Screen
                         )->route('platform.billing.billing.edit', $b->bs_id);
                     }),
                 TD::make()->width('100px')->render(fn ($b) =>
-                Button::make('Удалить')
+                Button::make(CT::get('Удалить'))
                     ->icon('bs.trash')
                     ->method('remove', ['id' => $b->bs_id])
-                    ->confirm('Точно удалить?')
+                    ->confirm(CT::get('Точно удалить?'))
                 ),
             ])
         ];
@@ -80,7 +80,7 @@ class BlillingScreen extends Screen
     public function remove(int $id)
     {
         rwBillingSetting::findOrFail($id)->delete();
-        Alert::error(CustomTranslator::get('Запись удалена!'));
+        Alert::error(CT::get('Запись удалена!'));
 
     }
 }

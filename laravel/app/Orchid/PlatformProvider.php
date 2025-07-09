@@ -276,12 +276,12 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(CustomTranslator::get('Пользователи'))
                 ->icon('bs.people')
-                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+//                ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                 ->list([
                     Menu::make('Пользователи')
                         ->icon('bs.people')
-                        ->route('platform.systems.users')
-                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager')),
+//                        ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
+                        ->route('platform.systems.users'),
 
                     Menu::make('Роли')
                         ->icon('bs.book')

@@ -20,11 +20,6 @@ use Orchid\Support\Facades\Toast;
 
 class UserListScreen extends Screen
 {
-    /**
-     * Fetch data to be displayed on the screen.
-     *
-     * @return array
-     */
     public function query(): iterable
     {
         $currentUser = Auth::user();
@@ -35,6 +30,12 @@ class UserListScreen extends Screen
 
             $dbUsers->where('domain_id', $currentUser->domain_id);
 
+            if (!$currentUser->hasRole('warehouse_manager')) {
+                $dbUsers->where(function ($query) use ($currentUser) {
+                    $query->where('id', $currentUser->id)
+                        ->orWhere('parent_id', $currentUser->id);
+                });
+            }
         }
 
         return [
@@ -46,17 +47,11 @@ class UserListScreen extends Screen
         ];
     }
 
-    /**
-     * The name of the screen displayed in the header.
-     */
     public function name(): ?string
     {
         return CustomTranslator::get('Пользователи');
     }
 
-    /**
-     * Display header description.
-     */
     public function description(): ?string
     {
         return CustomTranslator::get('Полный список всех зарегистрированных пользователей, включая их профили и привилегии.');
@@ -69,11 +64,6 @@ class UserListScreen extends Screen
         ];
     }
 
-    /**
-     * The screen's action buttons.
-     *
-     * @return \Orchid\Screen\Action[]
-     */
     public function commandBar(): iterable
     {
         return [
@@ -83,11 +73,6 @@ class UserListScreen extends Screen
         ];
     }
 
-    /**
-     * The screen's layout elements.
-     *
-     * @return string[]|\Orchid\Screen\Layout[]
-     */
     public function layout(): iterable
     {
         return [
@@ -99,11 +84,6 @@ class UserListScreen extends Screen
         ];
     }
 
-    /**
-     * Loads user data when opening the modal window.
-     *
-     * @return array
-     */
     public function loadUserOnOpenModal(User $user): iterable
     {
         return [

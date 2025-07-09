@@ -11,8 +11,8 @@ use App\Models\rwWarehouse;
 use App\Models\rwWhBilling;
 use App\Orchid\Layouts\Billings\Accounts\AccountEditTable;
 use App\Orchid\Layouts\Billings\Accounts\AccountNavigation;
-use App\Orchid\Layouts\Billings\Accounts\AccountTotalTable;
-use App\Orchid\Layouts\Billings\Accounts\CustomerCompanyTable;
+//use App\Orchid\Layouts\Billings\Accounts\AccountTotalTable;
+//use App\Orchid\Layouts\Billings\Accounts\CustomerCompanyTable;
 use App\Orchid\Layouts\Billings\Accounts\InvoceTable;
 use App\Services\CustomTranslator;
 use Illuminate\Support\Facades\DB;
@@ -100,13 +100,13 @@ class AccountEditScreen extends Screen
                 Layout::rows([
                     Input::make('transaction_id')->type('hidden'),
                     Input::make('bt_sum')
-                        ->title('Сумма')->type('number')->step('any')->required(),
-                    Input::make('bt_desc')->title('Описание'),
+                        ->title(CustomTranslator::get('Сумма'))->type('number')->step('any')->required(),
+                    Input::make('bt_desc')->title(CustomTranslator::get('Описание')),
                 ]),
             ])
-                ->title('Редактировать транзакцию')
+                ->title(CustomTranslator::get('Редактировать транзакцию'))
                 ->method('editTransaction')
-                ->applyButton('Сохранить')
+                ->applyButton(CustomTranslator::get('Сохранить'))
                 ->async('asyncGetTransaction'),
 
             // Создание транзакции

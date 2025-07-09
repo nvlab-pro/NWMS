@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid\Layouts\User;
 
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\User;
 use App\Services\CustomTranslator;
 use Orchid\Screen\Actions\Button;
@@ -90,6 +91,7 @@ class UserListLayout extends Table
 
                         Link::make(__('Badge'))
                             ->route('platform.systems.users.badge', $user->id)
+                            ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                             ->icon('bs.qr-code-scan'),
 
                         Link::make(CustomTranslator::get('Ред.'))
@@ -98,6 +100,7 @@ class UserListLayout extends Table
 
                         Button::make(CustomTranslator::get('Удалить'))
                             ->icon('bs.trash3')
+                            ->canSee(RoleMiddleware::checkUserPermission('admin,warehouse_manager'))
                             ->confirm(CustomTranslator::get('Once the account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
                             ->method('remove', [
                                 'id' => $user->id,
