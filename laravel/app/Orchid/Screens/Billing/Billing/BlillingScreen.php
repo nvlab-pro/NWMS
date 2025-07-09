@@ -11,18 +11,32 @@ use Orchid\Support\Facades\Layout;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\Button;
 use Orchid\Support\Facades\Alert;
+use Illuminate\Support\Facades\Auth;
 
 class BlillingScreen extends Screen
 {
-    public $name = 'Billing settings';
-    public $description = 'Список настроек биллинга';
-
     public function query(): iterable
     {
+        $currentUser = Auth::user();
+
+
+        $resBilling = rwBillingSetting::where('bs_domain_id', $currentUser->domain_id)->paginate(50);
+
         return [
-            'billings' => rwBillingSetting::paginate()
+            'billings' => $resBilling,
         ];
     }
+
+    public function name(): ?string
+    {
+        return CustomTranslator::get('Настройки биллинга');
+    }
+
+    public function description(): ?string
+    {
+        return CustomTranslator::get('Список настроек биллинга');
+    }
+
 
     public function commandBar(): iterable
     {

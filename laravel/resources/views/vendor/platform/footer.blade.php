@@ -3,7 +3,7 @@
 @else
     <div class="text-center user-select-none my-4 d-none d-lg-block">
         <p class="small mb-0">
-            (с) Copyright by NWMS. Version of deploy 0.666 from 09.07.2025.
+            (с) Copyright by NWMS. Version of deploy 0.667 from 09.07.2025.
         </p>
     </div>
 @endguest
